@@ -1,0 +1,34 @@
+{
+  "extends": "../../tsconfig.base.json",
+  "compilerOptions": {
+    "lib": [
+      "es2019"
+    ],
+    "module": "commonjs",
+    "moduleResolution": "node",
+    "target": "es6",
+    "strict": false,
+    "declaration": true,
+    "esModuleInterop": true,
+    "outDir": "./dist",
+    "rootDir": "src",
+    "skipLibCheck": true,
+    "composite": true,
+    "incremental": true,
+    "baseUrl": "."
+  },
+  "include": [
+    "src/**/*.ts",
+  ],
+  "references": [
+    {
+      "path": "../../libs/lib-reactor-server"
+    },
+    {
+      "path": "../../modules/module-editor"
+    },
+    {
+      "path": "../../modules/module-reactor"
+    }
+  ]
+}

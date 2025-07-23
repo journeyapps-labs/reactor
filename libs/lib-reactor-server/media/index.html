@@ -1,0 +1,93 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <style>
+      html,
+      body {
+        background: <%= LOADER_BACKGROUND_COLOR %>;
+      }
+
+      @keyframes fadein {
+        0%{
+          opacity: 0;
+        }
+        100%{
+          opacity: 1;
+        }
+      }
+
+      .loader {
+        opacity: 0;
+        top: 50%;
+        left: 50%;
+        transform: translateX(-50%) translateY(-50%);
+        position: absolute;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        animation: fadein;
+        animation-duration: 0.3s;
+        animation-delay: 0.5s;
+        animation-direction: normal;
+        animation-fill-mode: forwards;
+      }
+
+      .loading-bar-wrapper {
+        width: 200px;
+        height: 4px;
+        background: rgba(255, 255, 255, 0.1);
+        margin-top: 40px;
+      }
+
+      .loading-text {
+        margin-top: 6px;
+        font-size: 11px;
+        color: white;
+        opacity: 0.2;
+        font-family: sans-serif;
+      }
+
+      .loading-bar {
+        width: 0%;
+        transition: width 0.3s;
+        height: 100%;
+        background: rgba(255, 255, 255, 0.3);
+        will-change: width;
+      }
+    </style>
+    <script nonce="SCRIPT_NONCE">
+      let loaded = new Set();
+      window.reactorModuleLoaded = (module) => {
+        const scripts = Array.from(document.scripts).filter((s) => !!s.dataset['module']);
+        // could be multiple modules with the same name due to workers etc...
+        if(loaded.has(module)){
+          return;
+        }
+        loaded.add(module)
+        const loaderBar = document.querySelector('.loading-bar');
+        const loaderText = document.querySelector('.loading-text');
+        if (!loaderBar) {
+          return;
+        }
+        const percent = parseInt((loaded.size / scripts.length) * 100);
+        loaderBar.style.width = `${percent}%`;
+        if (percent === 100) {
+          loaderText.innerHTML = `Booting!`;
+        } else {
+          loaderText.innerHTML = `Loaded: ${module}`;
+        }
+      };
+    </script>
+  </head>
+  <body>
+    <div class="loader">
+      <div class="loading-bar-wrapper">
+        <div class="loading-bar"></div>
+      </div>
+      <div class="loading-text">Loading...</div>
+    </div>
+    <div id="application"></div>
+  </body>
+</html>

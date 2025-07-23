@@ -1,0 +1,4 @@
+packages:
+  - 'libs/*'
+  - 'modules/*'
+  - 'demo/*'

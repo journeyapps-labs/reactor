@@ -1,0 +1,19 @@
+{
+  "name": "@journeyapps-labs/lib-ioc",
+  "version": "1.0.1",
+  "author": "JourneyApps",
+  "main": "./dist/index.js",
+  "typings": "./dist/@types/index",
+  "license": "UNLICENSED",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/journeyapps-labs/reactor.git"
+  },
+  "scripts": {
+    "build": "../node_modules/.bin/tsc --build",
+    "test": "vitest run"
+  },
+  "devDependencies": {
+    "vitest": "^3.2.4"
+  }
+}

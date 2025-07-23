@@ -1,0 +1,5 @@
+*
+!dist/**/*
+!scripts/**/*
+!package.json
+!val-loader.js

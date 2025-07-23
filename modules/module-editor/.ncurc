@@ -1,0 +1,6 @@
+{
+  "reject":[
+    "monaco-editor-textmate",
+    "lru-cache"
+  ]
+}

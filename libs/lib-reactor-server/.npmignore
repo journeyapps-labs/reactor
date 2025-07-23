@@ -1,0 +1,4 @@
+*
+!dist/**/*
+!media/**/*
+!package.json

@@ -1,0 +1,15 @@
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+
+exports[`Tree > should test all tree things 1`] = `
+{
+  "[[\\"child\\",\\"root\\"],[\\"child\\",\\"child1\\"],[\\"child\\",\\"child2\\"]]": {
+    "collapsed": true,
+  },
+  "[[\\"child\\",\\"root\\"],[\\"child\\",\\"child1\\"]]": {
+    "collapsed": true,
+  },
+  "[[\\"child\\",\\"root\\"]]": {
+    "collapsed": true,
+  },
+}
+`;

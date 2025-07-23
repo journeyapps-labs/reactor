@@ -1,0 +1,41 @@
+{
+  "files": [],
+  "references": [
+    {
+      "path": "./libs/lib-reactor-utils"
+    },
+    {
+      "path": "./libs/lib-reactor-builder"
+    },
+    {
+      "path": "./libs/lib-reactor-search"
+    },
+    {
+      "path": "./libs/lib-reactor-data-layer"
+    },
+    {
+      "path": "./libs/lib-reactor-server"
+    },
+    {
+      "path": "./libs/lib-reactor-tree"
+    },
+    {
+      "path": "./libs/lib-ioc"
+    },
+    {
+      "path": "./modules/module-reactor"
+    },
+    {
+      "path": "./modules/module-editor"
+    },
+    {
+      "path": "./demo/module-demo"
+    },
+    {
+      "path": "./demo/module-custom-layout"
+    },
+    {
+      "path": "./demo/server"
+    }
+  ]
+}

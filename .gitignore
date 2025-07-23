@@ -1,0 +1,18 @@
+# MAC
+.DS_Store
+
+# IDES
+.idea
+.vscode
+
+# NODE
+node_modules
+dist
+dist-module
+lib
+
+# TS
+*.tsbuildinfo
+
+pnpm-links.js
+.pnpm-debug.log

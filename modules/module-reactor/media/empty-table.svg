@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="50px" height="50px" viewBox="0 0 50 50" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+  <!-- Generator: Sketch 63.1 (92452) - https://sketch.com -->
+  <title>im_empty_table</title>
+  <desc>Created with Sketch.</desc>
+  <defs>
+    <rect id="path-1" x="298" y="81" width="48" height="48"></rect>
+    <mask id="mask-2" maskContentUnits="userSpaceOnUse" maskUnits="objectBoundingBox" x="-1" y="-1" width="50" height="50">
+      <rect x="297" y="80" width="50" height="50" fill="white"></rect>
+      <use xlink:href="#path-1" fill="black"></use>
+    </mask>
+  </defs>
+  <g id="Page-1" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd" fill-opacity="0.05" stroke-dasharray="3,3">
+    <g id="Empty_Table" transform="translate(-297.000000, -80.000000)" fill="#FFFFFF" stroke="#FFFFFF" stroke-width="2">
+      <use id="im_empty_table" mask="url(#mask-2)" xlink:href="#path-1"></use>
+    </g>
+  </g>
+</svg>

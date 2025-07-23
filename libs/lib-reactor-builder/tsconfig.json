@@ -1,0 +1,17 @@
+{
+  "extends": "../../tsconfig.base.json",
+  "compilerOptions": {
+    "declarationDir": "dist/@types",
+    "rootDir": "src",
+    "outDir": "dist",
+    "downlevelIteration": true,
+    "esModuleInterop": true,
+    "target": "es6",
+    "module": "commonjs",
+    "allowJs": true
+  },
+  "include": [
+    "src/**/*.ts",
+    "src/**/*.json"
+  ]
+}

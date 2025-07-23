@@ -1,0 +1,41 @@
+{
+  "name": "@journeyapps-labs/reactor-mod-editor",
+  "version": "1.0.2",
+  "author": "JourneyApps",
+  "main": "./dist/index.js",
+  "license": "UNLICENSED",
+  "typings": "./dist/@types/index",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/journeyapps-labs/reactor.git"
+  },
+  "scripts": {
+    "build:module": "reactor build .",
+    "watch:module": "pnpm build:module --watch"
+  },
+  "dependencies": {
+    "@journeyapps-labs/reactor-mod": "workspace:*",
+    "@journeyapps-labs/lib-ioc": "workspace:*",
+    "@journeyapps-labs/lib-reactor-builder": "workspace:*",
+    "@journeyapps-labs/lib-reactor-search": "workspace:*",
+    "@journeyapps-labs/lib-reactor-utils": "workspace:*",
+    "@projectstorm/react-workspaces-core": "4.2.0",
+    "json5": "^2.2.3",
+    "jszip": "^3.10.1",
+    "lru-cache": "^5.1.1",
+    "mobx": "^6.13.7",
+    "mobx-react": "^9.2.0",
+    "monaco-editor": "^0.52.2",
+    "monaco-editor-textmate": "3.0.0",
+    "monaco-textmate": "^3.0.1",
+    "monaco-vim": "^0.4.2",
+    "monaco-yaml": "^5.4.0",
+    "onigasm": "^2.2.5",
+    "react": "19.1.0",
+    "react-monaco-editor": "^0.59.0"
+  },
+  "devDependencies": {
+    "@types/react": "19.1.8",
+    "json5-loader": "^4.0.1"
+  }
+}
