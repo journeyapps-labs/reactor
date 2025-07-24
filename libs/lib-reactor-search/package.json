@@ -1,14 +1,18 @@
 {
   "name": "@journeyapps-labs/lib-reactor-search",
-  "version": "1.0.1",
-  "author": "JourneyApps",
-  "main": "./dist/index.js",
-  "typings": "./dist/@types/index",
-  "license": "UNLICENSED",
+  "version": "1.0.0",
+  "publishConfig": {
+    "registry": "https://registry.npmjs.org/",
+    "access": "public"
+  },
   "repository": {
     "type": "git",
     "url": "https://github.com/journeyapps-labs/reactor.git"
   },
+  "author": "JOURNEYAPPS",
+  "license": "Apache-2.0",
+  "main": "./dist/index.js",
+  "typings": "./dist/@types/index",
   "scripts": {
     "build": "../node_modules/.bin/tsc --build"
   },

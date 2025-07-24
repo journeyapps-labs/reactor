@@ -1,16 +1,20 @@
 {
   "name": "@journeyapps-labs/lib-reactor-builder",
-  "version": "2.0.1",
-  "author": "JourneyApps",
-  "license": "UNLICENSED",
-  "bin": {
-    "reactor": "index.js"
+  "version": "1.0.0",
+  "publishConfig": {
+    "registry": "https://registry.npmjs.org/",
+    "access": "public"
   },
-  "main": "./dist/index.js",
   "repository": {
     "type": "git",
     "url": "https://github.com/journeyapps-labs/reactor.git"
   },
+  "author": "JOURNEYAPPS",
+  "license": "Apache-2.0",
+  "bin": {
+    "reactor": "index.js"
+  },
+  "main": "./dist/index.js",
   "scripts": {
     "clean": "../../node_modules/.bin/tsc --build --clean",
     "build": "../../node_modules/.bin/tsc"

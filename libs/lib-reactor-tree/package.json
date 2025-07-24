@@ -1,7 +1,16 @@
 {
   "name": "@journeyapps-labs/lib-reactor-tree",
   "version": "1.0.0",
-  "repository": "journeyapps-platform/journey-js",
+  "publishConfig": {
+    "registry": "https://registry.npmjs.org/",
+    "access": "public"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/journeyapps-labs/reactor.git"
+  },
+  "author": "JOURNEYAPPS",
+  "license": "Apache-2.0",
   "main": "./dist/src/index.js",
   "typings": "./dist/@types/src/index",
   "scripts": {

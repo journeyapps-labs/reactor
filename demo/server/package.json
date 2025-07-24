@@ -1,8 +1,5 @@
 {
   "name": "@journeyapps-platform/reactor-demo-server",
-  "version": "0.0.2",
-  "author": "JourneyApps",
-  "license": "UNLICENCED",
   "private": true,
   "scripts": {
     "start": "env-cmd -f .env node ./dist/index.js",
