@@ -1,4 +1,4 @@
-import { IObservableArray, makeObservable, observable } from 'mobx';
+import { IObservableArray, observable } from 'mobx';
 import { BaseObserver } from '@journeyapps-labs/lib-reactor-utils';
 
 export interface CollectionListener {

@@ -1,11 +1,11 @@
-import { IReactionDisposer, autorun, makeObservable, observable } from 'mobx';
-import * as sdk from '@journeyapps-platform/sdk-common';
+import { autorun, IReactionDisposer, observable } from 'mobx';
 import { Collection } from './Collection';
 import { SearchResult, SearchResultEntry } from '@journeyapps-labs/lib-reactor-search';
 
 export interface PaginatedCollectionOptions<T, R> {
   transformer: (res: R) => T[];
   loaderIterator?: () => Promise<AsyncIterator<R>> | AsyncIterator<R>;
+  hasMore?: (res: R) => boolean;
 }
 
 export interface AsSearchResultOptions<T> {
@@ -49,10 +49,7 @@ export class PaginatedSearchResult<T extends any> extends SearchResult<Paginated
   }
 }
 
-export class PaginatedCollection<
-  T = any,
-  R extends sdk.PaginationResponse = sdk.PaginationResponse
-> extends Collection<T> {
+export class PaginatedCollection<T = any, R = any> extends Collection<T> {
   @observable
   protected accessor lastResponse: R;
 
@@ -117,7 +114,7 @@ export class PaginatedCollection<
         return [];
       }
       this.lastResponse = next.value;
-      this.hasMore = this.lastResponse.more;
+      this.hasMore = this.options.hasMore(this.lastResponse);
       return this.getData(this.lastResponse);
     });
     return this.hasMore;
