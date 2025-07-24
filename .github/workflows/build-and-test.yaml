@@ -6,7 +6,7 @@ on:
   pull_request:
 
 jobs:
-  build_and_test:
+  libs_and_modules:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -34,5 +34,7 @@ jobs:
             ${{ runner.os }}-pnpm-store-
       - name: Install dependencies
         run: pnpm install
-      - name: Build
+      - name: Build libs and modules
+        run: pnpm build
+      - name: Test
         run: pnpm test
