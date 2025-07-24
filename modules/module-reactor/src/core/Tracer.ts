@@ -1,5 +1,13 @@
-import flight_log_types from '@journeyapps-platform/types-flight-log';
-import { ActionEvent } from '../actions/Action';
+import { ActionEvent, ActionSource } from '../actions/Action';
+
+export interface UserAction {
+  success: boolean;
+  source: ActionSource;
+  action_id: string;
+  start_timestamp: string;
+  end_timestamp: string;
+  trace_id?: string;
+}
 
 export class ActionTrace {
   tracer: Tracer;
@@ -17,9 +25,9 @@ export class ActionTrace {
     this.trace_id = id;
   }
 
-  end(status: flight_log_types.ACTION_STATUS) {
+  end(success: boolean) {
     this.tracer.logAction({
-      status: status,
+      success,
       source: this.event.source,
       action_id: this.event.id,
       start_timestamp: this.timestamp.toISOString(),
@@ -30,7 +38,7 @@ export class ActionTrace {
 }
 
 export class Tracer {
-  logAction(action: Omit<flight_log_types.UserAction, 'app_id' | 'user_id' | 'service_name'>) {}
+  logAction(action: UserAction) {}
 
   createActionTrace(event: ActionEvent) {
     return new ActionTrace(this, event);

@@ -9,7 +9,6 @@ import { IconWidget } from '../icons/IconWidget';
 import { ioc } from '../../inversify.config';
 import { System } from '../../core/System';
 import { ActionSource } from '../../actions/Action';
-import { ACTION_STATUS } from '@journeyapps-platform/types-flight-log';
 import * as _ from 'lodash';
 import { ThemeStore } from '../../stores/themes/ThemeStore';
 import { setupTooltipProps, TooltipPosition } from '../info/tooltips';
@@ -106,7 +105,7 @@ export const PanelButtonWidget: React.FC<
       onClick={(event) => {
         if (props.trace?.enabled) {
           ioc.get(System).tracer.logAction({
-            status: ACTION_STATUS.SUCCESS,
+            success: true,
             source: ActionSource.BUTTON,
             action_id: [
               `BUTTON`,

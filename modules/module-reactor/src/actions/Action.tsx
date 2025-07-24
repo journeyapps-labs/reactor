@@ -9,7 +9,6 @@ import { ActionValidator, PassiveActionValidationState, ValidationResult } from 
 import { Btn } from '../definitions/common';
 import * as React from 'react';
 import { ShortcutChord } from '../stores/shortcuts/Shortcut';
-import * as flight_log_types from '@journeyapps-platform/types-flight-log';
 import { ComboBoxItem } from '../stores/combo/ComboBoxDirectives';
 import { SystemInterface } from '../core/SystemInterface';
 import { BaseListener, BaseObserver, Logger } from '@journeyapps-labs/lib-reactor-utils';
@@ -361,10 +360,10 @@ export abstract class Action<
     const trace = this.application.tracer.createActionTrace(event);
     try {
       const res = await this._runAction(event);
-      trace.end(flight_log_types.ACTION_STATUS.SUCCESS);
+      trace.end(true);
       return res;
     } catch (ex) {
-      trace.end(flight_log_types.ACTION_STATUS.FAILURE);
+      trace.end(false);
     }
   }
 

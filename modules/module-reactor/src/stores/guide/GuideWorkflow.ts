@@ -1,5 +1,5 @@
 import { GuideStore } from './GuideStore';
-import { makeObservable, observable } from 'mobx';
+import { observable } from 'mobx';
 import { GuideStep } from './steps/GuideStep';
 import {
   ComponentSelectorGenerator,
@@ -10,7 +10,6 @@ import { BaseListener, BaseObserver } from '@journeyapps-labs/lib-reactor-utils'
 import { inject } from '../../inversify.config';
 import { System } from '../../core/System';
 import { ActionSource } from '../../actions';
-import { ACTION_STATUS } from '@journeyapps-platform/types-flight-log';
 
 export interface GuideWorkflowListener extends BaseListener {
   activated?: () => any;
@@ -101,7 +100,7 @@ export class GuideWorkflow<
       action_id: `${this.options.id}_EXITED_STEP_${this.currentStepIndex()}`,
       start_timestamp: new Date().toISOString(),
       end_timestamp: new Date().toISOString(),
-      status: ACTION_STATUS.SUCCESS
+      success: true
     });
   }
 
@@ -161,7 +160,7 @@ export class GuideWorkflow<
           action_id: `${this.options.id}_STEP_${step.getIndexNumber()}`,
           start_timestamp: new Date().toISOString(),
           end_timestamp: new Date().toISOString(),
-          status: ACTION_STATUS.SUCCESS
+          success: true
         });
       }
     });

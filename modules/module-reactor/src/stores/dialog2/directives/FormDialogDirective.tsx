@@ -3,7 +3,7 @@ import { ActionSource, Btn, ioc, System } from '../../..';
 import { FormModel } from '../../../forms/FormModel';
 import { AbstractDialogDirective, AbstractDialogDirectiveOptions } from '../AbstractDialogDirective';
 import * as React from 'react';
-import { ACTION_STATUS } from '@journeyapps-platform/types-flight-log';
+import { v4 } from 'uuid';
 
 export interface FormDialogDirectiveOptions<T extends FormModel = FormModel> extends AbstractDialogDirectiveOptions {
   form: T;
@@ -64,11 +64,12 @@ export class FormDialogDirective<T extends FormModel = FormModel> extends Abstra
   submitTrace() {
     try {
       ioc.get(System).tracer.logAction({
-        status: ACTION_STATUS.SUCCESS,
+        success: true,
         source: ActionSource.BUTTON,
         action_id: `FORM_DIALOG.${this.options2.trace.context.toUpperCase()}`,
         start_timestamp: new Date().toISOString(),
-        end_timestamp: new Date().toISOString()
+        end_timestamp: new Date().toISOString(),
+        trace_id: v4()
       });
     } catch (ex) {}
   }

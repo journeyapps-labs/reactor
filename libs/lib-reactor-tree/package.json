@@ -11,8 +11,8 @@
   },
   "author": "JOURNEYAPPS",
   "license": "Apache-2.0",
-  "main": "./dist/src/index.js",
-  "typings": "./dist/@types/src/index",
+  "main": "./dist/index.js",
+  "typings": "./dist/@types/index",
   "scripts": {
     "test": "vitest --config vitest.config.ts --run"
   },
