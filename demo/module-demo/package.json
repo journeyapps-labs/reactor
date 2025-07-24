@@ -5,7 +5,6 @@
   "private": true,
   "scripts": {
     "build:module": "reactor build .",
-    "test": "vitest run",
     "watch:module": "pnpm build:module --watch"
   },
   "dependencies": {
