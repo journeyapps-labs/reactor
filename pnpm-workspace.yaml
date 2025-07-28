@@ -2,3 +2,4 @@ packages:
   - 'libs/*'
   - 'modules/*'
   - 'demo/*'
+  - 'docs'
