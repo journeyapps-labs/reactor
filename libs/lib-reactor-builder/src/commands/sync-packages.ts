@@ -31,14 +31,12 @@ args.command<{ module: string; entry: boolean; watch: boolean }>(
       let dependencyPath = path.join(modulePath, 'node_modules', dependency);
       let reactorConfPath = path.join(dependencyPath, 'reactor.config.json');
       try {
-        // console.log("checking",reactorConfPath)
         await stat(reactorConfPath);
         const depPackageFile = require(path.join(dependencyPath, 'package.json'));
         foundModules.set(dependency, {
           package: depPackageFile,
           path: dependencyPath
         });
-        console.log('found', dependency);
       } catch (ex) {}
     }
 
