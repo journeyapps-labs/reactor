@@ -1,0 +1,19 @@
+{
+  "name": "@journeyapps-labs/reactor-mod-demo",
+  "main": "./dist/index.js",
+  "typings": "./dist/@types/index",
+  "private": true,
+  "scripts": {
+    "build:module": "reactor build .",
+    "watch:module": "pnpm build:module --watch"
+  },
+  "dependencies": {
+    "@journeyapps-labs/reactor-mod": "workspace:^",
+    "@journeyapps-labs/lib-ioc": "workspace:^",
+    "react": "19.1.0",
+    "@emotion/styled": "^11.14.1"
+  },
+  "devDependencies": {
+    "@journeyapps-labs/lib-reactor-builder": "workspace:^"
+  }
+}

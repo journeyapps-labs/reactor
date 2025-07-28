@@ -1,0 +1,11 @@
+{
+  "name": "Reactor CORE",
+  "slug": "module-reactor",
+  "env": [
+    "RELEASE",
+    "REACTOR_API_URL",
+    "ACCOUNTS_URL",
+    "ADMIN_PORTAL_URL",
+    "SUPPORT_EMAIL"
+  ]
+}

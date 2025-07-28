@@ -1,0 +1,15 @@
+name: Prettier check
+
+# This action works with pull requests and pushes
+on:
+  pull_request:
+
+jobs:
+  prettier:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4 # Check out the repository first.
+      - uses: Nerixyz/actionsx-prettier@v3-adj
+        with:
+          # prettier CLI arguments.
+          args: --check --ignore-path .prettierignore --config .prettierrc '**/*.{ts,tsx,js,jsx}'

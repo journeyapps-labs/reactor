@@ -1,0 +1,29 @@
+{
+  "name": "@journeyapps-labs/lib-reactor-data-layer",
+  "version": "1.0.0",
+  "publishConfig": {
+    "registry": "https://registry.npmjs.org/",
+    "access": "public"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/journeyapps-labs/reactor.git"
+  },
+  "author": "JOURNEYAPPS",
+  "license": "Apache-2.0",
+  "main": "./dist/index.js",
+  "typings": "./dist/@types/index",
+  "scripts": {
+    "test": "vitest run"
+  },
+  "dependencies": {
+    "@journeyapps-labs/lib-reactor-search": "workspace:*",
+    "@journeyapps-labs/lib-reactor-utils": "workspace:*",
+    "lodash": "^4.17.21",
+    "mobx": "^6.13.7"
+  },
+  "devDependencies": {
+    "@types/lodash": "^4.17.20",
+    "vitest": "^3.2.4"
+  }
+}

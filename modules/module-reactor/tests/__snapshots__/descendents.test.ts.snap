@@ -1,0 +1,31 @@
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+
+exports[`Should work with descendents that are not sub-categorized 1`] = `
+{
+  "controlValues": {
+    "sort": "asc",
+  },
+  "state": {
+    "trees": {
+      "[["child",null]]": {
+        "collapsed": false,
+      },
+    },
+  },
+}
+`;
+
+exports[`Should work with descendents that are sub-categorized 1`] = `
+{
+  "controlValues": {
+    "sort": "asc",
+  },
+  "state": {
+    "trees": {
+      "[["child",null]]": {
+        "collapsed": false,
+      },
+    },
+  },
+}
+`;

@@ -1,0 +1,23 @@
+{
+  "name": "@journeyapps-platform/reactor-demo-server",
+  "private": true,
+  "scripts": {
+    "start": "env-cmd -f .env node ./dist/index.js",
+    "watch": "nodemon --watch src --ext ts --ignore dist --exec 'pnpm start'"
+  },
+  "dependencies": {
+    "@journeyapps-labs/reactor-mod": "workspace:^",
+    "@journeyapps-labs/reactor-mod-editor": "workspace:^",
+    "@journeyapps-labs/lib-reactor-server": "workspace:^",
+    "compression": "^1.8.1",
+    "express": "^5.1.0",
+    "express-session": "^1.18.2"
+  },
+  "devDependencies": {
+    "@types/compression": "^1.8.1",
+    "@types/express": "^5.0.3",
+    "@types/express-session": "^1.18.2",
+    "env-cmd": "^10.1.0",
+    "nodemon": "^3.1.10"
+  }
+}

@@ -1,0 +1,27 @@
+{
+  "compilerOptions": {
+    "lib": [
+      "es2019"
+    ],
+    "module": "commonjs",
+    "moduleResolution": "node",
+    "target": "es6",
+    "strict": false,
+    "declaration": true,
+    "esModuleInterop": true,
+    "declarationDir": "dist/@types",
+    "rootDir": "src",
+    "outDir": "dist",
+    "skipLibCheck": true,
+    "composite": true,
+    "incremental": true
+  },
+  "include": [
+    "src"
+  ],
+  "references": [
+    {
+      "path": "../lib-reactor-utils"
+    }
+  ]
+}

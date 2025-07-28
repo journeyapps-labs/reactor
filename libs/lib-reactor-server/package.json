@@ -1,0 +1,31 @@
+{
+  "name": "@journeyapps-labs/lib-reactor-server",
+  "version": "1.0.0",
+  "publishConfig": {
+    "registry": "https://registry.npmjs.org/",
+    "access": "public"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/journeyapps-labs/reactor.git"
+  },
+  "author": "JOURNEYAPPS",
+  "license": "Apache-2.0",
+  "main": "./dist/index",
+  "typings": "./dist/@types/index",
+  "scripts": {
+    "build": "../node_modules/.bin/tsc --build"
+  },
+  "dependencies": {
+    "@journeyapps-labs/lib-reactor-utils": "workspace:*",
+    "cheerio": "^1.1.2",
+    "express": "^5.1.0",
+    "lodash": "^4.17.21",
+    "ua-parser-js": "2.0.4"
+  },
+  "devDependencies": {
+    "@types/express": "^5.0.3",
+    "@types/express-session": "^1.18.2",
+    "@types/lodash": "^4.17.20"
+  }
+}

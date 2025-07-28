@@ -1,0 +1,6 @@
+*
+!dist/**/*
+!dist-module/**/*
+!media/**/*
+!package.json
+!reactor.config.json

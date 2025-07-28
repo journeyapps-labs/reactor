@@ -1,0 +1,23 @@
+{
+  "compileOnSave": false,
+  "compilerOptions": {
+    "declaration": true,
+    "jsx": "react",
+    "resolveJsonModule": true,
+    "allowSyntheticDefaultImports": true,
+    "skipLibCheck": true,
+    "inlineSources": false,
+    "lib": [
+      "ES2020",
+      "dom"
+    ],
+    "preserveSymlinks": true,
+    "importHelpers": true,
+    "module": "es6",
+    "target": "es2017",
+    "sourceMap": true,
+    "moduleResolution": "node",
+    "strict": false,
+    "composite": true
+  }
+}
