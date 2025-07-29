@@ -5,6 +5,7 @@ import { packages } from './utils/packages';
 import { generateTSDocPlugin } from './utils/packageUtils';
 
 // This runs in Node.js - Don't use client-side code here (browser APIs, JSX...)
+const PROJECT_NAME = process.env.GH_PROJECT_NAME;
 
 const config: Config = {
   title: 'Reactor Docs',
@@ -17,15 +18,15 @@ const config: Config = {
   },
 
   // Set the production url of your site here
-  url: 'https://journeyapps-labs.github.io',
+  url: process.env.GH_URL,
   // Set the /<baseUrl>/ pathname under which your site is served
   // For GitHub pages deployment, it is often '/<projectName>/'
-  baseUrl: '/reactor/',
-
+  baseUrl: `/${PROJECT_NAME}/`,
+  trailingSlash: false,
   // GitHub pages deployment config.
   // If you aren't using GitHub pages, you don't need these.
-  organizationName: 'JourneyApps Labs', // Usually your GitHub org/user name.
-  projectName: 'Reactor', // Usually your repo name.
+  organizationName: process.env.GH_ORG,
+  projectName: PROJECT_NAME,
 
   onBrokenLinks: 'throw',
   onBrokenMarkdownLinks: 'warn',

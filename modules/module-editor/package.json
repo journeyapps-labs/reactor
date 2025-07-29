@@ -35,7 +35,7 @@
     "monaco-vim": "^0.4.2",
     "monaco-yaml": "^5.4.0",
     "onigasm": "^2.2.5",
-    "react": "19.1.0",
+    "react": "19.1.1",
     "react-monaco-editor": "^0.59.0"
   },
   "devDependencies": {
