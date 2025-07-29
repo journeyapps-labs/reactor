@@ -6,7 +6,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { Action, ActionEvent } from '../../Action';
 import { System } from '../../../core/System';
 
-export namespace S {
+namespace S {
   export const Download = themed.a`
     border-radius: 10px;
     background: ${(p) => p.theme.combobox.headerBackground};

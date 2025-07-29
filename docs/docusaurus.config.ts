@@ -43,7 +43,7 @@ const config: Config = {
       '@docusaurus/preset-classic',
       {
         docs: {
-          routeBasePath: '/docs',
+          routeBasePath: '/',
           sidebarPath: './sidebars.ts',
           path: 'docs'
         },
@@ -99,12 +99,14 @@ const config: Config = {
       ]
     },
     footer: {
-      style: 'dark',
       copyright: `Copyright © ${new Date().getFullYear()} JourneyApps`
     },
     prism: {
       theme: prismThemes.github,
       darkTheme: prismThemes.dracula
+    },
+    future: {
+      experimental_faster: true
     }
   } satisfies Preset.ThemeConfig
 };

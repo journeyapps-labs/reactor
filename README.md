@@ -11,7 +11,7 @@ __Features:__
 * Drag and drop everything (panels, tree entities, actions)
 * Settings subsystem with forms, controls and pluggable storage
 * Module system to enable and disable macro functionality.
-* soo much more!
+* So much more!
 
 ![](./screenshot1.jpg)
 
