@@ -8,8 +8,8 @@ jobs:
   prettier:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4 # Check out the repository first.
+      - uses: actions/checkout@v4
+
       - uses: Nerixyz/actionsx-prettier@v3-adj
         with:
-          # prettier CLI arguments.
           args: --check --ignore-path .prettierignore --config .prettierrc '**/*.{ts,tsx,js,jsx}'

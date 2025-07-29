@@ -19,7 +19,6 @@ export class CopyPanelURLAction extends Action {
     const myURL = new URL(window.location.href);
     myURL.hash = this.workspaceStore.getActivePanelHash();
     const url = myURL.toString();
-    console.log('URL: ', url);
     copyTextToClipboard(url);
   }
 }

@@ -16,7 +16,6 @@ let path = require.resolve('@journeyapps-labs/lib-reactor-server');
 
 const modules = loadModules({
   env: {
-    REACTOR_API_URL: process.env.REACTOR_API_URL,
     MODULES: process.env.MODULES.split(',')
   }
 });
@@ -30,7 +29,7 @@ const serveIndex = () => {
       return {
         USER_ID: '1234',
         USER_NAME: 'Test User',
-        USER_EMAIL: 'test@user.com'
+        USER_EMAIL: 'test@example.com'
       };
     },
     domTransform: ($) => {
