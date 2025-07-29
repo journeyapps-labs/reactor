@@ -55,11 +55,11 @@
     "platform-detect": "^3.0.1",
     "property-information": "^7.1.0",
     "query-string": "^9.2.2",
-    "react": "19.1.0",
+    "react": "^19.1.1",
     "react-avatar": "^5.0.4",
     "react-color": "^2.19.3",
     "react-day-picker": "^9.8.0",
-    "react-dom": "^19.1.0",
+    "react-dom": "^19.1.1",
     "react-markdown": "^10.1.0",
     "react-slick": "^0.30.3",
     "react-spinners": "^0.17.0",
@@ -84,6 +84,7 @@
     "@types/react-dom": "19.1.6",
     "@types/resize-observer-browser": "^0.1.11",
     "@types/uuid": "10.0.0",
+    "jsdom": "^26.1.0",
     "tslib": "^2.8.1",
     "vitest": "^3.2.4"
   }

@@ -1,4 +1,4 @@
 packages:
-  - 'libs/*'
-  - 'modules/*'
-  - 'demo/*'
+  - './libs/*'
+  - './modules/*'
+  - './demo/*'

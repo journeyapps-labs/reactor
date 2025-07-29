@@ -13,7 +13,7 @@ export interface SmartPositionWidgetProps {
   animate?: boolean;
 }
 
-export namespace S {
+namespace S {
   export const Box = styled.div<{ animate?: boolean }>`
     position: absolute;
     ${(p) => (p.animate ? `transition: top 0.3s, left 0.3s` : '')};

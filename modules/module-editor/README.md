@@ -1,4 +1,16 @@
-# Module editor
+# Reactor editor module
+
+![](https://img.shields.io/npm/v/@journeyapps-labs/reactor-mod-editor)
+
+This module provides editor capability to Reactor with the help of Monaco (the OSS editor found in vs-code).
+
+__Features:__
+* Upload VSCode themes
+* Customize themes
+* Customize editor shortcuts
+* Shortcuts accessible via cmd palette
+
+## Usage with other modules
 
 Make sure to put this in any modules that will need monaco (in the custom webpack.config.js):
 
