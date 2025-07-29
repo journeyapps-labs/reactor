@@ -3,6 +3,7 @@ import type { Config } from '@docusaurus/types';
 import type * as Preset from '@docusaurus/preset-classic';
 import { packages } from './utils/packages';
 import { generateTSDocPlugin } from './utils/packageUtils';
+import 'dotenv/config';
 
 // This runs in Node.js - Don't use client-side code here (browser APIs, JSX...)
 const PROJECT_NAME = process.env.GH_PROJECT_NAME;
