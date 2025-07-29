@@ -52,6 +52,9 @@ jobs:
       - name: Install dependencies
         run: pnpm install
 
+      - name: Build Typescript
+        run: pnpm build:ts
+
       - name: Install docs dependencies
         run: cd docs && pnpm install
 
