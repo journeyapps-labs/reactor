@@ -1,7 +1,6 @@
 import { Container } from '@journeyapps-labs/lib-ioc';
-import { AbstractReactorModule, UXStore, WorkspaceStore } from '@journeyapps-labs/reactor-mod';
+import { AbstractReactorModule, EmptyReactorPanelModel, UXStore, WorkspaceStore } from '@journeyapps-labs/reactor-mod';
 import { DemoBodyWidget } from './BodyWidget';
-import { EmptyReactorPanelModel } from '@journeyapps-labs/reactor-mod/dist';
 
 export class ReactorDemoModule extends AbstractReactorModule {
   constructor() {
