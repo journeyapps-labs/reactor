@@ -24,6 +24,9 @@ jobs:
           version: 10
           run_install: false
 
+      - name: Add NPM auth
+        run: echo "//registry.npmjs.org/:_authToken=${{secrets.NPM_TOKEN}}" >> ~/.npmrc
+
       - name: Get pnpm store directory
         shell: bash
         run: |
