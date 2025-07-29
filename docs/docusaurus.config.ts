@@ -96,7 +96,7 @@ const config: Config = {
       ]
     },
     footer: {
-      copyright: `Copyright © ${new Date().getFullYear()} JourneyApps`
+      copyright: `Copyright © ${new Date().getFullYear()} Journey Mobile, Inc.`
     },
     prism: {
       theme: prismThemes.github,
