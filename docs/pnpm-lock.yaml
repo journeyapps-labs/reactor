@@ -43,8 +43,8 @@ importers:
         specifier: 3.8.1
         version: 3.8.1(@swc/core@1.13.3)(acorn@8.15.0)(react-dom@19.1.1(react@19.1.1))(react@19.1.1)
       '@journeyapps-labs/common-docs':
-        specifier: dev
-        version: 0.0.0-dev-20250730201525(@algolia/client-search@5.35.0)(@docusaurus/faster@3.8.1(@docusaurus/types@3.8.1(@swc/core@1.13.3)(acorn@8.15.0)(react-dom@19.1.1(react@19.1.1))(react@19.1.1)))(@mdx-js/react@3.1.0(@types/react@19.1.9)(react@19.1.1))(@rspack/core@1.4.10)(@swc/core@1.13.3)(@types/react@19.1.9)(acorn@8.15.0)(react-dom@19.1.1(react@19.1.1))(react@19.1.1)(search-insights@2.17.3)(typescript@5.6.3)
+        specifier: ^0.0.2
+        version: 0.0.2(@algolia/client-search@5.35.0)(@docusaurus/faster@3.8.1(@docusaurus/types@3.8.1(@swc/core@1.13.3)(acorn@8.15.0)(react-dom@19.1.1(react@19.1.1))(react@19.1.1)))(@mdx-js/react@3.1.0(@types/react@19.1.9)(react@19.1.1))(@rspack/core@1.4.10)(@swc/core@1.13.3)(@types/react@19.1.9)(acorn@8.15.0)(react-dom@19.1.1(react@19.1.1))(react@19.1.1)(search-insights@2.17.3)(typescript@5.6.3)
       docusaurus-plugin-typedoc:
         specifier: ^1.4.0
         version: 1.4.0(typedoc-plugin-markdown@4.7.1(typedoc@0.28.8(typescript@5.6.3)))
@@ -1201,8 +1201,8 @@ packages:
     resolution: {integrity: sha512-u3UPsIilWKOM3F9CXtrG8LEJmNxwoCQC/XVj4IKYXvvpx7QIi/Kg1LI5uDmDpKlac62NUtX7eLjRh+jVZcLOzw==}
     engines: {node: ^14.15.0 || ^16.10.0 || >=18.0.0}
 
-  '@journeyapps-labs/common-docs@0.0.0-dev-20250730201525':
-    resolution: {integrity: sha512-7WWYVkfe9R61KnLzopcryvkoyQJcgqep077e3t1If30YoXM52MSQCoNLlYqz2GyJ3LOouuY9DTK1vZCh9bUwew==}
+  '@journeyapps-labs/common-docs@0.0.2':
+    resolution: {integrity: sha512-KKWUqx/MVN3QRX8Mi+Sfco6f8qHs4VK/ATiLut09YI373xjqPwHO+gzNdkGVOx2/ic/OcDG0K5rNPyBj0+xfXQ==}
 
   '@jridgewell/gen-mapping@0.3.12':
     resolution: {integrity: sha512-OuLGC46TjB5BbN1dH8JULVVZY4WTdkF7tV9Ys6wLL1rubZnCMstOhNHueU5bLCrnRuDhKPDM4g6sw4Bel5Gzqg==}
@@ -7198,7 +7198,7 @@ snapshots:
       '@types/yargs': 17.0.33
       chalk: 4.1.2
 
-  '@journeyapps-labs/common-docs@0.0.0-dev-20250730201525(@algolia/client-search@5.35.0)(@docusaurus/faster@3.8.1(@docusaurus/types@3.8.1(@swc/core@1.13.3)(acorn@8.15.0)(react-dom@19.1.1(react@19.1.1))(react@19.1.1)))(@mdx-js/react@3.1.0(@types/react@19.1.9)(react@19.1.1))(@rspack/core@1.4.10)(@swc/core@1.13.3)(@types/react@19.1.9)(acorn@8.15.0)(react-dom@19.1.1(react@19.1.1))(react@19.1.1)(search-insights@2.17.3)(typescript@5.6.3)':
+  '@journeyapps-labs/common-docs@0.0.2(@algolia/client-search@5.35.0)(@docusaurus/faster@3.8.1(@docusaurus/types@3.8.1(@swc/core@1.13.3)(acorn@8.15.0)(react-dom@19.1.1(react@19.1.1))(react@19.1.1)))(@mdx-js/react@3.1.0(@types/react@19.1.9)(react@19.1.1))(@rspack/core@1.4.10)(@swc/core@1.13.3)(@types/react@19.1.9)(acorn@8.15.0)(react-dom@19.1.1(react@19.1.1))(react@19.1.1)(search-insights@2.17.3)(typescript@5.6.3)':
     dependencies:
       '@docusaurus/plugin-content-docs': 3.8.1(@docusaurus/faster@3.8.1(@docusaurus/types@3.8.1(@swc/core@1.13.3)(acorn@8.15.0)(react-dom@19.1.1(react@19.1.1))(react@19.1.1)))(@mdx-js/react@3.1.0(@types/react@19.1.9)(react@19.1.1))(@rspack/core@1.4.10)(@swc/core@1.13.3)(acorn@8.15.0)(react-dom@19.1.1(react@19.1.1))(react@19.1.1)(typescript@5.6.3)
       '@docusaurus/preset-classic': 3.8.1(@algolia/client-search@5.35.0)(@docusaurus/faster@3.8.1(@docusaurus/types@3.8.1(@swc/core@1.13.3)(acorn@8.15.0)(react-dom@19.1.1(react@19.1.1))(react@19.1.1)))(@mdx-js/react@3.1.0(@types/react@19.1.9)(react@19.1.1))(@rspack/core@1.4.10)(@swc/core@1.13.3)(@types/react@19.1.9)(acorn@8.15.0)(react-dom@19.1.1(react@19.1.1))(react@19.1.1)(search-insights@2.17.3)(typescript@5.6.3)
