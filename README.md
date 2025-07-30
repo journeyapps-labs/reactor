@@ -1,9 +1,11 @@
 ## Reactor
 
-A framework for building ambitious web based applications. Reactor is the framework that powers [OXIDE (JourneyApps Platform IDE)](https://oxide.journeyapps.com), 
-the [PowerSync dashboard](https://powersync.journeyapps.com) and other internal administration systems within JourneyApps.
+A framework for building ambitious web based applications. Reactor is the framework that powers OXIDE (JourneyApps Platform IDE), 
+the PowerSync Dashboard and other internal administration systems within JourneyApps.
 
 Docs: [https://journeyapps-labs.github.io/reactor](https://journeyapps-labs.github.io/reactor) (WIP)
+
+News: [https://journeyapps-labs.github.io/site/blog/tags/reactor](https://journeyapps-labs.github.io/site/blog/tags/reactor)
 
 __Features:__
 * Desktop-grade multi-panel workspace support with drag and drop, tabs, tray and floating windows!
