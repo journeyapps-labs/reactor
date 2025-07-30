@@ -5,7 +5,7 @@ the PowerSync Dashboard and other internal administration systems within Journey
 
 Docs: [https://journeyapps-labs.github.io/reactor](https://journeyapps-labs.github.io/reactor) (WIP)
 
-News: [https://journeyapps-labs.github.io/site/blog/tags/reactor](https://journeyapps-labs.github.io/site/blog/tags/reactor)
+News: [https://labs.journeyapps.com/blog/tags/reactor](https://labs.journeyapps.com/blog/tags/reactor)
 
 __Features:__
 * Desktop-grade multi-panel workspace support with drag and drop, tabs, tray and floating windows!
