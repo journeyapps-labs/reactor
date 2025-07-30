@@ -18,16 +18,13 @@ const config: Config = {
     ...base_config.themeConfig,
     image: 'img/labs.png',
     navbar: {
+      // @ts-ignore
+      ...base_config.themeConfig.navbar,
       title: 'Reactor',
       logo: {
         alt: 'Labs Logo',
         src: 'img/labs.png'
-      },
-      items: [
-        // @ts-ignore
-        ...base_config.themeConfig.navbar.items,
-        { to: '/blog', label: 'Blog', position: 'left' }
-      ]
+      }
     }
   }
 };
