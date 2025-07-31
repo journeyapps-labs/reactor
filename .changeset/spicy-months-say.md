@@ -1,5 +1,5 @@
 ---
-'@journeyapps-labs/lib-reactor-builder': minor
+'@journeyapps-labs/lib-reactor-server': minor
 ---
 
 export PWA constant
