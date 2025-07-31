@@ -17,7 +17,7 @@ export const getPWAConfig = (modules: ReactorModule[]): ReactorModulePWAConfig |
   return pwa;
 };
 
-const enum PWA {
+export const enum PWA {
   MANIFEST = 'webmanifest.json',
   WORKER_LOADER = 'load-worker.js',
   SERVICE_WORKER = 'service-worker.js'
