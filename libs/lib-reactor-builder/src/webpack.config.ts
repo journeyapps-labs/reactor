@@ -10,7 +10,7 @@ export const generateCommonWebpack = (dir: string): Configuration => {
   const p = require(path.join(dir, 'package.json'));
   const reactor = require(path.join(dir, 'reactor.config.json'));
   const production = process.env.NODE_ENV === 'production';
-  const is_reactor_core = p.name.endsWith('reactor-mod');
+  const is_reactor_core = p.name === '@journeyapps-labs/reactor-mod';
 
   // check for dependent reactor modules
   const externals: ExternalItem[] = Object.keys(p.dependencies).filter((depName) => {
