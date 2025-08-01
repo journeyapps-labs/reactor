@@ -18,9 +18,5 @@
   },
   "devDependencies": {
     "vitest": "^0.33.0"
-  },
-  "files": [
-    "dist/src",
-    "dist/@types"
-  ]
+  }
 }
