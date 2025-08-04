@@ -1,4 +1,4 @@
-import { Container } from '@journeyapps-labs/lib-ioc';
+import { Container } from '@journeyapps-labs/common-ioc';
 import { AbstractReactorModule, RawBodyWidget, UXStore, WorkspaceStore } from '@journeyapps-labs/reactor-mod';
 
 export class ReactorCustomLayout extends AbstractReactorModule {

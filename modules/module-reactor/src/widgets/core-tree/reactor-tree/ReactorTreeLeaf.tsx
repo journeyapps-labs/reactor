@@ -1,4 +1,4 @@
-import { TreeEntity } from '@journeyapps-labs/lib-reactor-tree';
+import { TreeEntity } from '@journeyapps-labs/common-tree';
 import * as React from 'react';
 import { useEffect } from 'react';
 import { CoreTreeWidgetProps } from '../CoreTreeWidget';

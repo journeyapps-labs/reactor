@@ -1,11 +1,11 @@
 import { action, autorun, IObservableArray, observable } from 'mobx';
-import { BaseListener, BaseObserver } from '@journeyapps-labs/lib-reactor-utils';
+import { BaseObserver } from '@journeyapps-labs/common-utils';
 
 export interface SearchResultEntry {
   key: string;
 }
 
-export interface SearchResultListener extends BaseListener {
+export interface SearchResultListener {
   /**
    * Called when the search results are disposed of
    */

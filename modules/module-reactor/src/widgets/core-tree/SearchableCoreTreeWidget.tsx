@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { useEffect, useState } from 'react';
 import { CoreTreeWidget, CoreTreeWidgetProps } from './CoreTreeWidget';
-import { TreeEntity, TreeNode } from '@journeyapps-labs/lib-reactor-tree';
+import { TreeEntity, TreeNode } from '@journeyapps-labs/common-tree';
 import { createSearchEventMatcher, SearchEvent, SearchEventMatch } from '@journeyapps-labs/lib-reactor-search';
 import { observer } from 'mobx-react';
 import { isBaseReactorTree } from './reactor-tree/reactor-tree-utils';

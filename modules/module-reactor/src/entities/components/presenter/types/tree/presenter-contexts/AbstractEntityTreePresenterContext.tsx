@@ -1,6 +1,5 @@
 import React from 'react';
 import _ from 'lodash';
-import { BaseObserverInterface } from '@journeyapps-labs/lib-reactor-utils';
 import { CoreTreeWidget, ReactorTreeEntity, ReactorTreeNode } from '../../../../../../widgets';
 import {
   AbstractPresenterContext,
@@ -21,8 +20,9 @@ import { inject } from '../../../../../../inversify.config';
 import { ActionSource } from '../../../../../../actions';
 import { System } from '../../../../../../core/System';
 import { SetControl } from '../../../../../../controls/SetControl';
-import { TreeNode } from '@journeyapps-labs/lib-reactor-tree';
+import { TreeNode } from '@journeyapps-labs/common-tree';
 import { EntityReactorNode } from '../EntityReactorNode';
+import { BaseObserverInterface } from '@journeyapps-labs/common-utils';
 
 export interface GenerateTreeOptions<T> {
   events?: BaseObserverInterface<SelectEntityListener<T>>;

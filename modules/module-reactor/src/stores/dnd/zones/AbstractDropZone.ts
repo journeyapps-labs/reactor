@@ -1,7 +1,7 @@
-import { BaseListener, BaseObserver } from '@journeyapps-labs/lib-reactor-utils';
+import { BaseObserver } from '@journeyapps-labs/common-utils';
 import { MousePosition } from '../../../layers/combo/SmartPositionWidget';
 
-export interface DropZoneListener extends BaseListener {
+export interface DropZoneListener {
   highlight: (highlight: boolean) => any;
 }
 

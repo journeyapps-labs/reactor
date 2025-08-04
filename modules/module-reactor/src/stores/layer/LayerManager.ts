@@ -1,7 +1,7 @@
 import { v4 } from 'uuid';
-import { makeObservable, observable } from 'mobx';
+import { observable } from 'mobx';
 import * as _ from 'lodash';
-import { BaseListener, BaseObserver } from '@journeyapps-labs/lib-reactor-utils';
+import { BaseObserver } from '@journeyapps-labs/common-utils';
 
 export interface LayerRenderEvent {
   index: number;
@@ -15,7 +15,7 @@ export interface LayerOptions {
   alwaysOnTop?: boolean;
 }
 
-export interface LayerListener extends BaseListener {
+export interface LayerListener {
   dispose: () => any;
 }
 

@@ -1,6 +1,5 @@
 import { EntityDefinitionComponent } from '../../EntityDefinitionComponent';
 import { ReactorIcon } from '../../../widgets';
-import { BaseListener } from '@journeyapps-labs/lib-reactor-utils';
 
 export interface EntityDescription {
   simpleName: string;
@@ -14,7 +13,7 @@ export interface EntityDescriberComponentOptions<T> {
   describe: (entity: T) => EntityDescription;
 }
 
-export interface EntityDescriberComponentListener extends BaseListener {
+export interface EntityDescriberComponentListener {
   preferred: () => any;
 }
 

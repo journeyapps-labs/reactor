@@ -2,8 +2,8 @@ import { KeybindingsRegistry as K2 } from 'monaco-editor/esm/vs/platform/keybind
 import { EditorContextKeys } from 'monaco-editor/esm/vs/editor/common/editorContextKeys.js';
 import { ContextKey, Keybinding } from './definitions';
 import * as _ from 'lodash';
-import { BaseObserver } from '@journeyapps-labs/lib-reactor-utils';
 import { compareChords } from './utils';
+import { BaseObserver } from '@journeyapps-labs/common-utils';
 
 export interface ResolvedKeybindingItem {
   command: string;

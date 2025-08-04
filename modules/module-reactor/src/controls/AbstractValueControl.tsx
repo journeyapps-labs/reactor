@@ -1,10 +1,10 @@
-import { BaseListener, BaseObserver } from '@journeyapps-labs/lib-reactor-utils';
 import { ComboBoxItem } from '../stores/combo/ComboBoxDirectives';
 import { Btn } from '../definitions/common';
 import { observable } from 'mobx';
 import { AbstractControl, RepresentAsComboBoxItemsEvent, RepresentAsControlOptions } from './AbstractControl';
+import { BaseObserver } from '@journeyapps-labs/common-utils';
 
-export interface AbstractValueControlListener<Value> extends BaseListener {
+export interface AbstractValueControlListener<Value> {
   valueChanged: (value: Value) => any;
   optionsUpdated?: () => any;
 }

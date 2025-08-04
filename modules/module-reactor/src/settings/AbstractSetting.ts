@@ -1,7 +1,8 @@
-import { makeObservable, observable } from 'mobx';
+import { observable } from 'mobx';
 import * as uuid from 'uuid';
 import * as _ from 'lodash';
-import { BaseListener, BaseObserver, Logger } from '@journeyapps-labs/lib-reactor-utils';
+import { BaseObserver } from '@journeyapps-labs/common-utils';
+import { Logger } from '@journeyapps-labs/common-logger';
 
 export interface AbstractSettingOptions {
   key: string;
@@ -12,7 +13,7 @@ export interface AbstractSettingOptions {
   serializeID?: string;
 }
 
-export interface AbstractSettingListener extends BaseListener {
+export interface AbstractSettingListener {
   updated();
 }
 
@@ -33,7 +34,9 @@ export abstract class AbstractSetting<
     super();
     this.options = options;
     this.initialized = false;
-    this.logger = new Logger(`control: ${options.key}`);
+    this.logger = new Logger({
+      name: `control: ${options.key}`
+    });
     this.deserialized = false;
     this.promiseResolvers = {};
   }

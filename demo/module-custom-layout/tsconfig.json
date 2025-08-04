@@ -16,9 +16,6 @@
       "path": "../../libs/lib-reactor-utils"
     },
     {
-      "path": "../../libs/lib-ioc"
-    },
-    {
       "path": "../../modules/module-reactor"
     }
   ]

@@ -1,4 +1,3 @@
-import { BaseObserver } from '@journeyapps-labs/lib-reactor-utils';
 import * as React from 'react';
 import { Btn } from '../../definitions/common';
 import { DialogWidget } from '../../layers/dialog/DialogWidget';
@@ -6,6 +5,7 @@ import { observer } from 'mobx-react';
 import { observable } from 'mobx';
 import styled from '@emotion/styled';
 import { v4 } from 'uuid';
+import { BaseObserver } from '@journeyapps-labs/common-utils';
 
 export interface AbstractDialogDirectiveListener {
   disposed: (event: { canceled: boolean }) => any;

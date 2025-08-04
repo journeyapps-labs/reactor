@@ -1,13 +1,13 @@
 import { FormInput } from './FormInput';
 import * as React from 'react';
-import { BaseListener, BaseObserver } from '@journeyapps-labs/lib-reactor-utils';
 import styled from '@emotion/styled';
+import { BaseObserver } from '@journeyapps-labs/common-utils';
 
 export interface FormEvent {
   input: FormInput;
 }
 
-export interface FormModelListener extends BaseListener {
+export interface FormModelListener {
   valueChanged: (event: FormEvent) => any;
   errorsChanged: (event: FormEvent) => any;
 }

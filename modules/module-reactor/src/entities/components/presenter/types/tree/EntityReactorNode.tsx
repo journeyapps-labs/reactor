@@ -3,7 +3,6 @@ import * as React from 'react';
 import { EntityDefinition } from '../../../../EntityDefinition';
 import { ReactorEntityDnDWrapper } from './widgets/ReactorEntityDnDWrapperWidget';
 import { SelectEntityListener } from '../../EntityPresenterComponent';
-import { BaseObserverInterface } from '@journeyapps-labs/lib-reactor-utils';
 import { ReactorEntityWrapperWidget } from './widgets/ReactorEntityWrapperWidget';
 import { DescendantEntityProviderComponent } from '../../../exposer/DescendantEntityProviderComponent';
 import { AbstractEntityTreePresenterContext } from './presenter-contexts/AbstractEntityTreePresenterContext';
@@ -11,7 +10,8 @@ import { autorun, IReactionDisposer } from 'mobx';
 import { EntityTreePresenterComponent } from './EntityTreePresenterComponent';
 import { System } from '../../../../../core/System';
 import { inject } from '../../../../../inversify.config';
-import { TreeNode } from '@journeyapps-labs/lib-reactor-tree';
+import { TreeNode } from '@journeyapps-labs/common-tree';
+import { BaseObserverInterface } from '@journeyapps-labs/common-utils';
 
 export class DescendentContext<E> {
   nodes: Set<ReactorTreeEntity>;

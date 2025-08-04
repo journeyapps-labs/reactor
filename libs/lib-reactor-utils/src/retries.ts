@@ -1,6 +1,8 @@
-import { createLogger } from './Logger';
+import { Logger } from '@journeyapps-labs/common-logger';
 
-const logger = createLogger('RETRY_HANDLER');
+const logger = new Logger({
+  name: 'RETRY_HANDLER'
+});
 
 export const retryWithBackoff = async <T>(
   handler: () => Promise<T>,

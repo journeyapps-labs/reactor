@@ -1,4 +1,4 @@
-import { Container } from '@journeyapps-labs/lib-ioc';
+import { Container } from '@journeyapps-labs/common-ioc';
 import { AbstractReactorModule, EmptyReactorPanelModel, UXStore, WorkspaceStore } from '@journeyapps-labs/reactor-mod';
 import { DemoBodyWidget } from './BodyWidget';
 

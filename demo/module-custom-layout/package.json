@@ -9,7 +9,7 @@
   },
   "dependencies": {
     "@journeyapps-labs/reactor-mod": "workspace:^",
-    "@journeyapps-labs/lib-ioc": "workspace:^",
+    "@journeyapps-labs/common-ioc": "^1.0.0",
     "react": "19.1.1",
     "@emotion/styled": "^11.14.1"
   },

@@ -61,7 +61,7 @@ import { SearchStore } from './stores/SearchStore';
 import { SimpleEntitySearchEngineComponent } from './entities/components/search/SimpleEntitySearchEngineComponent';
 import { KeyboardStore } from './stores/KeyboardStore';
 import { patchLightThemeEntityColors } from './stores/themes/built-in-themes/light';
-import { Container } from '@journeyapps-labs/lib-ioc';
+import { Container } from '@journeyapps-labs/common-ioc';
 import { DateFormatVisorMetadata } from './visor/DateFormatVisorMetadata';
 import { DateTimezoneVisorMetadata } from './visor/DateTimezoneVisorMetadata';
 import { DialogStore2 } from './stores/dialog2/DialogStore2';

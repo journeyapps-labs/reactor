@@ -1,7 +1,7 @@
 import { EntityDefinition } from './EntityDefinition';
-import { BaseListener, BaseObserver } from '@journeyapps-labs/lib-reactor-utils';
+import { BaseObserver } from '@journeyapps-labs/common-utils';
 
-export abstract class EntityDefinitionComponent<T extends BaseListener = BaseListener> extends BaseObserver<T> {
+export abstract class EntityDefinitionComponent<T = any> extends BaseObserver<T> {
   definition: EntityDefinition;
 
   constructor(public type: string) {

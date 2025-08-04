@@ -11,12 +11,13 @@ import * as React from 'react';
 import { ShortcutChord } from '../stores/shortcuts/Shortcut';
 import { ComboBoxItem } from '../stores/combo/ComboBoxDirectives';
 import { SystemInterface } from '../core/SystemInterface';
-import { BaseListener, BaseObserver, Logger } from '@journeyapps-labs/lib-reactor-utils';
 import * as _ from 'lodash';
 import { ActionValidatorContext } from './validators/ActionValidatorContext';
 import { ActionButtonControl, ActionButtonWidget, EventType } from '../controls/ActionButtonControl';
 import { ActionMetaWidget } from './ActionMetaWidget';
 import { processCallbackWithValidation } from '../hooks/useValidator';
+import { BaseObserver } from '@journeyapps-labs/common-utils';
+import { Logger } from '@journeyapps-labs/common-logger';
 
 export interface SerializedAction {
   _action: string;
@@ -92,7 +93,7 @@ export interface ActionEvent {
   fireBehaviorChecks?: boolean;
 }
 
-export interface ActionListener<E extends ActionEvent = ActionEvent> extends BaseListener {
+export interface ActionListener<E extends ActionEvent = ActionEvent> {
   willFire: (event: { payload: Partial<E> }) => Promise<void>;
   didFire: (event: { payload: Partial<E>; status: LoadingDirectiveState; success: boolean }) => void;
   cancelled: (event: { payload: Partial<E> }) => void;
@@ -126,7 +127,9 @@ export abstract class Action<
       ...options,
       hotkeys: options.hotkeys || []
     };
-    this.logger = new Logger(options.name);
+    this.logger = new Logger({
+      name: options.name
+    });
     this.singletonValidationContext = null;
   }
 

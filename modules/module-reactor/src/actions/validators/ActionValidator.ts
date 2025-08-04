@@ -1,4 +1,4 @@
-import { BaseObserver } from '@journeyapps-labs/lib-reactor-utils';
+import { BaseObserver } from '@journeyapps-labs/common-utils';
 import { observable } from 'mobx';
 
 export enum PassiveActionValidationState {

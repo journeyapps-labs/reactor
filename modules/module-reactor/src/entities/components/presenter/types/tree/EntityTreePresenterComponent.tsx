@@ -1,4 +1,4 @@
-import { TreeSerialized } from '@journeyapps-labs/lib-reactor-tree';
+import { TreeSerialized } from '@journeyapps-labs/common-tree';
 import {
   EntityPresenterComponent,
   EntityPresenterComponentOptions,

@@ -1,4 +1,4 @@
-import { TreeEntity, TreeNode, TreeNodeListener } from '@journeyapps-labs/lib-reactor-tree';
+import { TreeEntity, TreeNode, TreeNodeListener } from '@journeyapps-labs/common-tree';
 import { TreeWidget } from '../../tree/TreeWidget';
 import * as _ from 'lodash';
 import * as React from 'react';
