@@ -3,6 +3,7 @@ import * as uuid from 'uuid';
 import * as _ from 'lodash';
 import { BaseObserver } from '@journeyapps-labs/common-utils';
 import { Logger } from '@journeyapps-labs/common-logger';
+import { createLogger } from '../core/logging';
 
 export interface AbstractSettingOptions {
   key: string;
@@ -34,9 +35,7 @@ export abstract class AbstractSetting<
     super();
     this.options = options;
     this.initialized = false;
-    this.logger = new Logger({
-      name: `control: ${options.key}`
-    });
+    this.logger = createLogger(`control: ${options.key}`);
     this.deserialized = false;
     this.promiseResolvers = {};
   }

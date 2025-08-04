@@ -3,6 +3,7 @@ import { AbstractSetting } from '../settings/AbstractSetting';
 import { observable } from 'mobx';
 import { Logger } from '@journeyapps-labs/common-logger';
 import { BaseObserver } from '@journeyapps-labs/common-utils';
+import { createLogger } from '../core/logging';
 
 export interface AbstractStoreOptions<T> {
   name: string;
@@ -25,9 +26,7 @@ export class AbstractStore<T = any, L extends AbstractStoreListener = AbstractSt
   constructor(protected options: AbstractStoreOptions<T>) {
     super();
     this.initialized = false;
-    this.logger = new Logger({
-      name: `STORE:${options.name}`
-    });
+    this.logger = createLogger(`STORE:${options.name}`);
     this._controls = new Set();
     this.bootstrapSerializer();
   }

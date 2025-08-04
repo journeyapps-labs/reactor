@@ -18,6 +18,7 @@ import { ActionMetaWidget } from './ActionMetaWidget';
 import { processCallbackWithValidation } from '../hooks/useValidator';
 import { BaseObserver } from '@journeyapps-labs/common-utils';
 import { Logger } from '@journeyapps-labs/common-logger';
+import { createLogger } from '../core/logging';
 
 export interface SerializedAction {
   _action: string;
@@ -127,9 +128,7 @@ export abstract class Action<
       ...options,
       hotkeys: options.hotkeys || []
     };
-    this.logger = new Logger({
-      name: options.name
-    });
+    this.logger = createLogger(options.name);
     this.singletonValidationContext = null;
   }
 
