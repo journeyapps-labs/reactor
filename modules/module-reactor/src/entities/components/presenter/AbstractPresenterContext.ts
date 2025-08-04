@@ -1,11 +1,11 @@
 import _ from 'lodash';
-import { BaseObserver, BaseObserverInterface } from '@journeyapps-labs/lib-reactor-utils';
 import { SearchEvent } from '@journeyapps-labs/lib-reactor-search';
 import { EntityPresenterComponent, SelectEntityListener } from './EntityPresenterComponent';
-import { makeObservable, observable } from 'mobx';
+import { observable } from 'mobx';
 import { ReactorIcon } from '../../../widgets';
 import { AbstractValueControl } from '../../../controls/AbstractValueControl';
 import { ButtonControl } from '../../../controls/ButtonControl';
+import { BaseObserver, BaseObserverInterface } from '@journeyapps-labs/common-utils';
 
 export interface RenderCollectionOptions<T> {
   entities: T[];

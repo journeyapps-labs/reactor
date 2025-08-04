@@ -1,10 +1,10 @@
 import * as React from 'react';
-import { BaseListener, BaseObserver } from '@journeyapps-labs/lib-reactor-utils';
 import { MousePosition } from '../../widgets';
 import { ComboBoxItem } from '../combo/ComboBoxDirectives';
 import { Btn } from '../../definitions/common';
+import { BaseObserver } from '@journeyapps-labs/common-utils';
 
-export interface ComboBoxDirectiveListener extends BaseListener {
+export interface ComboBoxDirectiveListener {
   dismissed: () => any;
   selectedItemsChanged: () => any;
   searchChanged?: () => any;

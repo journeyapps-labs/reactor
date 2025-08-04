@@ -1,7 +1,7 @@
 import { ReactorTreeNode } from './ReactorTreeNode';
 import { ReactorTreeLeaf } from './ReactorTreeLeaf';
 import { IBaseReactorTree, ReactorTreeProps } from './PatchTree';
-import { TreeEntityInterface } from '@journeyapps-labs/lib-reactor-tree';
+import { TreeEntityInterface } from '@journeyapps-labs/common-tree';
 import { SearchEvent, SearchEventMatch } from '@journeyapps-labs/lib-reactor-search';
 
 export type ReactorTreeEntity = ReactorTreeNode | ReactorTreeLeaf;

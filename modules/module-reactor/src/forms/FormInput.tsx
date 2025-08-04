@@ -1,9 +1,9 @@
-import { BaseListener, BaseObserver } from '@journeyapps-labs/lib-reactor-utils';
 import * as React from 'react';
 import { useEffect } from 'react';
 import { InputContainerWidget } from '../widgets/forms/InputContainerWidget';
 import styled from '@emotion/styled';
 import { useForceUpdate } from '../hooks/useForceUpdate';
+import { BaseObserver } from '@journeyapps-labs/common-utils';
 
 export interface FormInputOptions<T = any> {
   label: string;
@@ -23,7 +23,7 @@ export interface FormInputRenderOptions {
   inline: boolean;
 }
 
-export interface FormInputListener<T = any> extends BaseListener {
+export interface FormInputListener<T = any> {
   valueChanged: (event: { prev_value: T; current_value: T }) => any;
   errorChanged: (event: { error: string | null }) => any;
   removed: () => any;

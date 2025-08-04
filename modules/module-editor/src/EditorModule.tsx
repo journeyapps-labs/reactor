@@ -7,7 +7,7 @@ import {
   ThemeStore,
   WorkspaceStore
 } from '@journeyapps-labs/reactor-mod';
-import { Container } from '@journeyapps-labs/lib-ioc';
+import { Container } from '@journeyapps-labs/common-ioc';
 import { MonacoStore } from './stores/MonacoStore';
 import { MonacoShortcutHandler } from './shortcuts/MonacoShortcutHandler';
 import { MonacoCommandPalletSearchEngine } from './MonacoCommandPalletSearchEngine';

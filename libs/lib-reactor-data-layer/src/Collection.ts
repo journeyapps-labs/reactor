@@ -1,5 +1,5 @@
 import { IObservableArray, observable } from 'mobx';
-import { BaseObserver } from '@journeyapps-labs/lib-reactor-utils';
+import { BaseObserver } from '@journeyapps-labs/common-utils';
 
 export interface CollectionListener {
   cleared: () => any;

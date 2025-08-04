@@ -1,8 +1,8 @@
+import { BaseObserver } from '@journeyapps-labs/common-utils';
 import { ComboBoxDirective } from './ComboBoxDirective';
-import { makeObservable, observable } from 'mobx';
-import { BaseListener, BaseObserver } from '@journeyapps-labs/lib-reactor-utils';
+import { observable } from 'mobx';
 
-export interface ComboBoxStore2Listener extends BaseListener {
+export interface ComboBoxStore2Listener {
   directiveAdded: (directive: ComboBoxDirective) => any;
 }
 

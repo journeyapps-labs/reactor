@@ -17,12 +17,6 @@
       "path": "./libs/lib-reactor-server"
     },
     {
-      "path": "./libs/lib-reactor-tree"
-    },
-    {
-      "path": "./libs/lib-ioc"
-    },
-    {
       "path": "./modules/module-reactor"
     },
     {

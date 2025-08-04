@@ -1,7 +1,9 @@
-import { BaseListener, BaseObserver, Logger } from '@journeyapps-labs/lib-reactor-utils';
 import { AbstractSerializer } from './serializers/AbstractSerializer';
 import { AbstractSetting } from '../settings/AbstractSetting';
 import { observable } from 'mobx';
+import { Logger } from '@journeyapps-labs/common-logger';
+import { BaseObserver } from '@journeyapps-labs/common-utils';
+import { createLogger } from '../core/logging';
 
 export interface AbstractStoreOptions<T> {
   name: string;
@@ -9,7 +11,7 @@ export interface AbstractStoreOptions<T> {
   listenToExternalChanges?: boolean;
 }
 
-export interface AbstractStoreListener extends BaseListener {
+export interface AbstractStoreListener {
   initialized: () => any;
 }
 
@@ -24,7 +26,7 @@ export class AbstractStore<T = any, L extends AbstractStoreListener = AbstractSt
   constructor(protected options: AbstractStoreOptions<T>) {
     super();
     this.initialized = false;
-    this.logger = new Logger(`STORE:${options.name}`);
+    this.logger = createLogger(`STORE:${options.name}`);
     this._controls = new Set();
     this.bootstrapSerializer();
   }

@@ -3,10 +3,10 @@ import { Btn } from '../definitions/common';
 import * as uuid from 'uuid';
 import * as _ from 'lodash';
 import { ComboBoxItem } from './combo/ComboBoxDirectives';
-import { BaseObserver, copyTextToClipboard } from '@journeyapps-labs/lib-reactor-utils';
 import { FormModel } from '../forms';
 import { InputDialogType } from '../layers/dialog/InputDialogWidget';
 import * as React from 'react';
+import { BaseObserver } from '@journeyapps-labs/common-utils';
 
 export enum DialogType {
   MESSAGE = 'message',

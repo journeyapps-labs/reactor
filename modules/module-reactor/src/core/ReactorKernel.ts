@@ -6,10 +6,11 @@ configure({
 
 import { AbstractReactorModule } from './AbstractReactorModule';
 import { ioc } from '../inversify.config';
-import { Logger } from '@journeyapps-labs/lib-reactor-utils';
+import { Logger } from '@journeyapps-labs/common-logger';
 import { createRoot } from 'react-dom/client';
 import * as React from 'react';
 import { UXStore } from '../stores/UXStore';
+import { createLogger } from './logging';
 
 export class ReactorKernel {
   logger: Logger;
@@ -17,7 +18,7 @@ export class ReactorKernel {
 
   constructor() {
     this.modules = [];
-    this.logger = new Logger('REACTOR_KERNEL');
+    this.logger = createLogger('REACTOR_KERNEL');
   }
 
   registerModule(module: AbstractReactorModule) {

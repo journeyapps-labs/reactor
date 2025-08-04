@@ -16,13 +16,7 @@
       "path": "../../libs/lib-reactor-utils"
     },
     {
-      "path": "../../libs/lib-ioc"
-    },
-    {
       "path": "../../libs/lib-reactor-search"
-    },
-    {
-      "path": "../../libs/lib-reactor-tree"
     }
   ]
 }

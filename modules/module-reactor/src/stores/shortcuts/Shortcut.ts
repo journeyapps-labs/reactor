@@ -1,7 +1,7 @@
 import { ShortcutHandler, ShortcutHandlerAction } from './ShortcutHandler';
 import { observable, toJS } from 'mobx';
-import { BaseListener, BaseObserver } from '@journeyapps-labs/lib-reactor-utils';
 import * as _ from 'lodash';
+import { BaseObserver } from '@journeyapps-labs/common-utils';
 
 export enum keyType {
   SHIFT = 'shift',
@@ -16,7 +16,7 @@ export interface ShortcutKey {
   key?: string;
 }
 
-export interface ShortcutListener extends BaseListener {
+export interface ShortcutListener {
   deleted?: () => any;
   changed?: () => any;
 }

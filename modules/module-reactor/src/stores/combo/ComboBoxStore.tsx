@@ -17,7 +17,7 @@ import {
   UISearchEngineDirective
 } from './ComboBoxDirectives';
 import { PassiveActionValidationState } from '../../actions/validators/ActionValidator';
-import { BaseListener, BaseObserver } from '@journeyapps-labs/lib-reactor-utils';
+import { BaseObserver } from '@journeyapps-labs/common-utils';
 
 export interface ComboBoxOptions {
   title?: string;
@@ -37,7 +37,7 @@ export interface ComboBoxItemSelectedEvent {
   preventDefault: () => any;
 }
 
-export interface ComboBoxStoreListener extends BaseListener {
+export interface ComboBoxStoreListener {
   itemsSelected?: (event: ComboBoxItemSelectedEvent) => any;
   itemsShown?: () => any;
 }

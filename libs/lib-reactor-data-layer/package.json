@@ -19,6 +19,7 @@
   "dependencies": {
     "@journeyapps-labs/lib-reactor-search": "workspace:*",
     "@journeyapps-labs/lib-reactor-utils": "workspace:*",
+    "@journeyapps-labs/common-utils": "^1.0.0",
     "lodash": "^4.17.21",
     "mobx": "^6.13.7"
   },

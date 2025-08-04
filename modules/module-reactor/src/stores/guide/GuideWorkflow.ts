@@ -6,12 +6,12 @@ import {
   generateReactorComponentSelections,
   ReactorComponentSelections
 } from './selections/common';
-import { BaseListener, BaseObserver } from '@journeyapps-labs/lib-reactor-utils';
 import { inject } from '../../inversify.config';
 import { System } from '../../core/System';
 import { ActionSource } from '../../actions';
+import { BaseObserver } from '@journeyapps-labs/common-utils';
 
-export interface GuideWorkflowListener extends BaseListener {
+export interface GuideWorkflowListener {
   activated?: () => any;
   deActivated?: () => any;
   complete?: () => any;

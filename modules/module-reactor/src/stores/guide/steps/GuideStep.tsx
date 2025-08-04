@@ -3,7 +3,7 @@ import { GuideWorkflow, GuideWorkflowOptions } from '../GuideWorkflow';
 import { ReactorComponentSelections } from '../selections/common';
 import { StepTooltipWidget } from '../../../widgets/guide/StepTooltipWidget';
 import * as React from 'react';
-import { BaseListener, BaseObserver } from '@journeyapps-labs/lib-reactor-utils';
+import { BaseObserver } from '@journeyapps-labs/common-utils';
 
 export interface GuideStepOptions<E extends ReactorComponentSelections = ReactorComponentSelections> {
   label: string;
@@ -11,7 +11,7 @@ export interface GuideStepOptions<E extends ReactorComponentSelections = Reactor
   activated: (step: GuideStep<E>) => (() => any) | void;
 }
 
-export interface GuideStepListener extends BaseListener {
+export interface GuideStepListener {
   completed: () => any;
 }
 

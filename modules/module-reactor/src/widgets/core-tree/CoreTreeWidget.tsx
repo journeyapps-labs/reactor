@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { TreeEntity, TreeEntityInterface, TreeNode } from '@journeyapps-labs/lib-reactor-tree';
+import { TreeEntity, TreeEntityInterface, TreeNode } from '@journeyapps-labs/common-tree';
 import { TreeWidgetProps } from '../tree/TreeWidget';
 import { observer } from 'mobx-react';
 import { useForceUpdate } from '../../hooks/useForceUpdate';

@@ -1,4 +1,4 @@
-import { Container } from '@journeyapps-labs/lib-ioc';
+import { Container } from '@journeyapps-labs/common-ioc';
 
 export interface AbstractReactorModuleOptions {
   name: string;

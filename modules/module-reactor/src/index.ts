@@ -51,6 +51,7 @@ export * from './media-engine';
 export * from './widgets';
 export * from './core/System';
 export * from './core/Tracer';
+export * from './core/logging';
 export * from './inversify.config';
 
 export * from './layers/command-pallet/CommandPalletEntryWidget';
