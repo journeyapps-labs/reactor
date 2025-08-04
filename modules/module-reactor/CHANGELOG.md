@@ -1,5 +1,18 @@
 # @journeyapps-labs/reactor-mod
 
+## 1.1.0
+
+### Minor Changes
+
+- d38098f: New createLogger function and also move to the new labs libraries
+
+### Patch Changes
+
+- Updated dependencies [d38098f]
+- Updated dependencies [d38098f]
+  - @journeyapps-labs/lib-reactor-search@1.0.1
+  - @journeyapps-labs/lib-reactor-utils@2.0.0
+
 ## 1.0.1
 
 ### Patch Changes
