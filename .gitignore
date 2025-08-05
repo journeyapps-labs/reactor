@@ -15,4 +15,4 @@ lib
 *.tsbuildinfo
 
 .pnpm-debug.log
-pnpm-links.js
+.hidden
