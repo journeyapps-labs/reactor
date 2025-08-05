@@ -1,5 +1,11 @@
 # @journeyapps-labs/reactor-mod
 
+## 1.1.1
+
+### Patch Changes
+
+- e40a220: Add more libraries to the exported list
+
 ## 1.1.0
 
 ### Minor Changes
