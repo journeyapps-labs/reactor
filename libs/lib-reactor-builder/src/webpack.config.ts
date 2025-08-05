@@ -18,15 +18,19 @@ export const generateCommonWebpack = (dir: string): Configuration => {
   });
 
   const external_libraries = [
-    'react',
-    'react-dom',
-    '@emotion/react',
-    '@emotion/styled',
-    'lodash',
-    'mobx',
-    'mobx-react',
-    'uuid',
-    'luxon'
+    { lib: 'react' },
+    { lib: 'react-dom' },
+    { lib: '@emotion/react', aliased: true },
+    { lib: '@emotion/styled', aliased: true },
+    { lib: 'lodash' },
+    { lib: 'mobx', aliased: true },
+    { lib: 'mobx-react', aliased: true },
+    { lib: 'uuid', aliased: true },
+    { lib: 'luxon' },
+    { lib: '@fortawesome/fontawesome-svg-core', aliased: true },
+    { lib: '@fortawesome/free-brands-svg-icons', aliased: true },
+    { lib: '@fortawesome/free-solid-svg-icons', aliased: true },
+    { lib: '@fortawesome/react-fontawesome', aliased: true }
   ];
 
   let config = {
@@ -52,12 +56,7 @@ export const generateCommonWebpack = (dir: string): Configuration => {
       symlinks: true,
       extensions: ['.json', '.js', '.jsx'],
       alias: {
-        'process/browser': require.resolve('process/browser'),
-        '@emotion/react': require.resolve('@emotion/react'),
-        '@emotion/styled': require.resolve('@emotion/styled'),
-        mobx: require.resolve('mobx'),
-        'mobx-react': require.resolve('mobx-react'),
-        uuid: require.resolve('uuid')
+        'process/browser': require.resolve('process/browser')
       },
       modules: [
         path.join(__dirname, '../../../node_modules'),
@@ -150,14 +149,14 @@ export const generateCommonWebpack = (dir: string): Configuration => {
     if (is_reactor_core) {
       return patchExportedLibrary({
         w: prev,
-        alias: false,
-        module: cur,
+        alias: cur.aliased!!,
+        module: cur.lib,
         dir: __dirname
       });
     }
     return patchImportedLibrary({
       w: prev,
-      module: cur
+      module: cur.lib
     });
   }, config);
 
