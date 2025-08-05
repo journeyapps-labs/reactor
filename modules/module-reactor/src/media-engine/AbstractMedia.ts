@@ -70,18 +70,18 @@ export class AbstractMedia<OPTIONS extends AbstractMediaOptions = AbstractMediaO
     throw new Error('Cant convert asset content to File');
   }
 
-  async toArrayBuffer(): Promise<ArrayBuffer> {
+  async toArrayBuffer(): Promise<Uint8Array<ArrayBuffer>> {
     if (this.options.content instanceof ArrayBuffer) {
-      return this.options.content;
+      return new Uint8Array(this.options.content);
     }
     if (this.options.content instanceof Uint8Array) {
-      return this.options.content;
+      return this.options.content as Uint8Array<ArrayBuffer>;
     }
     if (this.options.content instanceof File) {
       return new Promise((resolve, reject) => {
         const reader = new FileReader();
         reader.readAsArrayBuffer(this.options.content as File);
-        reader.onload = () => resolve(reader.result as ArrayBuffer);
+        reader.onload = () => resolve(new Uint8Array(reader.result as ArrayBuffer));
         reader.onerror = (error) => reject(error);
       });
     }
@@ -92,7 +92,7 @@ export class AbstractMedia<OPTIONS extends AbstractMediaOptions = AbstractMediaO
       for (let i = 0; i < len; i++) {
         bytes[i] = binary_string.charCodeAt(i);
       }
-      return bytes.buffer;
+      return bytes;
     }
     throw new Error('Cant convert asset content to ArrayBuffer');
   }
