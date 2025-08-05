@@ -1,6 +1,6 @@
 import * as _ from 'lodash';
 import * as React from 'react';
-import { MouseEvent } from 'react';
+import { MouseEvent, useEffect, useRef, useState } from 'react';
 import styled from '@emotion/styled';
 import { WorkspaceCollectionModel, WorkspaceEngine, WorkspaceModel } from '@projectstorm/react-workspaces-core';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
@@ -27,11 +27,6 @@ export interface TabWidgetProps {
   indicator?: {
     color: string;
   };
-}
-
-export interface TabWidgetState {
-  hover: boolean;
-  clickStarted: boolean;
 }
 
 export interface ComboBoxItemAndBtn extends ComboBoxItem {
@@ -103,214 +98,183 @@ namespace S {
     }`;
 }
 
-@observer
-export class TabWidget extends React.Component<TabWidgetProps, TabWidgetState> {
-  ref: React.RefObject<HTMLDivElement>;
+export const TabWidget: React.FC<TabWidgetProps> = observer((props) => {
+  const comboBoxStore = ioc.get(ComboBoxStore);
+  const ref = useRef<HTMLDivElement>(null);
+  const [hover, setHover] = useState(false);
+  const [clickStarted, setClickStarted] = useState(false);
 
-  @inject(ComboBoxStore)
-  accessor comboBoxStore: ComboBoxStore;
-
-  constructor(props: TabWidgetProps) {
-    super(props);
-    this.ref = React.createRef();
-    this.state = {
-      hover: false,
-      clickStarted: false
-    };
-  }
-
-  componentDidMount(): void {
-    this.scrollIntoView();
-  }
-
-  scrollIntoView() {
-    if (this.props.selected) {
+  useEffect(() => {
+    if (props.selected) {
       _.defer(() => {
-        this.ref.current?.scrollIntoView({});
+        ref.current?.scrollIntoView({});
       });
     }
-  }
+  }, [props.selected]);
 
-  componentDidUpdate(prevProps: Readonly<TabWidgetProps>, prevState: Readonly<TabWidgetState>, snapshot?: any): void {
-    this.scrollIntoView();
-  }
-
-  getIcon() {
-    return <S.MainIcon selected={this.props.selected} icon={this.props.icon} />;
-  }
-
-  getIndicator() {
-    if (this.props.indicator) {
-      return <S.Indicator color={this.props.indicator.color} />;
-    }
-    return null;
-  }
-
-  getPrimaryTitle() {
-    if (this.props.titlePrimary) {
-      return (
-        <S.TitlePrimary selected={this.props.selected || this.state.hover}>{this.props.titlePrimary}</S.TitlePrimary>
-      );
-    }
-    return null;
-  }
-
-  fullscreen = () => {
-    ioc.get(WorkspaceStore).setFullscreenModel(this.props.model);
+  const fullscreen = () => {
+    ioc.get(WorkspaceStore).setFullscreenModel(props.model);
   };
 
-  mouseUpHandler = (event: React.MouseEvent) => {
-    if (this.state.clickStarted) {
+  const closeTab = (event) => {
+    event.stopPropagation();
+    props.model.delete();
+    props.engine.normalize();
+  };
+
+  const mouseUpHandler = (event: React.MouseEvent) => {
+    if (clickStarted) {
       // LMB: 0, MMB: 1 , RMB: 2
       if (event.button === 1) {
-        this.closeTab(event);
+        closeTab(event);
       }
     }
-
-    this.setState({ clickStarted: false });
+    setClickStarted(false);
   };
 
-  closeTab = (event) => {
-    event.stopPropagation();
-    this.props.model.delete();
-    this.props.engine.normalize();
+  const getIndicator = () => {
+    if (props.indicator) {
+      return <S.Indicator color={props.indicator.color} />;
+    }
+    return null;
   };
 
-  render() {
-    return (
-      <S.Container
-        onDoubleClick={this.fullscreen}
-        ref={this.ref}
-        onContextMenu={async (event) => {
-          event.stopPropagation();
-          event.preventDefault();
+  const getPrimaryTitle = () => {
+    if (props.titlePrimary) {
+      return <S.TitlePrimary selected={props.selected || hover}>{props.titlePrimary}</S.TitlePrimary>;
+    }
+    return null;
+  };
 
-          let items: ComboBoxItem[] = [
-            {
-              key: 'close',
-              title: 'Close tab',
-              group: 'tabs'
-            },
-            {
-              key: 'other',
-              title: 'Close others',
-              group: 'tabs'
-            },
-            {
-              key: 'all',
-              title: 'Close all',
-              group: 'tabs'
-            },
-            {
-              key: 'fullscreen',
-              title: 'Fullscreen',
-              group: 'tabs'
-            },
-            {
-              key: 'window',
-              title: 'Open in window',
-              group: 'tabs'
-            }
-          ];
+  return (
+    <S.Container
+      onDoubleClick={fullscreen}
+      ref={ref}
+      onContextMenu={async (event) => {
+        event.stopPropagation();
+        event.preventDefault();
 
-          // we also want to merge any panel actions that might exist
-          const factory = this.props.engine.getFactory(this.props.model);
-          if (factory instanceof ReactorPanelFactory) {
-            items = items.concat(
-              factory
-                .getAdditionalButtons({
-                  engine: this.props.engine,
-                  model: this.props.model
-                })
-                .map((btn) => {
-                  const name = btn.label || btn.tooltip;
-                  return {
-                    group: 'action-buttons',
-                    key: name,
-                    icon: btn.icon,
-                    color: ioc.get(ThemeStore).getCurrentTheme(theme).header.secondary,
-                    title: name,
-                    action: async (event) => {
-                      btn.action(event);
-                    }
-                  };
-                })
-            );
+        let items: ComboBoxItem[] = [
+          {
+            key: 'close',
+            title: 'Close tab',
+            group: 'tabs'
+          },
+          {
+            key: 'other',
+            title: 'Close others',
+            group: 'tabs'
+          },
+          {
+            key: 'all',
+            title: 'Close all',
+            group: 'tabs'
+          },
+          {
+            key: 'fullscreen',
+            title: 'Fullscreen',
+            group: 'tabs'
+          },
+          {
+            key: 'window',
+            title: 'Open in window',
+            group: 'tabs'
           }
+        ];
 
-          const selection: ComboBoxItemAndBtn = (await this.comboBoxStore.showComboBox(items, event)) as any;
-          if (!selection) {
-            return;
-          }
+        // we also want to merge any panel actions that might exist
+        const factory = props.engine.getFactory(props.model);
+        if (factory instanceof ReactorPanelFactory) {
+          items = items.concat(
+            factory
+              .getAdditionalButtons({
+                engine: props.engine,
+                model: props.model
+              })
+              .map((btn) => {
+                const name = btn.label || btn.tooltip;
+                return {
+                  group: 'action-buttons',
+                  key: name,
+                  icon: btn.icon,
+                  color: ioc.get(ThemeStore).getCurrentTheme(theme).header.secondary,
+                  title: name,
+                  action: async (event) => {
+                    btn.action(event);
+                  }
+                };
+              })
+          );
+        }
 
-          // tab actions
-          if (selection.group == 'tabs') {
-            // fullscreen
-            if (selection.key === 'fullscreen') {
-              this.fullscreen();
-            }
-            if (selection.key === 'window') {
-              this.props.model.delete();
-              ioc.get(WorkspaceStore).addModelInWindow(this.props.model, {
-                width: 400,
-                height: 400
-              });
-            }
-            // close
-            else if (selection.key === 'close') {
-              this.props.model.delete();
-              this.props.engine.normalize();
-            } else if (selection.key === 'other') {
-              (this.props.model.parent as ReactorTabFactoryModel).children
-                .filter((child) => {
-                  return child.id !== this.props.model.id;
-                })
-                .forEach((child) => {
-                  child.delete();
-                });
-              this.props.engine.normalize();
-            }
-            // delete all
-            else if (selection.key === 'all') {
-              (this.props.model.parent.parent as WorkspaceCollectionModel).replaceModel(
-                this.props.model.parent,
-                new ReactorTabFactoryModel().addModel(new WorkspaceModel('empty'))
-              );
-            }
-          }
+        const selection: ComboBoxItemAndBtn = (await comboBoxStore.showComboBox(items, event)) as any;
+        if (!selection) {
+          return;
+        }
 
-          // btn actions
-          else {
-            selection.action(event);
+        // tab actions
+        if (selection.group == 'tabs') {
+          // fullscreen
+          if (selection.key === 'fullscreen') {
+            fullscreen();
           }
-        }}
-        onMouseLeave={() => {
-          this.setState({
-            hover: false,
-            clickStarted: false
-          });
-        }}
-        onMouseMove={() => {
-          if (!this.state.hover) {
-            this.setState({
-              hover: true
+          if (selection.key === 'window') {
+            props.model.delete();
+            ioc.get(WorkspaceStore).addModelInWindow(props.model, {
+              width: 400,
+              height: 400
             });
           }
-        }}
-        onMouseUp={this.mouseUpHandler}
-        onMouseDown={() => {
-          this.setState({ clickStarted: true });
-        }}
-        selected={this.props.selected}
-      >
-        {this.getIcon()}
-        {this.getPrimaryTitle()}
-        <S.Title selected={this.props.selected || this.state.hover}>{this.props.title}</S.Title>
-        {this.getIndicator()}
-        <S.CloseIconContainer onClick={this.closeTab}>
-          <S.CloseIcon $hidden={!this.state.hover} icon="times-circle" />
-        </S.CloseIconContainer>
-      </S.Container>
-    );
-  }
-}
+          // close
+          else if (selection.key === 'close') {
+            props.model.delete();
+            props.engine.normalize();
+          } else if (selection.key === 'other') {
+            (props.model.parent as ReactorTabFactoryModel).children
+              .filter((child) => {
+                return child.id !== props.model.id;
+              })
+              .forEach((child) => {
+                child.delete();
+              });
+            props.engine.normalize();
+          }
+          // delete all
+          else if (selection.key === 'all') {
+            (props.model.parent.parent as WorkspaceCollectionModel).replaceModel(
+              props.model.parent,
+              new ReactorTabFactoryModel().addModel(new WorkspaceModel('empty'))
+            );
+          }
+        }
+
+        // btn actions
+        else {
+          selection.action(event);
+        }
+      }}
+      onMouseLeave={() => {
+        setHover(false);
+        setClickStarted(false);
+      }}
+      onMouseMove={() => {
+        if (!hover) {
+          setHover(true);
+        }
+      }}
+      onMouseUp={mouseUpHandler}
+      onMouseDown={() => {
+        setClickStarted(true);
+      }}
+      selected={props.selected}
+    >
+      <S.MainIcon selected={props.selected} icon={props.icon} />
+      {getPrimaryTitle()}
+      <S.Title selected={props.selected || hover}>{props.title}</S.Title>
+      {getIndicator()}
+      <S.CloseIconContainer onClick={closeTab}>
+        <S.CloseIcon $hidden={!hover} icon="times-circle" />
+      </S.CloseIconContainer>
+    </S.Container>
+  );
+});

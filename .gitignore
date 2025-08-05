@@ -15,3 +15,4 @@ lib
 *.tsbuildinfo
 
 .pnpm-debug.log
+.hidden

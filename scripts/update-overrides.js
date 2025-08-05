@@ -30,7 +30,7 @@ let dep = {};
   }
 
   const rootPackage = require(path.join(__dirname, '../package.json'));
-  for (let k in rootPackage.pnpm.overrides) {
+  for (let k in rootPackage.pnpm?.overrides || {}) {
     let existing = rootPackage.pnpm.overrides[k];
     if (dep[k] && existing !== dep[k]) {
       rootPackage.pnpm.overrides[k] = dep[k];
