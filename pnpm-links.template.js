@@ -2,4 +2,4 @@
 module.exports = {
   // "@projectstorm/react-workspaces-behavior-divider-dropzone": "../../os/react-workspaces/packages/behavior-divider-dropzone",
   //...
-}
+};
