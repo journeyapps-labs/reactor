@@ -4,6 +4,8 @@ settings:
   autoInstallPeers: true
   excludeLinksFromLockfile: false
 
+pnpmfileChecksum: sha256-25zgcqgOCLpnI5OJ0aAykNm5pbD8wUH6FQCvCXo8aKk=
+
 importers:
 
   .:
@@ -37,7 +39,7 @@ importers:
     dependencies:
       '@emotion/styled':
         specifier: ^11.14.1
-        version: 11.14.1(@emotion/react@11.14.0(@types/react@19.1.8)(react@19.1.1))(@types/react@19.1.8)(react@19.1.1)
+        version: 11.14.1(@emotion/react@11.14.0(react@19.1.1))(react@19.1.1)
       '@journeyapps-labs/common-ioc':
         specifier: ^1.0.0
         version: 1.0.0
@@ -56,7 +58,7 @@ importers:
     dependencies:
       '@emotion/styled':
         specifier: ^11.14.1
-        version: 11.14.1(@emotion/react@11.14.0(@types/react@19.1.8)(react@19.1.1))(@types/react@19.1.8)(react@19.1.1)
+        version: 11.14.1(@emotion/react@11.14.0(react@19.1.1))(react@19.1.1)
       '@journeyapps-labs/common-utils':
         specifier: ^1.0.0
         version: 1.0.0
@@ -462,10 +464,10 @@ importers:
         version: 2.2.11(@emotion/react@11.14.0(@types/react@19.1.8)(react@19.1.1))(@types/react@19.1.8)
       '@projectstorm/react-workspaces-model-tabs':
         specifier: ^2.3.8
-        version: 2.3.8(@types/react@19.1.8)
+        version: 2.3.10(@types/react@19.1.8)
       '@projectstorm/react-workspaces-model-tray':
         specifier: ^2.5.9
-        version: 2.5.9(@emotion/react@11.14.0(@types/react@19.1.8)(react@19.1.1))(@types/react@19.1.8)
+        version: 2.5.11(@emotion/react@11.14.0(@types/react@19.1.8)(react@19.1.1))(@types/react@19.1.8)
       balloon-css:
         specifier: ^1.2.0
         version: 1.2.0
@@ -1661,6 +1663,9 @@ packages:
   '@projectstorm/react-workspaces-core@4.2.0':
     resolution: {integrity: sha512-ZpdjxI6OXJdzhwOlwOSI6H5uemY/IcfSaitzBQz+C9wcdeio5X47yhLpNpPpnJHUV1CWIrwLPmHKjrGyIWCxlA==}
 
+  '@projectstorm/react-workspaces-core@4.2.2':
+    resolution: {integrity: sha512-j4JDKd7tZ8GxUUkDeyzESbRc4ZMq4zwcTnsfayo0VCwpcuu9sTb8oSdEsh3TNfw9LU9Oci+hGyjsGeS0zvNxkA==}
+
   '@projectstorm/react-workspaces-dropzone-plugin-tabs@2.2.12':
     resolution: {integrity: sha512-ytvQVeuxGmPOjeztU1ZvZtuG+eEphAPNJGLyxtZYY8KwR67QqynTCRew0W1PGNSLky7MPKz74eFiNUqi+3Dwig==}
 
@@ -1670,8 +1675,17 @@ packages:
   '@projectstorm/react-workspaces-model-floating-window@2.2.11':
     resolution: {integrity: sha512-DD/F2oYp9ZhSslqRmlWJe8utySFcN1F0lttkVBXYNgi3C0Ftz0acYJ5tbo1wXzSjTnHOn3Vf1aL1frlPuFgA7Q==}
 
+  '@projectstorm/react-workspaces-model-floating-window@2.2.13':
+    resolution: {integrity: sha512-TnfDIRbuL9gzQWiQ7D5P2/OAxrSou4vh93SzZ7ZKBpKZBp0xEP4DMu5rFayIel30mfvNNenWRw5+UKhzJv0SaQ==}
+
+  '@projectstorm/react-workspaces-model-tabs@2.3.10':
+    resolution: {integrity: sha512-z6NfRrZGpGprxpsQRc6m6XhWnS9zDZV3TBrkMscuIWp+XftM8yVFFcXaf/O/k4qN+raEL7oL5q+G83RfSf5E3Q==}
+
   '@projectstorm/react-workspaces-model-tabs@2.3.8':
     resolution: {integrity: sha512-wQ6Ho+Jg6whRodKuFXp/PbTGbxlcxAUXsqN9rQGAaTHwtYWNBHn5TJwU9QWM2Xd5fu8YDIMtyg5E5GzyNn5V6w==}
+
+  '@projectstorm/react-workspaces-model-tray@2.5.11':
+    resolution: {integrity: sha512-p0sEZznk1TC7B8E5oijaV1OhaxUmLgE8MtIAyB4TE2hLkupYwuXJ9DzjGBXpZfKyODB82DTBCBq7KrepZ1ieaA==}
 
   '@projectstorm/react-workspaces-model-tray@2.5.9':
     resolution: {integrity: sha512-TH3DNca2EKz1LN5UoerStSM/NAXzEnEU0FsLs3QwSizkz3vBvDxh+VhFbzFWgkqjxkMv/YCgvFKbtQZb7wbY6A==}
@@ -6035,13 +6049,27 @@ snapshots:
       '@emotion/babel-plugin': 11.13.5
       '@emotion/cache': 11.14.0
       '@emotion/serialize': 1.3.3
-      '@emotion/use-insertion-effect-with-fallbacks': 1.2.0(react@19.1.1)
+      '@emotion/use-insertion-effect-with-fallbacks': 1.2.0(react@18.3.1)
       '@emotion/utils': 1.4.2
       '@emotion/weak-memoize': 0.4.0
       hoist-non-react-statics: 3.3.2
       react: 19.1.1
     optionalDependencies:
       '@types/react': 19.1.8
+    transitivePeerDependencies:
+      - supports-color
+
+  '@emotion/react@11.14.0(react@19.1.1)':
+    dependencies:
+      '@babel/runtime': 7.28.2
+      '@emotion/babel-plugin': 11.13.5
+      '@emotion/cache': 11.14.0
+      '@emotion/serialize': 1.3.3
+      '@emotion/use-insertion-effect-with-fallbacks': 1.2.0(react@19.1.1)
+      '@emotion/utils': 1.4.2
+      '@emotion/weak-memoize': 0.4.0
+      hoist-non-react-statics: 3.3.2
+      react: 19.1.1
     transitivePeerDependencies:
       - supports-color
 
@@ -6060,7 +6088,7 @@ snapshots:
       '@babel/runtime': 7.28.2
       '@emotion/babel-plugin': 11.13.5
       '@emotion/is-prop-valid': 1.3.1
-      '@emotion/react': 11.14.0(@types/react@19.1.8)(react@19.1.1)
+      '@emotion/react': 11.14.0(@types/react@19.1.8)(react@18.3.1)
       '@emotion/serialize': 1.3.3
       '@emotion/use-insertion-effect-with-fallbacks': 1.2.0(react@18.3.1)
       '@emotion/utils': 1.4.2
@@ -6082,6 +6110,19 @@ snapshots:
       react: 19.1.1
     optionalDependencies:
       '@types/react': 19.1.8
+    transitivePeerDependencies:
+      - supports-color
+
+  '@emotion/styled@11.14.1(@emotion/react@11.14.0(react@19.1.1))(react@19.1.1)':
+    dependencies:
+      '@babel/runtime': 7.28.2
+      '@emotion/babel-plugin': 11.13.5
+      '@emotion/is-prop-valid': 1.3.1
+      '@emotion/react': 11.14.0(react@19.1.1)
+      '@emotion/serialize': 1.3.3
+      '@emotion/use-insertion-effect-with-fallbacks': 1.2.0(react@19.1.1)
+      '@emotion/utils': 1.4.2
+      react: 19.1.1
     transitivePeerDependencies:
       - supports-color
 
@@ -6529,6 +6570,19 @@ snapshots:
       - '@types/react'
       - supports-color
 
+  '@projectstorm/react-workspaces-core@4.2.2(@types/react@19.1.8)':
+    dependencies:
+      '@emotion/react': 11.14.0(@types/react@19.1.8)(react@19.1.1)
+      '@emotion/styled': 11.14.1(@emotion/react@11.14.0(@types/react@19.1.8)(react@19.1.1))(@types/react@19.1.8)(react@19.1.1)
+      color: 5.0.0
+      lodash: 4.17.21
+      react: 19.1.1
+      react-dom: 19.1.1(react@19.1.1)
+      uuid: 11.1.0
+    transitivePeerDependencies:
+      - '@types/react'
+      - supports-color
+
   '@projectstorm/react-workspaces-dropzone-plugin-tabs@2.2.12(@emotion/react@11.14.0(@types/react@19.1.8)(react@19.1.1))(@types/react@19.1.8)':
     dependencies:
       '@fortawesome/fontawesome-svg-core': 6.7.2
@@ -6568,6 +6622,30 @@ snapshots:
       - '@types/react'
       - supports-color
 
+  '@projectstorm/react-workspaces-model-floating-window@2.2.13(@emotion/react@11.14.0(@types/react@19.1.8)(react@19.1.1))(@types/react@19.1.8)':
+    dependencies:
+      '@emotion/styled': 11.14.1(@emotion/react@11.14.0(@types/react@19.1.8)(react@19.1.1))(@types/react@19.1.8)(react@19.1.1)
+      '@fortawesome/fontawesome-svg-core': 7.0.0
+      '@fortawesome/free-solid-svg-icons': 7.0.0
+      '@fortawesome/react-fontawesome': 0.2.3(@fortawesome/fontawesome-svg-core@7.0.0)(react@19.1.1)
+      '@projectstorm/react-workspaces-core': 4.2.2(@types/react@19.1.8)
+      react: 19.1.1
+    transitivePeerDependencies:
+      - '@emotion/react'
+      - '@types/react'
+      - supports-color
+
+  '@projectstorm/react-workspaces-model-tabs@2.3.10(@types/react@19.1.8)':
+    dependencies:
+      '@emotion/react': 11.14.0(@types/react@19.1.8)(react@19.1.1)
+      '@emotion/styled': 11.14.1(@emotion/react@11.14.0(@types/react@19.1.8)(react@19.1.1))(@types/react@19.1.8)(react@19.1.1)
+      '@projectstorm/react-workspaces-core': 4.2.2(@types/react@19.1.8)
+      lodash: 4.17.21
+      react: 19.1.1
+    transitivePeerDependencies:
+      - '@types/react'
+      - supports-color
+
   '@projectstorm/react-workspaces-model-tabs@2.3.8(@types/react@19.1.8)':
     dependencies:
       '@emotion/react': 11.14.0(@types/react@19.1.8)(react@18.3.1)
@@ -6576,6 +6654,18 @@ snapshots:
       lodash: 4.17.21
       react: 18.3.1
     transitivePeerDependencies:
+      - '@types/react'
+      - supports-color
+
+  '@projectstorm/react-workspaces-model-tray@2.5.11(@emotion/react@11.14.0(@types/react@19.1.8)(react@19.1.1))(@types/react@19.1.8)':
+    dependencies:
+      '@emotion/styled': 11.14.1(@emotion/react@11.14.0(@types/react@19.1.8)(react@19.1.1))(@types/react@19.1.8)(react@19.1.1)
+      '@projectstorm/react-workspaces-core': 4.2.2(@types/react@19.1.8)
+      '@projectstorm/react-workspaces-model-floating-window': 2.2.13(@emotion/react@11.14.0(@types/react@19.1.8)(react@19.1.1))(@types/react@19.1.8)
+      lodash: 4.17.21
+      react: 19.1.1
+    transitivePeerDependencies:
+      - '@emotion/react'
       - '@types/react'
       - supports-color
 

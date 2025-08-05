@@ -95,6 +95,8 @@ export * from './core/ReactorKernel';
 export * from './actions/validators/ActionValidator';
 export * from './actions/validators/InlineActionValidator';
 
+export * from './entities-reactor/ReactorEntities';
+
 export * from './entities/components/encoder/EntityEncoderComponent';
 export * from './entities/components/encoder/InlineEntityEncoderComponent';
 export * from './entities/components/exposer/DescendantEntityProviderComponent';

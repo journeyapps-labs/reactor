@@ -31,19 +31,19 @@ export const generateCommonWebpack = (dir: string): Configuration => {
     { lib: '@fortawesome/free-brands-svg-icons', aliased: true },
     { lib: '@fortawesome/free-solid-svg-icons', aliased: true },
     { lib: '@fortawesome/react-fontawesome', aliased: true },
-    { lib:"@journeyapps-labs/common-tree"},
-    { lib:"@journeyapps-labs/common-utils"},
-    { lib:"@journeyapps-labs/common-logger"},
-    { lib:"@journeyapps-labs/lib-reactor-utils"},
-    { lib:"@projectstorm/react-workspaces-behavior-divider-dropzone", aliased: true },
-    { lib:"@projectstorm/react-workspaces-behavior-panel-dropzone", aliased: true },
-    { lib:"@projectstorm/react-workspaces-behavior-resize", aliased: true },
-    { lib:"@projectstorm/react-workspaces-core", aliased: true },
-    { lib:"@projectstorm/react-workspaces-dropzone-plugin-tabs",aliased: true},
-    { lib:"@projectstorm/react-workspaces-dropzone-plugin-tray",aliased: true},
-    { lib:"@projectstorm/react-workspaces-model-floating-window",aliased: true},
-    { lib:"@projectstorm/react-workspaces-model-tabs",aliased: true},
-    { lib:"@projectstorm/react-workspaces-model-tray",aliased: true}
+    { lib: '@journeyapps-labs/common-tree' },
+    { lib: '@journeyapps-labs/common-utils' },
+    { lib: '@journeyapps-labs/common-logger' },
+    { lib: '@journeyapps-labs/lib-reactor-utils' },
+    { lib: '@projectstorm/react-workspaces-behavior-divider-dropzone', aliased: true },
+    { lib: '@projectstorm/react-workspaces-behavior-panel-dropzone', aliased: true },
+    { lib: '@projectstorm/react-workspaces-behavior-resize', aliased: true },
+    { lib: '@projectstorm/react-workspaces-core', aliased: true },
+    { lib: '@projectstorm/react-workspaces-dropzone-plugin-tabs', aliased: true },
+    { lib: '@projectstorm/react-workspaces-dropzone-plugin-tray', aliased: true },
+    { lib: '@projectstorm/react-workspaces-model-floating-window', aliased: true },
+    { lib: '@projectstorm/react-workspaces-model-tabs', aliased: true },
+    { lib: '@projectstorm/react-workspaces-model-tray', aliased: true }
   ];
 
   let config = {
@@ -164,7 +164,7 @@ export const generateCommonWebpack = (dir: string): Configuration => {
         w: prev,
         alias: cur.aliased!!,
         module: cur.lib,
-        dir: __dirname
+        dir: dir
       });
     }
     return patchImportedLibrary({

@@ -20,7 +20,7 @@ export const patchExportedLibrary = (options: {
         ...w.resolve.alias,
         ...(alias
           ? {
-              [module]: require.resolve(module)
+              [module]: require.resolve(module, { paths: [dir] })
             }
           : {})
       }

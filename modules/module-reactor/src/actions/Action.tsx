@@ -345,6 +345,7 @@ export abstract class Action<
       event.getStatus().complete();
       return result;
     } catch (ex) {
+      console.error(ex);
       this.dialogStore.showErrorDialog({
         title: `Action: ${this.options.name} failed`,
         message: 'Check the console for more information.'
