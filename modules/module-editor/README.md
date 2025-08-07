@@ -12,11 +12,15 @@ __Features:__
 
 ## Usage with other modules
 
-Make sure to put this in any modules that will need monaco (in the custom webpack.config.js):
+Make sure to put this in any modules that will need monaco or react-monaco-editor (in the custom webpack.config.js):
 
 ```js
 webpack = patchImportedLibrary({
   "w": webpack,
   "module": 'monaco-editor'
+})
+webpack = patchImportedLibrary({
+    "w": webpack,
+    "module": 'react-monaco-editor'
 })
 ```
