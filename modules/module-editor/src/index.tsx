@@ -3,6 +3,9 @@ import { EditorModule } from './EditorModule';
 require('monaco-editor/esm/vs/language/json/monaco.contribution');
 require('monaco-editor/esm/vs/basic-languages/javascript/javascript.contribution');
 
+import { StandaloneServices } from 'monaco-editor/esm/vs/editor/standalone/browser/standaloneServices';
+import { ICodeEditorService } from 'monaco-editor/esm/vs/editor/browser/services/codeEditorService';
+
 // Since packaging is done by you, you need
 // to instruct the editor how you named the
 // bundles that contain the web workers.
@@ -17,6 +20,10 @@ require('monaco-editor/esm/vs/basic-languages/javascript/javascript.contribution
   }
 };
 
+export const MonacoInternals = {
+  StandaloneServices,
+  ICodeEditorService
+};
 export * from './languages/logs';
 export * from './languages/languages';
 export * from './widgets/EditorWidget';
