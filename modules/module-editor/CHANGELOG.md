@@ -1,5 +1,11 @@
 # @journeyapps-labs/reactor-mod-editor
 
+## 1.0.5
+
+### Patch Changes
+
+- 6eb16b2: Also export react-monaco-editor to prevent duplicate monaco-editor includes
+
 ## 1.0.4
 
 ### Patch Changes
