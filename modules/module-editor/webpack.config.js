@@ -8,6 +8,12 @@ module.exports = (webpack) => {
     dir: __dirname
   });
 
+  webpack = patchExportedLibrary({
+    w: webpack,
+    module: 'react-monaco-editor',
+    dir: __dirname
+  });
+
   let r = webpack.module.rules.find((v) => !!v['oneOf']);
   r.oneOf = [
     {
