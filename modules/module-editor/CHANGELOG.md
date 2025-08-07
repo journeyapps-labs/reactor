@@ -1,5 +1,11 @@
 # @journeyapps-labs/reactor-mod-editor
 
+## 1.1.0
+
+### Minor Changes
+
+- e2b847d: Expose commonly used monaco internals
+
 ## 1.0.5
 
 ### Patch Changes
