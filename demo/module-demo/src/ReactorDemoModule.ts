@@ -1,14 +1,14 @@
 import { Container } from '@journeyapps-labs/common-ioc';
-import {
-  AbstractReactorModule,
-  EmptyReactorPanelModel,
-  ReactorEntities,
-  SettingsPanelModel,
-  System,
-  UXStore,
-  WorkspaceStore
-} from '@journeyapps-labs/reactor-mod';
+import { AbstractReactorModule, System, UXStore, VisorStore } from '@journeyapps-labs/reactor-mod';
 import { DemoBodyWidget } from './BodyWidget';
+import { setupWorkspaces } from './setupWorkspaces';
+import { TodoStore } from './stores/TodoStore';
+import { TodoModel } from './models/TodoModel';
+import { TodoDefinition } from './entities/TodoDefinition';
+import { CreateTodoAction } from './actions/CreateTodoAction';
+import { DeleteTodoAction } from './actions/DeleteTodoAction';
+import { CurrentTodoItemVisorMetadata } from './visor/CurrentTodoItemVisorMetadata';
+import { SetCurrentTodoItemAction } from './actions/SetCurrentTodoItemAction';
 
 export class ReactorDemoModule extends AbstractReactorModule {
   constructor() {
@@ -18,86 +18,29 @@ export class ReactorDemoModule extends AbstractReactorModule {
   }
 
   register(ioc: Container) {
-    const workspaceStore = ioc.get(WorkspaceStore);
+    const system = ioc.get(System);
+    const visorStore = ioc.get(VisorStore);
 
-    const generateSimpleWorkspace = () => {
-      let model = workspaceStore.generateRootModel();
+    ioc.bind(TodoStore).toConstantValue(new TodoStore());
 
-      model.addModel(new EmptyReactorPanelModel());
+    system.registerDefinition(new TodoDefinition());
 
-      return model;
-    };
+    system.registerAction(new CreateTodoAction());
+    system.registerAction(new DeleteTodoAction());
+    system.registerAction(new SetCurrentTodoItemAction());
 
-    const generateComplexWorkspace = () => {
-      let model = workspaceStore.generateRootModel();
+    visorStore.registerActiveMetadata(new CurrentTodoItemVisorMetadata());
 
-      //put actions panel in a tray
-      model.addModel(
-        workspaceStore.engine
-          .generateReactorTrayModel()
-          .addModel(
-            ioc
-              .get(System)
-              .getDefinition(ReactorEntities.ACTION)
-              .getPanelComponents()[0]
-              .generatePanelFactory()
-              .generateModel()
-          )
-      );
-
-      // put settings panel in tabs
-      model.addModel(workspaceStore.engine.generateReactorTabModel().addModel(new SettingsPanelModel()));
-
-      // put actions panel simply on the side without a container
-      model.addModel(
-        ioc
-          .get(System)
-          .getDefinition(ReactorEntities.PANEL)
-          .getPanelComponents()[0]
-          .generatePanelFactory()
-          .generateModel()
-      );
-      return model;
-    };
-
-    workspaceStore.registerWorkspaceGenerator({
-      generateAdvancedWorkspace: async () => {
-        return {
-          name: 'Simple workspace',
-          priority: 1,
-          model: generateSimpleWorkspace()
-        };
-      },
-      generateSimpleWorkspace: async () => {
-        return {
-          name: 'Simple workspace',
-          priority: 1,
-          model: generateSimpleWorkspace()
-        };
-      }
-    });
-
-    workspaceStore.registerWorkspaceGenerator({
-      generateAdvancedWorkspace: async () => {
-        return {
-          name: 'Complex workspace',
-          priority: 1,
-          model: generateComplexWorkspace()
-        };
-      },
-      generateSimpleWorkspace: async () => {
-        return {
-          name: 'Complex workspace',
-          priority: 1,
-          model: generateComplexWorkspace()
-        };
-      }
-    });
+    setupWorkspaces();
   }
 
   async init(ioc: Container): Promise<any> {
     const uxStore = ioc.get<UXStore>(UXStore);
     uxStore.setRootComponent(DemoBodyWidget);
     uxStore.primaryLogo = require('../media/logo.png');
+
+    ioc.get(TodoStore).addTodo(new TodoModel('Make some coffee'));
+    ioc.get(TodoStore).addTodo(new TodoModel('Fry some eggs'));
+    ioc.get(TodoStore).addTodo(new TodoModel('Check the oil in the car'));
   }
 }

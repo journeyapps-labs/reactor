@@ -34,6 +34,7 @@ export * from './hooks/useButton';
 export * from './hooks/useValidator';
 export * from './hooks/useCopyButton';
 export * from './hooks/useDisplayDateOptions';
+export * from './hooks/useDimensionObserver';
 
 export * from './search/SearchEngine';
 

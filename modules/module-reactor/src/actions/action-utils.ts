@@ -1,4 +1,4 @@
-import { Action, ActionEvent, ActionRollbackMechanic } from './Action';
+import { Action, ActionRollbackMechanic } from './Action';
 import { ioc } from '../inversify.config';
 import { DialogStore } from '../stores';
 import { BatchStore } from '../stores/batch/BatchStore';
