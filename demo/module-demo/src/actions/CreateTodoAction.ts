@@ -18,7 +18,7 @@ export class CreateTodoAction extends Action {
 
   async fireEvent(event: ActionEvent): Promise<any> {
     // show a loader
-    event.getStatus().pushMessage('Creating an inpuit');
+    event.getStatus().pushMessage('Creating a todo');
     let result = await this.dialogStore.showInputDialog({
       title: 'Create todo'
     });
