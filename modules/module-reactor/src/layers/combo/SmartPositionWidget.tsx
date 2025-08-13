@@ -1,6 +1,8 @@
 import * as React from 'react';
+import { useEffect, useRef } from 'react';
 import styled from '@emotion/styled';
-import * as _ from 'lodash';
+import { observer } from 'mobx-react';
+import { useDimensionObserver } from '../../hooks/useDimensionObserver';
 
 export interface MousePosition {
   clientX: number;
@@ -20,35 +22,22 @@ namespace S {
   `;
 }
 
-export class SmartPositionWidget extends React.Component<React.PropsWithChildren<SmartPositionWidgetProps>> {
-  ref: React.RefObject<HTMLDivElement>;
+export const SmartPositionWidget: React.FC<React.PropsWithChildren<SmartPositionWidgetProps>> = observer((props) => {
+  const ref = useRef<HTMLDivElement>(null);
 
-  constructor(props) {
-    super(props);
-    this.ref = React.createRef();
-    if (!this.props.position) {
-      this.state = {
-        left: '50%',
-        top: '50%'
-      };
-    }
-  }
-
-  getStyle(): Partial<CSSStyleDeclaration> {
-    if (!this.props.position) {
+  const getStyle = (options: { width: number; height: number }): Partial<CSSStyleDeclaration> => {
+    if (!props.position) {
       return { top: '50%', left: '50%' };
     }
-    if (this.ref.current) {
-      const rect = this.ref.current.getBoundingClientRect();
-
-      let x = this.props.position.clientX;
-      if (x + rect.width > document.body.offsetWidth) {
-        x = x - rect.width - 10;
+    if (ref.current) {
+      let x = props.position.clientX;
+      if (x + options.width > document.body.offsetWidth) {
+        x = x - options.width - 10;
       }
 
-      let y = this.props.position.clientY;
-      if (y + rect.height > document.body.offsetHeight) {
-        y = y - rect.height - 10;
+      let y = props.position.clientY;
+      if (y + options.height > document.body.offsetHeight) {
+        y = y - options.height - 10;
       }
 
       return {
@@ -57,34 +46,23 @@ export class SmartPositionWidget extends React.Component<React.PropsWithChildren
       };
     }
     return {
-      left: `${this.props.position.clientX}px`,
-      top: `${this.props.position.clientY}px`
+      left: `${props.position.clientX}px`,
+      top: `${props.position.clientY}px`
     };
-  }
+  };
 
-  reposition() {
-    if (this.ref.current) {
-      const s = this.getStyle();
-      this.ref.current.style.top = s.top;
-      this.ref.current.style.left = s.left;
+  useDimensionObserver({
+    element: ref,
+    changed: (dimensions) => {
+      const s = getStyle(dimensions);
+      ref.current.style.top = s.top;
+      ref.current.style.left = s.left;
     }
-  }
+  });
 
-  componentDidMount(): void {
-    _.defer(() => {
-      this.reposition();
-    });
-  }
-
-  componentDidUpdate(): void {
-    this.reposition();
-  }
-
-  render() {
-    return (
-      <S.Box animate={this.props.animate} className={this.props.className} ref={this.ref}>
-        {this.props.children}
-      </S.Box>
-    );
-  }
-}
+  return (
+    <S.Box animate={props.animate} className={props.className} ref={ref}>
+      {props.children}
+    </S.Box>
+  );
+});
