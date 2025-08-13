@@ -1,5 +1,12 @@
 # @journeyapps-labs/lib-reactor-server
 
+## 1.1.2
+
+### Patch Changes
+
+- Updated dependencies [f4006d1]
+  - @journeyapps-labs/lib-reactor-utils@2.0.1
+
 ## 1.1.1
 
 ### Patch Changes
