@@ -1,5 +1,18 @@
 # @journeyapps-labs/reactor-mod
 
+## 1.2.0
+
+### Minor Changes
+
+- 0612bc5: Fix a positioning bug for SmartPositionWidget by introducing a new useDimensionObserver hook to track position every 10ms
+
+### Patch Changes
+
+- f4006d1: Bumped dependencies
+- Updated dependencies [f4006d1]
+  - @journeyapps-labs/lib-reactor-utils@2.0.1
+  - @journeyapps-labs/lib-reactor-search@1.0.2
+
 ## 1.1.1
 
 ### Patch Changes
