@@ -42,19 +42,19 @@ export class FormDialogDirective<T extends FormModel = FormModel> extends Abstra
         disabled: !this.valid,
         tooltip: !this.valid ? 'Fix any errors before saving.' : null,
         action: async (event, loading) => {
-          loading(true);
-          this.loading = true;
-          if (this.options2.handler) {
-            try {
+          try {
+            loading(true);
+            this.loading = true;
+            if (this.options2.handler) {
               await this.options2.handler(this.form);
-              if (this.options2.trace?.enabled) {
-                this.submitTrace();
-              }
-              this.dispose(false);
-            } finally {
-              loading(false);
-              this.loading = false;
             }
+            if (this.options2.trace?.enabled) {
+              this.submitTrace();
+            }
+            this.dispose(false);
+          } finally {
+            loading(false);
+            this.loading = false;
           }
         }
       }
