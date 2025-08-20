@@ -1,5 +1,11 @@
 # @journeyapps-labs/reactor-mod
 
+## 1.2.1
+
+### Patch Changes
+
+- 26c9fad: Fix an issue where showDialog would hang if no handler was provided to the FormDialogDirective
+
 ## 1.2.0
 
 ### Minor Changes
