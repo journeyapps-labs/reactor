@@ -21,6 +21,9 @@ export class ImageInput extends FormInput<ImageInputG> {
         onUpload={(media) => {
           this.setValue(media);
         }}
+        clear={() => {
+          this.setValue(null);
+        }}
       />
     );
   }

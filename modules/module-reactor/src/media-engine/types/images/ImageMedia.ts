@@ -23,8 +23,7 @@ export class ImageMedia extends AbstractMedia {
       w: options.maxHeight,
       h: options.maxHeight
     });
-    // @ts-ignore
-    return await image.getBase64(this.getType().options.mime);
+    return await image.getBase64('image/jpeg');
   });
 
   /**

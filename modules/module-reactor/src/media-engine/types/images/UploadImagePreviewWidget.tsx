@@ -6,9 +6,11 @@ import { MediaEngine } from '../../MediaEngine';
 import { ioc } from '../../../inversify.config';
 import { ImagePreviewWidget } from './ImagePreviewWidget';
 import { styled } from '../../../stores/themes/reactor-theme-fragment';
+import { PanelButtonWidget } from '../../../widgets';
 
 export interface UploadImagePreviewWidgetProps {
   onUpload: (media: ImageMedia) => Promise<void> | void;
+  clear: () => any;
   media?: ImageMedia;
   mimeTypes?: string[];
 }
@@ -37,7 +39,22 @@ export const UploadImagePreviewWidget: React.FC<UploadImagePreviewWidgetProps> =
       }}
     >
       {props.media ? (
-        <ImagePreviewWidget width={200} height={200} media={props.media} />
+        <>
+          <ImagePreviewWidget width={200} height={200} media={props.media} />
+          <S.ButtonContainer
+            onClick={(event) => {
+              event.stopPropagation();
+            }}
+          >
+            <PanelButtonWidget
+              icon="trash"
+              tooltip="Clear image"
+              action={(event) => {
+                props.clear();
+              }}
+            />
+          </S.ButtonContainer>
+        </>
       ) : (
         <S.Text>Select image</S.Text>
       )}
@@ -63,5 +80,18 @@ namespace S {
     position: relative;
     background: ${(p) => p.theme.forms.inputBackground};
     cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  `;
+
+  export const ButtonContainer = styled.div`
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    opacity: 0.4;
+    &:hover {
+      opacity: 1;
+    }
   `;
 }

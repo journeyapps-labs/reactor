@@ -198,7 +198,15 @@ export class ReactorModule extends AbstractReactorModule {
       new ImageMediaType({
         mime: 'image/gif',
         extensions: ['.gif'],
-        displayName: 'Gif',
+        displayName: 'GIF',
+        icon: 'image'
+      })
+    );
+    mediaEngine.registerMediaType(
+      new ImageMediaType({
+        mime: 'image/svg',
+        extensions: ['.svg'],
+        displayName: 'SVG',
         icon: 'image'
       })
     );

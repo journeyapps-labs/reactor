@@ -1,7 +1,8 @@
 import * as React from 'react';
-import styled from '@emotion/styled';
-import { ImageMedia } from './ImageMedia';
 import { useEffect, useState } from 'react';
+import { ImageMedia } from './ImageMedia';
+import { styled } from '../../../stores/themes/reactor-theme-fragment';
+
 export interface ImagePreviewWidgetProps {
   media: ImageMedia;
   width: number;
