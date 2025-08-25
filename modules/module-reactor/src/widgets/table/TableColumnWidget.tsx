@@ -9,7 +9,8 @@ export interface TableColumnWidgetProps {
 namespace S {
   export const Container = styled.th<{ shrink: boolean }>`
     text-align: left;
-    padding: 5px 10px;
+    padding: 4px 8px;
+    font-size: 13px;
     ${(p) => (p.shrink ? `width: 1%` : '')};
   `;
 }
