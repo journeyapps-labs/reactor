@@ -90,8 +90,9 @@ theme.addThemeValues({
       ...DarkTheme.forms,
       checkbox: '#333',
       checkboxChecked: 'white',
-      inputBackground: 'rgba(28, 28, 30, 1)',
+      inputBackground: 'rgb(37 37 39)',
       inputForeground: 'white',
+      inputBorder: '#434343',
       toggleOnColor: 'rgb(0,192,255)',
       toggleHandleColor: '#fff'
     },

@@ -150,6 +150,7 @@ export const DarkTheme = theme.addThemeValues({
       checkboxChecked: 'rgb(0,192,255)',
       inputForeground: 'white',
       inputBackground: '#15191f',
+      inputBorder: '#343a46',
       toggleOnColor: 'rgb(0,192,255)',
       toggleHandleColor: 'white',
       groupBorder: 'rgba(255,255,255,0.1)',

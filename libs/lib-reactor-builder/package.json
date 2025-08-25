@@ -20,9 +20,9 @@
     "build": "../../node_modules/.bin/tsc"
   },
   "dependencies": {
-    "@babel/core": "^7.28.0",
+    "@babel/core": "^7.28.3",
     "@babel/preset-react": "^7.27.1",
-    "@babel/preset-env": "^7.28.0",
+    "@babel/preset-env": "^7.28.3",
     "@rbarilani/remove-source-map-url-webpack-plugin": "^1.1.0",
     "assert": "^2.1.0",
     "babel-loader": "^10.0.0",
@@ -44,14 +44,14 @@
     "terser-webpack-plugin": "5.3.14",
     "util": "^0.12.5",
     "val-loader": "^6.0.0",
-    "webpack": "5.101.1",
+    "webpack": "5.101.3",
     "webpack-cli": "^6.0.1",
     "yargs": "^18.0.0"
   },
   "devDependencies": {
     "tslib": "^2.8.1",
     "@types/yargs": "^17.0.33",
-    "@types/node": "^24.2.1",
+    "@types/node": "^24.3.0",
     "@types/debug": "^4.1.12",
     "@types/lodash": "^4.17.20",
     "@types/webpack": "^5.28.5"

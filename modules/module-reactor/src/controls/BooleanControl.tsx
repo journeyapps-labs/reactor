@@ -1,10 +1,8 @@
-import { AbstractControl, RepresentAsComboBoxItemsEvent } from './AbstractControl';
+import { RepresentAsComboBoxItemsEvent } from './AbstractControl';
 import { ComboBoxItem } from '../stores/combo/ComboBoxDirectives';
 import * as React from 'react';
 import { useEffect } from 'react';
-import { getDarkenedColor, normalizeColorToHex } from '@journeyapps-labs/lib-reactor-utils';
-import Switch from 'react-switch';
-import { styled, theme } from '../stores/themes/reactor-theme-fragment';
+import { theme } from '../stores/themes/reactor-theme-fragment';
 import { ioc } from '../inversify.config';
 import { ThemeStore } from '../stores/themes/ThemeStore';
 import { useForceUpdate } from '../hooks/useForceUpdate';
@@ -13,6 +11,7 @@ import { CheckboxLabelWidget } from '../widgets/forms/CheckboxLabelWidget';
 import { CheckboxWidget } from '../widgets/forms/CheckboxWidget';
 import { Btn } from '../definitions/common';
 import { AbstractValueControl } from './AbstractValueControl';
+import { Switch } from '../widgets/forms/Switch';
 
 export interface RepresentAsCheckboxOptions {
   label?: string;
@@ -99,16 +98,8 @@ export const BooleanControlWidget: React.FC<BooleanControlWidgetProps> = (props)
   }
 
   return (
-    <S.SwitchComp
+    <Switch
       disabled={props.disabled}
-      onHandleColor={normalizeColorToHex(currentTheme.forms.toggleHandleColor)}
-      offHandleColor={normalizeColorToHex(currentTheme.forms.toggleHandleColor)}
-      onColor={normalizeColorToHex(getDarkenedColor(currentTheme.forms.toggleOnColor, 0.5))}
-      offColor={normalizeColorToHex(currentTheme.forms.checkbox)}
-      handleDiameter={14}
-      height={18}
-      width={45}
-      borderRadius={3}
       onChange={(checked) => {
         props.control.value = checked;
       }}
@@ -116,11 +107,3 @@ export const BooleanControlWidget: React.FC<BooleanControlWidgetProps> = (props)
     />
   );
 };
-
-namespace S {
-  export const SwitchComp = styled(Switch)<{ checked: boolean }>`
-    .react-switch-bg {
-      border: solid 1px ${(p) => (p.checked ? p.theme.forms.toggleOnColor : p.theme.forms.checkbox)};
-    }
-  `;
-}

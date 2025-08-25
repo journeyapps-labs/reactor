@@ -159,6 +159,7 @@ export const theme = new ThemeFragment({
         description: 'Description for various inputs',
         inputBackground: 'Background color for input fields',
         inputForeground: 'Text color for input fields',
+        inputBorder: 'Border color for input fields',
         checkbox: 'Checkbox color',
         checkboxChecked: 'Checkbox color when selected',
         toggleOnColor: 'Selected color for toggle fields',
