@@ -1,5 +1,18 @@
 # @journeyapps-labs/reactor-mod
 
+## 1.2.2
+
+### Patch Changes
+
+- 4596785: - Improve themes, specifically input fields now have borders
+  - Add support for SVG images as ImageMediaType
+  - Consolidate the Switch component everywhere in Reactor
+  - Improve the ImageInput and add the ability to clear images
+- 4596785: Bump all dependencies
+- Updated dependencies [4596785]
+  - @journeyapps-labs/lib-reactor-utils@2.0.2
+  - @journeyapps-labs/lib-reactor-search@1.0.3
+
 ## 1.2.1
 
 ### Patch Changes
