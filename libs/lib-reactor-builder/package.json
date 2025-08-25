@@ -1,6 +1,6 @@
 {
   "name": "@journeyapps-labs/lib-reactor-builder",
-  "version": "1.0.3",
+  "version": "1.0.4",
   "publishConfig": {
     "registry": "https://registry.npmjs.org/",
     "access": "public"

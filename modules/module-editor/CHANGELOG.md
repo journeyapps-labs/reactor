@@ -1,5 +1,17 @@
 # @journeyapps-labs/reactor-mod-editor
 
+## 1.1.3
+
+### Patch Changes
+
+- 4596785: Bump all dependencies
+- Updated dependencies [4596785]
+- Updated dependencies [4596785]
+  - @journeyapps-labs/reactor-mod@1.2.2
+  - @journeyapps-labs/lib-reactor-builder@1.0.4
+  - @journeyapps-labs/lib-reactor-utils@2.0.2
+  - @journeyapps-labs/lib-reactor-search@1.0.3
+
 ## 1.1.2
 
 ### Patch Changes
