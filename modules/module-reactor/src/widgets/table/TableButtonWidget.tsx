@@ -12,7 +12,7 @@ namespace S {
       font-size: 13px;
       color: ${(p) => p.theme.text.primary};
       border-radius: 3px;
-      opacity: 0.3;
+      opacity: 0.4;
       cursor: pointer;
       &:hover{
         opacity: 1;

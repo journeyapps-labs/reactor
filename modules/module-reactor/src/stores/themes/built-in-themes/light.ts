@@ -165,7 +165,7 @@ theme.addThemeValues({
       pills: '#dbdbdb',
       pillsSpecial: 'rgb(187 187 187)',
       columnBackground: 'rgba(0, 0, 0, 0.1)',
-      columnForeground: '#000'
+      columnForeground: '#3d3d3d'
     },
     floating: {
       background: 'rgba(255,255,255,0.8)',

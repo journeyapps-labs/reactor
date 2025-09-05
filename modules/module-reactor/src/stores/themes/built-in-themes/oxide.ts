@@ -66,7 +66,9 @@ theme.addThemeValues({
     },
     table: {
       ...DarkTheme.table,
-      odd: '#3A3A3C'
+      odd: '#3A3A3C',
+      pills: '#5d5d5d',
+      pillsSpecial: 'rgb(165 92 0)'
     },
     text: {
       primary: 'white',
