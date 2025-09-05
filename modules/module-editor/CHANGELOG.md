@@ -1,5 +1,19 @@
 # @journeyapps-labs/reactor-mod-editor
 
+## 1.1.4
+
+### Patch Changes
+
+- cb8db2f: - bump all dependencies
+  - fix an issue where workspace constraint system may activate on an empty model causing an error
+  - improve theme colors for table row buttons
+  - update column display type to accept JSX.Element
+- Updated dependencies [cb8db2f]
+  - @journeyapps-labs/lib-reactor-builder@1.0.5
+  - @journeyapps-labs/lib-reactor-utils@2.0.3
+  - @journeyapps-labs/reactor-mod@1.2.3
+  - @journeyapps-labs/lib-reactor-search@1.0.4
+
 ## 1.1.3
 
 ### Patch Changes

@@ -1,5 +1,14 @@
 # @journeyapps-labs/lib-reactor-utils
 
+## 2.0.3
+
+### Patch Changes
+
+- cb8db2f: - bump all dependencies
+  - fix an issue where workspace constraint system may activate on an empty model causing an error
+  - improve theme colors for table row buttons
+  - update column display type to accept JSX.Element
+
 ## 2.0.2
 
 ### Patch Changes
