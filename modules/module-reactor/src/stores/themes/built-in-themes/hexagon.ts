@@ -71,7 +71,9 @@ theme.addThemeValues({
     },
     table: {
       ...DarkTheme.table,
-      odd: '#29292a'
+      odd: '#29292a',
+      pills: '#4b4b4d',
+      pillsSpecial: 'linear-gradient(155deg, #ff8f00, #ff1744)'
     },
     text: {
       primary: 'white',

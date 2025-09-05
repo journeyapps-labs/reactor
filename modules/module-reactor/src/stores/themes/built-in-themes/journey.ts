@@ -71,7 +71,9 @@ theme.addThemeValues({
     },
     table: {
       ...DarkTheme.table,
-      odd: 'rgb(40,56,64)'
+      odd: 'rgb(40,56,64)',
+      pills: '#476979',
+      pillsSpecial: 'rgb(255 100 0)'
     },
     text: {
       primary: 'white',

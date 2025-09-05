@@ -94,9 +94,6 @@ export class ReactorWorkspaceEngine extends WorkspaceEngine {
         };
       }
     });
-    overConstrainRecomputeBehavior({
-      engine: this
-    });
     resizingBehavior(this);
 
     // // !------------- DEVELOPER ------------!

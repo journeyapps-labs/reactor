@@ -8,7 +8,7 @@ import { TableRowsWidget } from './TableRowsWidget';
 import { TableRowsGroupWidget, TableRowsGroupWidgetProps } from './TableRowsGroupWidget';
 
 export interface TableColumn {
-  display: string;
+  display: string | React.JSX.Element;
   key: string;
   accessor?: (cell: any, row: TableRow) => React.JSX.Element | string;
   noWrap?: boolean;
