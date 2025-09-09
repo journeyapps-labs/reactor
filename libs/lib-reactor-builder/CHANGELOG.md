@@ -1,5 +1,15 @@
 # @journeyapps-labs/lib-reactor-builder
 
+## 2.0.0
+
+### Major Changes
+
+- 5eb207d: UUID is no longer part of the exposed libraries because its busted in v13
+
+### Patch Changes
+
+- 5eb207d: All deps upgraded
+
 ## 1.0.5
 
 ### Patch Changes

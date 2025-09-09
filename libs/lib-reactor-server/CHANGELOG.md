@@ -1,5 +1,15 @@
 # @journeyapps-labs/lib-reactor-server
 
+## 1.1.5
+
+### Patch Changes
+
+- 49b70e1: Improve error message if module fails to load
+- 49b70e1: - Date inputs can now accept null
+  - Improved nested panel serialization checks
+  - Date controls now respect date display options configured in Reactor
+- 5eb207d: All deps upgraded
+
 ## 1.1.4
 
 ### Patch Changes
