@@ -1,5 +1,16 @@
 # @journeyapps-labs/reactor-mod-editor
 
+## 1.1.5
+
+### Patch Changes
+
+- 5eb207d: All deps upgraded
+- Updated dependencies [5eb207d]
+- Updated dependencies [49b70e1]
+- Updated dependencies [5eb207d]
+  - @journeyapps-labs/lib-reactor-builder@2.0.0
+  - @journeyapps-labs/reactor-mod@2.0.0
+
 ## 1.1.4
 
 ### Patch Changes

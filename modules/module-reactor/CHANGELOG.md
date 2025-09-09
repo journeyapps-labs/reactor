@@ -1,5 +1,17 @@
 # @journeyapps-labs/reactor-mod
 
+## 2.0.0
+
+### Major Changes
+
+- 49b70e1: - Date inputs can now accept null
+  - Improved nested panel serialization checks
+  - Date controls now respect date display options configured in Reactor
+
+### Patch Changes
+
+- 5eb207d: All deps upgraded
+
 ## 1.2.3
 
 ### Patch Changes
