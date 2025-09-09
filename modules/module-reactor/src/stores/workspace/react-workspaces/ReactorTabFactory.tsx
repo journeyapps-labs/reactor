@@ -1,5 +1,9 @@
 import { WorkspaceModel } from '@projectstorm/react-workspaces-core';
-import { WorkspaceTabFactory, WorkspaceTabModel } from '@projectstorm/react-workspaces-model-tabs';
+import {
+  WorkspaceTabFactory,
+  WorkspaceTabModel,
+  WorkspaceTabModelSerialized
+} from '@projectstorm/react-workspaces-model-tabs';
 import * as React from 'react';
 import { MouseEvent } from 'react';
 import * as _ from 'lodash';
@@ -12,6 +16,7 @@ import { ReactorPanelFactory } from './ReactorPanelFactory';
 import { ReactorPanelModel } from './ReactorPanelModel';
 import { ComboBoxItem } from '../../combo/ComboBoxDirectives';
 import { styled } from '../../themes/reactor-theme-fragment';
+import { serializeChildren } from './ReactorExpandNodeFactory';
 
 export const TAB_BAR_HEIGHT = 30;
 
@@ -58,6 +63,13 @@ export class ReactorTabFactoryModel extends WorkspaceTabModel {
       width: 100,
       height: 100
     });
+  }
+
+  toArray(): WorkspaceTabModelSerialized {
+    return {
+      ...super.toArray(),
+      children: serializeChildren(this.children)
+    };
   }
 
   isEmpty() {

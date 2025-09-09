@@ -1,4 +1,9 @@
-import { WorkspaceTrayFactory, WorkspaceTrayMode, WorkspaceTrayModel } from '@projectstorm/react-workspaces-model-tray';
+import {
+  SerializedWorkspaceTrayModel,
+  WorkspaceTrayFactory,
+  WorkspaceTrayMode,
+  WorkspaceTrayModel
+} from '@projectstorm/react-workspaces-model-tray';
 import { WorkspaceModelFactoryEvent } from '@projectstorm/react-workspaces-core';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import * as React from 'react';
@@ -7,6 +12,7 @@ import { getTransparentColor } from '@journeyapps-labs/lib-reactor-utils';
 import { SmartTrayTitleWidget } from '../../../widgets/panel/tray/SmartTrayTitleWidget';
 import { FloatingWindowFactory } from '@projectstorm/react-workspaces-model-floating-window';
 import { styled } from '../../themes/reactor-theme-fragment';
+import { serializeChildren } from './ReactorExpandNodeFactory';
 
 namespace S {
   export const Pin = styled.div`
@@ -35,6 +41,13 @@ export class ReactorTrayModel extends WorkspaceTrayModel {
       factory: factory
     });
     this.setExpand(false, true);
+  }
+
+  toArray(): SerializedWorkspaceTrayModel {
+    return {
+      ...super.toArray(),
+      children: serializeChildren(this.children)
+    };
   }
 }
 

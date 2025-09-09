@@ -138,15 +138,21 @@ export abstract class ReactorPanelFactory<T extends ReactorPanelModel = ReactorP
 
   renderTitleBar(event: RenderTitleBarEvent<T>): React.JSX.Element {
     return (
-      <SmartPanelTitleWidget
-        btns={this.getAdditionalButtons(event)}
-        fullscreen={this.options.fullscreen}
-        icon={this.options.icon}
-        icon2={this.options.icon2}
-        color={this.options.color}
-        name={this.getSimpleName(event.model)}
-        event={event}
-        factory={this}
+      <Observer
+        render={() => {
+          return (
+            <SmartPanelTitleWidget
+              btns={this.getAdditionalButtons(event)}
+              fullscreen={this.options.fullscreen}
+              icon={this.options.icon}
+              icon2={this.options.icon2}
+              color={this.options.color}
+              name={this.getSimpleName(event.model)}
+              event={event}
+              factory={this}
+            />
+          );
+        }}
       />
     );
   }

@@ -6,12 +6,12 @@ import { getTransparentColor } from '@journeyapps-labs/lib-reactor-utils';
 import { ReactorComponentType } from '../../../stores/guide/selections/common';
 import { ReactorPanelModel } from '../../../stores/workspace/react-workspaces/ReactorPanelModel';
 import { css } from '@emotion/react';
-import { themed, theme } from '../../../stores/themes/reactor-theme-fragment';
+import { theme, themed } from '../../../stores/themes/reactor-theme-fragment';
 import { AwSnapWidget } from './AwSnapWidget';
 import { ReactorPanelFactory } from '../../../stores/workspace/react-workspaces/ReactorPanelFactory';
 import { WorkspaceModelFactoryEvent } from '@projectstorm/react-workspaces-core';
 import { Observer } from 'mobx-react';
-import { GetTheme, ThemeColors } from '../../../stores/themes/ThemeFragment';
+import { GetTheme } from '../../../stores/themes/ThemeFragment';
 
 export const WorkspaceModelContext = React.createContext<ReactorPanelModel>(null);
 

@@ -55,7 +55,7 @@
     "mobx-utils": "^6.1.1",
     "platform-detect": "^3.0.1",
     "property-information": "^7.1.0",
-    "query-string": "^9.2.2",
+    "query-string": "^9.3.0",
     "react": "^19.1.1",
     "react-avatar": "^5.0.4",
     "react-color": "^2.19.3",
@@ -66,13 +66,13 @@
     "react-spinners": "^0.17.0",
     "react-switch": "^7.1.0",
     "readable-stream": "^4.7.0",
-    "recharts": "^3.1.2",
+    "recharts": "^3.2.0",
     "rehype-external-links": "^3.0.0",
     "slick-carousel": "^1.8.1",
     "timeago.js": "^4.0.2",
     "typeface-fira-sans": "^1.1.13",
     "typeface-source-sans-pro": "^1.1.13",
-    "uuid": "11.1.0"
+    "uuid": "13.0.0"
   },
   "devDependencies": {
     "@babel/runtime": "^7.28.4",

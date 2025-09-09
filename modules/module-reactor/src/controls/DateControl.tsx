@@ -4,13 +4,12 @@ import { AbstractValueControl, AbstractValueControlOptions } from './AbstractVal
 import { Btn } from '../definitions/common';
 import { useForceUpdate } from '../hooks/useForceUpdate';
 import { RepresentAsComboBoxItemsEvent, RepresentAsControlOptions } from './AbstractControl';
-import { DateTimePickerType, DateTimePickerWidget } from '../widgets/forms/dates/DateTimePickerWidget';
+import { DateTimePickerType } from '../widgets/forms/dates/DateTimePickerWidget';
 import { ComboBoxItem, DialogStore } from '../stores/index';
 import { DateTimeButtonWidget, ReactorIcon } from '../widgets/index';
-import { makeObservable, observable } from 'mobx';
+import { observable } from 'mobx';
 import { DateInput, FormModel } from '../forms/index';
 import { ioc } from '../inversify.config';
-import { styled } from '../stores/themes/reactor-theme-fragment';
 
 export interface DateControlOptions extends AbstractValueControlOptions<Date> {
   type: DateTimePickerType;
