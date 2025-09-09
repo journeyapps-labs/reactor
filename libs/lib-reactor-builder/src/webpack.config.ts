@@ -25,7 +25,6 @@ export const generateCommonWebpack = (dir: string): Configuration => {
     { lib: 'lodash' },
     { lib: 'mobx', aliased: true },
     { lib: 'mobx-react', aliased: true },
-    { lib: 'uuid', aliased: true },
     { lib: 'luxon' },
     { lib: '@fortawesome/fontawesome-svg-core', aliased: true },
     { lib: '@fortawesome/free-brands-svg-icons', aliased: true },
