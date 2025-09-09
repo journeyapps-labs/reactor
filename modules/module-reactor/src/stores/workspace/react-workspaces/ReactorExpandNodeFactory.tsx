@@ -2,29 +2,34 @@ import * as React from 'react';
 import {
   DividerWidget,
   ExpandNodeModel,
+  ExpandNodeWidget,
+  WorkspaceModel,
   WorkspaceModelFactoryEvent,
-  WorkspaceNodeFactory,
-  ExpandNodeWidget
+  WorkspaceNodeFactory
 } from '@projectstorm/react-workspaces-core';
 import { ReactorPanelModel } from './ReactorPanelModel';
 import { ThemeStore } from '../../themes/ThemeStore';
 import { inject } from '../../../inversify.config';
 import { theme } from '../../themes/reactor-theme-fragment';
 
+export const serializeChildren = (children: WorkspaceModel[]) => {
+  return children
+    .filter((child) => {
+      // certain models we don't want to be serializable
+      if (child instanceof ReactorPanelModel) {
+        return child.isSerializable();
+      }
+      return true;
+    })
+    .map((m) => m.toArray());
+};
+
 export class ReactorWorkspaceNodeModel extends ExpandNodeModel {
   toArray() {
     const data = super.toArray();
     return {
       ...data,
-      children: this.children
-        .filter((child) => {
-          // certain models we don't want to be serializable
-          if (child instanceof ReactorPanelModel) {
-            return child.isSerializable();
-          }
-          return true;
-        })
-        .map((m) => m.toArray())
+      children: serializeChildren(this.children)
     };
   }
 }

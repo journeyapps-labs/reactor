@@ -25,7 +25,7 @@ export class DateInput extends ControlInput<
     );
     this.reactionDisposer = autorun(() => {
       let valid = (this.control as DateControl)?.valid;
-      this.setError(valid ? null : 'Invalid date');
+      this.setError(this.control.value && valid ? null : 'Invalid date');
     });
   }
 

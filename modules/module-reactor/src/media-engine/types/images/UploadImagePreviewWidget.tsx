@@ -13,11 +13,13 @@ export interface UploadImagePreviewWidgetProps {
   clear: () => any;
   media?: ImageMedia;
   mimeTypes?: string[];
+  className?: any;
 }
 
 export const UploadImagePreviewWidget: React.FC<UploadImagePreviewWidgetProps> = (props) => {
   return (
     <S.Preview
+      className={props.className}
       onClick={async () => {
         const file = await selectFile({ mimeTypes: props.mimeTypes });
 
