@@ -1,5 +1,11 @@
 # @journeyapps-labs/reactor-mod
 
+## 2.1.1
+
+### Patch Changes
+
+- 9f8ab19: Make sure that MultiSelectInput has values to enumerate over
+
 ## 2.1.0
 
 ### Minor Changes
