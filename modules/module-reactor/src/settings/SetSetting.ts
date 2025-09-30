@@ -1,5 +1,5 @@
 import { SetControl, SetControlOption } from '../controls/SetControl';
-import { SimpleComboBoxDirective } from '../stores/combo2/directives/SimpleComboBoxDirective';
+import { SimpleComboBoxDirective } from '../stores/combo2/directives/simple/SimpleComboBoxDirective';
 import { MousePosition } from '../widgets';
 import { AbstractInteractiveControlOptions } from './AbstractInteractiveSetting';
 import { AbstractUserSetting } from './AbstractUserSetting';

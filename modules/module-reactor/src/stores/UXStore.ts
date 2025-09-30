@@ -6,7 +6,7 @@ import { ComboBoxItem } from './combo/ComboBoxDirectives';
 import { AbstractStore } from './AbstractStore';
 import { v4 } from 'uuid';
 import { ComboBoxStore2 } from './combo2/ComboBoxStore2';
-import { SimpleComboBoxDirective } from './combo2/directives/SimpleComboBoxDirective';
+import { SimpleComboBoxDirective } from './combo2/directives/simple/SimpleComboBoxDirective';
 import { ChangeThemeAction } from '../actions';
 import { System } from '../core/System';
 import { WorkspaceStore } from './workspace/WorkspaceStore';

@@ -6,7 +6,7 @@ import { EntityDefinition } from '../../../entities/EntityDefinition';
 import { EncodedEntity } from '../../../entities/components/encoder/EntityEncoderComponent';
 import * as _ from 'lodash';
 import { ComboBoxStore2 } from '../../combo2/ComboBoxStore2';
-import { SimpleComboBoxDirective } from '../../combo2/directives/SimpleComboBoxDirective';
+import { SimpleComboBoxDirective } from '../../combo2/directives/simple/SimpleComboBoxDirective';
 import { NotificationStore } from '../../NotificationStore';
 import { MousePosition } from '../../../layers/combo/SmartPositionWidget';
 import { DialogStore } from '../../DialogStore';

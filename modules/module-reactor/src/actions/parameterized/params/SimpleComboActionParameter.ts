@@ -4,7 +4,7 @@ import { ComboBoxStore2 } from '../../../stores/combo2/ComboBoxStore2';
 import {
   SimpleComboBoxDirective,
   SimpleComboBoxDirectiveOptions
-} from '../../../stores/combo2/directives/SimpleComboBoxDirective';
+} from '../../../stores/combo2/directives/simple/SimpleComboBoxDirective';
 import { ParameterizedActionEvent } from '../ParameterizedAction';
 import { AbstractActionParameter, AbstractActionParameterOptions } from './AbstractActionParameter';
 

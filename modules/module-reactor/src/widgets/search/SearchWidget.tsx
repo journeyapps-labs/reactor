@@ -5,7 +5,7 @@ import { IconWidget, ReactorIcon } from '../icons/IconWidget';
 import styled from '@emotion/styled';
 import { ComboBoxStore2 } from '../../stores/combo2/ComboBoxStore2';
 import { inject } from '../../inversify.config';
-import { SimpleComboBoxDirective } from '../../stores/combo2/directives/SimpleComboBoxDirective';
+import { SimpleComboBoxDirective } from '../../stores/combo2/directives/simple/SimpleComboBoxDirective';
 import { SearchStore } from '../../stores/SearchStore';
 import { ComboBoxItem } from '../../stores';
 import { getTransparentColor } from '@journeyapps-labs/lib-reactor-utils';

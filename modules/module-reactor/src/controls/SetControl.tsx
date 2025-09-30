@@ -3,9 +3,8 @@ import { ComboBoxItem } from '../stores';
 import * as React from 'react';
 import { useEffect } from 'react';
 import { useForceUpdate } from '../hooks/useForceUpdate';
-import { ioc, inject } from '../inversify.config';
+import { inject, ioc } from '../inversify.config';
 import { ComboBoxStore2 } from '../stores/combo2/ComboBoxStore2';
-import { SimpleComboBoxDirective } from '../stores/combo2/directives/SimpleComboBoxDirective';
 import { v4 } from 'uuid';
 import { Btn } from '../definitions/common';
 import { ThemeStore } from '../stores/themes/ThemeStore';
@@ -14,6 +13,7 @@ import { AbstractValueControl, AbstractValueControlOptions } from './AbstractVal
 import { ReactorIcon } from '../widgets/icons/IconWidget';
 import { MousePosition } from '../layers/combo/SmartPositionWidget';
 import { PanelButtonWidget } from '../widgets/forms/PanelButtonWidget';
+import { SimpleComboBoxDirective } from '../stores/combo2/directives/simple/SimpleComboBoxDirective';
 
 export interface SetControlOption<T extends string> {
   key: T;

@@ -1,28 +1,26 @@
 import * as React from 'react';
-import { ComboBoxDirective, ComboBoxDirectiveOptions } from '../ComboBoxDirective';
-import { ComboBoxItem } from '../../combo/ComboBoxDirectives';
-import { ComboBoxWidget } from '../../../layers/combo/ComboBoxWidget';
-import { useForceUpdate } from '../../../hooks/useForceUpdate';
-import { ControlledSearchWidget } from '../../../widgets/search/ControlledSearchWidget';
+import { ComboBoxDirective, ComboBoxDirectiveOptions } from '../../ComboBoxDirective';
+import { ComboBoxItem } from '../../../combo/ComboBoxDirectives';
+import { ComboBoxWidget } from '../../../../layers/combo/ComboBoxWidget';
+import { useForceUpdate } from '../../../../hooks/useForceUpdate';
+import { ControlledSearchWidget } from '../../../../widgets/search/ControlledSearchWidget';
 import * as _ from 'lodash';
 import { createSearchEventMatcherBool } from '@journeyapps-labs/lib-reactor-search';
-import { styled } from '../../themes/reactor-theme-fragment';
+import { styled } from '../../../themes/reactor-theme-fragment';
 
-export interface SimpleComboBoxDirectiveOptions<T extends ComboBoxItem = ComboBoxItem>
-  extends ComboBoxDirectiveOptions {
+export interface BaseComboBoxDirectiveOptions<T extends ComboBoxItem = ComboBoxItem> extends ComboBoxDirectiveOptions {
   items: T[];
-  selected?: string;
   hideSearch?: boolean;
   sort?: boolean;
 }
 
-export class SimpleComboBoxDirective<T extends ComboBoxItem = ComboBoxItem> extends ComboBoxDirective<
-  T,
-  SimpleComboBoxDirectiveOptions<T>
-> {
+export class BaseComboBoxDirective<
+  T extends ComboBoxItem = ComboBoxItem,
+  O extends BaseComboBoxDirectiveOptions<T> = BaseComboBoxDirectiveOptions<T>
+> extends ComboBoxDirective<T, O> {
   private matcher: (c: string) => boolean;
 
-  constructor(options: SimpleComboBoxDirectiveOptions<T>) {
+  constructor(options: O) {
     super(options);
   }
 
@@ -38,13 +36,8 @@ export class SimpleComboBoxDirective<T extends ComboBoxItem = ComboBoxItem> exte
     this.setSelected([found]);
   }
 
-  getSelectedItem(): T | null {
-    return this.getSelected()[0] || null;
-  }
-
   setSelected(items: T[]) {
     super.setSelected(items);
-    this.dismiss();
     this.getSelected().forEach((s) => {
       s.action?.(this.getPosition());
     });
@@ -78,11 +71,11 @@ export class SimpleComboBoxDirective<T extends ComboBoxItem = ComboBoxItem> exte
   }
 }
 
-export interface SimpleComboBoxDirectiveWidgetProps {
-  directive: SimpleComboBoxDirective;
+export interface BaseComboBoxDirectiveWidgetProps {
+  directive: BaseComboBoxDirective;
 }
 
-export const SimpleComboBoxDirectiveWidget: React.FC<SimpleComboBoxDirectiveWidgetProps> = (props) => {
+export const SimpleComboBoxDirectiveWidget: React.FC<BaseComboBoxDirectiveWidgetProps> = (props) => {
   const forceUpdate = useForceUpdate();
 
   if (props.directive.getAllItems().length === 0) {

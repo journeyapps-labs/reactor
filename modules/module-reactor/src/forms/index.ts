@@ -10,6 +10,7 @@ export * from './controls/ImageInput';
 export * from './controls/NumberInput';
 export * from './controls/ProviderInput';
 export * from './controls/SelectInput';
+export * from './controls/MultiSelectInput';
 export * from './controls/text/TextAreaInput';
 export * from './controls/text/TextInput';
 export * from './FormInput';

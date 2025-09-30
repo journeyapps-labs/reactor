@@ -12,7 +12,7 @@ import { WorkspaceModelContext } from '../PanelWidget';
 import { ButtonComponentSelection, ReactorComponentType } from '../../../../stores/guide/selections/common';
 import { ReactorPanelModel } from '../../../../stores/workspace/react-workspaces/ReactorPanelModel';
 import { ComboBoxStore2 } from '../../../../stores/combo2/ComboBoxStore2';
-import { SimpleComboBoxDirective } from '../../../../stores/combo2/directives/SimpleComboBoxDirective';
+import { SimpleComboBoxDirective } from '../../../../stores/combo2/directives/simple/SimpleComboBoxDirective';
 import { styled } from '../../../../stores/themes/reactor-theme-fragment';
 import { System } from '../../../../core/System';
 import { IconWidget, ReactorIcon } from '../../../icons/IconWidget';

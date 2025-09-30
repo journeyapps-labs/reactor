@@ -2,7 +2,7 @@ import { action, observable } from 'mobx';
 import * as _ from 'lodash';
 import { EncodedEntity } from '../../entities/components/encoder/EntityEncoderComponent';
 import { ComboBoxStore2 } from '../combo2/ComboBoxStore2';
-import { SimpleComboBoxDirective } from '../combo2/directives/SimpleComboBoxDirective';
+import { SimpleComboBoxDirective } from '../combo2/directives/simple/SimpleComboBoxDirective';
 import { ActionMacroBehavior, ActionRollbackMechanic, ActionSource, EntityAction } from '../../actions';
 import { MousePosition, ReactorIcon } from '../../widgets';
 import { System } from '../../core/System';

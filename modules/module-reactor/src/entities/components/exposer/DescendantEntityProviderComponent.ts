@@ -2,7 +2,7 @@ import { EntityDefinitionComponent } from '../../EntityDefinitionComponent';
 import { ReactorTreeEntity, ReactorTreeNode, TreeWidgetProps } from '../../../widgets';
 import { inject } from '../../../inversify.config';
 import { ComboBoxStore2 } from '../../../stores/combo2/ComboBoxStore2';
-import { SimpleComboBoxDirective } from '../../../stores/combo2/directives/SimpleComboBoxDirective';
+import { SimpleComboBoxDirective } from '../../../stores/combo2/directives/simple/SimpleComboBoxDirective';
 import { AbstractEntityTreePresenterContext } from '../presenter/types/tree/presenter-contexts/AbstractEntityTreePresenterContext';
 import { Action, EntityAction } from '../../../actions';
 

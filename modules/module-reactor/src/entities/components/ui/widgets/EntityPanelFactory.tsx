@@ -10,7 +10,7 @@ import {
 import { inject } from '../../../../inversify.config';
 import { BatchStore } from '../../../../stores/batch/BatchStore';
 import { ComboBoxStore2 } from '../../../../stores/combo2/ComboBoxStore2';
-import { SimpleComboBoxDirective } from '../../../../stores/combo2/directives/SimpleComboBoxDirective';
+import { SimpleComboBoxDirective } from '../../../../stores/combo2/directives/simple/SimpleComboBoxDirective';
 import { ReactorPanelFactory } from '../../../../stores/workspace/react-workspaces/ReactorPanelFactory';
 import { ReactorPanelModel } from '../../../../stores/workspace/react-workspaces/ReactorPanelModel';
 import {

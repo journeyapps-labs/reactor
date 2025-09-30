@@ -9,6 +9,7 @@ import { CreateTodoAction } from './actions/CreateTodoAction';
 import { DeleteTodoAction } from './actions/DeleteTodoAction';
 import { CurrentTodoItemVisorMetadata } from './visor/CurrentTodoItemVisorMetadata';
 import { SetCurrentTodoItemAction } from './actions/SetCurrentTodoItemAction';
+import { ShowDemoFormAction } from './actions/ShowDemoFormAction';
 
 export class ReactorDemoModule extends AbstractReactorModule {
   constructor() {
@@ -28,6 +29,7 @@ export class ReactorDemoModule extends AbstractReactorModule {
     system.registerAction(new CreateTodoAction());
     system.registerAction(new DeleteTodoAction());
     system.registerAction(new SetCurrentTodoItemAction());
+    system.registerAction(new ShowDemoFormAction());
 
     visorStore.registerActiveMetadata(new CurrentTodoItemVisorMetadata());
 
