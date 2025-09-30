@@ -1,5 +1,11 @@
 # @journeyapps-labs/lib-reactor-builder
 
+## 2.0.1
+
+### Patch Changes
+
+- 1bd2ef3: Bump all dependencies
+
 ## 2.0.0
 
 ### Major Changes
