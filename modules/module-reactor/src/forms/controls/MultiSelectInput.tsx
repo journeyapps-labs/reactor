@@ -38,19 +38,19 @@ export const MultiSelectInputWidget: React.FC<MultiSelectInputWidgetProps> = (pr
       }
     });
   }, []);
-
+  let value = input.value || [];
   return (
     <div>
       {_.map(input.options.options, (option, key) => {
         return (
           <CheckboxLabelWidget
             label={option}
-            checked={input.value.indexOf(key) !== -1}
+            checked={value.indexOf(key) !== -1}
             onChange={(checked) => {
               if (checked) {
-                input.setValue([...input.value, key]);
+                input.setValue([...value, key]);
               } else {
-                input.setValue([...input.value.filter((v) => v !== key)]);
+                input.setValue([...value.filter((v) => v !== key)]);
               }
             }}
           />
