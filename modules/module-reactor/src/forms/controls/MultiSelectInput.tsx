@@ -40,7 +40,7 @@ export const MultiSelectInputWidget: React.FC<MultiSelectInputWidgetProps> = (pr
   }, []);
 
   return (
-    <>
+    <div>
       {_.map(input.options.options, (option, key) => {
         return (
           <CheckboxLabelWidget
@@ -56,6 +56,6 @@ export const MultiSelectInputWidget: React.FC<MultiSelectInputWidgetProps> = (pr
           />
         );
       })}
-    </>
+    </div>
   );
 };
