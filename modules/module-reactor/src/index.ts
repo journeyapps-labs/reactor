@@ -86,7 +86,9 @@ export * from './stores/dialog2/DialogStore2';
 export * from './stores/dialog2/AbstractDialogDirective';
 export * from './stores/dialog2/directives/FormDialogDirective';
 export * from './stores/combo2/directives/ComposableComboBoxDirective';
-export * from './stores/combo2/directives/SimpleComboBoxDirective';
+export * from './stores/combo2/directives/simple/BaseComboBoxDirective';
+export * from './stores/combo2/directives/simple/SimpleComboBoxDirective';
+export * from './stores/combo2/directives/simple/MultiComboBoxDirective';
 export * from './stores/combo2/directives/CascadingSearchEngineComboBoxDirective';
 export * from './stores/combo2/directives/SearchEngineComboBoxDirective';
 

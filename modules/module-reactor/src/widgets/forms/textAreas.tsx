@@ -4,7 +4,7 @@ import { themed } from '../../stores/themes/reactor-theme-fragment';
 export const TextArea = themed.textarea`
     font-family: 'Source Sans Pro';
     outline: none;
-    border: none;
+    border: solid 1px ${(p) => p.theme.forms.inputBorder};
     border-radius: 3px;
     color: ${(p) => p.theme.forms.inputForeground};
     background: ${(p) => p.theme.forms.inputBackground};

@@ -12,7 +12,7 @@ import { EntityDefinition } from '../entities/EntityDefinition';
 import { EncodedEntity } from '../entities/components/encoder/EntityEncoderComponent';
 import { AbstractStore } from '../stores';
 import { ComboBoxStore2 } from '../stores/combo2/ComboBoxStore2';
-import { SimpleComboBoxDirective } from '../stores/combo2/directives/SimpleComboBoxDirective';
+import { SimpleComboBoxDirective } from '../stores/combo2/directives/simple/SimpleComboBoxDirective';
 import { MousePosition } from '../layers/combo/SmartPositionWidget';
 import { Newable } from '@journeyapps-labs/common-ioc';
 import { BaseObserver } from '@journeyapps-labs/common-utils';

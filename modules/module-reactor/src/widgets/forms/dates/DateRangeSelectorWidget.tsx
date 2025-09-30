@@ -8,7 +8,7 @@ import { Layer, LayerManager } from '../../../stores/layer/LayerManager';
 import { getTransparentColor } from '@journeyapps-labs/lib-reactor-utils';
 import { DateTimePickerLayerWidget } from './DateTimePickerLayerWidget';
 import { ComboBoxStore2 } from '../../../stores/combo2/ComboBoxStore2';
-import { SimpleComboBoxDirective } from '../../../stores/combo2/directives/SimpleComboBoxDirective';
+import { SimpleComboBoxDirective } from '../../../stores/combo2/directives/simple/SimpleComboBoxDirective';
 import { SmartDateDisplayWidget } from '../../info/DateDisplayWidget';
 
 export interface DateRangeSelectorWidgetProps {

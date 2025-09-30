@@ -6,7 +6,7 @@ import { observer } from 'mobx-react';
 import { PanelButtonWidget } from '../forms/PanelButtonWidget';
 import { ioc } from '../../inversify.config';
 import { ComboBoxStore2 } from '../../stores/combo2/ComboBoxStore2';
-import { SimpleComboBoxDirective } from '../../stores/combo2/directives/SimpleComboBoxDirective';
+import { SimpleComboBoxDirective } from '../../stores/combo2/directives/simple/SimpleComboBoxDirective';
 
 const loader = require('../../../media/loader.png');
 
