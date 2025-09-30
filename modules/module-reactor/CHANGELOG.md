@@ -1,5 +1,20 @@
 # @journeyapps-labs/reactor-mod
 
+## 2.1.0
+
+### Minor Changes
+
+- 6ab9986: - Added MultiSelectInput
+  - Added MultiComboBoxDirective
+  - Fixed TextAreaInput styling
+
+### Patch Changes
+
+- 1bd2ef3: Bump all dependencies
+- Updated dependencies [1bd2ef3]
+  - @journeyapps-labs/lib-reactor-search@1.0.5
+  - @journeyapps-labs/lib-reactor-utils@2.0.4
+
 ## 2.0.0
 
 ### Major Changes
