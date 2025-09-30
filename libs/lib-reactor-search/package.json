@@ -19,6 +19,6 @@
   "dependencies": {
     "@journeyapps-labs/lib-reactor-utils": "workspace:*",
     "fastest-levenshtein": "^1.0.16",
-    "mobx": "^6.13.7"
+    "mobx": "^6.15.0"
   }
 }

@@ -13,10 +13,10 @@
     "@journeyapps-labs/reactor-mod": "workspace:^",
     "react": "19.1.1",
     "uuid": "^13.0.0",
-    "mobx": "^6.13.7"
+    "mobx": "^6.15.0"
   },
   "devDependencies": {
     "@journeyapps-labs/lib-reactor-builder": "workspace:^",
-    "@types/uuid": "^10.0.0"
+    "@types/uuid": "^11.0.0"
   }
 }

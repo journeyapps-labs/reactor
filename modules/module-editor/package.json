@@ -28,8 +28,8 @@
     "json5": "^2.2.3",
     "jszip": "^3.10.1",
     "lru-cache": "^5.1.1",
-    "mobx": "^6.13.7",
-    "mobx-react": "^9.2.0",
+    "mobx": "^6.15.0",
+    "mobx-react": "^9.2.1",
     "monaco-editor": "^0.53.0",
     "monaco-editor-textmate": "3.0.0",
     "monaco-textmate": "^3.0.1",
@@ -40,7 +40,7 @@
     "react-monaco-editor": "^0.59.0"
   },
   "devDependencies": {
-    "@types/react": "19.1.12",
+    "@types/react": "19.1.16",
     "json5-loader": "^4.0.1"
   }
 }
