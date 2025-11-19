@@ -51,14 +51,17 @@ export const SmartPositionWidget: React.FC<React.PropsWithChildren<SmartPosition
     };
   };
 
-  useDimensionObserver({
-    element: ref,
-    changed: (dimensions) => {
-      const s = getStyle(dimensions);
-      ref.current.style.top = s.top;
-      ref.current.style.left = s.left;
-    }
-  });
+  useDimensionObserver(
+    {
+      element: ref,
+      changed: (dimensions) => {
+        const s = getStyle(dimensions);
+        ref.current.style.top = s.top;
+        ref.current.style.left = s.left;
+      }
+    },
+    [props.position.clientX, props.position.clientY]
+  );
 
   return (
     <S.Box animate={props.animate} className={props.className} ref={ref}>

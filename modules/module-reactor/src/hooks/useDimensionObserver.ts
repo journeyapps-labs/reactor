@@ -13,7 +13,7 @@ export interface UseDimensionObserverOptions {
   element: React.RefObject<HTMLElement>;
 }
 
-export const useDimensionObserver = (props: UseDimensionObserverOptions) => {
+export const useDimensionObserver = (props: UseDimensionObserverOptions, bust: any[] = []) => {
   const [dimensions, setDimensions] = useState<Dimensions>(null);
 
   let check = useCallback(() => {
@@ -30,7 +30,7 @@ export const useDimensionObserver = (props: UseDimensionObserverOptions) => {
     if (dimensions) {
       props.changed(dimensions);
     }
-  }, [dimensions]);
+  }, [dimensions, ...bust]);
 
   useEffect(() => {
     check();
