@@ -1,5 +1,19 @@
 # @journeyapps-labs/reactor-mod-editor
 
+## 1.1.8
+
+### Patch Changes
+
+- 2b3fd96: Bump all dependencies
+- d948a53: react-dom needs to be a dependency
+- Updated dependencies [2b3fd96]
+- Updated dependencies [2b3fd96]
+- Updated dependencies [2b3fd96]
+  - @journeyapps-labs/lib-reactor-builder@2.0.2
+  - @journeyapps-labs/lib-reactor-utils@2.0.5
+  - @journeyapps-labs/reactor-mod@3.0.0
+  - @journeyapps-labs/lib-reactor-search@1.0.6
+
 ## 1.1.7
 
 ### Patch Changes

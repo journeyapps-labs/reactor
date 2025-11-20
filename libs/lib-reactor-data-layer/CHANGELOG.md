@@ -1,5 +1,14 @@
 # @journeyapps-labs/lib-reactor-data-layer
 
+## 1.0.6
+
+### Patch Changes
+
+- 2b3fd96: Bump all dependencies
+- Updated dependencies [2b3fd96]
+  - @journeyapps-labs/lib-reactor-utils@2.0.5
+  - @journeyapps-labs/lib-reactor-search@1.0.6
+
 ## 1.0.5
 
 ### Patch Changes

@@ -1,6 +1,6 @@
 {
   "name": "@journeyapps-labs/reactor-mod-editor",
-  "version": "1.1.7",
+  "version": "1.1.8",
   "publishConfig": {
     "registry": "https://registry.npmjs.org/",
     "access": "public"
@@ -37,7 +37,7 @@
     "monaco-yaml": "^5.4.0",
     "onigasm": "^2.2.5",
     "react": "19.2.0",
-    "react-dom":"19.2.0",
+    "react-dom": "19.2.0",
     "react-monaco-editor": "^0.59.0"
   },
   "devDependencies": {

@@ -1,5 +1,12 @@
 # @journeyapps-labs/lib-reactor-search
 
+## 1.0.6
+
+### Patch Changes
+
+- Updated dependencies [2b3fd96]
+  - @journeyapps-labs/lib-reactor-utils@2.0.5
+
 ## 1.0.5
 
 ### Patch Changes

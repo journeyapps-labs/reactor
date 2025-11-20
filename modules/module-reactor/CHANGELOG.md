@@ -1,5 +1,19 @@
 # @journeyapps-labs/reactor-mod
 
+## 3.0.0
+
+### Major Changes
+
+- 2b3fd96: help buttons were removed, as they were mot used for the meta icons
+
+### Patch Changes
+
+- 2b3fd96: Bump all dependencies
+- 2b3fd96: Fixed a positioning issue with the dimension observer
+- Updated dependencies [2b3fd96]
+  - @journeyapps-labs/lib-reactor-utils@2.0.5
+  - @journeyapps-labs/lib-reactor-search@1.0.6
+
 ## 2.1.1
 
 ### Patch Changes
