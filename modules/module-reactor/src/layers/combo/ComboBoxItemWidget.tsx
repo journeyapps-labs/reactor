@@ -1,13 +1,14 @@
 import * as React from 'react';
+import { MouseEvent } from 'react';
 
 import { ComboBoxItem } from '../../stores/combo/ComboBoxDirectives';
 import { IconWidget } from '../../widgets/icons/IconWidget';
-import { MouseEvent } from 'react';
 import { css } from '@emotion/react';
 import { AttentionWrapperWidget } from '../../widgets/guide/AttentionWrapperWidget';
 import { ButtonComponentSelection, ReactorComponentType } from '../../stores/guide/selections/common';
 import { themed } from '../../stores/themes/reactor-theme-fragment';
 import { COMBOBOX_ITEM_H_PADDING } from '../../layout';
+import * as _ from 'lodash';
 
 export interface ComboBoxItemWidgetProps {
   item: ComboBoxItem;
@@ -184,7 +185,9 @@ export class ComboBoxItemWidget extends React.Component<React.PropsWithChildren<
         type={ReactorComponentType.COMBO_BOX_ITEM}
         activated={(selected) => {
           if (!this.scrolled && !!selected) {
-            this.getRef()?.current?.scrollIntoView();
+            _.defer(() => {
+              this.getRef()?.current?.scrollIntoView();
+            });
             this.scrolled = true;
           }
           return this.getItem(!!selected);

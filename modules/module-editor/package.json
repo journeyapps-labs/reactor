@@ -19,7 +19,7 @@
   },
   "dependencies": {
     "@journeyapps-labs/common-ioc": "^1.0.0",
-    "@journeyapps-labs/common-utils": "^1.0.0",
+    "@journeyapps-labs/common-utils": "^1.0.1",
     "@journeyapps-labs/lib-reactor-builder": "workspace:*",
     "@journeyapps-labs/lib-reactor-search": "workspace:*",
     "@journeyapps-labs/lib-reactor-utils": "workspace:*",
@@ -30,17 +30,17 @@
     "lru-cache": "^5.1.1",
     "mobx": "^6.15.0",
     "mobx-react": "^9.2.1",
-    "monaco-editor": "^0.53.0",
+    "monaco-editor": "^0.54.0",
     "monaco-editor-textmate": "3.0.0",
     "monaco-textmate": "^3.0.1",
     "monaco-vim": "^0.4.2",
     "monaco-yaml": "^5.4.0",
     "onigasm": "^2.2.5",
-    "react": "19.1.1",
+    "react": "19.2.0",
     "react-monaco-editor": "^0.59.0"
   },
   "devDependencies": {
-    "@types/react": "19.1.16",
+    "@types/react": "19.2.6",
     "json5-loader": "^4.0.1"
   }
 }

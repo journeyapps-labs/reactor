@@ -15,9 +15,9 @@
   },
   "devDependencies": {
     "@types/compression": "^1.8.1",
-    "@types/express": "^5.0.3",
+    "@types/express": "^5.0.5",
     "@types/express-session": "^1.18.2",
     "env-cmd": "^11.0.0",
-    "nodemon": "^3.1.10"
+    "nodemon": "^3.1.11"
   }
 }

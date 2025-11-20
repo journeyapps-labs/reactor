@@ -83,7 +83,6 @@ export class UXStore extends AbstractStore {
 
   // meta buttons
   accountButtonOptions: Set<ComboBoxItem>;
-  helpButtonItems: Set<ComboBoxItem>;
   settingsButtonItems: Set<ComboBoxItem>;
 
   constructor(protected options2: UXStoreOptions) {
@@ -116,7 +115,6 @@ export class UXStore extends AbstractStore {
     this.secondaryHeader = null;
     this.cssFragments = new Map<string, string>();
     this.accountButtonOptions = new Set();
-    this.helpButtonItems = new Set();
     this.settingsButtonItems = new Set();
   }
 
