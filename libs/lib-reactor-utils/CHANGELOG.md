@@ -1,5 +1,11 @@
 # @journeyapps-labs/lib-reactor-utils
 
+## 2.0.5
+
+### Patch Changes
+
+- 2b3fd96: Bump all dependencies
+
 ## 2.0.4
 
 ### Patch Changes
