@@ -90,8 +90,8 @@ export const GrammerMapping: GrammerMappingType = {
     url: json,
     monaco: MonacoLanguages.JSON,
     hook: () => {
-      monaco.languages.json.jsonDefaults.setModeConfiguration({
-        ...monaco.languages.json.jsonDefaults.modeConfiguration,
+      monaco.json.jsonDefaults.setModeConfiguration({
+        ...monaco.json.jsonDefaults.modeConfiguration,
         tokens: false
       });
     }

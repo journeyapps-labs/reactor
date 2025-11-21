@@ -30,7 +30,7 @@
     "lru-cache": "^5.1.1",
     "mobx": "^6.15.0",
     "mobx-react": "^9.2.1",
-    "monaco-editor": "^0.54.0",
+    "monaco-editor": "^0.55.1",
     "monaco-editor-textmate": "3.0.0",
     "monaco-textmate": "^3.0.1",
     "monaco-vim": "^0.4.2",

@@ -35,6 +35,6 @@
     "@types/lodash": "^4.17.20",
     "@types/luxon": "^3.7.1",
     "@types/node": "^24.10.1",
-    "vitest": "^4.0.10"
+    "vitest": "^4.0.12"
   }
 }

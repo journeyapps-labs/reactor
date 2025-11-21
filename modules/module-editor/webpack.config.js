@@ -4,7 +4,7 @@ module.exports = (webpack) => {
   webpack = patchExportedLibrary({
     w: webpack,
     module: 'monaco-editor',
-    test: /monaco-editor\/esm\/vs\/editor\/edcore\.main\.js/,
+    test: /monaco-patch\.js/,
     dir: __dirname
   });
 
@@ -56,7 +56,7 @@ module.exports = (webpack) => {
           ...webpack.resolve.alias,
           'lru-cache': path.join(__dirname, 'node_modules', 'lru-cache'),
           'monaco-editor/esm': 'monaco-editor/esm',
-          'monaco-editor$': 'monaco-editor/esm/vs/editor/edcore.main.js'
+          'monaco-editor$': path.join(__dirname, 'monaco-patch.js')
         }
       },
       module: {
