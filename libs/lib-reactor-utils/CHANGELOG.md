@@ -1,5 +1,11 @@
 # @journeyapps-labs/lib-reactor-utils
 
+## 2.0.6
+
+### Patch Changes
+
+- b691ff0: Fix issues with module-editor due to new monaco changes
+
 ## 2.0.5
 
 ### Patch Changes

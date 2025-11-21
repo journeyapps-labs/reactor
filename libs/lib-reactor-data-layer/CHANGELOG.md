@@ -1,5 +1,14 @@
 # @journeyapps-labs/lib-reactor-data-layer
 
+## 1.0.7
+
+### Patch Changes
+
+- b691ff0: Fix issues with module-editor due to new monaco changes
+- Updated dependencies [b691ff0]
+  - @journeyapps-labs/lib-reactor-utils@2.0.6
+  - @journeyapps-labs/lib-reactor-search@1.0.7
+
 ## 1.0.6
 
 ### Patch Changes
