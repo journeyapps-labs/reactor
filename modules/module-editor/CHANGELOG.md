@@ -1,5 +1,15 @@
 # @journeyapps-labs/reactor-mod-editor
 
+## 1.1.9
+
+### Patch Changes
+
+- b691ff0: Fix issues with module-editor due to new monaco changes
+- Updated dependencies [b691ff0]
+  - @journeyapps-labs/lib-reactor-utils@2.0.6
+  - @journeyapps-labs/reactor-mod@3.0.1
+  - @journeyapps-labs/lib-reactor-search@1.0.7
+
 ## 1.1.8
 
 ### Patch Changes
