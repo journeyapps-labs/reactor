@@ -1,6 +1,6 @@
 import * as monaco from 'monaco-editor';
 import * as platform from 'monaco-editor/esm/vs/platform/registry/common/platform.js';
-import { Extensions } from 'monaco-editor/esm/vs/platform/theme/common/colorRegistry.js';
+import { Extensions } from 'monaco-editor/esm/vs/platform/theme/common/colorUtils.js';
 import { Themes } from '@journeyapps-labs/reactor-mod';
 import { colorToAHex } from '@journeyapps-labs/lib-reactor-utils';
 import * as _ from 'lodash';
