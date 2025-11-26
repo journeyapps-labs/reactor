@@ -1,5 +1,11 @@
 # @journeyapps-labs/reactor-mod
 
+## 3.0.2
+
+### Patch Changes
+
+- 9fe67f3: Small bug with positioning not being set with the SmartPositionWidget
+
 ## 3.0.1
 
 ### Patch Changes
