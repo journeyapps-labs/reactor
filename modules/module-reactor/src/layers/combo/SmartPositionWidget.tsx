@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { useEffect, useRef } from 'react';
+import { useRef } from 'react';
 import styled from '@emotion/styled';
 import { observer } from 'mobx-react';
 import { useDimensionObserver } from '../../hooks/useDimensionObserver';
@@ -10,7 +10,7 @@ export interface MousePosition {
 }
 
 export interface SmartPositionWidgetProps {
-  position: MousePosition;
+  position?: MousePosition;
   className?: any;
   animate?: boolean;
 }
@@ -60,7 +60,7 @@ export const SmartPositionWidget: React.FC<React.PropsWithChildren<SmartPosition
         ref.current.style.left = s.left;
       }
     },
-    [props.position.clientX, props.position.clientY]
+    [props.position?.clientX, props.position?.clientY]
   );
 
   return (
