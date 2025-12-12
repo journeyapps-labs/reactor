@@ -1,5 +1,4 @@
 import * as React from 'react';
-import { useRef } from 'react';
 import { Btn } from '../../../../definitions/common';
 import { inject, ioc } from '../../../../inversify.config';
 import { WorkspaceCollectionModel, WorkspaceNodeModel } from '@projectstorm/react-workspaces-core';
@@ -20,6 +19,8 @@ import { FloatingWindowModel } from '@projectstorm/react-workspaces-model-floati
 import { ReactorPanelFactory } from '../../../../stores/workspace/react-workspaces/ReactorPanelFactory';
 import { ActionSource } from '../../../../actions/Action';
 import { ReactorEntities } from '../../../../entities-reactor/ReactorEntities';
+import { useButton } from '../../../../hooks/useButton';
+import { PassiveActionValidationState } from '../../../../actions/validators/ActionValidator';
 
 export interface PanelTitleWidgetProps {
   name: string;
@@ -94,7 +95,12 @@ namespace S {
 }
 
 const PanelIconButton: React.FC<{ btn: Btn; highlight: boolean }> = ({ btn, highlight }) => {
-  const ref = useRef(null);
+  const { onClick, disabled, ref, validationResult } = useButton({ btn });
+
+  if (validationResult.type === PassiveActionValidationState.DISALLOWED) {
+    return null;
+  }
+
   return (
     <AttentionWrapperWidget<ButtonComponentSelection>
       forwardRef={ref}
@@ -106,16 +112,16 @@ const PanelIconButton: React.FC<{ btn: Btn; highlight: boolean }> = ({ btn, high
         return (
           <S.Button
             ref={ref}
-            highlight={highlight}
+            highlight={highlight && !disabled}
             selected={!!selected}
             aria-label={btn.tooltip || btn.label}
             data-balloon-pos="left"
             onClick={(event) => {
               event.persist();
-              btn.action && btn.action(event);
+              onClick(event);
             }}
           >
-            <S.PanelMicroButtonIcon highlight={highlight} icon={btn.icon} />
+            <S.PanelMicroButtonIcon highlight={highlight && !disabled} icon={btn.icon} />
           </S.Button>
         );
       }}
