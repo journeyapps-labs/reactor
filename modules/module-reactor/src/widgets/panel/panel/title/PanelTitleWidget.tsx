@@ -97,7 +97,7 @@ namespace S {
 const PanelIconButton: React.FC<{ btn: Btn; highlight: boolean }> = ({ btn, highlight }) => {
   const { onClick, disabled, ref, validationResult } = useButton({ btn });
 
-  if (validationResult.type === PassiveActionValidationState.DISALLOWED) {
+  if (validationResult?.type === PassiveActionValidationState.DISALLOWED) {
     return null;
   }
 
