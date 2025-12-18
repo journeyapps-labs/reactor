@@ -1,5 +1,11 @@
 # @journeyapps-labs/reactor-mod
 
+## 3.0.3
+
+### Patch Changes
+
+- 7f06677: Update and ensure action validation in additionalButtons
+
 ## 3.0.2
 
 ### Patch Changes
