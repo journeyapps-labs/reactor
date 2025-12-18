@@ -156,9 +156,7 @@ export class EntityPanelFactory<T> extends ReactorPanelFactory<EntityPanelModel<
   getAdditionalButtons(event: RenderTitleBarEvent<EntityPanelModel<T>>): Btn[] {
     return [
       ...super.getAdditionalButtons(event),
-      ...this.component.additionalActions.map((a) => {
-        return this.system.getActionByID(a).representAsButton();
-      })
+      ...this.component.additionalActions.map((a) => this.system.getActionByID(a).representAsControl().representAsBtn())
     ];
   }
 
