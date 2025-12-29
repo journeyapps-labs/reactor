@@ -36,25 +36,7 @@ export class MonacoKeybindingStore extends AbstractStore {
           this.focusedEditor = editor;
         });
         const l3 = editor.onDidBlurEditorText(() => {
-          setTimeout(() => {
-            /*
-              If the cmd palette is opened while we have focus, we don't want to clear the focus editor, because
-              we need it when using the `MonacoCommandPalletSearchEngine`. In all other cases, we want to clear
-              this so that the Reactor Actions appear first
-             */
-            if (this.focusedEditor === editor && options2.cmdPaletteStore.show === null) {
-              this.focusedEditor = null;
-            } else {
-              // wait for cmd palette to close and only then clear the focus editor
-              autorunDisposer = autorun(() => {
-                if (options2.cmdPaletteStore.show === null) {
-                  this.focusedEditor = null;
-                  autorunDisposer?.();
-                  autorunDisposer = null;
-                }
-              });
-            }
-          }, 1000);
+          autorunDisposer = this.setupFocusRestoration(editor, autorunDisposer);
         });
         const l2 = editor.onDidDispose(() => {
           l1.dispose();
@@ -76,6 +58,46 @@ export class MonacoKeybindingStore extends AbstractStore {
   protected async _init(): Promise<void> {
     this.keybindingRegistry.load();
     this.actions = await this.getDefaultActions();
+  }
+
+  /*
+  If the cmd palette is opened while we have focus, we don't want to clear the focus editor, because
+  we need it when using the `MonacoCommandPalletSearchEngine`. In all other cases, we want to clear
+  this so that the Reactor Actions appear first
+  */
+  private setupFocusRestoration(editor: MonacoEditorType, existingDisposer: IReactionDisposer): IReactionDisposer {
+    const isCmdPaletteOpen = this.options2.cmdPaletteStore.show !== null;
+
+    if (!isCmdPaletteOpen) {
+      this.scheduleFocusedEditorCleanup(editor);
+      return existingDisposer;
+    }
+
+    existingDisposer?.();
+
+    let newDisposer: IReactionDisposer = null;
+    newDisposer = autorun(() => {
+      const isCmdPaletteClosed = this.options2.cmdPaletteStore.show === null;
+      if (!isCmdPaletteClosed) {
+        return;
+      }
+
+      editor.focus();
+      this.focusedEditor = null;
+      newDisposer?.();
+      newDisposer = null;
+    });
+
+    return newDisposer;
+  }
+
+  private scheduleFocusedEditorCleanup(editor: MonacoEditorType): void {
+    setTimeout(() => {
+      if (this.focusedEditor !== editor) {
+        return;
+      }
+      this.focusedEditor = null;
+    }, 1000);
   }
 
   getActionFromID(id: string): MonacoStoreAction {
