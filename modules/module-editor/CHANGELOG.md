@@ -1,5 +1,11 @@
 # @journeyapps-labs/reactor-mod-editor
 
+## 1.1.12
+
+### Patch Changes
+
+- 110fe9c: Fixed Monaco editor refocus on cmd pallete closure
+
 ## 1.1.11
 
 ### Patch Changes
