@@ -1,5 +1,11 @@
 # @journeyapps-labs/reactor-mod
 
+## 4.0.0
+
+### Major Changes
+
+- 0b471b5: Deserialization in AbstractStore needs to be considered async in order to emit when deserilization occured.
+
 ## 3.0.3
 
 ### Patch Changes
