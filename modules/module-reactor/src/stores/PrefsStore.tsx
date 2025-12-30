@@ -81,7 +81,7 @@ export class PrefsStore extends AbstractStore<PrefsSerialized> {
     return prefs;
   }
 
-  deserialize(data: PrefsSerialized) {
+  async deserialize(data: PrefsSerialized) {
     _.forEach(this.controls, (control: AbstractSetting) => {
       if (data.controls[control.options.key] !== undefined) {
         control.doDeserialize(data.controls[control.options.key]);

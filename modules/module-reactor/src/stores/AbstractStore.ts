@@ -13,6 +13,7 @@ export interface AbstractStoreOptions<T> {
 
 export interface AbstractStoreListener {
   initialized: () => any;
+  deserialized: () => any;
 }
 
 export class AbstractStore<T = any, L extends AbstractStoreListener = AbstractStoreListener> extends BaseObserver<L> {
@@ -45,7 +46,7 @@ export class AbstractStore<T = any, L extends AbstractStoreListener = AbstractSt
     return null;
   }
 
-  protected deserialize(data: T) {
+  protected async deserialize(data: T): Promise<any> {
     // do nothing
   }
 
@@ -55,7 +56,8 @@ export class AbstractStore<T = any, L extends AbstractStoreListener = AbstractSt
     }
     const data = await this.options.serializer.deserialize();
     if (data) {
-      this.deserialize(data);
+      await this.deserialize(data);
+      this.iterateListeners((cb) => cb.deserialized?.());
       return true;
     }
     return false;
