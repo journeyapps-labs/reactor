@@ -20,11 +20,11 @@
     "@journeyapps-labs/lib-reactor-search": "workspace:*",
     "@journeyapps-labs/lib-reactor-utils": "workspace:*",
     "@journeyapps-labs/common-utils": "^1.0.1",
-    "lodash": "^4.17.21",
+    "lodash": "^4.17.23",
     "mobx": "^6.15.0"
   },
   "devDependencies": {
-    "@types/lodash": "^4.17.20",
-    "vitest": "^4.0.12"
+    "@types/lodash": "^4.17.23",
+    "vitest": "^4.0.18"
   }
 }
