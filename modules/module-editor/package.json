@@ -33,15 +33,15 @@
     "monaco-editor": "^0.55.1",
     "monaco-editor-textmate": "3.0.0",
     "monaco-textmate": "^3.0.1",
-    "monaco-vim": "^0.4.2",
+    "monaco-vim": "^0.4.4",
     "monaco-yaml": "^5.4.0",
     "onigasm": "^2.2.5",
-    "react": "19.2.0",
-    "react-dom": "19.2.0",
+    "react": "19.2.4",
+    "react-dom": "19.2.4",
     "react-monaco-editor": "^0.59.0"
   },
   "devDependencies": {
-    "@types/react": "19.2.6",
+    "@types/react": "19.2.9",
     "json5-loader": "^4.0.1"
   }
 }

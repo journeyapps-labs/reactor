@@ -18,14 +18,14 @@
   },
   "dependencies": {
     "@journeyapps-labs/lib-reactor-utils": "workspace:*",
-    "cheerio": "^1.1.2",
-    "express": "^5.1.0",
-    "lodash": "^4.17.21",
-    "ua-parser-js": "2.0.6"
+    "cheerio": "^1.2.0",
+    "express": "^5.2.1",
+    "lodash": "^4.17.23",
+    "ua-parser-js": "2.0.8"
   },
   "devDependencies": {
-    "@types/express": "^5.0.5",
+    "@types/express": "^5.0.6",
     "@types/express-session": "^1.18.2",
-    "@types/lodash": "^4.17.20"
+    "@types/lodash": "^4.17.23"
   }
 }
