@@ -7,9 +7,8 @@ import {
 import * as React from 'react';
 import { MouseEvent } from 'react';
 import * as _ from 'lodash';
-import { Observer } from 'mobx-react';
 import { ComboBoxStore } from '../../combo/ComboBoxStore';
-import { ioc, inject } from '../../../inversify.config';
+import { inject, ioc } from '../../../inversify.config';
 import { TabMicroButtonWidget } from '../../../widgets/panel/tabs/TabMicroButtonWidget';
 import { WorkspaceStore } from '../WorkspaceStore';
 import { ReactorPanelFactory } from './ReactorPanelFactory';
@@ -132,9 +131,6 @@ export class ReactorTabFactory extends WorkspaceTabFactory<ReactorTabFactoryMode
   }
 
   generateTabsContainer(event): React.JSX.Element {
-    // return (
-    //   <Observer
-    //     render={() => {
     return (
       <S.Outer>
         <S.Container>
@@ -173,8 +169,5 @@ export class ReactorTabFactory extends WorkspaceTabFactory<ReactorTabFactoryMode
         </S.Container>
       </S.Outer>
     );
-    /* }}
-      />
-    );*/
   }
 }
