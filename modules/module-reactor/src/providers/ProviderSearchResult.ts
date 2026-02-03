@@ -6,8 +6,10 @@ export interface ProviderSearchResultEntity<ENTITY = any> extends SearchResultEn
   entity: ENTITY;
 }
 
-export interface ProviderSearchResultSerialized<ENTITY = any, SERIALIZED extends SerializedEntity = SerializedEntity>
-  extends ProviderSearchResultEntity<ENTITY> {
+export interface ProviderSearchResultSerialized<
+  ENTITY = any,
+  SERIALIZED extends SerializedEntity = SerializedEntity
+> extends ProviderSearchResultEntity<ENTITY> {
   serialized: SERIALIZED;
 }
 

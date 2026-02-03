@@ -1,8 +1,9 @@
 import { ComboBoxItem } from '../../../combo/ComboBoxDirectives';
 import { BaseComboBoxDirective, BaseComboBoxDirectiveOptions } from './BaseComboBoxDirective';
 
-export interface MultiComboBoxDirectiveOptions<T extends ComboBoxItem = ComboBoxItem>
-  extends BaseComboBoxDirectiveOptions<T> {
+export interface MultiComboBoxDirectiveOptions<
+  T extends ComboBoxItem = ComboBoxItem
+> extends BaseComboBoxDirectiveOptions<T> {
   selected?: string[];
 }
 

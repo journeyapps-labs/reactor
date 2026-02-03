@@ -3,7 +3,6 @@ import { observer } from 'mobx-react';
 import styled from '@emotion/styled';
 import { keyframes } from '@emotion/react';
 
-// FIXME wrong name
 export interface AssetsTreeWidgetProps {
   dropped: (files: File[]) => any;
 }

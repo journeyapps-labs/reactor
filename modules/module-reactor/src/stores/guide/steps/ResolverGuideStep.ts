@@ -2,8 +2,9 @@ import { GuideStep, GuideStepOptions } from './GuideStep';
 import { IReactionDisposer, autorun } from 'mobx';
 import { ReactorComponentSelections } from '../selections/common';
 
-export interface ResolverGuideStepOptions<E extends ReactorComponentSelections = ReactorComponentSelections>
-  extends GuideStepOptions<E> {
+export interface ResolverGuideStepOptions<
+  E extends ReactorComponentSelections = ReactorComponentSelections
+> extends GuideStepOptions<E> {
   isResolved: () => boolean;
 }
 

@@ -132,51 +132,49 @@ export class ReactorTabFactory extends WorkspaceTabFactory<ReactorTabFactoryMode
   }
 
   generateTabsContainer(event): React.JSX.Element {
+    // return (
+    //   <Observer
+    //     render={() => {
     return (
-      <Observer
-        render={() => {
-          return (
-            <S.Outer>
-              <S.Container>
-                <S.Tabs>{event.content}</S.Tabs>
-                <S.TabButtons draggable={false}>
-                  <TabMicroButtonWidget
-                    btn={ioc.get(WorkspaceStore).generateFullscreenButton(event.model.getSelected())}
-                  />
-                  <TabMicroButtonWidget
-                    btn={{
-                      icon: 'angle-down',
-                      action: async (e: MouseEvent) => {
-                        const workspaceStore = ioc.get(WorkspaceStore);
-                        const selected = await this.comboBoxStore.showComboBox(
-                          _.chain(event.model.children)
-                            .filter((model) => {
-                              return workspaceStore.engine.getFactory(model) instanceof ReactorPanelFactory;
-                            })
-                            .map((model) => {
-                              return {
-                                title: workspaceStore.engine
-                                  .getFactory<ReactorPanelFactory>(model)
-                                  .getSimpleName(model as ReactorPanelModel),
-                                key: model.id
-                              } as ComboBoxItem;
-                            })
-                            .value(),
-                          e
-                        );
+      <S.Outer>
+        <S.Container>
+          <S.Tabs>{event.content}</S.Tabs>
+          <S.TabButtons draggable={false}>
+            <TabMicroButtonWidget btn={ioc.get(WorkspaceStore).generateFullscreenButton(event.model.getSelected())} />
+            <TabMicroButtonWidget
+              btn={{
+                icon: 'angle-down',
+                action: async (e: MouseEvent) => {
+                  const workspaceStore = ioc.get(WorkspaceStore);
+                  const selected = await this.comboBoxStore.showComboBox(
+                    _.chain(event.model.children)
+                      .filter((model) => {
+                        return workspaceStore.engine.getFactory(model) instanceof ReactorPanelFactory;
+                      })
+                      .map((model) => {
+                        return {
+                          title: workspaceStore.engine
+                            .getFactory<ReactorPanelFactory>(model)
+                            .getSimpleName(model as ReactorPanelModel),
+                          key: model.id
+                        } as ComboBoxItem;
+                      })
+                      .value(),
+                    e
+                  );
 
-                        if (selected) {
-                          event.model.setSelected(_.find(event.model.children, { id: selected.key }));
-                        }
-                      }
-                    }}
-                  />
-                </S.TabButtons>
-              </S.Container>
-            </S.Outer>
-          );
-        }}
-      />
+                  if (selected) {
+                    event.model.setSelected(_.find(event.model.children, { id: selected.key }));
+                  }
+                }
+              }}
+            />
+          </S.TabButtons>
+        </S.Container>
+      </S.Outer>
     );
+    /* }}
+      />
+    );*/
   }
 }

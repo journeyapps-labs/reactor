@@ -117,7 +117,7 @@ export abstract class ReactorPanelFactory<T extends ReactorPanelModel = ReactorP
     // we wrap this in an observer, so we can auto repaint when tab icons or other props repaint
     return (
       <Observer
-        children={() => {
+        render={() => {
           return this.generatePanelTabInternal(event);
         }}
       />

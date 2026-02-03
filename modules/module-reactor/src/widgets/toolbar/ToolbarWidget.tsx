@@ -7,6 +7,7 @@ import { PanelButtonWidget } from '../forms/PanelButtonWidget';
 import { ioc } from '../../inversify.config';
 import { ComboBoxStore2 } from '../../stores/combo2/ComboBoxStore2';
 import { SimpleComboBoxDirective } from '../../stores/combo2/directives/simple/SimpleComboBoxDirective';
+import { Fonts } from '../../fonts';
 
 const loader = require('../../../media/loader.png');
 
@@ -54,7 +55,7 @@ namespace S {
 
   export const Text = themed.div`
     transform: rotateZ(-90deg);
-    font-family: "Open Sans", sans-serif;
+    font-family: ${Fonts.PRIMARY};
     font-size: 14px;
     color: ${(p) => p.theme.text.primary};
     position: absolute;

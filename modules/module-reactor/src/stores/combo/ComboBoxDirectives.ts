@@ -76,5 +76,6 @@ export interface UISearchEngineDirective extends UIDirective {
 
 export interface ComboBoxSearchEngineResultEntry extends SearchResultEntry, ComboBoxItem {}
 
-export interface ComboBoxSearchEngine<T extends ComboBoxSearchEngineResultEntry = ComboBoxSearchEngineResultEntry>
-  extends SearchEngineInterface<T> {}
+export interface ComboBoxSearchEngine<
+  T extends ComboBoxSearchEngineResultEntry = ComboBoxSearchEngineResultEntry
+> extends SearchEngineInterface<T> {}

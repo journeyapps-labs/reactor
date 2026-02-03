@@ -7,8 +7,9 @@ import { observer } from 'mobx-react';
 import { TabDirective, TabSelectionWidget } from '../../../widgets';
 import { ComboBoxItem } from '../../combo/ComboBoxDirectives';
 
-export interface ComposableComboBoxDirectiveOptions<T extends ComboBoxItem = ComboBoxItem>
-  extends ComboBoxDirectiveOptions {
+export interface ComposableComboBoxDirectiveOptions<
+  T extends ComboBoxItem = ComboBoxItem
+> extends ComboBoxDirectiveOptions {
   directives: ComboBoxDirective<T>[];
 }
 

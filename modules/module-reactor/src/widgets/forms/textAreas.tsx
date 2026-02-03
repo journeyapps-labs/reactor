@@ -1,8 +1,8 @@
-import * as React from 'react';
 import { themed } from '../../stores/themes/reactor-theme-fragment';
+import { Fonts } from '../../fonts';
 
 export const TextArea = themed.textarea`
-    font-family: 'Source Sans Pro';
+    font-family: ${Fonts.PRIMARY};
     outline: none;
     border: solid 1px ${(p) => p.theme.forms.inputBorder};
     border-radius: 3px;

@@ -14,9 +14,9 @@ export interface AbstractValueControlOptions<Value> {
 }
 
 export abstract class AbstractValueControl<
-    Value = any,
-    Options extends AbstractValueControlOptions<Value> = AbstractValueControlOptions<Value>
-  >
+  Value = any,
+  Options extends AbstractValueControlOptions<Value> = AbstractValueControlOptions<Value>
+>
   extends BaseObserver<AbstractValueControlListener<Value>>
   implements AbstractControl
 {

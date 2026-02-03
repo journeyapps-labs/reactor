@@ -41,7 +41,7 @@
     "react-monaco-editor": "^0.59.0"
   },
   "devDependencies": {
-    "@types/react": "19.2.9",
+    "@types/react": "19.2.10",
     "json5-loader": "^4.0.1"
   }
 }

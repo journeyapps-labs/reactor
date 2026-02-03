@@ -15,6 +15,7 @@ import { DialogLayer } from '../../layers/dialog/DialogLayer';
 import { DialogLayer2 } from '../../layers/dialog2/DialogLayer2';
 import { KeyCommandDialogLayer } from '../../layers/keys-dialog/KeyCommandDialogLayer';
 import { GuideLayer } from '../../layers/guide/GuideLayer';
+import { Fonts } from '../../fonts';
 
 export interface RawBodyWidgetProps {
   logo: string;
@@ -70,7 +71,7 @@ namespace S {
       height: 100%;
       width: 100%;
       position: fixed;
-      font-family: 'Source Sans Pro';
+      font-family: ${Fonts.PRIMARY};
     }
     [aria-label][data-balloon-pos]:before {
       z-index: 2;

@@ -34,9 +34,10 @@ export interface ProviderSearchEvent<PARENT_ENTITY = any> extends SearchEvent {
 /**
  * @deprecated
  */
-export abstract class Provider<ENTITY = any, SERIALIZED extends SerializedEntity = SerializedEntity>
-  implements SearchEngineInterface<ProviderSearchResultEntity<ENTITY>>
-{
+export abstract class Provider<
+  ENTITY = any,
+  SERIALIZED extends SerializedEntity = SerializedEntity
+> implements SearchEngineInterface<ProviderSearchResultEntity<ENTITY>> {
   options: ProviderOptions;
   system: System;
 

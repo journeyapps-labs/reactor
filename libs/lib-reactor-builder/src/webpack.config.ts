@@ -27,7 +27,6 @@ export const generateCommonWebpack = (dir: string): Configuration => {
     { lib: 'mobx-react', aliased: true },
     { lib: 'luxon' },
     { lib: '@fortawesome/fontawesome-svg-core', aliased: true },
-    { lib: '@fortawesome/free-brands-svg-icons', aliased: true },
     { lib: '@fortawesome/free-solid-svg-icons', aliased: true },
     { lib: '@fortawesome/react-fontawesome', aliased: true },
     { lib: '@journeyapps-labs/common-tree' },

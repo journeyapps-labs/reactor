@@ -21,7 +21,7 @@
     "cheerio": "^1.2.0",
     "express": "^5.2.1",
     "lodash": "^4.17.23",
-    "ua-parser-js": "2.0.8"
+    "ua-parser-js": "2.0.9"
   },
   "devDependencies": {
     "@types/express": "^5.0.6",

@@ -1,6 +1,7 @@
 import * as React from 'react';
 import { TabBadgeDirective } from './GenericTabSelectionWidget';
 import { themed } from '../../stores/themes/reactor-theme-fragment';
+import { Fonts } from '../../fonts';
 
 export interface TabBadgeWidgetProps {
   directive: TabBadgeDirective;
@@ -20,7 +21,7 @@ namespace S {
     min-width: 16px;
     text-align: center;
     line-height: 12px;
-    font-family: monospace;
+    font-family: ${Fonts.MONOSPACED};
 
     border-radius: 8px;
     background-color: ${(p) => p.color};

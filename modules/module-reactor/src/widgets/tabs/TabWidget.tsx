@@ -3,6 +3,7 @@ import { useAttention } from '../guide/AttentionWrapperWidget';
 import { styled } from '../../stores/themes/reactor-theme-fragment';
 import { ButtonComponentSelection, ReactorComponentType } from '../../stores/guide/selections/common';
 import { GenericTabWidgetProps } from './GenericTabSelectionWidget';
+import { Fonts } from '../../fonts';
 
 namespace S {
   export const Tab = styled.div<{ selected: boolean; attention: boolean; disabled?: boolean }>`
@@ -13,7 +14,7 @@ namespace S {
     background: ${(p) => (p.selected ? p.theme.tabs.selectedBackground : 'transparent')};
     //prevents a weird ghosting border with transparent borders
     background-origin: border-box;
-    font-family: 'Source Sans Pro';
+    font-family: ${Fonts.PRIMARY};
     font-size: 15px;
     white-space: nowrap;
     border: ${(p) => (p.attention ? p.theme.guide.accent : `transparent`)} solid 1px;
