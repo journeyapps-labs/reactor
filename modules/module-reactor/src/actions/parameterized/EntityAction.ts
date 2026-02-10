@@ -28,8 +28,10 @@ export interface EntityActionOptions<T = any> extends ParameterizedActionOptions
   autoSelectIsolatedTarget?: boolean;
 }
 
-export interface EntityActionEvent<Target = any, DecodedParameters = {}>
-  extends ParameterizedActionEvent<DecodedParameters> {
+export interface EntityActionEvent<
+  Target = any,
+  DecodedParameters = {}
+> extends ParameterizedActionEvent<DecodedParameters> {
   targetEntity: Target;
 }
 

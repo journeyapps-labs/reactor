@@ -11,8 +11,9 @@ import { SearchEngineComboBoxDirective } from './SearchEngineComboBoxDirective';
 import { PARENT_VARIABLE } from '../../../entities/components/search/SimpleParentEntitySearchEngine';
 import { EntitySearchEngineParameter } from '../../../search/params/EntitySearchEngineParameter';
 
-export interface CascadingSearchEngineComboBoxDirectiveOptions<T extends ComboBoxItem>
-  extends ComboBoxDirectiveOptions {
+export interface CascadingSearchEngineComboBoxDirectiveOptions<
+  T extends ComboBoxItem
+> extends ComboBoxDirectiveOptions {
   directives: ComboBoxDirective<T>[];
   passValueToNextDirective: (item: T, nextEngine: ComboBoxDirective) => any;
 }

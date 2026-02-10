@@ -15,8 +15,9 @@ export interface ParameterizedActionOptions extends ActionOptions {
   params?: AbstractActionParameter[];
 }
 
-export interface ParameterizedActionListener<E extends ParameterizedActionEvent = ParameterizedActionEvent>
-  extends ActionListener<E> {
+export interface ParameterizedActionListener<
+  E extends ParameterizedActionEvent = ParameterizedActionEvent
+> extends ActionListener<E> {
   willCollectParams?: (event: { payload: Partial<Omit<E, 'id'>> }) => any;
 }
 

@@ -56,9 +56,9 @@ export interface CommandPalletSearchEngineOptions {
   priority?: number;
 }
 
-export abstract class CMDPalletSearchEngine<T extends CommandPalletSearchResultEntry = CommandPalletSearchResultEntry>
-  implements SearchEngineInterface<T>
-{
+export abstract class CMDPalletSearchEngine<
+  T extends CommandPalletSearchResultEntry = CommandPalletSearchResultEntry
+> implements SearchEngineInterface<T> {
   options: CommandPalletSearchEngineOptions;
   id: string;
 

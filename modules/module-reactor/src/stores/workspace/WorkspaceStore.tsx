@@ -6,9 +6,9 @@ import {
   WorkspaceModel,
   WorkspaceNodeModel
 } from '@projectstorm/react-workspaces-core';
-import { action, autorun, IReactionDisposer, makeObservable, observable } from 'mobx';
+import { action, autorun, observable } from 'mobx';
 
-import { ioc, inject } from '../../inversify.config';
+import { inject, ioc } from '../../inversify.config';
 import { AbstractLayoutEngine, AddModelsOptions } from './layout-engines/AbstractLayoutEngine';
 import { AbstractStore, AbstractStoreListener } from '../AbstractStore';
 import queryString from 'query-string';
@@ -114,12 +114,16 @@ export class WorkspaceStore extends AbstractStore<WorkspacePrefsSerialized, Work
     this.simpleLayoutEngine = new SimpleLayoutEngine();
     this.advancedLayoutEngine = new AdvancedLayoutEngine();
 
-    let listener: () => any;
-    autorun(() => {
-      listener?.();
-      if (this.currentModel) {
-        listener = overConstrainRecomputeBehavior({
-          engine: this.engine
+    this.engine.registerListener({
+      modelUpdated: () => {
+        let listener: () => any;
+        autorun(() => {
+          listener?.();
+          if (this.currentModel && this.engine) {
+            listener = overConstrainRecomputeBehavior({
+              engine: this.engine
+            });
+          }
         });
       }
     });

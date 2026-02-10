@@ -5,14 +5,17 @@ import {
   DescendantEntityProviderComponentOptions
 } from './DescendantEntityProviderComponent';
 
-export interface DescendantLoadingEntityGeneratedOptions<Descendant>
-  extends DescendantEntityGeneratedOptions<Descendant> {
+export interface DescendantLoadingEntityGeneratedOptions<
+  Descendant
+> extends DescendantEntityGeneratedOptions<Descendant> {
   refreshDescendants?: (event: { node?: ReactorTreeNode }) => any;
   loading?: () => boolean;
 }
 
-export interface DescendantLoadingEntityProviderOptions<Parent, Descendant>
-  extends DescendantEntityProviderComponentOptions<Parent, Descendant> {
+export interface DescendantLoadingEntityProviderOptions<
+  Parent,
+  Descendant
+> extends DescendantEntityProviderComponentOptions<Parent, Descendant> {
   generateOptions: (parentEntity: Parent) => DescendantLoadingEntityGeneratedOptions<Descendant> | null;
 }
 

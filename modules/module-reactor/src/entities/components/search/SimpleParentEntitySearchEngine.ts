@@ -18,8 +18,10 @@ import { ComboBoxDirective } from '../../../stores/combo2/ComboBoxDirective';
 
 export const PARENT_VARIABLE = 'parent';
 
-export interface SimpleParentEntitySearchEngineOptions<Parent, Item>
-  extends SimpleEntitySearchEngineComponentOptions<Item> {
+export interface SimpleParentEntitySearchEngineOptions<
+  Parent,
+  Item
+> extends SimpleEntitySearchEngineComponentOptions<Item> {
   type: string;
   getEntities: (event: SearchEngineSearchEvent<{ [PARENT_VARIABLE]: Parent }>) => Promise<Item[]>;
 }
