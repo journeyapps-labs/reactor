@@ -1,5 +1,17 @@
 # @journeyapps-labs/reactor-mod
 
+## 4.0.2
+
+### Patch Changes
+
+- 2bea4b2: - Fix issue with workspace deserialization race condition causing overconstraint check to fail
+  - Remove lots of dead imports and dead code
+  - Provide fallback font until primary font has loaded
+- 2bea4b2: Bump all dependenciess
+- Updated dependencies [2bea4b2]
+  - @journeyapps-labs/lib-reactor-utils@2.0.8
+  - @journeyapps-labs/lib-reactor-search@1.0.9
+
 ## 4.0.1
 
 ### Patch Changes
