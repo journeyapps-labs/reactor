@@ -1,5 +1,13 @@
 # @journeyapps-labs/lib-reactor-server
 
+## 1.1.10
+
+### Patch Changes
+
+- 2bea4b2: Bump all dependenciess
+- Updated dependencies [2bea4b2]
+  - @journeyapps-labs/lib-reactor-utils@2.0.8
+
 ## 1.1.9
 
 ### Patch Changes
