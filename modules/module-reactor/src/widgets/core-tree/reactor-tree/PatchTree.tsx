@@ -140,7 +140,7 @@ export function PatchTree<T extends GConstructor<TreeEntity<ReactorTreeListener>
             matches: result
           };
         });
-        this.open();
+        this.open({ reveal: true });
         return true;
       }
       return false;

@@ -18,9 +18,13 @@ export const EntityTreeCollectionWidget = function <T>(props: EntityTreeCollecti
   const lockedRef = useRef<boolean>(false);
 
   const saveState = useCallback(
-    _.debounce(() => {
-      presenterContext.saveState();
-    }, 100),
+    _.debounce(
+      () => {
+        presenterContext.saveState();
+      },
+      100,
+      { leading: false, trailing: true }
+    ),
     []
   );
 
@@ -46,14 +50,14 @@ export const EntityTreeCollectionWidget = function <T>(props: EntityTreeCollecti
             if (n.entity === entity) {
               let p = n.getParent();
 
-              // already visible no need to do anything
+              // already visible, no need to do anything
               if (!p) {
                 return;
               }
 
               // need to open up the element
               while (!!p) {
-                p.setCollapsed(false);
+                p.open({ reveal: true });
                 p = p.getParent();
               }
 

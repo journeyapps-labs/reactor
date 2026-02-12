@@ -1,0 +1,19 @@
+{
+  "name": "@journeyapps-labs/reactor-stress-test-demo",
+  "main": "./dist/index.js",
+  "typings": "./dist/@types/index",
+  "private": true,
+  "scripts": {
+    "build:module": "reactor build .",
+    "watch:module": "pnpm build:module --watch"
+  },
+  "dependencies": {
+    "@journeyapps-labs/reactor-mod": "workspace:^",
+    "@faker-js/faker": "^10.3.0",
+    "lodash": "^4.17.23"
+  },
+  "devDependencies": {
+    "@journeyapps-labs/lib-reactor-builder": "workspace:^",
+    "@types/lodash": "^4.17.23"
+  }
+}

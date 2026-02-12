@@ -7,9 +7,9 @@ exports[`Should work with descendents that are not sub-categorized 1`] = `
   },
   "state": {
     "trees": {
-      "[["child",null]]": {
-        "collapsed": false,
-      },
+      "open": [
+        "[["child",null]]",
+      ],
     },
   },
 }
@@ -22,9 +22,9 @@ exports[`Should work with descendents that are sub-categorized 1`] = `
   },
   "state": {
     "trees": {
-      "[["child",null]]": {
-        "collapsed": false,
-      },
+      "open": [
+        "[["child",null]]",
+      ],
     },
   },
 }

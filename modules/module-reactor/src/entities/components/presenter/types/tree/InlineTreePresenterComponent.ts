@@ -1,4 +1,4 @@
-import { EntityTreePresenterComponent } from './EntityTreePresenterComponent';
+import { EntityTreePresenterComponent, EntityTreePresenterComponentOptions } from './EntityTreePresenterComponent';
 import {
   ReactorTreeEntity,
   ReactorTreeLeaf,
@@ -15,7 +15,7 @@ import { EntityReactorNode } from './EntityReactorNode';
 import { EntityReactorLeaf } from './EntityReactorLeaf';
 import { CachedEntityTreePresenterContext } from './presenter-contexts/CachedEntityTreePresenterContext';
 
-export interface BaseInlineTreePresenterComponentOptions<T> {
+export interface BaseInlineTreePresenterComponentOptions<T> extends EntityTreePresenterComponentOptions {
   augmentTreeProps?: (entity: T, hover: boolean) => Partial<TreeLeafWidgetProps>;
   augmentTreeNodeProps?: (entity: T, hover: boolean) => Partial<TreeWidgetProps>;
 }
@@ -102,7 +102,7 @@ export class InlineCachedTreePresenterContext<T> extends CachedEntityTreePresent
 export class InlineTreePresenterComponent<T> extends EntityTreePresenterComponent<T> {
   // Store options3 for context generation
   constructor(protected options3: InlineTreePresenterComponentOptions<T> = {}) {
-    super();
+    super(options3);
   }
 
   protected _generateContext(): AbstractEntityTreePresenterContext<T> {
