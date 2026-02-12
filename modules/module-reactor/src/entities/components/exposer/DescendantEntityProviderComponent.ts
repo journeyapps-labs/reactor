@@ -1,5 +1,7 @@
 import { EntityDefinitionComponent } from '../../EntityDefinitionComponent';
-import { ReactorTreeEntity, ReactorTreeNode, TreeWidgetProps } from '../../../widgets';
+import { ReactorTreeNode } from '../../../widgets/core-tree/reactor-tree/ReactorTreeNode';
+import { ReactorTreeEntity } from '../../../widgets/core-tree/reactor-tree/reactor-tree-utils';
+import { TreeWidgetProps } from '../../../widgets/tree/TreeWidget';
 import { inject } from '../../../inversify.config';
 import { ComboBoxStore2 } from '../../../stores/combo2/ComboBoxStore2';
 import { SimpleComboBoxDirective } from '../../../stores/combo2/directives/simple/SimpleComboBoxDirective';

@@ -6,7 +6,7 @@ import { IndividualSettingsWidget } from '../IndividualSettingsWidget';
 import * as _ from 'lodash';
 import { observer } from 'mobx-react';
 import { ProviderControl } from '../../../settings/ProviderControl';
-import { CardWidget } from '../../../widgets';
+import { CardWidget } from '../../../widgets/cards/CardWidget';
 import { styled } from '../../../stores/themes/reactor-theme-fragment';
 import { SearchablePanelWidget } from '../../../widgets/search/SearchablePanelWidget';
 import { EntityControl } from '../../../controls/EntityControl';

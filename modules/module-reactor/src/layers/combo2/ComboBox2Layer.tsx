@@ -7,7 +7,7 @@ import { SmartPositionWidget } from '../combo/SmartPositionWidget';
 import { FloatingPanelWidget } from '../../widgets/floating/FloatingPanelWidget';
 import { themed } from '../../stores/themes/reactor-theme-fragment';
 import { ComboBoxDirective } from '../../stores/combo2/ComboBoxDirective';
-import { FloatingPanelButtonWidget } from '../../widgets';
+import { FloatingPanelButtonWidget } from '../../widgets/floating/FloatingPanelButtonWidget';
 
 export class ComboBox2Layer extends LayerDirective {
   @inject(ComboBoxStore2)

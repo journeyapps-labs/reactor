@@ -4,7 +4,8 @@ import { EncodedEntity } from '../../entities/components/encoder/EntityEncoderCo
 import { ComboBoxStore2 } from '../combo2/ComboBoxStore2';
 import { SimpleComboBoxDirective } from '../combo2/directives/simple/SimpleComboBoxDirective';
 import { ActionMacroBehavior, ActionRollbackMechanic, ActionSource, EntityAction } from '../../actions';
-import { MousePosition, ReactorIcon } from '../../widgets';
+import { MousePosition } from '../../layers/combo/SmartPositionWidget';
+import { ReactorIcon } from '../../widgets/icons/IconWidget';
 import { System } from '../../core/System';
 import { VisorStore } from '../visor/VisorStore';
 import { ioc } from '../../inversify.config';

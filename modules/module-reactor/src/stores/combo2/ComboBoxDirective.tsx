@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { MousePosition } from '../../widgets';
+import { MousePosition } from '../../layers/combo/SmartPositionWidget';
 import { ComboBoxItem } from '../combo/ComboBoxDirectives';
 import { Btn } from '../../definitions/common';
 import { BaseObserver } from '@journeyapps-labs/common-utils';

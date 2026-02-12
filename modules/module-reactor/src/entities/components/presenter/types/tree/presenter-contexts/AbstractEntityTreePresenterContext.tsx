@@ -1,6 +1,8 @@
 import React from 'react';
 import _ from 'lodash';
-import { CoreTreeWidget, ReactorTreeEntity, ReactorTreeNode } from '../../../../../../widgets';
+import { CoreTreeWidget } from '../../../../../../widgets/core-tree/CoreTreeWidget';
+import { ReactorTreeEntity } from '../../../../../../widgets/core-tree/reactor-tree/reactor-tree-utils';
+import { ReactorTreeNode } from '../../../../../../widgets/core-tree/reactor-tree/ReactorTreeNode';
 import {
   AbstractPresenterContext,
   PresenterContextListener,

@@ -1,4 +1,6 @@
-import { IBaseReactorTree, useDraggableEntity, useDroppableEntity } from '../../../../../../widgets';
+import { useDraggableEntity } from '../../../../../../widgets/dnd3/entities/useDraggableEntity';
+import { useDroppableEntity } from '../../../../../../widgets/dnd3/entities/useDroppableEntity';
+import { IBaseReactorTree } from '../../../../../../widgets/core-tree/reactor-tree/PatchTree';
 import * as React from 'react';
 import { EntityDefinition } from '../../../../../EntityDefinition';
 import { observer } from 'mobx-react';

@@ -10,7 +10,7 @@ import { ComboBoxItem, ComboBoxStore, DialogButtonStyle } from '../../stores';
 import { AttentionWrapperWidget } from '../../widgets/guide/AttentionWrapperWidget';
 import ReactMarkdown from 'react-markdown';
 import { ReactorComponentType } from '../../stores/guide/selections/common';
-import { PanelButtonWidget } from '../../widgets/index';
+import { PanelButtonWidget } from '../../widgets/forms/PanelButtonWidget';
 import rehypeExternalLinks from 'rehype-external-links';
 
 export interface DialogWidgetProps {

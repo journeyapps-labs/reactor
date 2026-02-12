@@ -7,7 +7,7 @@ import { ChangeThemeAction } from '../../../actions';
 import { ioc } from '../../../inversify.config';
 import { ThemeStore } from '../../../stores/themes/ThemeStore';
 import { PanelButtonWidget } from '../../../widgets/forms/PanelButtonWidget';
-import { TableRow } from '../../../widgets';
+import { TableRow } from '../../../widgets/table/TableWidget';
 import { ColorDefinition } from '../../../stores/themes/ThemeFragment';
 import { observer } from 'mobx-react';
 

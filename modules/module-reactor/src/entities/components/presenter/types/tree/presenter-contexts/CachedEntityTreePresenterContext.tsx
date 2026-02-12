@@ -1,4 +1,4 @@
-import { ReactorTreeEntity } from '../../../../../../widgets';
+import { ReactorTreeEntity } from '../../../../../../widgets/core-tree/reactor-tree/reactor-tree-utils';
 import { RenderCollectionOptions } from '../../../AbstractPresenterContext';
 import { EntityTreePresenterComponent, EntityTreePresenterSettings } from '../EntityTreePresenterComponent';
 import { observable } from 'mobx';

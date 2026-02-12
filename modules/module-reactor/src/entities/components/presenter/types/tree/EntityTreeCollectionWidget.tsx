@@ -1,7 +1,9 @@
 import _ from 'lodash';
 import { autorun } from 'mobx';
 import React, { useCallback, useEffect, useRef, useState } from 'react';
-import { CoreTreeWidget, ReactorTreeEntity, SearchableCoreTreeWidget } from '../../../../../widgets';
+import { CoreTreeWidget } from '../../../../../widgets/core-tree/CoreTreeWidget';
+import { SearchableCoreTreeWidget } from '../../../../../widgets/core-tree/SearchableCoreTreeWidget';
+import { ReactorTreeEntity } from '../../../../../widgets/core-tree/reactor-tree/reactor-tree-utils';
 import { RenderCollectionOptions } from '../../AbstractPresenterContext';
 import { AbstractEntityTreePresenterContext } from './presenter-contexts/AbstractEntityTreePresenterContext';
 import { EntityReactorNode } from './EntityReactorNode';

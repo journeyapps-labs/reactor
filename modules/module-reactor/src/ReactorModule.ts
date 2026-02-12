@@ -238,41 +238,38 @@ export class ReactorModule extends AbstractReactorModule {
     const uxStore = ioc.get(UXStore);
     const prefsStore = ioc.get(PrefsStore);
     const themeStore = ioc.get(ThemeStore);
+    const workspaceStore = ioc.get(WorkspaceStore);
+    const visorStore = ioc.get(VisorStore);
 
     //!---------- MOBILE FIX ---------------
-    let deferredPrompt;
     window.addEventListener('beforeinstallprompt', (e) => {
       // Prevent the mini-infobar from appearing on mobile
       e.preventDefault();
-      // Stash the event so it can be triggered later.
-      deferredPrompt = e;
     });
     //!-------------------------------------
 
     // register panel factories for each component type
     system.getEntityDefinitions().forEach((def) => {
       def.getPanelComponents().forEach((fact) => {
-        ioc.get(WorkspaceStore).registerFactory(fact.generatePanelFactory());
+        workspaceStore.registerFactory(fact.generatePanelFactory());
       });
     });
 
-    ioc.get(WorkspaceStore).init();
+    // phase 1: initialize core stateful stores deterministically
+    await workspaceStore.init();
     cmdPaletteStore.init();
-    ioc.get(VisorStore).init();
+    await visorStore.init();
 
-    uxStore.init();
-
+    // phase 2: register preference controls from all stores
     system.getStores().forEach((s) => {
       s.getControls().forEach((c) => {
         prefsStore.registerPreference(c);
       });
     });
-    ioc
-      .get(PrefsStore)
-      .init()
-      .then(() => {
-        ioc.get(WorkspaceStore).hydratePanelFromURL();
-      });
+
+    // phase 3: initialize preferences before URL hydration to avoid partial state races
+    await prefsStore.init();
+    await workspaceStore.hydratePanelFromURL();
 
     // register all the providers as search engines for the command pallet
     _.forEach(ioc.get(System).providers, (provider) => {
@@ -303,5 +300,8 @@ export class ReactorModule extends AbstractReactorModule {
         }
       });
     });
+
+    // phase 4: activate UX once foundational stores are initialized
+    await uxStore.init();
   }
 }

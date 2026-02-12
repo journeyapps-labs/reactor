@@ -3,7 +3,7 @@ import { ControlInput, ControlInputGenerics } from './ControlInput';
 import { FormInputOptions, FormInputRenderOptions } from '../FormInput';
 import { FileControl } from '../../controls/FileControl';
 import styled from '@emotion/styled';
-import { PanelButtonMode, PanelButtonWidget } from '../../widgets';
+import { PanelButtonMode, PanelButtonWidget } from '../../widgets/forms/PanelButtonWidget';
 import { DialogStore } from '../../stores';
 import { inject } from '../../inversify.config';
 import { InputDialogType } from '../../layers/dialog/InputDialogWidget';

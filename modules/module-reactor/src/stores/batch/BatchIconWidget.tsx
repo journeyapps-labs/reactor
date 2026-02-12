@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { IconWidget } from '../../widgets';
+import { IconWidget } from '../../widgets/icons/IconWidget';
 import { ioc } from '../../inversify.config';
 import { BatchStore } from './BatchStore';
 import { observer } from 'mobx-react';

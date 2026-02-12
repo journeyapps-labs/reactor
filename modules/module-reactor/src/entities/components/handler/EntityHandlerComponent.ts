@@ -1,6 +1,6 @@
 import { EntityDefinitionComponent } from '../../EntityDefinitionComponent';
 import { ComboBoxItem } from '../../../stores';
-import { MousePosition } from '../../../widgets';
+import { MousePosition } from '../../../layers/combo/SmartPositionWidget';
 import { ActionSource } from '../../../actions';
 import { v4 } from 'uuid';
 

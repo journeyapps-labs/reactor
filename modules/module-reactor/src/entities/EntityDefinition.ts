@@ -2,7 +2,8 @@ import { EntityComboBoxItem, EntitySearchEngineComponent } from './components/se
 import { EncodedEntity, EntityEncoderComponent } from './components/encoder/EntityEncoderComponent';
 import { EntityDefinitionComponent } from './EntityDefinitionComponent';
 import { System } from '../core/System';
-import { MousePosition, ReactorIcon } from '../widgets';
+import { MousePosition } from '../layers/combo/SmartPositionWidget';
+import { ReactorIcon } from '../widgets/icons/IconWidget';
 import * as _ from 'lodash';
 import { EntityPresenterComponent } from './components/presenter/EntityPresenterComponent';
 import { EntityHandlerComponent, OpenEntityEvent } from './components/handler/EntityHandlerComponent';

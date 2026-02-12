@@ -1,6 +1,6 @@
 import { SetControl, SetControlOption } from '../controls/SetControl';
 import { SimpleComboBoxDirective } from '../stores/combo2/directives/simple/SimpleComboBoxDirective';
-import { MousePosition } from '../widgets';
+import { MousePosition } from '../layers/combo/SmartPositionWidget';
 import { AbstractInteractiveControlOptions } from './AbstractInteractiveSetting';
 import { AbstractUserSetting } from './AbstractUserSetting';
 import { computed, observable } from 'mobx';

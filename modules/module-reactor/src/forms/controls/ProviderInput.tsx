@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { FormInput, FormInputGenerics, FormInputOptions, FormInputRenderOptions } from '../FormInput';
-import { ProviderButtonWidget } from '../../widgets';
+import { ProviderButtonWidget } from '../../widgets/forms/ProviderButtonWidget';
 
 export interface ProviderInputOptions extends FormInputOptions {
   entityType: string;
