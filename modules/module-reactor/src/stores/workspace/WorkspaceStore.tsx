@@ -6,7 +6,7 @@ import {
   WorkspaceModel,
   WorkspaceNodeModel
 } from '@projectstorm/react-workspaces-core';
-import { action, autorun, observable } from 'mobx';
+import { action, autorun, IReactionDisposer, observable } from 'mobx';
 
 import { inject, ioc } from '../../inversify.config';
 import { AbstractLayoutEngine, AddModelsOptions } from './layout-engines/AbstractLayoutEngine';
@@ -27,6 +27,7 @@ import { SimpleLayoutEngine } from './layout-engines/SimpleLayoutEngine';
 import { ReactorTrayModel } from './react-workspaces/ReactorTrayFactory';
 import { WorkspaceTrayMode } from '@projectstorm/react-workspaces-model-tray';
 import { LocalStorageSerializer } from '../serializers/LocalStorageSerializer';
+import { EmptyReactorPanelModel } from '../../panels/empty/EmptyPanelWorkspaceFactory';
 
 export interface WorkspacePrefsSerialized {
   type: 'workspaces';
@@ -114,10 +115,12 @@ export class WorkspaceStore extends AbstractStore<WorkspacePrefsSerialized, Work
     this.simpleLayoutEngine = new SimpleLayoutEngine();
     this.advancedLayoutEngine = new AdvancedLayoutEngine();
 
+    let autorunListener: IReactionDisposer;
     this.engine.registerListener({
       modelUpdated: () => {
+        autorunListener?.();
         let listener: () => any;
-        autorun(() => {
+        autorunListener = autorun(() => {
           listener?.();
           if (this.currentModel && this.engine) {
             listener = overConstrainRecomputeBehavior({
@@ -355,6 +358,17 @@ export class WorkspaceStore extends AbstractStore<WorkspacePrefsSerialized, Work
 
     for (let w of sorted) {
       this.registerWorkspaces(w);
+    }
+
+    // Safety net: generators can be disabled/misconfigured and return no workspaces.
+    // Keep Reactor usable by bootstrapping a minimal empty workspace.
+    if (this.workspaces.length === 0) {
+      const model = this.generateRootModel();
+      model.addModel(new EmptyReactorPanelModel());
+      this.registerWorkspaces({
+        name: 'Default',
+        model
+      });
     }
 
     this.iterateListeners((listener) => {

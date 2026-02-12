@@ -140,7 +140,9 @@ export class DialogStore extends BaseObserver<DialogListener> {
       directive.resolve(val);
     }
     const index = _.findIndex(this.directives, { id: directive.id });
-    this.directives.splice(index, 1);
+    if (index !== -1) {
+      this.directives.splice(index, 1);
+    }
   }
 
   showFormDialog<T extends FormModel>(options: { model: T } & CommonDialogOptions): Promise<T | null>;

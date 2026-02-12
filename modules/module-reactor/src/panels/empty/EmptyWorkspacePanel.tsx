@@ -12,7 +12,7 @@ import { PanelTitleWidget } from '../../widgets/panel/panel/title/PanelTitleWidg
 import { ReactorPanelModel } from '../../stores/workspace/react-workspaces/ReactorPanelModel';
 import { ReactorPanelFactory } from '../../stores/workspace/react-workspaces/ReactorPanelFactory';
 import { themed } from '../../stores/themes/reactor-theme-fragment';
-import { EntityPlaceholderWidget, ProviderPlaceholderWidget } from '../../widgets';
+import { EntityPlaceholderWidget } from '../../widgets/panel/panel/EntityPlaceholderWidget';
 import { ReactorEntities } from '../../entities-reactor/ReactorEntities';
 
 export interface EmptyWorkspacePanelProps {

@@ -33,6 +33,7 @@ export abstract class AbstractDescendentContext<E> {
     this.nodes.forEach((n) => {
       n.delete();
     });
+    this.nodes.clear();
   }
 
   protected loadEntities() {
