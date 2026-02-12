@@ -1,7 +1,7 @@
 import { ReactorTreeEntity } from '../../../../../../widgets';
 import { RenderCollectionOptions } from '../../../AbstractPresenterContext';
 import { EntityTreePresenterComponent, EntityTreePresenterSettings } from '../EntityTreePresenterComponent';
-import { makeObservable, observable } from 'mobx';
+import { observable } from 'mobx';
 import { AbstractEntityTreePresenterContext } from './AbstractEntityTreePresenterContext';
 
 export abstract class CachedEntityTreePresenterContext<

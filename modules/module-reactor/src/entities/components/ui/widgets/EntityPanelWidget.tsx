@@ -1,5 +1,5 @@
 import * as React from 'react';
-import _ from 'lodash';
+import { useEffect } from 'react';
 import styled from '@emotion/styled';
 import { EntityPanelModel } from './EntityPanelFactory';
 import { observer } from 'mobx-react';
@@ -9,7 +9,6 @@ import { System } from '../../../../core/System';
 import { ComboBoxStore2 } from '../../../../stores/combo2/ComboBoxStore2';
 import { SimpleComboBoxDirective } from '../../../../stores/combo2/directives/simple/SimpleComboBoxDirective';
 import { BatchStore } from '../../../../stores/batch/BatchStore';
-import { useEffect } from 'react';
 import { autorun } from 'mobx';
 import { useForceUpdate } from '../../../../hooks/useForceUpdate';
 
