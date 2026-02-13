@@ -111,6 +111,8 @@ export * from './entities/components/meta/EntityDescriberComponent';
 export * from './entities/components/meta/EntityDocsComponent';
 export * from './entities/components/presenter/AbstractPresenterContext';
 export * from './entities/components/presenter/EntityPresenterComponent';
+export * from './entities/components/presenter/types/cards/EntityCardsPresenterComponent';
+export * from './entities/components/presenter/types/cards/EntityCardsCollectionWidget';
 export * from './entities/components/presenter/types/tree/EntityReactorNode';
 export * from './entities/components/presenter/types/tree/EntityReactorLeaf';
 export * from './entities/components/presenter/types/tree/InlineTreePresenterComponent';

@@ -2,7 +2,8 @@ import { EntityDefinitionComponent } from '../../EntityDefinitionComponent';
 import { AbstractPresenterContext } from './AbstractPresenterContext';
 
 export enum EntityPresenterComponentRenderType {
-  TREE = 'tree'
+  TREE = 'tree',
+  CARDS = 'cards'
 }
 
 export interface EntityPresenterComponentOptions {

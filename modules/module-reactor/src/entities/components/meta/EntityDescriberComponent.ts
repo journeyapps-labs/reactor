@@ -1,11 +1,20 @@
 import { EntityDefinitionComponent } from '../../EntityDefinitionComponent';
 import { ReactorIcon } from '../../../widgets/icons/IconWidget';
+import { ReadOnlyMetadataWidgetProps } from '../../../widgets/meta/ReadOnlyMetadataWidget';
 
 export interface EntityDescription {
   simpleName: string;
   complexName?: string;
   icon?: ReactorIcon;
   iconColor?: string;
+  /**
+   * Optional metadata entries shown by card-style presenters.
+   */
+  labels?: ReadOnlyMetadataWidgetProps[];
+  /**
+   * Optional tag chips shown by card-style presenters.
+   */
+  tags?: string[];
 }
 
 export interface EntityDescriberComponentOptions<T> {

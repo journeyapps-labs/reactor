@@ -1,13 +1,14 @@
 import { EntityDefinition } from '../../entities/EntityDefinition';
 import { ReactorEntities, ReactorEntityCategories } from '../ReactorEntities';
 import { ActionEntityEncoder } from './ActionEntityEncoder';
-import { Action, ParameterizedAction } from '../../actions';
+import { Action, ActionRollbackMechanic, ParameterizedAction } from '../../actions';
 import { ActionEntityHandler } from './ActionEntityHandler';
 import { EntityPanelComponent } from '../../entities/components/ui/EntityPanelComponent';
 import { InlineTreePresenterComponent } from '../../entities/components/presenter/types/tree/InlineTreePresenterComponent';
 import { ActionTreePresenter } from './ActionTreePresenter';
 import { EntityDescriberComponent } from '../../entities/components/meta/EntityDescriberComponent';
 import { ActionSearchEngineComponent } from './ActionSearchEngineComponent';
+import { EntityCardsPresenterComponent } from '../../entities/components/presenter/types/cards/EntityCardsPresenterComponent';
 
 export class ActionEntityDefinition extends EntityDefinition<Action> {
   constructor() {
@@ -22,9 +23,28 @@ export class ActionEntityDefinition extends EntityDefinition<Action> {
       new EntityDescriberComponent<Action>({
         label: 'Simple',
         describe: (entity: Action) => {
+          const tags = [entity instanceof ParameterizedAction ? 'parameterized' : 'standard'];
+          if (entity.options.exemptFromExclusiveExecutionLock) {
+            tags.push('exclusive-exempt');
+          }
+          if (entity.options.hideFromCmdPallet) {
+            tags.push('cmd-hidden');
+          }
+
           return {
             icon: entity.options.icon,
-            simpleName: entity.options.name
+            simpleName: entity.options.name,
+            labels: [
+              {
+                label: 'Type',
+                value: entity.getTypeDisplayName(),
+                icon: {
+                  name: 'cube',
+                  color: 'rgba(255,255,255,0.5)'
+                }
+              }
+            ],
+            tags
           };
         }
       })
@@ -33,11 +53,56 @@ export class ActionEntityDefinition extends EntityDefinition<Action> {
       new EntityDescriberComponent<Action>({
         label: 'Advanced',
         describe: (entity: Action) => {
+          const behavior = entity.options.behavior || 'none';
+          const rollback = entity.options.rollbackMechanic || ActionRollbackMechanic.NONE;
+          const tags = [entity instanceof ParameterizedAction ? 'parameterized' : 'standard'];
+          if (entity.options.exemptFromExclusiveExecutionLock) {
+            tags.push('exclusive-exempt');
+          }
+          if (entity.options.hideFromCmdPallet) {
+            tags.push('cmd-hidden');
+          }
+
           return {
             icon: entity.options.icon,
             simpleName: entity.options.name,
             complexName: entity.getTypeDisplayName(),
-            iconColor: !(entity instanceof ParameterizedAction) ? 'orange' : 'mediumpurple'
+            iconColor: !(entity instanceof ParameterizedAction) ? 'orange' : 'mediumpurple',
+            labels: [
+              {
+                label: 'Hotkeys',
+                value: `${entity.options.hotkeys?.length || 0}`,
+                icon: {
+                  name: 'keyboard',
+                  color: 'rgba(255,255,255,0.5)'
+                }
+              },
+              {
+                label: 'Validators',
+                value: `${entity.options.validators?.length || 0}`,
+                icon: {
+                  name: 'shield',
+                  color: 'rgba(255,255,255,0.5)'
+                }
+              },
+              {
+                label: 'Behavior',
+                value: behavior,
+                icon: {
+                  name: 'bolt',
+                  color: 'rgba(255,255,255,0.5)'
+                }
+              },
+              {
+                label: 'Rollback',
+                value: rollback,
+                icon: {
+                  name: 'rotate-left',
+                  color: 'rgba(255,255,255,0.5)'
+                }
+              }
+            ],
+            tags
           };
         }
       })
@@ -45,6 +110,7 @@ export class ActionEntityDefinition extends EntityDefinition<Action> {
     this.registerComponent(new ActionEntityHandler());
     this.registerComponent(new ActionEntityEncoder());
     this.registerComponent(new InlineTreePresenterComponent<Action>());
+    this.registerComponent(new EntityCardsPresenterComponent<Action>());
     this.registerComponent(new ActionTreePresenter());
     this.registerComponent(
       new EntityPanelComponent<Action>({
