@@ -111,6 +111,9 @@ export abstract class AbstractEntityTreePresenterContext<
     const controlValues = this.getControlValues();
     if (controlValues[EntityTreePresenterSetting.SORT] === SortDirection.ASC) {
       entities = _.sortBy(entities, (e) => {
+        // Sorting should not subscribe the outer tree-generation reaction to entity UI state
+        // (for example active/highlighted describer fields), otherwise cosmetic updates can
+        // trigger full node regeneration and visible flicker when cacheTreeEntities is disabled.
         return untracked(() => {
           return this.definition.describeEntity(e).simpleName?.toLowerCase();
         });
