@@ -1,6 +1,6 @@
 import _ from 'lodash';
 import { autorun } from 'mobx';
-import React, { useCallback, useEffect, useRef, useState } from 'react';
+import React, { useEffect, useMemo, useRef, useState } from 'react';
 import { CoreTreeWidget } from '../../../../../widgets/core-tree/CoreTreeWidget';
 import { ReactorTreeEntity } from '../../../../../widgets/core-tree/reactor-tree/reactor-tree-utils';
 import { PanelPlaceholderWidget } from '../../../../../widgets/panel/panel/PanelPlaceholderWidget';
@@ -19,26 +19,36 @@ export const EntityTreeCollectionWidget = function <T>(props: EntityTreeCollecti
   const { event, presenterContext } = props;
   const [nodes, setNodes] = useState<ReactorTreeEntity[]>([]);
   const lockedRef = useRef<boolean>(false);
+  const eventRef = useRef(event);
 
-  const saveState = useCallback(
-    _.debounce(
+  const saveState = useMemo(() => {
+    return _.debounce(
       () => {
         presenterContext.saveState();
       },
       100,
       { leading: false, trailing: true }
-    ),
-    []
-  );
+    );
+  }, [presenterContext]);
+
+  useEffect(() => {
+    return () => {
+      saveState.cancel();
+    };
+  }, [saveState]);
+
+  useEffect(() => {
+    eventRef.current = event;
+  }, [event]);
 
   useEffect(() => {
     return autorun(
       () => {
-        setNodes(presenterContext.getTreeNodes(event));
+        setNodes(presenterContext.getTreeNodes(eventRef.current));
       },
       { name: `EntityTreeCollectionWidget:${presenterContext.definition.type}` }
     );
-  }, [event]);
+  }, [presenterContext]);
 
   useEffect(() => {
     return event.events?.registerListener({
@@ -77,7 +87,7 @@ export const EntityTreeCollectionWidget = function <T>(props: EntityTreeCollecti
           .value();
       }
     });
-  }, [nodes]);
+  }, [event.events, nodes]);
 
   if (nodes.length === 0) {
     return <PanelPlaceholderWidget center={true} icon="clone" text="No entities to display" />;

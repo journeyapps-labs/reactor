@@ -53,9 +53,11 @@ namespace S {
 }
 
 export const MetadataWidget: React.FC<MetadataWidgetProps> = (props) => {
+  const isActive = props.active ?? true;
+
   return (
     <S.MetaEntry
-      active={props.active}
+      active={isActive}
       $cursor={props.onClick ? 'pointer' : null}
       background={props.color}
       foreground={props.colorForeground}
@@ -70,7 +72,7 @@ export const MetadataWidget: React.FC<MetadataWidgetProps> = (props) => {
           : null
       }
     >
-      <S.MetaKey active={props.active}>{props.label}</S.MetaKey>
+      <S.MetaKey active={isActive}>{props.label}</S.MetaKey>
       <S.MetaValue>{props.value}</S.MetaValue>
       {props.icon ? <S.MetaIcon spin={props.icon.spin} icon={props.icon.name} color={props.icon.color} /> : null}
     </S.MetaEntry>

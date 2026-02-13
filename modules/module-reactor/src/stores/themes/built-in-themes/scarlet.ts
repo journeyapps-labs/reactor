@@ -38,7 +38,7 @@ export const Scarlet = theme.addThemeValues({
     cards: {
       background: '#191e25',
       foreground: 'rgb(205,205,205)',
-      border: 'rgba(0,0,0,0)'
+      border: '#2f3744'
     },
     status: {
       cardBackground: '#14181e',

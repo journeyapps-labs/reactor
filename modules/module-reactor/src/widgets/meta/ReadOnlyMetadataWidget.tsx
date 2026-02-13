@@ -15,7 +15,7 @@ export const ReadOnlyMetadataWidget: React.FC<ReadOnlyMetadataWidgetProps> = (pr
 
   let icon = props.icon || {
     name: 'clipboard',
-    color: 'rgba(255,255,255, 0.3)'
+    color: 'currentColor'
   };
 
   return (

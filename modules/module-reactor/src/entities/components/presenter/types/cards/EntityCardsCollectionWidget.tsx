@@ -30,16 +30,28 @@ namespace S {
 
   export const Card = themed(CardWidget)`
     cursor: pointer;
+    overflow: hidden;
+    min-width: 0;
   `;
 
   export const CardWrapper = styled.div`
     cursor: pointer;
+    min-width: 0;
   `;
 
   export const PillRow = styled.div`
     display: flex;
     flex-wrap: wrap;
     gap: 5px;
+  `;
+
+  export const TagPill = styled(PillWidget)`
+    background: rgba(129, 139, 153, 0.9) !important;
+
+    > div:first-of-type {
+      background: rgba(0, 0, 0, 0.18);
+      color: rgba(255, 255, 255, 0.95);
+    }
   `;
 
   export const CardTitle = styled.div`
@@ -145,7 +157,7 @@ export const EntityCardWidget = observer(function <T>(props: EntityCardWidgetPro
                   return (
                     <S.PillRow>
                       {tags.map((tag) => (
-                        <PillWidget key={`tag-${tag}`} label={tag} color="rgb(120, 120, 120)" />
+                        <S.TagPill key={`tag-${tag}`} label={tag} />
                       ))}
                     </S.PillRow>
                   );

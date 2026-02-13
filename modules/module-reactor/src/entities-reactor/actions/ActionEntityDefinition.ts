@@ -40,7 +40,7 @@ export class ActionEntityDefinition extends EntityDefinition<Action> {
                 value: entity.getTypeDisplayName(),
                 icon: {
                   name: 'cube',
-                  color: 'rgba(255,255,255,0.5)'
+                  color: 'currentColor'
                 }
               }
             ],
@@ -74,7 +74,7 @@ export class ActionEntityDefinition extends EntityDefinition<Action> {
                 value: `${entity.options.hotkeys?.length || 0}`,
                 icon: {
                   name: 'keyboard',
-                  color: 'rgba(255,255,255,0.5)'
+                  color: 'currentColor'
                 }
               },
               {
@@ -82,7 +82,7 @@ export class ActionEntityDefinition extends EntityDefinition<Action> {
                 value: `${entity.options.validators?.length || 0}`,
                 icon: {
                   name: 'shield',
-                  color: 'rgba(255,255,255,0.5)'
+                  color: 'currentColor'
                 }
               },
               {
@@ -90,7 +90,7 @@ export class ActionEntityDefinition extends EntityDefinition<Action> {
                 value: behavior,
                 icon: {
                   name: 'bolt',
-                  color: 'rgba(255,255,255,0.5)'
+                  color: 'currentColor'
                 }
               },
               {
@@ -98,7 +98,7 @@ export class ActionEntityDefinition extends EntityDefinition<Action> {
                 value: rollback,
                 icon: {
                   name: 'rotate-left',
-                  color: 'rgba(255,255,255,0.5)'
+                  color: 'currentColor'
                 }
               }
             ],

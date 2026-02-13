@@ -1,6 +1,6 @@
 import React from 'react';
 import _ from 'lodash';
-import { useCallback, useEffect, useRef } from 'react';
+import { useCallback, useEffect, useMemo, useRef } from 'react';
 import { SearchableCoreTreeWidget } from '../../../../../widgets/core-tree/SearchableCoreTreeWidget';
 import { ReactorTreeEntity } from '../../../../../widgets/core-tree/reactor-tree/reactor-tree-utils';
 import { TreeEntity } from '@journeyapps-labs/common-tree';
@@ -17,6 +17,9 @@ export const SearchableEntityTreeWidget: React.FC<SearchableEntityTreeWidgetProp
   const searchMatchesByTreeRef = useRef<Record<string, boolean>>({});
   const receivedSearchEventsRef = useRef<boolean>(false);
   const forceUpdate = useForceUpdate();
+  const treeKeys = useMemo(() => {
+    return nodes.map((tree) => tree.getPathAsString()).join('|');
+  }, [nodes]);
   const searchMatchUpdateDebounced = useRef(
     _.debounce(
       () => {
@@ -35,7 +38,7 @@ export const SearchableEntityTreeWidget: React.FC<SearchableEntityTreeWidgetProp
     return () => {
       searchMatchUpdateDebounced.cancel();
     };
-  }, [search, searchMatchUpdateDebounced]);
+  }, [search, treeKeys, searchMatchUpdateDebounced]);
 
   const setTreeSearchMatches = useCallback(
     (treePath: string, matched: TreeEntity[]) => {

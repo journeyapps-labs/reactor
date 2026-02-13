@@ -30,7 +30,10 @@ export const SearchableCoreTreeWidget: React.FC<SearchableCoreTreeWidgetProps> =
   const searchState = useMemo(() => {
     const matched = props.tree.flatten().filter((l) => {
       if (isBaseReactorTree(l)) {
-        return l.setSearch(matcher);
+        if (!matcher) {
+          return true;
+        }
+        return !!l.match(matcher);
       } else if (l instanceof TreeNode) {
         return (
           props.matchNode?.({
@@ -66,14 +69,21 @@ export const SearchableCoreTreeWidget: React.FC<SearchableCoreTreeWidgetProps> =
   }, [matcher, props.tree, props.matchLeaf, props.matchNode]);
 
   useEffect(() => {
+    const flattened = props.tree.flatten();
+    flattened.forEach((t) => {
+      if (isBaseReactorTree(t)) {
+        t.setSearch(matcher);
+      }
+    });
+
     return () => {
-      props.tree.flatten().forEach((t) => {
+      flattened.forEach((t) => {
         if (isBaseReactorTree(t)) {
           t.setSearch(null);
         }
       });
     };
-  }, []);
+  }, [props.tree, matcher]);
 
   useEffect(() => {
     props.onSearchResultChanged?.({
