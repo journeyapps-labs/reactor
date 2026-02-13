@@ -2,12 +2,11 @@ import React from 'react';
 import { observer } from 'mobx-react';
 import styled from '@emotion/styled';
 import { RenderCollectionOptions } from '../../AbstractPresenterContext';
-import { EntityCardsPresenterContext } from './EntityCardsPresenterComponent';
+import { EntityCardsPresenterContext, NestedTreeRenderOption } from './EntityCardsPresenterComponent';
 import { CardWidget } from '../../../../../widgets/cards/CardWidget';
 import { PillWidget } from '../../../../../widgets/status/PillWidget';
 import { MetaBarWidget } from '../../../../../widgets/meta/MetaBarWidget';
 import { PanelPlaceholderWidget } from '../../../../../widgets/panel/panel/PanelPlaceholderWidget';
-import { getTransparentColor } from '@journeyapps-labs/lib-reactor-utils';
 import { themed } from '../../../../../stores/themes/reactor-theme-fragment';
 import { ActionSource } from '../../../../../actions';
 import { IconWidget } from '../../../../../widgets/icons/IconWidget';
@@ -29,10 +28,8 @@ namespace S {
     gap: 10px;
   `;
 
-  export const Card = themed(CardWidget)<{ selected: boolean }>`
+  export const Card = themed(CardWidget)`
     cursor: pointer;
-    border: solid 1px
-      ${(p) => (p.selected ? getTransparentColor(p.theme.status.loading, 0.8) : p.theme.cards.border)};
   `;
 
   export const CardWrapper = styled.div`
@@ -62,6 +59,19 @@ namespace S {
   `;
 
   export const Labels = styled(MetaBarWidget)``;
+  export const NestedSection = styled.div`
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+  `;
+
+  export const NestedHeader = themed.div`
+    font-size: 12px;
+    color: ${(p) => p.theme.cards.foreground};
+    opacity: 0.8;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+  `;
 
   export const Empty = styled(PanelPlaceholderWidget)`
     min-height: 220px;
@@ -96,6 +106,7 @@ export const EntityCardWidget = observer(function <T>(props: EntityCardWidgetPro
   const description = presenterContext.definition.describeEntity(entity);
   const labels = description.labels || [];
   const tags = description.tags || [];
+  const nestedTrees = presenterContext.getNestedTreeRenderOptions(entity);
 
   return (
     <S.CardWrapper
@@ -140,7 +151,30 @@ export const EntityCardWidget = observer(function <T>(props: EntityCardWidgetPro
                   );
                 }
               }
-            : null
+            : null,
+          {
+            key: 'nested-trees',
+            content: () => {
+              if (nestedTrees.length === 0) {
+                return null;
+              }
+
+              return (
+                <>
+                  {nestedTrees.map((nested: NestedTreeRenderOption) => {
+                    return (
+                      <S.NestedSection key={nested.key}>
+                        <S.NestedHeader>{nested.label}</S.NestedHeader>
+                        {nested.context.renderCollection({
+                          entities: nested.entities
+                        })}
+                      </S.NestedSection>
+                    );
+                  })}
+                </>
+              );
+            }
+          }
         ].filter((f) => !!f)}
       />
     </S.CardWrapper>

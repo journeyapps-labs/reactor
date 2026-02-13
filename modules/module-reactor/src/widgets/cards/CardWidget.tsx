@@ -13,10 +13,13 @@ import { themed } from '../../stores/themes/reactor-theme-fragment';
 export interface CardWidgetProps {
   btns?: PanelBtn[];
   title: string | React.JSX.Element;
-  subHeading?: string;
+  subHeading?: string | React.JSX.Element;
   color?: string;
+  subHeadingColor?: string;
+  selected?: boolean;
+  selectedBorderColor?: string;
   className?;
-  sections: { content: () => React.JSX.Element; key: string }[];
+  sections: { content: () => React.JSX.Element | null; key: string }[];
   loader?: {
     color?: string;
     percentage: number;
@@ -25,10 +28,10 @@ export interface CardWidgetProps {
 }
 
 namespace S {
-  export const Container = themed.div`
+  export const Container = themed.div<{ selected?: boolean; selectedBorderColor?: string }>`
     border-radius: 5px;
     background: ${(p) => p.theme.cards.background};
-    border: solid 1px ${(p) => p.theme.cards.border};
+    border: solid 1px ${(p) => (p.selected ? p.selectedBorderColor || p.theme.status.loading : p.theme.cards.border)};
     display: flex;
     flex-direction: column;
   `;
@@ -109,13 +112,27 @@ export class CardWidget extends React.Component<CardWidgetProps> {
     return <S.Title>{this.props.title}</S.Title>;
   }
 
+  getSubHeading() {
+    if (!this.props.subHeading) {
+      return null;
+    }
+    if (React.isValidElement(this.props.subHeading)) {
+      return this.props.subHeading;
+    }
+    return <S.Subtitle color={this.props.subHeadingColor || this.props.color}>{this.props.subHeading}</S.Subtitle>;
+  }
+
   render() {
     return (
-      <S.Container className={this.props.className}>
+      <S.Container
+        className={this.props.className}
+        selected={this.props.selected}
+        selectedBorderColor={this.props.selectedBorderColor}
+      >
         <S.Top>
           <S.Info>
             {this.getTitle()}
-            {this.props.subHeading ? <S.Subtitle color={this.props.color}>{this.props.subHeading}</S.Subtitle> : null}
+            {this.getSubHeading()}
           </S.Info>
           <S.Buttons>
             {this.props.btns?.map((btn, index) => {
@@ -129,9 +146,16 @@ export class CardWidget extends React.Component<CardWidgetProps> {
               return null;
             }
             return (
-              <S.Content key={section.key}>
-                <Observer render={section.content} />
-              </S.Content>
+              <Observer
+                key={section.key}
+                render={() => {
+                  const content = section.content();
+                  if (!content) {
+                    return null;
+                  }
+                  return <S.Content>{content}</S.Content>;
+                }}
+              />
             );
           })}
         </>

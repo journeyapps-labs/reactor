@@ -11,6 +11,7 @@ import { CurrentTodoItemVisorMetadata } from './visor/CurrentTodoItemVisorMetada
 import { SetCurrentTodoItemAction } from './actions/SetCurrentTodoItemAction';
 import { ShowDemoFormAction } from './actions/ShowDemoFormAction';
 import { DemoFormsDialogsPanelFactory } from './panels/DemoFormsDialogsPanelFactory';
+import { AddSubTodoAction } from './actions/AddSubTodoAction';
 
 export class ReactorDemoModule extends AbstractReactorModule {
   constructor() {
@@ -31,6 +32,7 @@ export class ReactorDemoModule extends AbstractReactorModule {
     system.registerAction(new CreateTodoAction());
     system.registerAction(new DeleteTodoAction());
     system.registerAction(new SetCurrentTodoItemAction());
+    system.registerAction(new AddSubTodoAction());
     system.registerAction(new ShowDemoFormAction());
     workspaceStore.registerFactory(new DemoFormsDialogsPanelFactory());
 
@@ -41,11 +43,21 @@ export class ReactorDemoModule extends AbstractReactorModule {
 
   async init(ioc: Container): Promise<any> {
     const uxStore = ioc.get<UXStore>(UXStore);
+    const todoStore = ioc.get(TodoStore);
     uxStore.setRootComponent(DemoBodyWidget);
     uxStore.primaryLogo = require('../media/logo.png');
 
-    ioc.get(TodoStore).addTodo(new TodoModel('Make some coffee'));
-    ioc.get(TodoStore).addTodo(new TodoModel('Fry some eggs'));
-    ioc.get(TodoStore).addTodo(new TodoModel('Check the oil in the car'));
+    const coffee = new TodoModel('Make some coffee');
+    coffee.addChild(new TodoModel('Boil water'));
+    coffee.addChild(new TodoModel('Grind beans'));
+    coffee.addChild(new TodoModel('Brew and serve'));
+
+    const eggs = new TodoModel('Fry some eggs');
+    eggs.addChild(new TodoModel('Heat pan'));
+    eggs.addChild(new TodoModel('Crack eggs'));
+
+    todoStore.addTodo(coffee);
+    todoStore.addTodo(eggs);
+    todoStore.addTodo(new TodoModel('Check the oil in the car'));
   }
 }

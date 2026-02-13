@@ -3,31 +3,62 @@ import { computed, observable } from 'mobx';
 
 export class TodoStore {
   @observable
-  protected accessor _todos: Set<TodoModel>;
+  protected accessor _rootTodos: Set<TodoModel>;
 
   @observable
   accessor activeTodo: TodoModel;
 
   constructor() {
-    this._todos = new Set<TodoModel>();
+    this._rootTodos = new Set<TodoModel>();
     this.activeTodo = null;
   }
 
-  addTodo(todo: TodoModel) {
-    let l1 = todo.registerListener({
+  protected bindTodo(todo: TodoModel) {
+    const l1 = todo.registerListener({
       deleted: () => {
-        this._todos.delete(todo);
+        this._rootTodos.delete(todo);
+        if (this.activeTodo === todo) {
+          this.activeTodo = null;
+        }
         l1();
       },
       becameActive: () => {
         this.activeTodo = todo;
+      },
+      childAdded: ({ child }) => {
+        this.bindTodo(child);
+      },
+      childRemoved: ({ child }) => {
+        if (this.activeTodo === child) {
+          this.activeTodo = null;
+        }
       }
     });
-    this._todos.add(todo);
+    todo.children.forEach((child) => {
+      this.bindTodo(child);
+    });
+  }
+
+  addTodo(todo: TodoModel) {
+    this.bindTodo(todo);
+    this._rootTodos.add(todo);
+  }
+
+  addSubTodo(parent: TodoModel, todo: TodoModel) {
+    this.bindTodo(todo);
+    parent.addChild(todo);
+  }
+
+  @computed
+  get rootTodos() {
+    return Array.from(this._rootTodos.values());
   }
 
   @computed
   get todos() {
-    return Array.from(this._todos.values());
+    const walk = (todo: TodoModel): TodoModel[] => {
+      return [todo, ...todo.children.flatMap((child) => walk(child))];
+    };
+    return this.rootTodos.flatMap((todo) => walk(todo));
   }
 }

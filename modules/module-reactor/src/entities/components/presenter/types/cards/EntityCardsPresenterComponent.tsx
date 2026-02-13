@@ -6,17 +6,47 @@ import { inject } from '../../../../../inversify.config';
 import { ActionSource } from '../../../../../actions';
 import { MousePosition } from '../../../../../layers/combo/SmartPositionWidget';
 import { EntityCardsCollectionWidget } from './EntityCardsCollectionWidget';
+import { DescendantEntityProviderComponent } from '../../../exposer/DescendantEntityProviderComponent';
+import { EntityTreePresenterComponent } from '../tree/EntityTreePresenterComponent';
+import { AbstractEntityTreePresenterContext } from '../tree/presenter-contexts/AbstractEntityTreePresenterContext';
+import { BooleanControl } from '../../../../../controls/BooleanControl';
 
 export interface EntityCardsPresenterComponentOptions {
   label?: string;
 }
 
-export class EntityCardsPresenterContext<T> extends AbstractPresenterContext<T> {
+export enum EntityCardsPresenterSetting {
+  SHOW_NESTED = 'show-nested'
+}
+
+export interface EntityCardsPresenterSettings {
+  [EntityCardsPresenterSetting.SHOW_NESTED]: boolean;
+}
+
+export interface NestedTreeRenderOption {
+  key: string;
+  label: string;
+  entities: any[];
+  context: AbstractEntityTreePresenterContext;
+}
+
+export class EntityCardsPresenterContext<T> extends AbstractPresenterContext<T, {}, EntityCardsPresenterSettings> {
   @inject(BatchStore)
   accessor batchStore: BatchStore;
+  protected nestedTreeContexts: Map<DescendantEntityProviderComponent<any, any>, AbstractEntityTreePresenterContext>;
 
   constructor(public presenter: EntityCardsPresenterComponent<T>) {
     super(presenter);
+    this.nestedTreeContexts = new Map();
+
+    this.addSetting({
+      icon: 'sitemap',
+      label: 'Show nested',
+      key: EntityCardsPresenterSetting.SHOW_NESTED,
+      control: new BooleanControl({
+        initialValue: true
+      })
+    });
   }
 
   get definition() {
@@ -35,6 +65,47 @@ export class EntityCardsPresenterContext<T> extends AbstractPresenterContext<T> 
       return [described.simpleName, described.complexName, ...labelTerms, ...(described.tags || [])]
         .filter((v) => v != null && `${v}`.trim() !== '')
         .some((value) => !!event.searchEvent.matches(String(value), { nullIsTrue: false }));
+    });
+  }
+
+  getNestedTreeRenderOptions(entity: T): NestedTreeRenderOption[] {
+    const settings = this.getControlValues();
+    if (!settings[EntityCardsPresenterSetting.SHOW_NESTED]) {
+      return [];
+    }
+
+    return this.definition.getExposers().flatMap((exposer, index) => {
+      const descendantDefinition = this.definition.system.getDefinition(exposer.descendantType);
+      if (!descendantDefinition) {
+        return [];
+      }
+
+      const presenter = descendantDefinition
+        .getPresenters()
+        .find((p) => p instanceof EntityTreePresenterComponent) as EntityTreePresenterComponent<any>;
+      if (!presenter) {
+        return [];
+      }
+
+      if (!this.nestedTreeContexts.has(exposer)) {
+        this.nestedTreeContexts.set(exposer, presenter.generateContext());
+      }
+
+      const context = this.nestedTreeContexts.get(exposer);
+      const { options } = exposer.getReactorTreeEntities(entity, context);
+      const descendants = options?.descendants || [];
+      if (descendants.length === 0) {
+        return [];
+      }
+
+      return [
+        {
+          key: `nested-${exposer.descendantType}-${index}`,
+          label: options?.category?.label || descendantDefinition.label,
+          entities: descendants,
+          context
+        }
+      ];
     });
   }
 
@@ -76,6 +147,14 @@ export class EntityCardsPresenterContext<T> extends AbstractPresenterContext<T> 
         }}
       />
     );
+  }
+
+  dispose() {
+    this.nestedTreeContexts.forEach((context) => {
+      context.dispose();
+    });
+    this.nestedTreeContexts.clear();
+    super.dispose();
   }
 }
 
