@@ -92,7 +92,7 @@ export class EntityCardsPresenterContext<T> extends AbstractPresenterContext<T, 
       }
 
       const context = this.nestedTreeContexts.get(exposer);
-      const { options } = exposer.getReactorTreeEntities(entity, context);
+      const options = exposer.getDescendantOptions(entity);
       const descendants = options?.descendants || [];
       if (descendants.length === 0) {
         return [];

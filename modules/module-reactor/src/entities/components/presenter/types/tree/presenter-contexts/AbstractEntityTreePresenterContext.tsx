@@ -28,6 +28,7 @@ import { BaseObserverInterface } from '@journeyapps-labs/common-utils';
 import { AbstractDescendentContextOptions } from '../descendent/AbstractDescendentContext';
 import { LazyDescendentContext } from '../descendent/LazyDescendentContext';
 import { ImmediateDescendentContext } from '../descendent/ImmediateDescendentContext';
+import { untracked } from 'mobx';
 
 export interface GenerateTreeOptions<T> {
   events?: BaseObserverInterface<SelectEntityListener<T>>;
@@ -109,10 +110,18 @@ export abstract class AbstractEntityTreePresenterContext<
   getSortedEntities(entities: T[]) {
     const controlValues = this.getControlValues();
     if (controlValues[EntityTreePresenterSetting.SORT] === SortDirection.ASC) {
-      entities = _.sortBy(entities, (e) => this.definition.describeEntity(e).simpleName?.toLowerCase());
+      entities = _.sortBy(entities, (e) => {
+        return untracked(() => {
+          return this.definition.describeEntity(e).simpleName?.toLowerCase();
+        });
+      });
     }
     if (controlValues[EntityTreePresenterSetting.SORT] === SortDirection.DESC) {
-      entities = _.sortBy(entities, (e) => this.definition.describeEntity(e).simpleName?.toLowerCase()).reverse();
+      entities = _.sortBy(entities, (e) => {
+        return untracked(() => {
+          return this.definition.describeEntity(e).simpleName?.toLowerCase();
+        });
+      }).reverse();
     }
     return entities;
   }

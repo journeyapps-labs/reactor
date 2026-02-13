@@ -139,7 +139,7 @@ export class DescendantEntityProviderComponent<Parent = any, Descendant = any> e
     entity: Parent,
     context: AbstractEntityTreePresenterContext<Descendant>
   ): { entities: ReactorTreeEntity[]; options: DescendantEntityGeneratedOptions<Descendant> } {
-    const descendantOptions = this.options.generateOptions(entity);
+    const descendantOptions = this.getDescendantOptions(entity);
     return {
       options: descendantOptions,
       entities: this.doGetReactorTreeEntities({
@@ -148,5 +148,9 @@ export class DescendantEntityProviderComponent<Parent = any, Descendant = any> e
         context
       })
     };
+  }
+
+  getDescendantOptions(entity: Parent): DescendantEntityGeneratedOptions<Descendant> | null {
+    return this.options.generateOptions(entity);
   }
 }
