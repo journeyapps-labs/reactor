@@ -2,12 +2,13 @@ import _ from 'lodash';
 import { autorun } from 'mobx';
 import React, { useCallback, useEffect, useRef, useState } from 'react';
 import { CoreTreeWidget } from '../../../../../widgets/core-tree/CoreTreeWidget';
-import { SearchableCoreTreeWidget } from '../../../../../widgets/core-tree/SearchableCoreTreeWidget';
 import { ReactorTreeEntity } from '../../../../../widgets/core-tree/reactor-tree/reactor-tree-utils';
+import { PanelPlaceholderWidget } from '../../../../../widgets/panel/panel/PanelPlaceholderWidget';
 import { RenderCollectionOptions } from '../../AbstractPresenterContext';
 import { AbstractEntityTreePresenterContext } from './presenter-contexts/AbstractEntityTreePresenterContext';
 import { EntityReactorNode } from './EntityReactorNode';
 import { EntityReactorLeaf } from './EntityReactorLeaf';
+import { SearchableEntityTreeWidget } from './SearchableEntityTreeWidget';
 
 export interface EntityTreeCollectionWidgetProps<T extends any> {
   event: RenderCollectionOptions<T>;
@@ -40,7 +41,7 @@ export const EntityTreeCollectionWidget = function <T>(props: EntityTreeCollecti
   }, [event]);
 
   useEffect(() => {
-    return props.event.events?.registerListener({
+    return event.events?.registerListener({
       selectEntity: (entity) => {
         if (lockedRef.current) {
           return;
@@ -66,7 +67,7 @@ export const EntityTreeCollectionWidget = function <T>(props: EntityTreeCollecti
               // fire the events again so the leaf which is now visible, scrolls into view
               _.defer(() => {
                 lockedRef.current = true;
-                props.event.events.iterateListeners((cb) => cb.selectEntity?.(entity));
+                event.events.iterateListeners((cb) => cb.selectEntity?.(entity));
                 _.defer(() => {
                   lockedRef.current = false;
                 });
@@ -78,24 +79,15 @@ export const EntityTreeCollectionWidget = function <T>(props: EntityTreeCollecti
     });
   }, [nodes]);
 
-  // common properties for each node / leaf
+  if (nodes.length === 0) {
+    return <PanelPlaceholderWidget center={true} icon="clone" text="No entities to display" />;
+  }
+
+  if (event.searchEvent?.search) {
+    return <SearchableEntityTreeWidget nodes={nodes} search={event.searchEvent.search} />;
+  }
+
   const jsxElements = nodes.map((tree) => {
-    // render as searchable tree
-    if (event.searchEvent?.search) {
-      return (
-        <SearchableCoreTreeWidget
-          tree={tree}
-          key={tree.getPathAsString()}
-          matchNode={() => {
-            return false;
-          }}
-          matchLeaf={() => {
-            return false;
-          }}
-          search={event.searchEvent.search}
-        />
-      );
-    }
     return (
       <CoreTreeWidget
         tree={tree}
@@ -108,5 +100,6 @@ export const EntityTreeCollectionWidget = function <T>(props: EntityTreeCollecti
       />
     );
   });
+
   return <>{jsxElements}</>;
 };

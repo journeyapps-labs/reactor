@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { useEffect, useMemo, useState } from 'react';
+import { useEffect, useMemo } from 'react';
 import { CoreTreeWidget, CoreTreeWidgetProps } from './CoreTreeWidget';
 import { TreeEntity, TreeNode } from '@journeyapps-labs/common-tree';
 import { createSearchEventMatcher, SearchEvent, SearchEventMatch } from '@journeyapps-labs/lib-reactor-search';
@@ -12,35 +12,23 @@ export interface SearchableCoreTreeWidgetProps extends CoreTreeWidgetProps {
   matchLeaf(event: SearchEvent & { tree: TreeEntity }): SearchEventMatch;
 
   matchNode(event: SearchEvent & { tree: TreeNode }): SearchEventMatch;
+
+  onSearchResultChanged?: (event: { matched: TreeEntity[] }) => any;
 }
 
 export const SearchableCoreTreeWidget: React.FC<SearchableCoreTreeWidgetProps> = observer((props) => {
-  const [matcher, setMatcher] = useState<SearchEvent>(null);
-  const [allowed, setAllowed] = useState<string[]>([]);
-  useEffect(() => {
-    return () => {
-      props.tree.flatten().forEach((t) => {
-        if (isBaseReactorTree(t)) {
-          t.setSearch(null);
-        }
-      });
-    };
-  }, []);
-
-  useEffect(() => {
-    if (props.search) {
-      setMatcher({
-        search: props.search,
-        matches: createSearchEventMatcher(props.search)
-      });
-    } else {
-      setMatcher(null);
+  const matcher = useMemo<SearchEvent>(() => {
+    if (!props.search) {
+      return null;
     }
+    return {
+      search: props.search,
+      matches: createSearchEventMatcher(props.search)
+    };
   }, [props.search]);
 
-  useMemo(() => {
-    const leafs = props.tree.flatten();
-    const filtered = leafs.filter((l) => {
+  const searchState = useMemo(() => {
+    const matched = props.tree.flatten().filter((l) => {
       if (isBaseReactorTree(l)) {
         return l.setSearch(matcher);
       } else if (l instanceof TreeNode) {
@@ -57,7 +45,7 @@ export const SearchableCoreTreeWidget: React.FC<SearchableCoreTreeWidgetProps> =
     });
 
     const allowedSet = new Set<TreeEntity>();
-    filtered.forEach((l) => {
+    matched.forEach((l) => {
       let entity = l;
       do {
         if (!allowedSet.has(entity)) {
@@ -67,14 +55,33 @@ export const SearchableCoreTreeWidget: React.FC<SearchableCoreTreeWidgetProps> =
       } while (entity);
     });
 
-    setAllowed(Array.from(allowedSet.values()).map((f) => f.getPathAsString()));
-  }, [matcher]);
+    return {
+      matched,
+      allowed: new Set(Array.from(allowedSet.values()).map((f) => f.getPathAsString()))
+    };
+  }, [matcher, props.tree, props.matchLeaf, props.matchNode]);
+
+  useEffect(() => {
+    return () => {
+      props.tree.flatten().forEach((t) => {
+        if (isBaseReactorTree(t)) {
+          t.setSearch(null);
+        }
+      });
+    };
+  }, []);
+
+  useEffect(() => {
+    props.onSearchResultChanged?.({
+      matched: searchState.matched
+    });
+  }, [searchState, props.onSearchResultChanged]);
 
   return (
     <CoreTreeWidget
       renderTreeEntity={(tree) => {
         if (props.search) {
-          return allowed.indexOf(tree.getPathAsString()) !== -1;
+          return searchState.allowed.has(tree.getPathAsString());
         }
         return true;
       }}
