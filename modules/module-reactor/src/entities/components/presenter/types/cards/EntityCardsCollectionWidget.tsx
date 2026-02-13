@@ -100,7 +100,7 @@ export const EntityCardWidget = observer(function <T>(props: EntityCardWidgetPro
   return (
     <S.CardWrapper
       onClick={(event) => {
-        presenterContext.handleClick(entity, event as any, ActionSource.TREE_LEAF);
+        presenterContext.handleClick(entity, event as any, ActionSource.CARD);
       }}
       onContextMenu={(event) => {
         event.preventDefault();

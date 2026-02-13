@@ -79,5 +79,9 @@ export abstract class ComboBoxDirective<
     this.iterateListeners((cb) => cb.searchChanged?.());
   }
 
+  setParent(parent: any) {
+    // optional parent-aware behavior for specific directives
+  }
+
   abstract getContent(): React.JSX.Element;
 }

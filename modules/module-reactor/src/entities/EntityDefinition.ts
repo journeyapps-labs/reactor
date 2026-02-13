@@ -33,9 +33,7 @@ import {
   ProviderActionParameter
 } from '../actions';
 import { DescendantEntityProviderComponent } from './components/exposer/DescendantEntityProviderComponent';
-import { CascadingSearchEngineComboBoxDirective } from '../stores/combo2/directives/CascadingSearchEngineComboBoxDirective';
 import { ThemeStore } from '../stores/themes/ThemeStore';
-import { SimpleEntitySearchEngine } from './components/search/SimpleEntitySearchEngineComponent';
 
 export interface EntityDefinitionOptions {
   type: string;
@@ -115,14 +113,12 @@ export abstract class EntityDefinition<T extends any = any> {
   async resolveOneEntity(options: EntityPickOptions<T> = {}): Promise<T | null> {
     const engineComponents = this.getSearchEngines();
     if (engineComponents.length === 1 && options.autoSelectedIsolatedEntity) {
-      let engine = engineComponents[0].getSearchEngine();
-      if (engine instanceof SimpleEntitySearchEngine) {
-        let res = await engine.autoSelectIsolatedItem({
-          value: null
-        });
-        if (res) {
-          return res;
-        }
+      const engine = engineComponents[0].getSearchEngine();
+      const res = await engine.autoSelectIsolatedItem({
+        value: null
+      });
+      if (res) {
+        return res;
       }
     }
 
@@ -137,7 +133,7 @@ export abstract class EntityDefinition<T extends any = any> {
         filter: options.filter
       });
 
-      if (options.parent && directive instanceof CascadingSearchEngineComboBoxDirective) {
+      if (options.parent) {
         directive.setParent(options.parent);
       }
       return directive;

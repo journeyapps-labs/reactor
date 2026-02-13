@@ -70,6 +70,7 @@ export interface ActionOptions {
 export enum ActionSource {
   COMMAND_PALLET = 'cmd-palette',
   BUTTON = 'button',
+  CARD = 'card',
   TREE_LEAF = 'tree-leaf',
   COMBO_BOX_CALLOUT = 'combo-box-callout',
   RIGHT_CLICK = 'right-click',
