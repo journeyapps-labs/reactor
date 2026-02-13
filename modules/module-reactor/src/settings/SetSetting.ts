@@ -39,6 +39,38 @@ export class SetSetting extends AbstractUserSetting<SetControl, SetSettingOption
     return this.control.value;
   }
 
+  canBeChanged() {
+    return this.options.options.length > 1;
+  }
+
+  onValueChanged(cb: (value: string) => any) {
+    return this.control.registerListener({
+      valueChanged: (value) => {
+        cb(value);
+      }
+    });
+  }
+
+  setValue(value: string) {
+    this.control.value = value;
+  }
+
+  setOptions(options: SetControlOption<string>[]) {
+    this.options = {
+      ...this.options,
+      options
+    };
+    this.control.updateOptions({
+      options
+    });
+    if (options.length === 0) {
+      return;
+    }
+    if (!options.find((o) => o.key === this.control.value)) {
+      this.control.value = options[0].key;
+    }
+  }
+
   protected deserialize(data) {
     this.control.value = data.value;
   }

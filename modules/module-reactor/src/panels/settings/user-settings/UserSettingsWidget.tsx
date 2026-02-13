@@ -44,6 +44,7 @@ export class UserSettingsWidget<P extends {} = {}> extends React.Component<P> {
     [category: string]: ControlResult[];
   } {
     return _.chain(this.prefsStore.getInteractiveControls())
+      .filter((c) => c.canBeChanged())
       .map((c) => {
         return { match: search.matches(c.options.name), control: c };
       })

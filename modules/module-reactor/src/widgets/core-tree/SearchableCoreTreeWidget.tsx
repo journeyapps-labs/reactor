@@ -9,9 +9,9 @@ import { isBaseReactorTree } from './reactor-tree/reactor-tree-utils';
 export interface SearchableCoreTreeWidgetProps extends CoreTreeWidgetProps {
   search: string;
 
-  matchLeaf(event: SearchEvent & { tree: TreeEntity }): SearchEventMatch;
+  matchLeaf?(event: SearchEvent & { tree: TreeEntity }): SearchEventMatch;
 
-  matchNode(event: SearchEvent & { tree: TreeNode }): SearchEventMatch;
+  matchNode?(event: SearchEvent & { tree: TreeNode }): SearchEventMatch;
 
   onSearchResultChanged?: (event: { matched: TreeEntity[] }) => any;
 }
@@ -32,16 +32,20 @@ export const SearchableCoreTreeWidget: React.FC<SearchableCoreTreeWidgetProps> =
       if (isBaseReactorTree(l)) {
         return l.setSearch(matcher);
       } else if (l instanceof TreeNode) {
-        return props.matchNode({
-          ...matcher,
-          tree: l
-        });
+        return (
+          props.matchNode?.({
+            ...matcher,
+            tree: l
+          }) ?? false
+        );
       }
 
-      return props.matchLeaf({
-        ...matcher,
-        tree: l
-      });
+      return (
+        props.matchLeaf?.({
+          ...matcher,
+          tree: l
+        }) ?? false
+      );
     });
 
     const allowedSet = new Set<TreeEntity>();

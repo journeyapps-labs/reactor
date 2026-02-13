@@ -64,12 +64,6 @@ export const SearchableEntityTreeWidget: React.FC<SearchableEntityTreeWidgetProp
           <SearchableCoreTreeWidget
             tree={tree}
             key={tree.getPathAsString()}
-            matchNode={() => {
-              return false;
-            }}
-            matchLeaf={() => {
-              return false;
-            }}
             search={search}
             onSearchResultChanged={(result) => {
               setTreeSearchMatches(tree.getPathAsString(), result.matched);

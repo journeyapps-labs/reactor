@@ -11,7 +11,8 @@ import { ComboBoxItem } from '../stores';
 import { inject } from '../inversify.config';
 import { EntityPanelComponent } from './components/ui/EntityPanelComponent';
 import { EntityDescriberComponent, EntityDescription } from './components/meta/EntityDescriberComponent';
-import { computed, observable } from 'mobx';
+import { EntityDescriberBank } from './components/meta/EntityDescriberBank';
+import { computed } from 'mobx';
 import { EntityDocsComponent } from './components/meta/EntityDocsComponent';
 import { ComboBoxStore2 } from '../stores/combo2/ComboBoxStore2';
 import {
@@ -61,14 +62,13 @@ export abstract class EntityDefinition<T extends any = any> {
   @inject(ThemeStore)
   accessor themeStore: ThemeStore;
 
-  @observable
-  private accessor preferredDescriber: string;
+  private describers: EntityDescriberBank<T>;
 
   private additionalActionIds: string[];
 
   constructor(protected options: EntityDefinitionOptions) {
     this.components = new Set();
-    this.preferredDescriber = null;
+    this.describers = new EntityDescriberBank<T>(this);
     this.additionalActionIds = [];
   }
 
@@ -80,11 +80,7 @@ export abstract class EntityDefinition<T extends any = any> {
     component.setDefinition(this);
     this.components.add(component);
     if (component instanceof EntityDescriberComponent) {
-      component.registerListener({
-        preferred: () => {
-          this.preferredDescriber = component.label;
-        }
-      });
+      this.describers.register(component as EntityDescriberComponent<T>);
     }
   }
 
@@ -287,10 +283,11 @@ export abstract class EntityDefinition<T extends any = any> {
   }
 
   getPreferredDescriber() {
-    if (this.preferredDescriber) {
-      return this.getDescribers().find((d) => d.label === this.preferredDescriber);
-    }
-    return this.getDescribers()[0];
+    return this.describers.getPreferredDescriber();
+  }
+
+  getSettings() {
+    return this.describers.getSettings();
   }
 
   registerAdditionalAction(actionId: string) {
@@ -304,9 +301,7 @@ export abstract class EntityDefinition<T extends any = any> {
   });
 
   getDescribers = _.memoize(() => {
-    return Array.from(this.components.values()).filter(
-      (c) => c.type === EntityDescriberComponent.TYPE
-    ) as EntityDescriberComponent<T>[];
+    return this.describers.getDescribers();
   });
 
   getEncoders = _.memoize(() => {

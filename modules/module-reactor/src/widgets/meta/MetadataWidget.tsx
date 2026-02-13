@@ -1,22 +1,12 @@
 import * as React from 'react';
 import { MouseEventHandler } from 'react';
-import { IconWidget, ReactorIcon } from '../icons/IconWidget';
+import { IconWidget } from '../icons/IconWidget';
 import { getColorWithAlphaOptions } from '@journeyapps-labs/lib-reactor-utils';
 import { styled } from '../../stores/themes/reactor-theme-fragment';
 import { setupTooltipProps, TooltipPosition } from '../info/tooltips';
+import type { EntityLabel } from '../../entities/components/meta/EntityDescriberComponent';
 
-export interface MetadataWidgetProps {
-  label: string;
-  value: string;
-  color?: string;
-  colorForeground?: string;
-  icon?: {
-    name: ReactorIcon;
-    color: string;
-    spin?: boolean;
-  };
-  active?: boolean;
-  tooltip?: string;
+export interface MetadataWidgetProps extends EntityLabel {
   className?: any;
   onClick?: MouseEventHandler<any>;
 }

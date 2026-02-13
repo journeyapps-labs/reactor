@@ -1,6 +1,19 @@
 import { EntityDefinitionComponent } from '../../EntityDefinitionComponent';
 import { ReactorIcon } from '../../../widgets/icons/IconWidget';
-import { ReadOnlyMetadataWidgetProps } from '../../../widgets/meta/ReadOnlyMetadataWidget';
+
+export interface EntityLabel {
+  label: string;
+  value: string;
+  color?: string;
+  colorForeground?: string;
+  icon?: {
+    name: ReactorIcon;
+    color: string;
+    spin?: boolean;
+  };
+  active?: boolean;
+  tooltip?: string;
+}
 
 export interface EntityDescription {
   simpleName: string;
@@ -10,7 +23,7 @@ export interface EntityDescription {
   /**
    * Optional metadata entries shown by card-style presenters.
    */
-  labels?: ReadOnlyMetadataWidgetProps[];
+  labels?: EntityLabel[];
   /**
    * Optional tag chips shown by card-style presenters.
    */
