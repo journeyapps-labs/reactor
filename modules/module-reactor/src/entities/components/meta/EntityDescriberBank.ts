@@ -25,14 +25,6 @@ export class EntityDescriberBank<T = any> extends PreferredSetBank<EntityDescrib
     return super.register(describer);
   }
 
-  getDescribers(): EntityDescriberComponent<T>[] {
-    return this.getItems();
-  }
-
-  getPreferredDescriber(): EntityDescriberComponent<T> | null {
-    return this.getPreferred();
-  }
-
   protected onPreferredChanged(describer: EntityDescriberComponent<T>) {
     describer.setPreferred();
   }

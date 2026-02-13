@@ -101,6 +101,7 @@ export * from './actions/validators/InlineActionValidator';
 export * from './entities-reactor/ReactorEntities';
 
 export * from './entities/components/encoder/EntityEncoderComponent';
+export * from './entities/components/encoder/EntityEncoderBank';
 export * from './entities/components/encoder/InlineEntityEncoderComponent';
 export * from './entities/components/exposer/DescendantEntityProviderComponent';
 export * from './entities/components/exposer/DescendantLoadingEntityProviderComponent';
@@ -126,6 +127,7 @@ export * from './entities/components/presenter/types/tree/presenter-contexts/Ent
 export * from './entities/components/presenter/types/tree/widgets/ReactorEntityDnDWrapperWidget';
 export * from './entities/components/presenter/types/tree/widgets/ReactorEntityWrapperWidget';
 export * from './entities/components/search/EntitySearchEngineComponent';
+export * from './entities/components/search/EntitySearchBank';
 export * from './entities/components/search/SimpleEntitySearchEngineComponent';
 export * from './entities/components/search/SimpleParentEntitySearchEngine';
 export * from './entities/components/ui/EntityPanelComponent';
