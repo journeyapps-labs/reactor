@@ -107,6 +107,8 @@ export * from './entities/components/exposer/DescendantLoadingEntityProviderComp
 export * from './entities/components/handler/EntityActionHandlerComponent';
 export * from './entities/components/handler/EntityHandlerComponent';
 export * from './entities/components/handler/InlineEntityHandlerComponent';
+export * from './entities/components/banks/ComponentBank';
+export * from './entities/components/banks/PreferredSetBank';
 export * from './entities/components/meta/EntityDescriberComponent';
 export * from './entities/components/meta/EntityDocsComponent';
 export * from './entities/components/presenter/AbstractPresenterContext';

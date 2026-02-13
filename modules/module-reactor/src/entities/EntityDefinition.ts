@@ -14,6 +14,7 @@ import { EntityDescriberComponent, EntityDescription } from './components/meta/E
 import { EntityDescriberBank } from './components/meta/EntityDescriberBank';
 import { computed } from 'mobx';
 import { EntityDocsComponent } from './components/meta/EntityDocsComponent';
+import { ComponentBank } from './components/banks/ComponentBank';
 import { ComboBoxStore2 } from '../stores/combo2/ComboBoxStore2';
 import {
   SimpleComboBoxDirective,
@@ -51,7 +52,6 @@ export interface EntityPickOptions<T extends any = any> {
 }
 
 export abstract class EntityDefinition<T extends any = any> {
-  components: Set<EntityDefinitionComponent>;
   system: System;
 
   @inject(ComboBoxStore2)
@@ -61,12 +61,25 @@ export abstract class EntityDefinition<T extends any = any> {
   accessor themeStore: ThemeStore;
 
   private describers: EntityDescriberBank<T>;
+  private docsComponents: ComponentBank<EntityDocsComponent<T>>;
+  private encoderComponents: ComponentBank<EntityEncoderComponent<T>>;
+  private searchComponents: ComponentBank<EntitySearchEngineComponent<T>>;
+  private presenterComponents: ComponentBank<EntityPresenterComponent>;
+  private handlerComponents: ComponentBank<EntityHandlerComponent>;
+  private panelComponents: ComponentBank<EntityPanelComponent>;
+  private exposerComponents: ComponentBank<DescendantEntityProviderComponent<T, any>>;
 
   private additionalActionIds: string[];
 
   constructor(protected options: EntityDefinitionOptions) {
-    this.components = new Set();
     this.describers = new EntityDescriberBank<T>(this);
+    this.docsComponents = new ComponentBank<EntityDocsComponent<T>>();
+    this.encoderComponents = new ComponentBank<EntityEncoderComponent<T>>();
+    this.searchComponents = new ComponentBank<EntitySearchEngineComponent<T>>();
+    this.presenterComponents = new ComponentBank<EntityPresenterComponent>();
+    this.handlerComponents = new ComponentBank<EntityHandlerComponent>();
+    this.panelComponents = new ComponentBank<EntityPanelComponent>();
+    this.exposerComponents = new ComponentBank<DescendantEntityProviderComponent<T, any>>();
     this.additionalActionIds = [];
   }
 
@@ -76,9 +89,37 @@ export abstract class EntityDefinition<T extends any = any> {
 
   registerComponent(component: EntityDefinitionComponent) {
     component.setDefinition(this);
-    this.components.add(component);
     if (component instanceof EntityDescriberComponent) {
       this.describers.register(component as EntityDescriberComponent<T>);
+      return;
+    }
+    if (component instanceof EntityDocsComponent) {
+      this.docsComponents.register(component as EntityDocsComponent<T>);
+      return;
+    }
+    if (component instanceof EntityEncoderComponent) {
+      this.encoderComponents.register(component as EntityEncoderComponent<T>);
+      return;
+    }
+    if (component instanceof EntitySearchEngineComponent) {
+      this.searchComponents.register(component as EntitySearchEngineComponent<T>);
+      return;
+    }
+    if (component instanceof EntityPresenterComponent) {
+      this.presenterComponents.register(component);
+      return;
+    }
+    if (component instanceof EntityHandlerComponent) {
+      this.handlerComponents.register(component);
+      return;
+    }
+    if (component instanceof EntityPanelComponent) {
+      this.panelComponents.register(component);
+      return;
+    }
+    if (component instanceof DescendantEntityProviderComponent) {
+      this.exposerComponents.register(component as DescendantEntityProviderComponent<T, any>);
+      return;
     }
   }
 
@@ -290,51 +331,37 @@ export abstract class EntityDefinition<T extends any = any> {
     this.additionalActionIds.push(actionId);
   }
 
-  getDocumenters = _.memoize(() => {
-    return Array.from(this.components.values()).filter(
-      (c) => c.type === EntityDocsComponent.TYPE
-    ) as EntityDocsComponent<T>[];
-  });
+  getDocumenters(): EntityDocsComponent<T>[] {
+    return this.docsComponents.getItems();
+  }
 
-  getDescribers = _.memoize(() => {
+  getDescribers() {
     return this.describers.getDescribers();
-  });
+  }
 
-  getEncoders = _.memoize(() => {
-    return Array.from(this.components.values()).filter(
-      (c) => c.type === EntityEncoderComponent.TYPE
-    ) as EntityEncoderComponent[];
-  });
+  getEncoders(): EntityEncoderComponent<T>[] {
+    return this.encoderComponents.getItems();
+  }
 
-  getSearchEngines = _.memoize(() => {
-    return Array.from(this.components.values()).filter(
-      (c) => c.type === EntitySearchEngineComponent.TYPE
-    ) as EntitySearchEngineComponent<T>[];
-  });
+  getSearchEngines(): EntitySearchEngineComponent<T>[] {
+    return this.searchComponents.getItems();
+  }
 
-  getPresenters = _.memoize(() => {
-    return Array.from(this.components.values()).filter(
-      (c) => c.type === EntityPresenterComponent.TYPE
-    ) as EntityPresenterComponent[];
-  });
+  getPresenters(): EntityPresenterComponent[] {
+    return this.presenterComponents.getItems();
+  }
 
-  getHandlers = _.memoize(() => {
-    return Array.from(this.components.values()).filter(
-      (c) => c.type === EntityHandlerComponent.TYPE
-    ) as EntityHandlerComponent[];
-  });
+  getHandlers(): EntityHandlerComponent[] {
+    return this.handlerComponents.getItems();
+  }
 
-  getPanelComponents = _.memoize(() => {
-    return Array.from(this.components.values()).filter(
-      (c) => c.type === EntityPanelComponent.TYPE
-    ) as EntityPanelComponent[];
-  });
+  getPanelComponents(): EntityPanelComponent[] {
+    return this.panelComponents.getItems();
+  }
 
-  getExposers = _.memoize(() => {
-    return Array.from(this.components.values()).filter(
-      (c) => c.type === DescendantEntityProviderComponent.TYPE
-    ) as DescendantEntityProviderComponent<T, any>[];
-  });
+  getExposers(): DescendantEntityProviderComponent<T, any>[] {
+    return this.exposerComponents.getItems();
+  }
 
   // !-------------- handling ---------------
 

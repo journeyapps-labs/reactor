@@ -1,5 +1,5 @@
 import { Container } from '@journeyapps-labs/common-ioc';
-import { AbstractReactorModule, System, UXStore, VisorStore } from '@journeyapps-labs/reactor-mod';
+import { AbstractReactorModule, System, UXStore, VisorStore, WorkspaceStore } from '@journeyapps-labs/reactor-mod';
 import { DemoBodyWidget } from './BodyWidget';
 import { setupWorkspaces } from './setupWorkspaces';
 import { TodoStore } from './stores/TodoStore';
@@ -10,6 +10,7 @@ import { DeleteTodoAction } from './actions/DeleteTodoAction';
 import { CurrentTodoItemVisorMetadata } from './visor/CurrentTodoItemVisorMetadata';
 import { SetCurrentTodoItemAction } from './actions/SetCurrentTodoItemAction';
 import { ShowDemoFormAction } from './actions/ShowDemoFormAction';
+import { DemoFormsDialogsPanelFactory } from './panels/DemoFormsDialogsPanelFactory';
 
 export class ReactorDemoModule extends AbstractReactorModule {
   constructor() {
@@ -21,6 +22,7 @@ export class ReactorDemoModule extends AbstractReactorModule {
   register(ioc: Container) {
     const system = ioc.get(System);
     const visorStore = ioc.get(VisorStore);
+    const workspaceStore = ioc.get(WorkspaceStore);
 
     ioc.bind(TodoStore).toConstantValue(new TodoStore());
 
@@ -30,6 +32,7 @@ export class ReactorDemoModule extends AbstractReactorModule {
     system.registerAction(new DeleteTodoAction());
     system.registerAction(new SetCurrentTodoItemAction());
     system.registerAction(new ShowDemoFormAction());
+    workspaceStore.registerFactory(new DemoFormsDialogsPanelFactory());
 
     visorStore.registerActiveMetadata(new CurrentTodoItemVisorMetadata());
 
