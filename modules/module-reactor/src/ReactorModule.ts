@@ -51,6 +51,7 @@ import './stores/themes/built-in-themes/journey';
 import './stores/themes/built-in-themes/light';
 import './stores/themes/built-in-themes/scarlet';
 import './stores/themes/built-in-themes/oxide';
+import './stores/themes/built-in-themes/bunny';
 import { PanelEntityDefinition } from './entities-reactor/panels/PanelEntityDefinition';
 import { AddPanelWorkspaceAction } from './actions/builtin-actions/workspace/AddPanelWorkspaceAction';
 import { DNDStore } from './stores/dnd/DNDStore';

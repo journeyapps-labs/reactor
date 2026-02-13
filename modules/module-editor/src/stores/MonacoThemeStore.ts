@@ -162,6 +162,13 @@ export class MonacoThemeStore extends AbstractStore {
           compatibility: true
         },
         {
+          key: Themes.BUNNY,
+          label: 'Ayu Mirage',
+          theme: COUPLED_IDE_THEMES[Themes.HEXAGON],
+          system: true,
+          compatibility: true
+        },
+        {
           key: Themes.REACTOR_LIGHT,
           label: 'Ayu Light',
           theme: COUPLED_IDE_THEMES[Themes.REACTOR_LIGHT],

@@ -75,9 +75,10 @@ export class EditorModule extends AbstractReactorModule {
     const selectedTheme = themeStore.selectedTheme;
     selectedTheme.registerListener({
       updated(): any {
-        monacoThemeStore.selectedTheme.setItem(
-          monacoThemeStore.getMonacoThemeForReactorTheme(selectedTheme.entity.key)
-        );
+        const monacoTheme = monacoThemeStore.getMonacoThemeForReactorTheme(selectedTheme.entity.key);
+        if (monacoTheme) {
+          monacoThemeStore.selectedTheme.setItem(monacoTheme);
+        }
       }
     });
 

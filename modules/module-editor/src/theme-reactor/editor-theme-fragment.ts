@@ -67,6 +67,15 @@ theme.addThemeValues({
     }
   }
 });
+theme.addThemeValues({
+  name: Themes.BUNNY,
+  values: {
+    editor: {
+      background: '#161322',
+      backgroundSticky: '#161322'
+    }
+  }
+});
 
 export const styled = theme.styled();
 export const themed = theme.styled();

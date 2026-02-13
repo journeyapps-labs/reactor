@@ -69,6 +69,7 @@ export * from './stores/themes/emotion';
 export * from './stores/themes/ThemeFragment';
 export * from './stores/themes/ThemeStore';
 export * from './stores/themes/built-in-themes/scarlet';
+export * from './stores/themes/built-in-themes/bunny';
 export * from './stores/themes/reactor-theme-fragment';
 
 export * from './stores/layer/LayerDirective';

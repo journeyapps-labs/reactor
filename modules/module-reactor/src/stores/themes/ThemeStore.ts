@@ -11,7 +11,8 @@ export enum Themes {
   REACTOR_LIGHT = 'reactor-light',
   JOURNEY = 'journey',
   SCARLET = 'scarlet',
-  HEXAGON = 'hexagon'
+  HEXAGON = 'hexagon',
+  BUNNY = 'bunny'
 }
 
 export interface Theme {
@@ -65,6 +66,12 @@ export class ThemeStore extends AbstractStore {
     this.registerTheme({
       key: Themes.HEXAGON,
       label: 'Hexagon',
+      core: true,
+      light: false
+    });
+    this.registerTheme({
+      key: Themes.BUNNY,
+      label: 'Bunny',
       core: true,
       light: false
     });

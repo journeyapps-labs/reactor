@@ -45,12 +45,27 @@ namespace S {
     gap: 5px;
   `;
 
-  export const TagPill = styled(PillWidget)`
-    background: rgba(129, 139, 153, 0.9) !important;
+  export const TagPill = themed(PillWidget)`
+    background: ${(p) =>
+      p.theme.light
+        ? 'rgba(129, 139, 153, 0.9)'
+        : p.theme.guide.accent === 'rgb(184 107 255)'
+          ? 'rgba(112, 128, 145, 0.62)'
+          : 'rgba(98, 114, 134, 0.7)'} !important;
 
     > div:first-of-type {
-      background: rgba(0, 0, 0, 0.18);
-      color: rgba(255, 255, 255, 0.95);
+      background: ${(p) =>
+        p.theme.light
+          ? 'rgba(0, 0, 0, 0.18)'
+          : p.theme.guide.accent === 'rgb(184 107 255)'
+            ? 'rgba(0, 0, 0, 0.08)'
+            : 'rgba(0, 0, 0, 0.12)'};
+      color: ${(p) =>
+        p.theme.light
+          ? 'rgba(255, 255, 255, 0.95)'
+          : p.theme.guide.accent === 'rgb(184 107 255)'
+            ? 'rgba(222, 232, 242, 0.88)'
+            : 'rgba(227, 236, 249, 0.92)'};
     }
   `;
 
