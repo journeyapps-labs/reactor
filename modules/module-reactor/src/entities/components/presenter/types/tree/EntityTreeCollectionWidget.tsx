@@ -79,7 +79,13 @@ export const EntityTreeCollectionWidget = observer(function <T>(props: EntityTre
   }
 
   if (event.searchEvent?.search) {
-    return <SearchableEntityTreeWidget nodes={nodes} search={event.searchEvent.search} />;
+    return (
+      <SearchableEntityTreeWidget
+        nodes={nodes}
+        search={event.searchEvent.search}
+        searchScope={presenterContext.presenter.searchScope}
+      />
+    );
   }
 
   const jsxElements = nodes.map((tree) => {

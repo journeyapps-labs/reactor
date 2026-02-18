@@ -7,10 +7,12 @@ import { TreeEntity } from '@journeyapps-labs/common-tree';
 import { PanelPlaceholderWidget } from '../../../../../widgets/panel/panel/PanelPlaceholderWidget';
 import { useForceUpdate } from '../../../../../hooks/useForceUpdate';
 import styled from '@emotion/styled';
+import { SearchableTreeSearchScope } from '../../../../../widgets/core-tree/SearchableTreeSearchScope';
 
 export interface SearchableEntityTreeWidgetProps {
   nodes: ReactorTreeEntity[];
   search: string;
+  searchScope?: SearchableTreeSearchScope;
 }
 
 namespace S {
@@ -20,7 +22,7 @@ namespace S {
 }
 
 export const SearchableEntityTreeWidget: React.FC<SearchableEntityTreeWidgetProps> = (props) => {
-  const { nodes, search } = props;
+  const { nodes, search, searchScope } = props;
   const searchMatchesByTreeRef = useRef<Record<string, boolean>>({});
   const receivedSearchEventsRef = useRef<boolean>(false);
   const forceUpdate = useForceUpdate();
@@ -77,6 +79,7 @@ export const SearchableEntityTreeWidget: React.FC<SearchableEntityTreeWidgetProp
             <SearchableCoreTreeWidget
               tree={tree}
               search={search}
+              searchScope={searchScope}
               onSearchResultChanged={(result) => {
                 setTreeSearchMatches(treePath, result.matched);
               }}

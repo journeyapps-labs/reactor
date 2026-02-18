@@ -7,6 +7,7 @@ import {
 import { inject } from '../../../../../inversify.config';
 import { BatchStore } from '../../../../../stores/batch/BatchStore';
 import { AbstractEntityTreePresenterContext } from './presenter-contexts/AbstractEntityTreePresenterContext';
+import { SearchableTreeSearchScope } from '../../../../../widgets/core-tree/SearchableTreeSearchScope';
 
 export enum EntityTreePresenterSetting {
   SORT = 'sort'
@@ -27,6 +28,7 @@ export interface EntityTreePresenterState {
 
 export interface EntityTreePresenterComponentOptions extends Omit<EntityPresenterComponentOptions, 'label'> {
   loadChildrenAsNodesAreOpened?: boolean;
+  searchScope?: SearchableTreeSearchScope;
   label?: string;
 }
 
@@ -48,5 +50,9 @@ export abstract class EntityTreePresenterComponent<T> extends EntityPresenterCom
 
   get loadChildrenAsNodesAreOpened() {
     return this.options2.loadChildrenAsNodesAreOpened;
+  }
+
+  get searchScope() {
+    return this.options2.searchScope || SearchableTreeSearchScope.FULL_TREE;
   }
 }

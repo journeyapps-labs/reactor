@@ -9,6 +9,7 @@ import { MetaBarWidget } from '../meta/MetaBarWidget';
 import { ReadOnlyMetadataWidgetProps } from '../meta/ReadOnlyMetadataWidget';
 import { getDarkenedColor, getTransparentColor } from '@journeyapps-labs/lib-reactor-utils';
 import { themed } from '../../stores/themes/reactor-theme-fragment';
+import { getScrollableCSS } from '../panel/panel/PanelWidget';
 
 export interface CardWidgetProps {
   btns?: PanelBtn[];
@@ -38,6 +39,7 @@ export const CardContent = themed.div`
   padding: 10px;
   min-width: 0;
   overflow-x: auto;
+  ${(p) => getScrollableCSS(p.theme)};
 `;
 
 namespace S {

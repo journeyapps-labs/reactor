@@ -95,6 +95,7 @@ export * from './tabs/TabSelectionKeyboardWidget';
 export * from './collections/PaginatedCollectionWidget';
 
 export * from './core-tree/SearchableCoreTreeWidget';
+export * from './core-tree/SearchableTreeSearchScope';
 export * from './core-tree/CoreTreeWidget';
 export * from './core-tree/reactor-tree/PatchTree';
 export * from './core-tree/reactor-tree/ReactorTreeNode';

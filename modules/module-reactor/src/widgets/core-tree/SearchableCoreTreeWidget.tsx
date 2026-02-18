@@ -7,9 +7,11 @@ import { observer } from 'mobx-react';
 import { isBaseReactorTree } from './reactor-tree/reactor-tree-utils';
 import { ReactorTreeNode } from './reactor-tree/ReactorTreeNode';
 import _ from 'lodash';
+import { SearchableTreeSearchScope } from './SearchableTreeSearchScope';
 
 export interface SearchableCoreTreeWidgetProps extends CoreTreeWidgetProps {
   search: string;
+  searchScope?: SearchableTreeSearchScope;
 
   matchLeaf?(event: SearchEvent & { tree: TreeEntity }): SearchEventMatch;
 
@@ -18,29 +20,28 @@ export interface SearchableCoreTreeWidgetProps extends CoreTreeWidgetProps {
   onSearchResultChanged?: (event: { matched: TreeEntity[] }) => any;
 }
 
-export const SearchableCoreTreeWidget: React.FC<SearchableCoreTreeWidgetProps> = observer((props) => {
-  const [treeVersion, setTreeVersion] = useState(0);
-
-  const matcher = useMemo<SearchEvent>(() => {
-    if (!props.search) {
+const useSearchMatcher = (search: string) => {
+  return useMemo<SearchEvent>(() => {
+    if (!search) {
       return null;
     }
     return {
-      search: props.search,
-      matches: createSearchEventMatcher(props.search)
+      search,
+      matches: createSearchEventMatcher(search)
     };
-  }, [props.search]);
+  }, [search]);
+};
 
-  const flattened = useMemo(() => {
-    return props.tree.flatten();
-  }, [props.tree, treeVersion]);
-
+const useTreeVersionListeners = (
+  entities: TreeEntity[],
+  setTreeVersion: React.Dispatch<React.SetStateAction<number>>
+) => {
   useEffect(() => {
     const bump = () => {
       setTreeVersion((v) => v + 1);
     };
 
-    const listeners = flattened
+    const listeners = entities
       .filter((t) => isBaseReactorTree(t))
       .map((t) => {
         return t.registerListener({
@@ -56,40 +57,21 @@ export const SearchableCoreTreeWidget: React.FC<SearchableCoreTreeWidgetProps> =
     return () => {
       listeners.forEach((dispose) => dispose?.());
     };
-  }, [flattened]);
+  }, [entities, setTreeVersion]);
+};
 
-  useEffect(() => {
-    if (!matcher) {
-      return;
-    }
-    // In searchable mode, reveal lazy node branches so descendants can attach/load
-    // and participate in deep matching.
-    flattened.forEach((tree) => {
-      if (tree instanceof ReactorTreeNode) {
-        if (tree.collapsed) {
-          tree.open({ reveal: true });
-        }
-      }
-    });
-  }, [flattened, matcher]);
-
-  useEffect(() => {
-    if (!matcher) {
-      return;
-    }
-    // One-shot post-search refresh: in some lazy-tree cases, descendants can attach/load
-    // before this widget's mutation listeners are registered (especially when a node is
-    // already open). Triggering one deferred pass closes that race.
-    const deferred = _.defer(() => {
-      setTreeVersion((v) => v + 1);
-    });
-    return () => {
-      clearTimeout(deferred as any);
-    };
-  }, [matcher]);
+const FilteredCoreTreeWidget: React.FC<
+  SearchableCoreTreeWidgetProps & {
+    entities: TreeEntity[];
+    matcher: SearchEvent;
+    revealMatch: boolean;
+    setTreeVersion: React.Dispatch<React.SetStateAction<number>>;
+  }
+> = (props) => {
+  const { entities, matcher, revealMatch, setTreeVersion, renderTreeEntity: _renderTreeEntity, ...rest } = props;
 
   const searchState = useMemo(() => {
-    const matched = flattened.filter((l) => {
+    const matched = entities.filter((l) => {
       if (isBaseReactorTree(l)) {
         if (!matcher) {
           return true;
@@ -127,23 +109,23 @@ export const SearchableCoreTreeWidget: React.FC<SearchableCoreTreeWidgetProps> =
       matched,
       allowed: new Set(Array.from(allowedSet.values()).map((f) => f.getPathAsString()))
     };
-  }, [flattened, matcher, props.matchLeaf, props.matchNode]);
+  }, [entities, matcher, props.matchLeaf, props.matchNode]);
 
   useEffect(() => {
-    flattened.forEach((t) => {
+    entities.forEach((t) => {
       if (isBaseReactorTree(t)) {
-        t.setSearch(matcher);
+        t.setSearch(matcher, { revealMatch });
       }
     });
 
     return () => {
-      flattened.forEach((t) => {
+      entities.forEach((t) => {
         if (isBaseReactorTree(t)) {
           t.setSearch(null);
         }
       });
     };
-  }, [flattened, matcher]);
+  }, [entities, matcher, revealMatch]);
 
   useEffect(() => {
     props.onSearchResultChanged?.({
@@ -151,12 +133,23 @@ export const SearchableCoreTreeWidget: React.FC<SearchableCoreTreeWidgetProps> =
     });
   }, [searchState, props.onSearchResultChanged]);
 
+  useEffect(() => {
+    if (!matcher) {
+      return;
+    }
+    const deferred = _.defer(() => {
+      setTreeVersion((v) => v + 1);
+    });
+    return () => {
+      clearTimeout(deferred as any);
+    };
+  }, [matcher, setTreeVersion]);
+
   return (
     <CoreTreeWidget
+      {...rest}
       renderTreeEntity={(tree) => {
         if (props.search) {
-          // Keep the root mounted during search so descendants can attach/load
-          // and discover deep matches before filtering settles.
           if (tree === props.tree) {
             return true;
           }
@@ -164,7 +157,80 @@ export const SearchableCoreTreeWidget: React.FC<SearchableCoreTreeWidgetProps> =
         }
         return true;
       }}
+    />
+  );
+};
+
+const SearchableCoreTreeWidgetVisibleMode: React.FC<SearchableCoreTreeWidgetProps> = observer((props) => {
+  const [treeVersion, setTreeVersion] = useState(0);
+  const matcher = useSearchMatcher(props.search);
+
+  const visibleEntities = useMemo(() => {
+    const entities: TreeEntity[] = [];
+    const walk = (tree: TreeEntity) => {
+      entities.push(tree);
+      if (!(tree instanceof TreeNode) || tree.collapsed) {
+        return;
+      }
+      tree.children.forEach((child) => {
+        walk(child);
+      });
+    };
+    walk(props.tree);
+    return entities;
+  }, [props.tree, treeVersion]);
+
+  useTreeVersionListeners(visibleEntities, setTreeVersion);
+  return (
+    <FilteredCoreTreeWidget
       {...props}
+      entities={visibleEntities}
+      matcher={matcher}
+      revealMatch={false}
+      setTreeVersion={setTreeVersion}
     />
   );
 });
+
+const SearchableCoreTreeWidgetFullMode: React.FC<SearchableCoreTreeWidgetProps> = observer((props) => {
+  const [treeVersion, setTreeVersion] = useState(0);
+  const matcher = useSearchMatcher(props.search);
+
+  const flattened = useMemo(() => {
+    return props.tree.flatten();
+  }, [props.tree, treeVersion]);
+
+  useTreeVersionListeners(flattened, setTreeVersion);
+
+  useEffect(() => {
+    if (!matcher) {
+      return;
+    }
+    // In searchable mode, reveal lazy node branches so descendants can attach/load
+    // and participate in deep matching.
+    flattened.forEach((tree) => {
+      if (tree instanceof ReactorTreeNode) {
+        if (tree.collapsed) {
+          tree.open({ reveal: true });
+        }
+      }
+    });
+  }, [flattened, matcher]);
+
+  return (
+    <FilteredCoreTreeWidget
+      {...props}
+      entities={flattened}
+      matcher={matcher}
+      revealMatch={true}
+      setTreeVersion={setTreeVersion}
+    />
+  );
+});
+
+export const SearchableCoreTreeWidget: React.FC<SearchableCoreTreeWidgetProps> = (props) => {
+  if ((props.searchScope || SearchableTreeSearchScope.FULL_TREE) === SearchableTreeSearchScope.VISIBLE_ONLY) {
+    return <SearchableCoreTreeWidgetVisibleMode {...props} />;
+  }
+  return <SearchableCoreTreeWidgetFullMode {...props} />;
+};
