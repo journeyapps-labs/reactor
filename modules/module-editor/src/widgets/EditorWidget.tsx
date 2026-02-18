@@ -18,7 +18,6 @@ export interface EditorWidgetProps {
   options?: Partial<monaco.editor.IEditorConstructionOptions>;
   model: monaco.editor.ITextModel;
   events?: OxideEditorEvents;
-  backgroundColor?: string;
   patchOxideShortcuts?: boolean;
   forwardRef?: React.RefObject<HTMLDivElement>;
 }
@@ -33,13 +32,12 @@ namespace S {
     overflow: hidden;
   `;
 
-  export const Monaco = themed.div<{ background: string }>`
+  export const Monaco = themed.div`
     position: absolute;
     top: 0;
     left: 0;
     right: 0;
     bottom: 0;
-    background: ${(p) => p.background};
 
     // note: there is really no other way to do this
     // note: we have this code since we have the monaco editor background
@@ -68,7 +66,7 @@ export const EditorWidget: React.FC<EditorWidgetProps> = observer((props) => {
 
   return (
     <S.Background ref={ref}>
-      <S.Monaco background={props.backgroundColor || ioc.get(ThemeStore).getCurrentTheme(theme).editor.background}>
+      <S.Monaco>
         <MonacoEditorWidget
           model={props.model}
           options={{

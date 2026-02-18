@@ -2,13 +2,13 @@ import * as React from 'react';
 import { observer } from 'mobx-react';
 import {
   CardWidget,
-  MetadataWidget,
+  MetaBarWidget,
   PanelButtonMode,
   PanelButtonWidget,
   ReactorPanelModel,
   styled
 } from '@journeyapps-labs/reactor-mod';
-import { DualEditorWidget, EditorWidget, SimpleEditorWidget } from '@journeyapps-labs/reactor-mod-editor';
+import { DualEditorWidget, EditorWidget, MonacoLanguages } from '@journeyapps-labs/reactor-mod-editor';
 import { editor, Uri } from 'monaco-editor';
 import { v4 } from 'uuid';
 
@@ -16,20 +16,30 @@ export interface DemoEditorsPanelWidgetProps {
   model: ReactorPanelModel;
 }
 
-const STANDARD_EDITOR_INITIAL = `{
-  "name": "editor-playground",
-  "featureFlags": {
-    "dualEditor": true,
-    "readOnlyPreview": true
-  },
+const TRIO_JSON_SNIPPET = `{
+  "workspace": "editors",
+  "features": ["json", "javascript", "markdown"],
   "theme": "reactor-dark"
 }`;
 
-const SIMPLE_EDITOR_SNIPPET = `const createPanel = (name) => ({
+const TRIO_JS_SNIPPET = `const createPanel = (name) => ({
   id: name.toLowerCase().replace(/\\s+/g, '-'),
   title: name,
   kind: 'demo'
-});`;
+});
+
+console.log(createPanel('Editors playground'));`;
+
+const TRIO_MD_SNIPPET = `# Editors playground
+
+- JSON config preview
+- JavaScript behavior snippet
+- Markdown documentation note
+
+\`\`\`ts
+export const playgroundReady = true;
+\`\`\`
+`;
 
 const DIFF_ORIGINAL = `function formatTodoLabel(label) {
   return label.trim();
@@ -47,53 +57,115 @@ console.log({ todo });
 `;
 
 export const DemoEditorsPanelWidget: React.FC<DemoEditorsPanelWidgetProps> = observer(() => {
-  const [configModel] = React.useState(() => {
-    return editor.createModel(STANDARD_EDITOR_INITIAL, 'json', Uri.parse(`${v4()}/demo/editors/config.json`));
+  const [trioJsonModel] = React.useState(() => {
+    return editor.createModel(TRIO_JSON_SNIPPET, MonacoLanguages.JSON, Uri.parse(`${v4()}/demo/editors/trio.json`));
+  });
+  const [trioJsModel] = React.useState(() => {
+    return editor.createModel(TRIO_JS_SNIPPET, MonacoLanguages.JAVASCRIPT, Uri.parse(`${v4()}/demo/editors/trio.js`));
+  });
+  const [trioMarkdownModel] = React.useState(() => {
+    return editor.createModel(TRIO_MD_SNIPPET, MonacoLanguages.MARKDOWN, Uri.parse(`${v4()}/demo/editors/trio.md`));
   });
 
   React.useEffect(() => {
     return () => {
-      configModel.dispose();
+      trioJsonModel.dispose();
+      trioJsModel.dispose();
+      trioMarkdownModel.dispose();
     };
-  }, [configModel]);
+  }, [trioJsonModel, trioJsModel, trioMarkdownModel]);
 
-  const resetModel = React.useCallback(() => {
-    configModel.setValue(STANDARD_EDITOR_INITIAL);
-  }, [configModel]);
+  const resetJsonModel = React.useCallback(() => {
+    trioJsonModel.setValue(TRIO_JSON_SNIPPET);
+  }, [trioJsonModel]);
+
+  const resetJsModel = React.useCallback(() => {
+    trioJsModel.setValue(TRIO_JS_SNIPPET);
+  }, [trioJsModel]);
+
+  const resetMarkdownModel = React.useCallback(() => {
+    trioMarkdownModel.setValue(TRIO_MD_SNIPPET);
+  }, [trioMarkdownModel]);
 
   return (
     <S.Container>
       <CardWidget
         title="Standard editor widgets"
-        subHeading="Editable editor plus a compact read-only snippet"
+        subHeading="Editable language playground for JSON, JavaScript and Markdown"
         sections={[
           {
-            key: 'standard-editor',
+            key: 'trio-editors',
             content: () => {
               return (
-                <>
-                  <S.EditorFrame>
-                    <EditorWidget model={configModel} options={{ minimap: { enabled: false }, fontSize: 13 }} />
-                  </S.EditorFrame>
-                  <S.Buttons>
-                    <PanelButtonWidget
-                      label="Reset editable editor"
-                      icon="redo"
-                      mode={PanelButtonMode.PRIMARY}
-                      action={resetModel}
-                    />
-                  </S.Buttons>
-                </>
-              );
-            }
-          },
-          {
-            key: 'simple-editor',
-            content: () => {
-              return (
-                <S.SimpleEditorFrame>
-                  <SimpleEditorWidget text={SIMPLE_EDITOR_SNIPPET} lang="javascript" path="demo/snippet.js" />
-                </S.SimpleEditorFrame>
+                <S.TrioGrid>
+                  <S.TrioItem>
+                    <S.TrioMeta>
+                      <MetaBarWidget meta={[{ label: 'Language', value: 'JSON', color: 'cyan' }]} />
+                    </S.TrioMeta>
+                    <S.TrioFrame>
+                      <EditorWidget
+                        model={trioJsonModel}
+                        options={{
+                          minimap: { enabled: false },
+                          scrollBeyondLastLine: false
+                        }}
+                      />
+                    </S.TrioFrame>
+                    <S.Buttons>
+                      <PanelButtonWidget
+                        label="Reset JSON"
+                        icon="redo"
+                        mode={PanelButtonMode.PRIMARY}
+                        action={resetJsonModel}
+                      />
+                    </S.Buttons>
+                  </S.TrioItem>
+                  <S.TrioItem>
+                    <S.TrioMeta>
+                      <MetaBarWidget meta={[{ label: 'Language', value: 'JavaScript', color: 'green' }]} />
+                    </S.TrioMeta>
+                    <S.TrioFrame>
+                      <EditorWidget
+                        model={trioJsModel}
+                        options={{
+                          minimap: { enabled: false },
+                          scrollBeyondLastLine: false
+                        }}
+                      />
+                    </S.TrioFrame>
+                    <S.Buttons>
+                      <PanelButtonWidget
+                        label="Reset JavaScript"
+                        icon="redo"
+                        mode={PanelButtonMode.PRIMARY}
+                        action={resetJsModel}
+                      />
+                    </S.Buttons>
+                  </S.TrioItem>
+                  <S.TrioItem>
+                    <S.TrioMeta>
+                      <MetaBarWidget meta={[{ label: 'Language', value: 'Markdown', color: 'orange' }]} />
+                    </S.TrioMeta>
+                    <S.TrioFrame>
+                      <EditorWidget
+                        model={trioMarkdownModel}
+                        options={{
+                          minimap: { enabled: false },
+                          scrollBeyondLastLine: false,
+                          wordWrap: 'on'
+                        }}
+                      />
+                    </S.TrioFrame>
+                    <S.Buttons>
+                      <PanelButtonWidget
+                        label="Reset Markdown"
+                        icon="redo"
+                        mode={PanelButtonMode.PRIMARY}
+                        action={resetMarkdownModel}
+                      />
+                    </S.Buttons>
+                  </S.TrioItem>
+                </S.TrioGrid>
               );
             }
           }
@@ -112,7 +184,7 @@ export const DemoEditorsPanelWidget: React.FC<DemoEditorsPanelWidgetProps> = obs
                   <DualEditorWidget
                     original={DIFF_ORIGINAL}
                     value={DIFF_UPDATED}
-                    language="javascript"
+                    language={MonacoLanguages.JAVASCRIPT}
                     options={{
                       readOnly: true,
                       minimap: {
@@ -121,16 +193,20 @@ export const DemoEditorsPanelWidget: React.FC<DemoEditorsPanelWidgetProps> = obs
                       renderOverviewRuler: false
                     }}
                     getLeftHeaderContent={() => (
-                      <S.HeaderContent>
-                        <MetadataWidget label="Side" value="Original" color="orange" />
-                        <MetadataWidget label="State" value="Baseline" color="gray" />
-                      </S.HeaderContent>
+                      <MetaBarWidget
+                        meta={[
+                          { label: 'Side', value: 'Original', color: 'orange' },
+                          { label: 'State', value: 'Baseline', color: 'gray' }
+                        ]}
+                      />
                     )}
                     getRightHeaderContent={() => (
-                      <S.HeaderContent>
-                        <MetadataWidget label="Side" value="Updated" color="cyan" />
-                        <MetadataWidget label="State" value="Proposed" color="green" />
-                      </S.HeaderContent>
+                      <MetaBarWidget
+                        meta={[
+                          { label: 'Side', value: 'Updated', color: 'cyan' },
+                          { label: 'State', value: 'Proposed', color: 'green' }
+                        ]}
+                      />
                     )}
                   />
                 </S.DualEditorFrame>
@@ -153,25 +229,40 @@ namespace S {
     box-sizing: border-box;
   `;
 
+  export const TrioGrid = styled.div`
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 10px;
+
+    > * {
+      min-width: 0;
+    }
+
+    @media (max-width: 1200px) {
+      grid-template-columns: 1fr;
+    }
+  `;
+
+  export const TrioItem = styled.div`
+    min-width: 0;
+  `;
+
+  export const TrioMeta = styled.div`
+    margin-bottom: 6px;
+  `;
+
   export const Buttons = styled.div`
     margin-top: 10px;
     display: flex;
     gap: 8px;
   `;
 
-  export const EditorFrame = styled.div`
+  export const TrioFrame = styled.div`
     position: relative;
-    height: 260px;
+    height: 200px;
     border: solid 1px ${(p) => p.theme.panels.divider};
     border-radius: 6px;
     overflow: hidden;
-  `;
-
-  export const SimpleEditorFrame = styled.div`
-    border: solid 1px ${(p) => p.theme.panels.divider};
-    border-radius: 6px;
-    overflow: hidden;
-    padding: 6px 8px;
   `;
 
   export const DualEditorFrame = styled.div`
@@ -180,12 +271,5 @@ namespace S {
     border: solid 1px ${(p) => p.theme.panels.divider};
     border-radius: 6px;
     overflow: hidden;
-  `;
-
-  export const HeaderContent = styled.div`
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    padding: 6px 8px;
   `;
 }

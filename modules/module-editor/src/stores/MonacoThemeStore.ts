@@ -132,7 +132,7 @@ export class MonacoThemeStore extends AbstractStore {
       [
         {
           key: Themes.JOURNEY,
-          label: 'Journey dark',
+          label: 'Journey',
           theme: COUPLED_IDE_THEMES[Themes.JOURNEY],
           system: true,
           compatibility: false
@@ -153,7 +153,7 @@ export class MonacoThemeStore extends AbstractStore {
         },
         {
           key: Themes.OXIDE,
-          label: 'OXIDE dark',
+          label: 'OXIDE',
           theme: COUPLED_IDE_THEMES[Themes.OXIDE],
           system: true,
           compatibility: true
@@ -167,21 +167,21 @@ export class MonacoThemeStore extends AbstractStore {
         },
         {
           key: Themes.HEXAGON,
-          label: 'Ayu Mirage',
+          label: 'Hexagon',
           theme: COUPLED_IDE_THEMES[Themes.HEXAGON],
           system: true,
           compatibility: true
         },
         {
           key: Themes.BUNNY,
-          label: 'Ayu Mirage',
-          theme: COUPLED_IDE_THEMES[Themes.HEXAGON],
+          label: 'Bunny',
+          theme: COUPLED_IDE_THEMES[Themes.BUNNY],
           system: true,
           compatibility: true
         },
         {
           key: Themes.REACTOR_LIGHT,
-          label: 'Ayu Light',
+          label: 'Reactor Light',
           theme: COUPLED_IDE_THEMES[Themes.REACTOR_LIGHT],
           system: true,
           compatibility: true
