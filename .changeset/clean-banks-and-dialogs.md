@@ -28,3 +28,4 @@ Modernized entity definition internals and improved dialog/form behavior.
   - tag chip styling was tuned to be less harsh while preserving contrast and readability.
 - Refined built-in theme card borders across Reactor/Scarlet/Oxide/Journey and improved Reactor Light hierarchy/contrast balance for clearer panel/tray/header boundaries.
 - Overhauled the Reactor Light theme palette to be easier on the eyes while improving structural clarity (surfaces, separators, metadata readability, and card/tag presentation).
+- Fixed a tree-search clear regression where stale text matches could persist until hover, by ensuring tree leaf/node widgets perform a post-listener-registration refresh.

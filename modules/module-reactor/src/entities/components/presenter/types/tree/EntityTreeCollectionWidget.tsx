@@ -1,6 +1,6 @@
 import _ from 'lodash';
 import { autorun } from 'mobx';
-import React, { useEffect, useMemo, useRef, useState } from 'react';
+import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { CoreTreeWidget } from '../../../../../widgets/core-tree/CoreTreeWidget';
 import { ReactorTreeEntity } from '../../../../../widgets/core-tree/reactor-tree/reactor-tree-utils';
 import { PanelPlaceholderWidget } from '../../../../../widgets/panel/panel/PanelPlaceholderWidget';
@@ -40,6 +40,14 @@ export const EntityTreeCollectionWidget = function <T>(props: EntityTreeCollecti
   useEffect(() => {
     eventRef.current = event;
   }, [event]);
+
+  useEffect(() => {
+    if (!event.searchEvent?.search) {
+      // Search mode mutates collapse state to reveal matches. When leaving search mode,
+      // rebuild nodes so persisted pre-search tree state is re-applied via deserialize.
+      setNodes(presenterContext.getTreeNodes(eventRef.current));
+    }
+  }, [!event.searchEvent?.search]);
 
   useEffect(() => {
     return autorun(
