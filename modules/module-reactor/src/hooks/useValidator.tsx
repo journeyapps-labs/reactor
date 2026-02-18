@@ -7,7 +7,7 @@ import {
 } from '../actions/validators/ActionValidator';
 import { Validator } from '../actions/validators/ActionValidatorContext';
 import { ioc } from '../inversify.config';
-import { NotificationStore, NotificationType } from '../stores';
+import { NotificationStore, NotificationType } from '../stores/NotificationStore';
 import { ENV } from '../env';
 import { Btn } from '../definitions/common';
 

@@ -1,5 +1,5 @@
 import { EntityHandlerComponent, OpenEntityEvent } from '../../entities/components/handler/EntityHandlerComponent';
-import { Action } from '../../actions';
+import { Action } from '../../actions/Action';
 import { ComboBoxItem } from '../../stores';
 
 export class ActionEntityHandler extends EntityHandlerComponent<Action> {

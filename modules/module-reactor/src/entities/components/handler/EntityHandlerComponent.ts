@@ -1,7 +1,7 @@
 import { EntityDefinitionComponent } from '../../EntityDefinitionComponent';
-import { ComboBoxItem } from '../../../stores';
+import { ComboBoxItem } from '../../../stores/combo/ComboBoxDirectives';
 import { MousePosition } from '../../../layers/combo/SmartPositionWidget';
-import { ActionSource } from '../../../actions';
+import { ActionSource } from '../../../actions/Action';
 import { v4 } from 'uuid';
 
 export interface OpenEntityEvent<T> {

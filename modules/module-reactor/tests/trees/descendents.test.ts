@@ -1,14 +1,13 @@
 import { beforeEach, expect, it, vi } from 'vitest';
-import {
-  AbstractEntityTreePresenterContext,
-  DescendantLoadingEntityProviderComponent,
-  EntityDefinition,
-  EntityReactorNode,
-  InlineTreePresenterComponent,
-  ioc,
-  ReactorTreeNode,
-  System
-} from '../src';
+import { System } from '../../src/core/System';
+import { ioc } from '../../src/inversify.config';
+import { EntityDefinition } from '../../src/entities/EntityDefinition';
+import { DescendantLoadingEntityProviderComponent } from '../../src/entities/components/exposer/DescendantLoadingEntityProviderComponent';
+import { EntityReactorNode } from '../../src/entities/components/presenter/types/tree/EntityReactorNode';
+import { InlineTreePresenterComponent } from '../../src/entities/components/presenter/types/tree/InlineTreePresenterComponent';
+import { AbstractEntityTreePresenterContext } from '../../src/entities/components/presenter/types/tree/presenter-contexts/AbstractEntityTreePresenterContext';
+import { ReactorTreeNode } from '../../src/widgets/core-tree/reactor-tree/ReactorTreeNode';
+
 // @ts-ignore
 window.matchMedia = () => {};
 

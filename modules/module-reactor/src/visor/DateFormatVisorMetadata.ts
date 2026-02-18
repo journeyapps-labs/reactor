@@ -1,5 +1,5 @@
 import { autorun } from 'mobx';
-import { VisorMetadata } from '../stores';
+import { VisorMetadata } from '../stores/visor/VisorMetadata';
 import { DateFormatPreference } from '../preferences/DateFormatPreference';
 import { ComboBoxStore2 } from '../stores/combo2/ComboBoxStore2';
 import { inject } from '../inversify.config';

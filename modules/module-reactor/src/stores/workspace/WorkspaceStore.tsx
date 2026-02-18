@@ -27,7 +27,7 @@ import { SimpleLayoutEngine } from './layout-engines/SimpleLayoutEngine';
 import { ReactorTrayModel } from './react-workspaces/ReactorTrayFactory';
 import { WorkspaceTrayMode } from '@projectstorm/react-workspaces-model-tray';
 import { LocalStorageSerializer } from '../serializers/LocalStorageSerializer';
-import { EmptyReactorPanelModel } from '../../panels/empty/EmptyPanelWorkspaceFactory';
+import { EmptyReactorPanelModel } from '../../panels/empty/EmptyReactorPanelModel';
 
 export interface WorkspacePrefsSerialized {
   type: 'workspaces';

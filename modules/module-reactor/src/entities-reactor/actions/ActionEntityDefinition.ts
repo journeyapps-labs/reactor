@@ -1,7 +1,8 @@
 import { EntityDefinition } from '../../entities/EntityDefinition';
 import { ReactorEntities, ReactorEntityCategories } from '../ReactorEntities';
 import { ActionEntityEncoder } from './ActionEntityEncoder';
-import { Action, ActionRollbackMechanic, ParameterizedAction } from '../../actions';
+import { Action, ActionRollbackMechanic } from '../../actions/Action';
+import { ParameterizedAction } from '../../actions/parameterized/ParameterizedAction';
 import { ActionEntityHandler } from './ActionEntityHandler';
 import { EntityPanelComponent } from '../../entities/components/ui/EntityPanelComponent';
 import { InlineTreePresenterComponent } from '../../entities/components/presenter/types/tree/InlineTreePresenterComponent';

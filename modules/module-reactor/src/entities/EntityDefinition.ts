@@ -8,7 +8,7 @@ import { MousePosition } from '../layers/combo/SmartPositionWidget';
 import { ReactorIcon } from '../widgets/icons/IconWidget';
 import { EntityPresenterComponent } from './components/presenter/EntityPresenterComponent';
 import { EntityHandlerComponent, OpenEntityEvent } from './components/handler/EntityHandlerComponent';
-import { ComboBoxItem } from '../stores';
+import { ComboBoxItem } from '../stores/combo/ComboBoxDirectives';
 import { inject } from '../inversify.config';
 import { EntityPanelComponent } from './components/ui/EntityPanelComponent';
 import { EntityDescriberComponent, EntityDescription } from './components/meta/EntityDescriberComponent';
@@ -22,17 +22,15 @@ import {
   SimpleComboBoxDirectiveOptions
 } from '../stores/combo2/directives/simple/SimpleComboBoxDirective';
 import { ComboBoxDirective } from '../stores/combo2/ComboBoxDirective';
+import { Action } from '../actions/Action';
+import { CoupledAction, CoupledActionEvent, CoupledActionFocusOption } from '../actions/parameterized/CoupledAction';
+import { EntityAction } from '../actions/parameterized/EntityAction';
 import {
-  Action,
-  CoupledAction,
-  CoupledActionEvent,
-  CoupledActionFocusOption,
-  EntityAction,
   ParameterizedAction,
   ParameterizedActionEvent,
-  ParameterizedActionOptions,
-  ProviderActionParameter
-} from '../actions';
+  ParameterizedActionOptions
+} from '../actions/parameterized/ParameterizedAction';
+import { ProviderActionParameter } from '../actions/parameterized/params/ProviderActionParameter';
 import { DescendantEntityProviderComponent } from './components/exposer/DescendantEntityProviderComponent';
 import { ThemeStore } from '../stores/themes/ThemeStore';
 

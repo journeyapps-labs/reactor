@@ -1,11 +1,10 @@
-import React from 'react';
+import * as React from 'react';
 import { describe, expect, it, vi } from 'vitest';
-import './rig/tree-test-mocks';
 import { ReactorTreeLeaf } from '../../src/widgets/core-tree/reactor-tree/ReactorTreeLeaf';
 import { ReactorTreeNode } from '../../src/widgets/core-tree/reactor-tree/ReactorTreeNode';
 import { SearchableCoreTreeWidget } from '../../src/widgets/core-tree/SearchableCoreTreeWidget';
 import { SearchableTreeSearchScope } from '../../src/widgets/core-tree/SearchableTreeSearchScope';
-import { renderWithReactorTestRig } from './rig/reactor-test-rig';
+import { renderWithReactorTestRig } from '../rig/reactor-test-rig';
 
 const createLeaf = (key: string) => {
   return new ReactorTreeLeaf({

@@ -1,5 +1,5 @@
 import { ParameterizedAction, ParameterizedActionEvent } from './parameterized/ParameterizedAction';
-import { System } from '../core/System';
+import { SystemInterface } from '../core/SystemInterface';
 
 export interface CurriedActionOptions {
   entities?: { [key: string]: any };
@@ -19,7 +19,7 @@ export class CurriedAction extends ParameterizedAction {
     this.params = options.params;
   }
 
-  setApplication(app: System) {
+  setApplication(app: SystemInterface) {
     this.action.setApplication(app);
   }
 

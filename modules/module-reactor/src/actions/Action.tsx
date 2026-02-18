@@ -1,5 +1,4 @@
 import { MousePosition } from '../layers/combo/SmartPositionWidget';
-import { System } from '../core/System';
 import { ReactorIcon } from '../widgets/icons/IconWidget';
 import { VisorStore } from '../stores/visor/VisorStore';
 import { inject } from '../inversify.config';
@@ -280,7 +279,7 @@ export abstract class Action<
     return 'Standard Action';
   }
 
-  setApplication(app: System) {
+  setApplication(app: SystemInterface) {
     this.application = app;
   }
 

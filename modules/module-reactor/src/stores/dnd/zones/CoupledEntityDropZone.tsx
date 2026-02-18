@@ -1,7 +1,8 @@
 import { HandleDropEvent } from './AbstractDropZone';
 import { inject } from '../../../inversify.config';
 import { System } from '../../../core/System';
-import { ActionSource, CoupledAction } from '../../../actions';
+import { ActionSource } from '../../../actions/Action';
+import { CoupledAction } from '../../../actions/parameterized/CoupledAction';
 import { EntityDefinition } from '../../../entities/EntityDefinition';
 import { EncodedEntity } from '../../../entities/components/encoder/EntityEncoderComponent';
 import * as _ from 'lodash';

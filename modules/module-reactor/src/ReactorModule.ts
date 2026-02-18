@@ -13,7 +13,10 @@ import {
 } from './stores';
 import { System } from './core/System';
 import { setupPrefs } from './setup/setup-preferences';
-import { ChangeThemeAction, CreateWorkspaceAction, ExportShortcutsAction, ResetPreferencesAction } from './actions';
+import { ChangeThemeAction } from './actions/builtin-actions/ChangeThemeAction';
+import { CreateWorkspaceAction } from './actions/builtin-actions/workspace/CreateWorkspaceAction';
+import { ExportShortcutsAction } from './actions/builtin-actions/shortcuts/ExportShortcutsAction';
+import { ResetPreferencesAction } from './actions/builtin-actions/ResetPreferencesAction';
 
 import { DialogStore } from './stores/DialogStore';
 import { CMDPalletPreferencesSearchEngine } from './cmd-pallet/CMDPalletPreferencesSearchEngine';

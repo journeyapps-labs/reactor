@@ -1,5 +1,7 @@
 import { autorun } from 'mobx';
-import { UXStore, VisorMetadata, VisorStore } from '../stores';
+import { UXStore } from '../stores/UXStore';
+import { VisorMetadata } from '../stores/visor/VisorMetadata';
+import { VisorStore } from '../stores/visor/VisorStore';
 import { inject } from '../inversify.config';
 import { ThemeStore } from '../stores/themes/ThemeStore';
 import { theme } from '../stores/themes/reactor-theme-fragment';

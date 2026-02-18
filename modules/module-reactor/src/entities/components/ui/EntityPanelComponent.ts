@@ -1,7 +1,7 @@
 import { EntityDefinitionComponent } from '../../EntityDefinitionComponent';
 import { EntityPanelFactory, EntityPanelModel } from './widgets/EntityPanelFactory';
 import { ReactorIcon } from '../../../widgets/icons/IconWidget';
-import { Action } from '../../../actions';
+import { Action } from '../../../actions/Action';
 import { EntityPresenterComponent } from '../presenter/EntityPresenterComponent';
 import * as _ from 'lodash';
 

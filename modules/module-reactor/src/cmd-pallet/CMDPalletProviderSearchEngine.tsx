@@ -6,7 +6,9 @@ import {
   CMDPalletSearchEngineResult,
   CommandPalletSearchResultEntry
 } from './CMDPalletSearchEngine';
-import { Provider, ProviderSearchResultSerialized, SerializedEntity, ThemeStore } from '../index';
+import { Provider, SerializedEntity } from '../providers/Provider';
+import { ProviderSearchResultSerialized } from '../providers/ProviderSearchResult';
+import { ThemeStore } from '../stores/themes/ThemeStore';
 import { SearchEvent } from '@journeyapps-labs/lib-reactor-search';
 import { CommandPalletEntryWidget } from '../layers/command-pallet/CommandPalletEntryWidget';
 import { theme } from '../stores/themes/reactor-theme-fragment';

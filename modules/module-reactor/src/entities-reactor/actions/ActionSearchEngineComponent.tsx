@@ -10,7 +10,8 @@ import {
   CMDPalletEntitySearchEngineOptions,
   CommandPalletEntryWidgetWrapped
 } from '../../cmd-pallet/CMDPalletEntitySearchEngine';
-import { Action, PassiveActionValidationState } from '../../actions';
+import { Action } from '../../actions/Action';
+import { PassiveActionValidationState } from '../../actions/validators/ActionValidator';
 import * as React from 'react';
 import { processCallbackWithValidation, useValidator } from '../../hooks/useValidator';
 import { ioc } from '../../inversify.config';

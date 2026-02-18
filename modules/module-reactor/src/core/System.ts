@@ -10,7 +10,7 @@ import { ProviderActionParameter } from '../actions/parameterized/params/Provide
 import { SystemInterface, SystemListener } from './SystemInterface';
 import { EntityDefinition } from '../entities/EntityDefinition';
 import { EncodedEntity } from '../entities/components/encoder/EntityEncoderComponent';
-import { AbstractStore } from '../stores';
+import { AbstractStore } from '../stores/AbstractStore';
 import { ComboBoxStore2 } from '../stores/combo2/ComboBoxStore2';
 import { SimpleComboBoxDirective } from '../stores/combo2/directives/simple/SimpleComboBoxDirective';
 import { MousePosition } from '../layers/combo/SmartPositionWidget';

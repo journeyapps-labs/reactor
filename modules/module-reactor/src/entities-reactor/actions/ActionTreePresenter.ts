@@ -1,5 +1,6 @@
 import { EntityTreePresenterComponent } from '../../entities/components/presenter/types/tree/EntityTreePresenterComponent';
-import { Action, ParameterizedAction } from '../../actions';
+import { Action } from '../../actions/Action';
+import { ParameterizedAction } from '../../actions/parameterized/ParameterizedAction';
 import { EntityTreePresenterContext } from '../../entities/components/presenter/types/tree/presenter-contexts/EntityTreePresenterContext';
 import { ReactorTreeLeaf } from '../../widgets/core-tree/reactor-tree/ReactorTreeLeaf';
 import { ReactorTreeNode } from '../../widgets/core-tree/reactor-tree/ReactorTreeNode';

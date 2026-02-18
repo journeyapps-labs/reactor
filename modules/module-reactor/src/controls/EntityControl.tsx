@@ -1,5 +1,5 @@
 import { RepresentAsComboBoxItemsEvent } from './AbstractControl';
-import { ComboBoxItem } from '../stores';
+import { ComboBoxItem } from '../stores/combo/ComboBoxDirectives';
 import { v4 } from 'uuid';
 import { inject } from '../inversify.config';
 import { System } from '../core/System';

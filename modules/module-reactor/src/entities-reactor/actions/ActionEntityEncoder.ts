@@ -1,5 +1,5 @@
 import { EntityEncoderComponent } from '../../entities/components/encoder/EntityEncoderComponent';
-import { Action } from '../../actions';
+import { Action } from '../../actions/Action';
 
 export interface EncodedAction {
   action: string;

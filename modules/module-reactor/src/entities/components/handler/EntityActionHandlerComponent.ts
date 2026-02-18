@@ -1,6 +1,6 @@
 import { EntityHandlerComponent } from './EntityHandlerComponent';
-import { ComboBoxItem } from '../../../stores';
-import { EntityAction } from '../../../actions';
+import { ComboBoxItem } from '../../../stores/combo/ComboBoxDirectives';
+import { EntityAction } from '../../../actions/parameterized/EntityAction';
 
 export class EntityActionHandlerComponent extends EntityHandlerComponent {
   constructor(protected actionID: string) {

@@ -1,5 +1,5 @@
 import { autorun } from 'mobx';
-import { VisorMetadata } from '../stores';
+import { VisorMetadata } from '../stores/visor/VisorMetadata';
 import { DateLocalSetting } from '../preferences/DateLocalSetting';
 import { computeDateTimeParts, ReactorDateFormats } from '@journeyapps-labs/lib-reactor-utils';
 

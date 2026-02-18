@@ -8,7 +8,7 @@ import { PillWidget } from '../../../../../widgets/status/PillWidget';
 import { MetaBarWidget } from '../../../../../widgets/meta/MetaBarWidget';
 import { PanelPlaceholderWidget } from '../../../../../widgets/panel/panel/PanelPlaceholderWidget';
 import { themed } from '../../../../../stores/themes/reactor-theme-fragment';
-import { ActionSource } from '../../../../../actions';
+import { ActionSource } from '../../../../../actions/Action';
 import { IconWidget } from '../../../../../widgets/icons/IconWidget';
 import { MatchesWidget } from '../../../../../widgets/search/MatchesWidget';
 import { SearchEvent } from '@journeyapps-labs/lib-reactor-search';

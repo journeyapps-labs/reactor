@@ -1,10 +1,9 @@
-import React from 'react';
+import * as React from 'react';
 import { describe, expect, it, vi } from 'vitest';
-import './rig/tree-test-mocks';
 import { ReactorTreeNode } from '../../src/widgets/core-tree/reactor-tree/ReactorTreeNode';
 import { SearchableTreeSearchScope } from '../../src/widgets/core-tree/SearchableTreeSearchScope';
 import { EntityTreeCollectionWidget } from '../../src/entities/components/presenter/types/tree/EntityTreeCollectionWidget';
-import { renderWithReactorTestRig } from './rig/reactor-test-rig';
+import { renderWithReactorTestRig } from '../rig/reactor-test-rig';
 
 const searchableEntityTreeWidgetSpy = vi.fn();
 const coreTreeWidgetSpy = vi.fn();

@@ -12,8 +12,7 @@ import { ReactorPanelFactory } from '../../../stores/workspace/react-workspaces/
 import { WorkspaceModelFactoryEvent } from '@projectstorm/react-workspaces-core';
 import { Observer } from 'mobx-react';
 import { GetTheme } from '../../../stores/themes/ThemeFragment';
-
-export const WorkspaceModelContext = React.createContext<ReactorPanelModel>(null);
+import { WorkspaceModelContext } from './WorkspaceModelContext';
 
 export interface PanelWidgetProps {
   event: WorkspaceModelFactoryEvent<ReactorPanelModel>;

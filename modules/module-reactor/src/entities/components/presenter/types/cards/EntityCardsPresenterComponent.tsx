@@ -3,7 +3,7 @@ import { RenderCollectionOptions, AbstractPresenterContext } from '../../Abstrac
 import { EntityPresenterComponent, EntityPresenterComponentRenderType } from '../../EntityPresenterComponent';
 import { BatchStore } from '../../../../../stores/batch/BatchStore';
 import { inject } from '../../../../../inversify.config';
-import { ActionSource } from '../../../../../actions';
+import { ActionSource } from '../../../../../actions/Action';
 import { MousePosition } from '../../../../../layers/combo/SmartPositionWidget';
 import { EntityCardsCollectionWidget } from './EntityCardsCollectionWidget';
 import { DescendantEntityProviderComponent } from '../../../exposer/DescendantEntityProviderComponent';
