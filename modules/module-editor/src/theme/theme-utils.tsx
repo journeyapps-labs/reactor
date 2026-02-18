@@ -7,6 +7,7 @@ import * as _ from 'lodash';
 
 const THEME_JOURNEY = require('../../media/themes/journey.json5');
 const THEME_REACTOR = require('../../media/themes/reactor.json5');
+const THEME_REACTOR_DARK = require('../../media/themes/reactor-dark.json5');
 const THEME_OXIDE = require('../../media/themes/oxide.json5');
 const THEME_SCARLET = require('../../media/themes/scarlet.json5');
 const THEME_AYU_MIRAGE = require('../../media/themes/ayu-mirage.json5');
@@ -121,6 +122,7 @@ export const DARK_THEME = 'journey-dark';
 export const COUPLED_IDE_THEMES = {
   [Themes.JOURNEY]: normalizeVSCodeTheme(THEME_JOURNEY.default),
   [Themes.REACTOR]: normalizeVSCodeTheme(THEME_REACTOR.default),
+  [Themes.REACTOR_DARK]: normalizeVSCodeTheme(THEME_REACTOR_DARK.default),
   [Themes.OXIDE]: normalizeVSCodeTheme(THEME_OXIDE.default),
   [Themes.SCARLET]: normalizeVSCodeTheme(THEME_SCARLET.default),
   [Themes.HEXAGON]: normalizeVSCodeTheme(THEME_AYU_MIRAGE.default),

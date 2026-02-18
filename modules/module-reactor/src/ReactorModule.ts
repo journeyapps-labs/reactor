@@ -46,6 +46,7 @@ import { ThemeStore } from './stores/themes/ThemeStore';
 import { theme } from './stores/themes/reactor-theme-fragment';
 
 import './stores/themes/built-in-themes/reactor';
+import './stores/themes/built-in-themes/reactor-dark';
 import './stores/themes/built-in-themes/hexagon';
 import './stores/themes/built-in-themes/journey';
 import './stores/themes/built-in-themes/light';

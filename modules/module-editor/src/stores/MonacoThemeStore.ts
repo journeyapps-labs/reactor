@@ -58,6 +58,7 @@ export class MonacoThemeStore extends AbstractStore {
           changed: (item) => {
             if (!!item) {
               monaco.editor.defineTheme(DARK_THEME, item.theme);
+              monaco.editor.setTheme(DARK_THEME);
             }
           }
         },
@@ -65,6 +66,8 @@ export class MonacoThemeStore extends AbstractStore {
       )
     );
     this.storedThemes = this.addControl(new StoredThemesSettings());
+    monaco.editor.defineTheme(DARK_THEME, this.getSystemThemes()[Themes.REACTOR].theme);
+    monaco.editor.setTheme(DARK_THEME);
   }
 
   clone(): EditorTheme {
@@ -88,6 +91,7 @@ export class MonacoThemeStore extends AbstractStore {
     this.selectedTheme.setItem(editorTheme);
     this.selectedTheme.save();
     monaco.editor.defineTheme(DARK_THEME, editorTheme.theme);
+    monaco.editor.setTheme(DARK_THEME);
   }
 
   deleteTheme(editorTheme: EditorTheme) {
@@ -135,8 +139,15 @@ export class MonacoThemeStore extends AbstractStore {
         },
         {
           key: Themes.REACTOR,
-          label: 'Reactor dark',
+          label: 'Reactor',
           theme: COUPLED_IDE_THEMES[Themes.REACTOR],
+          system: true,
+          compatibility: false
+        },
+        {
+          key: Themes.REACTOR_DARK,
+          label: 'Reactor dark',
+          theme: COUPLED_IDE_THEMES[Themes.REACTOR_DARK],
           system: true,
           compatibility: false
         },

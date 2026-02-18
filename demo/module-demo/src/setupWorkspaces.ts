@@ -2,6 +2,7 @@ import { ReactorEntities, SettingsPanelModel, System, WorkspaceStore } from '@jo
 import { ioc } from '@journeyapps-labs/reactor-mod';
 import { DemoEntities } from './DemoEntities';
 import { DemoFormsDialogsPanelModel } from './panels/DemoFormsDialogsPanelFactory';
+import { DemoEditorsPanelModel } from './panels/DemoEditorsPanelFactory';
 
 export const setupWorkspaces = () => {
   const workspaceStore = ioc.get(WorkspaceStore);
@@ -45,6 +46,12 @@ export const setupWorkspaces = () => {
     return model;
   };
 
+  const generateEditorsWorkspace = () => {
+    let model = workspaceStore.generateRootModel();
+    model.addModel(new DemoEditorsPanelModel());
+    return model;
+  };
+
   workspaceStore.registerWorkspaceGenerator({
     generateAdvancedWorkspace: async () => {
       return {
@@ -92,6 +99,23 @@ export const setupWorkspaces = () => {
         name: 'Forms & dialogs workspace',
         priority: 1,
         model: generateFormsWorkspace()
+      };
+    }
+  });
+
+  workspaceStore.registerWorkspaceGenerator({
+    generateAdvancedWorkspace: async () => {
+      return {
+        name: 'Editors workspace',
+        priority: 1,
+        model: generateEditorsWorkspace()
+      };
+    },
+    generateSimpleWorkspace: async () => {
+      return {
+        name: 'Editors workspace',
+        priority: 1,
+        model: generateEditorsWorkspace()
       };
     }
   });

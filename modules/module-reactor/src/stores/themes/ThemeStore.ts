@@ -8,6 +8,7 @@ import { EntityDefinition } from '../../entities/EntityDefinition';
 export enum Themes {
   OXIDE = 'oxide',
   REACTOR = 'reactor',
+  REACTOR_DARK = 'reactor-dark',
   REACTOR_LIGHT = 'reactor-light',
   JOURNEY = 'journey',
   SCARLET = 'scarlet',
@@ -36,6 +37,12 @@ export class ThemeStore extends AbstractStore {
     this.registerTheme({
       key: Themes.REACTOR,
       label: 'Reactor',
+      core: true,
+      light: false
+    });
+    this.registerTheme({
+      key: Themes.REACTOR_DARK,
+      label: 'Reactor dark',
       core: true,
       light: false
     });

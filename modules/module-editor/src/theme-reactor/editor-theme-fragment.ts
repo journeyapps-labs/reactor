@@ -17,8 +17,17 @@ theme.addThemeValues({
   name: Themes.REACTOR,
   values: {
     editor: {
-      background: '#1d222a',
-      backgroundSticky: '#1d222a'
+      background: '#1b212b',
+      backgroundSticky: '#1b212b'
+    }
+  }
+});
+theme.addThemeValues({
+  name: Themes.REACTOR_DARK,
+  values: {
+    editor: {
+      background: '#0f0f0f',
+      backgroundSticky: '#0f0f0f'
     }
   }
 });

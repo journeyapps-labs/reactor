@@ -12,6 +12,7 @@ import { SetCurrentTodoItemAction } from './actions/SetCurrentTodoItemAction';
 import { ShowDemoFormAction } from './actions/ShowDemoFormAction';
 import { DemoFormsDialogsPanelFactory } from './panels/DemoFormsDialogsPanelFactory';
 import { AddSubTodoAction } from './actions/AddSubTodoAction';
+import { DemoEditorsPanelFactory } from './panels/DemoEditorsPanelFactory';
 
 export class ReactorDemoModule extends AbstractReactorModule {
   constructor() {
@@ -35,6 +36,7 @@ export class ReactorDemoModule extends AbstractReactorModule {
     system.registerAction(new AddSubTodoAction());
     system.registerAction(new ShowDemoFormAction());
     workspaceStore.registerFactory(new DemoFormsDialogsPanelFactory());
+    workspaceStore.registerFactory(new DemoEditorsPanelFactory());
 
     visorStore.registerActiveMetadata(new CurrentTodoItemVisorMetadata());
 

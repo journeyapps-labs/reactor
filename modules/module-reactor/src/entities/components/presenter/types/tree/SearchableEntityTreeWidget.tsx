@@ -23,8 +23,7 @@ namespace S {
 
 export const SearchableEntityTreeWidget: React.FC<SearchableEntityTreeWidgetProps> = (props) => {
   const { nodes, search, searchScope } = props;
-  const searchMatchesByTreeRef = useRef<Record<string, boolean>>({});
-  const receivedSearchEventsRef = useRef<boolean>(false);
+  const searchMatchesByTreeRef = useRef<Record<string, boolean | undefined>>({});
   const forceUpdate = useForceUpdate();
   const treeKeys = useMemo(() => {
     return nodes.map((tree) => tree.getPathAsString()).join('|');
@@ -40,8 +39,11 @@ export const SearchableEntityTreeWidget: React.FC<SearchableEntityTreeWidgetProp
   ).current;
 
   useEffect(() => {
-    searchMatchesByTreeRef.current = {};
-    receivedSearchEventsRef.current = false;
+    const next: Record<string, boolean | undefined> = {};
+    nodes.forEach((tree) => {
+      next[tree.getPathAsString()] = undefined;
+    });
+    searchMatchesByTreeRef.current = next;
     searchMatchUpdateDebounced.cancel();
 
     return () => {
@@ -52,7 +54,6 @@ export const SearchableEntityTreeWidget: React.FC<SearchableEntityTreeWidgetProp
   const setTreeSearchMatches = useCallback(
     (treePath: string, matched: TreeEntity[]) => {
       const hasMatches = matched.length > 0;
-      receivedSearchEventsRef.current = true;
       if (searchMatchesByTreeRef.current[treePath] === hasMatches) {
         return;
       }
@@ -62,8 +63,9 @@ export const SearchableEntityTreeWidget: React.FC<SearchableEntityTreeWidgetProp
     [searchMatchUpdateDebounced]
   );
 
-  const showNoSearchResults =
-    receivedSearchEventsRef.current && !Object.values(searchMatchesByTreeRef.current).some((v) => !!v);
+  const statuses = Object.values(searchMatchesByTreeRef.current);
+  const allTreesReported = statuses.length > 0 && statuses.every((status) => status !== undefined);
+  const showNoSearchResults = allTreesReported && statuses.every((status) => status === false);
 
   if (showNoSearchResults) {
     return <PanelPlaceholderWidget center={true} icon="search" text="No search results" />;
@@ -73,7 +75,7 @@ export const SearchableEntityTreeWidget: React.FC<SearchableEntityTreeWidgetProp
     <>
       {nodes.map((tree) => {
         const treePath = tree.getPathAsString();
-        const hidden = receivedSearchEventsRef.current && !searchMatchesByTreeRef.current[treePath];
+        const hidden = searchMatchesByTreeRef.current[treePath] === false;
         return (
           <S.TreeContainer key={treePath} $hidden={hidden}>
             <SearchableCoreTreeWidget

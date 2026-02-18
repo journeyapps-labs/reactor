@@ -63,12 +63,18 @@ importers:
       '@journeyapps-labs/reactor-mod':
         specifier: workspace:^
         version: link:../../modules/module-reactor
+      '@journeyapps-labs/reactor-mod-editor':
+        specifier: workspace:^
+        version: link:../../modules/module-editor
       '@projectstorm/react-workspaces-core':
         specifier: ^4.2.3
         version: 4.2.3(@types/react@19.2.14)
       mobx:
         specifier: ^6.15.0
         version: 6.15.0
+      monaco-editor:
+        specifier: ^0.55.1
+        version: 0.55.1
       react:
         specifier: 19.2.4
         version: 19.2.4
