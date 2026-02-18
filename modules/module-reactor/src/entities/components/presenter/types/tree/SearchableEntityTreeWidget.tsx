@@ -6,10 +6,17 @@ import { ReactorTreeEntity } from '../../../../../widgets/core-tree/reactor-tree
 import { TreeEntity } from '@journeyapps-labs/common-tree';
 import { PanelPlaceholderWidget } from '../../../../../widgets/panel/panel/PanelPlaceholderWidget';
 import { useForceUpdate } from '../../../../../hooks/useForceUpdate';
+import styled from '@emotion/styled';
 
 export interface SearchableEntityTreeWidgetProps {
   nodes: ReactorTreeEntity[];
   search: string;
+}
+
+namespace S {
+  export const TreeContainer = styled.div<{ $hidden: boolean }>`
+    ${(p) => (p.$hidden ? 'display: none;' : '')}
+  `;
 }
 
 export const SearchableEntityTreeWidget: React.FC<SearchableEntityTreeWidgetProps> = (props) => {
@@ -63,15 +70,18 @@ export const SearchableEntityTreeWidget: React.FC<SearchableEntityTreeWidgetProp
   return (
     <>
       {nodes.map((tree) => {
+        const treePath = tree.getPathAsString();
+        const hidden = receivedSearchEventsRef.current && !searchMatchesByTreeRef.current[treePath];
         return (
-          <SearchableCoreTreeWidget
-            tree={tree}
-            key={tree.getPathAsString()}
-            search={search}
-            onSearchResultChanged={(result) => {
-              setTreeSearchMatches(tree.getPathAsString(), result.matched);
-            }}
-          />
+          <S.TreeContainer key={treePath} $hidden={hidden}>
+            <SearchableCoreTreeWidget
+              tree={tree}
+              search={search}
+              onSearchResultChanged={(result) => {
+                setTreeSearchMatches(treePath, result.matched);
+              }}
+            />
+          </S.TreeContainer>
         );
       })}
     </>

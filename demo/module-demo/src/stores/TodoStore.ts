@@ -49,8 +49,7 @@ export class TodoStore {
     parent.addChild(todo);
   }
 
-  @computed
-  get rootTodos() {
+  @computed get rootTodos() {
     return Array.from(this._rootTodos.values());
   }
 

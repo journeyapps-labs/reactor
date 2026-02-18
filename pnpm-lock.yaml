@@ -63,6 +63,9 @@ importers:
       '@journeyapps-labs/reactor-mod':
         specifier: workspace:^
         version: link:../../modules/module-reactor
+      '@projectstorm/react-workspaces-core':
+        specifier: ^4.2.3
+        version: 4.2.3(@types/react@19.2.14)
       mobx:
         specifier: ^6.15.0
         version: 6.15.0
@@ -471,23 +474,23 @@ importers:
         specifier: 2.4.12
         version: 2.4.12(@emotion/react@11.14.0(@types/react@19.2.14)(react@19.2.4))(@types/react@19.2.14)
       '@projectstorm/react-workspaces-behavior-panel-dropzone':
-        specifier: 2.3.12
-        version: 2.3.12(@emotion/react@11.14.0(@types/react@19.2.14)(react@19.2.4))(@types/react@19.2.14)
+        specifier: 2.3.13
+        version: 2.3.13(@emotion/react@11.14.0(@types/react@19.2.14)(react@19.2.4))(@types/react@19.2.14)
       '@projectstorm/react-workspaces-behavior-resize':
-        specifier: 2.3.10
-        version: 2.3.10(@emotion/react@11.14.0(@types/react@19.2.14)(react@19.2.4))(@types/react@19.2.14)
+        specifier: 2.3.11
+        version: 2.3.11(@emotion/react@11.14.0(@types/react@19.2.14)(react@19.2.4))(@types/react@19.2.14)
       '@projectstorm/react-workspaces-core':
-        specifier: 4.2.2
-        version: 4.2.2(@types/react@19.2.14)
+        specifier: 4.2.3
+        version: 4.2.3(@types/react@19.2.14)
       '@projectstorm/react-workspaces-dropzone-plugin-tabs':
+        specifier: 2.2.15
+        version: 2.2.15(@emotion/react@11.14.0(@types/react@19.2.14)(react@19.2.4))(@types/react@19.2.14)
+      '@projectstorm/react-workspaces-dropzone-plugin-tray':
         specifier: 2.2.14
         version: 2.2.14(@emotion/react@11.14.0(@types/react@19.2.14)(react@19.2.4))(@types/react@19.2.14)
-      '@projectstorm/react-workspaces-dropzone-plugin-tray':
-        specifier: 2.2.13
-        version: 2.2.13(@emotion/react@11.14.0(@types/react@19.2.14)(react@19.2.4))(@types/react@19.2.14)
       '@projectstorm/react-workspaces-model-floating-window':
-        specifier: 2.2.13
-        version: 2.2.13(@emotion/react@11.14.0(@types/react@19.2.14)(react@19.2.4))(@types/react@19.2.14)
+        specifier: 2.2.14
+        version: 2.2.14(@emotion/react@11.14.0(@types/react@19.2.14)(react@19.2.4))(@types/react@19.2.14)
       '@projectstorm/react-workspaces-model-tabs':
         specifier: ^2.3.11
         version: 2.3.11(@types/react@19.2.14)
@@ -1566,13 +1569,6 @@ packages:
     resolution: {integrity: sha512-YTVITFGN0/24PxzXrwqCgnyd7njDuzp5ZvaCx5nq/jg55kUYd94Nj8UTchBdBofi/L0nwRfjGOg0E41d2u9T1w==}
     engines: {node: '>=6'}
 
-  '@fortawesome/react-fontawesome@0.2.3':
-    resolution: {integrity: sha512-HlJco8RDY8NrzFVjy23b/7mNS4g9NegcrBG3n7jinwpc2x/AmSVk53IhWniLYM4szYLxRAFTAGwGn0EIlclDeQ==}
-    deprecated: v0.2.x is no longer supported. Unless you are still using FontAwesome 5, please update to v3.1.1 or greater.
-    peerDependencies:
-      '@fortawesome/fontawesome-svg-core': ~1 || ~6 || ~7
-      react: ^16.3 || ^17.0.0 || ^18.0.0 || ^19.0.0
-
   '@fortawesome/react-fontawesome@3.2.0':
     resolution: {integrity: sha512-E9Gu1hqd6JussVO26EC4WqRZssXMnQr2ol7ZNWkkFOH8jZUaxDJ9Z9WF9wIVkC+kJGXUdY3tlffpDwEKfgQrQw==}
     engines: {node: '>=20'}
@@ -1762,38 +1758,26 @@ packages:
   '@projectstorm/react-workspaces-behavior-divider-dropzone@2.4.12':
     resolution: {integrity: sha512-6820JzBYf0EeR2Hc1+jRehpHes+ze0GJbU/B03sDhtVeVKjYVC7v3pSFi53A88B0j4dmUlZ3/7ilGPrNj/xN+w==}
 
-  '@projectstorm/react-workspaces-behavior-panel-dropzone@2.3.12':
-    resolution: {integrity: sha512-gSEjYNEI91Uff8U2LXlOzO9nAZWqSq0V+3QMkNT1uMgdPUYmfSHnhzDPywbe0/DIhx6rD9/oiKhgBR0as9MwvA==}
+  '@projectstorm/react-workspaces-behavior-panel-dropzone@2.3.13':
+    resolution: {integrity: sha512-UhG8B7YO/4D73djicvz/PXvNNg0+3q4yCex+lmKQeERHT2UdiKtBEUGzihc6Kn9BunzwPxRb7W1N6G1DTsh1oQ==}
 
-  '@projectstorm/react-workspaces-behavior-resize@2.3.10':
-    resolution: {integrity: sha512-fwiUKrZA0vSeIMon0rxkdEN6sEJXfhmNEpDKorjNCgNmyuSfc1a/vCJSPWpdA0e+fz2jzMmXQRs2jJdLWgz+eg==}
-
-  '@projectstorm/react-workspaces-core@4.2.2':
-    resolution: {integrity: sha512-j4JDKd7tZ8GxUUkDeyzESbRc4ZMq4zwcTnsfayo0VCwpcuu9sTb8oSdEsh3TNfw9LU9Oci+hGyjsGeS0zvNxkA==}
+  '@projectstorm/react-workspaces-behavior-resize@2.3.11':
+    resolution: {integrity: sha512-R2+EvSk9L01ef1TYaHaQqbgqqaz+cbgp7d/LYh0wTmM4G/ZNx1TQQ3GvSPC9hFTxTFOykEinpsvCWlL8lFfZDQ==}
 
   '@projectstorm/react-workspaces-core@4.2.3':
     resolution: {integrity: sha512-beBPmJTnuD0rAlIXZehQ96d4g3MhP40gyCgtC51n9uTVdCTKjorf5cultUTnKksIx7JFMag3d8PRSLp5nVT/6w==}
 
-  '@projectstorm/react-workspaces-dropzone-plugin-tabs@2.2.14':
-    resolution: {integrity: sha512-sh1HjVMNXzP9UWkQd2GwHYFqrgLS2dItYsJRH2HKtoX2psbFvSZ8I1vt982pKKh8vI8uu+IDy7SImLQCEq6b6A==}
+  '@projectstorm/react-workspaces-dropzone-plugin-tabs@2.2.15':
+    resolution: {integrity: sha512-myBRuWa+7TdfuC0rjnc0KdL8w20Md0ImzG4FVrjcSSlWC/cagxYKHEyrduNX8QSwvbhr1asv+g+VBOxZEaoh0g==}
 
-  '@projectstorm/react-workspaces-dropzone-plugin-tray@2.2.13':
-    resolution: {integrity: sha512-JqkLIuNVTeNOuJDALw4JAZWimPz2YpxFfA1uuVHIfQUqzf0IjSX9V6mlib3+q4Ag6pRVoth+obvvOBJLIILQgQ==}
-
-  '@projectstorm/react-workspaces-model-floating-window@2.2.13':
-    resolution: {integrity: sha512-TnfDIRbuL9gzQWiQ7D5P2/OAxrSou4vh93SzZ7ZKBpKZBp0xEP4DMu5rFayIel30mfvNNenWRw5+UKhzJv0SaQ==}
+  '@projectstorm/react-workspaces-dropzone-plugin-tray@2.2.14':
+    resolution: {integrity: sha512-22iBrn7fGmxTgNpAUXbh3Y5RhUhc86ZjDgLWPvijRhzMF2QnRf4ew8c3ZBJp2baZREJVavqiaDkN0spyKE2GKg==}
 
   '@projectstorm/react-workspaces-model-floating-window@2.2.14':
     resolution: {integrity: sha512-ZLGvEcju5xbW5c7Pmk2VNX7UYx4isJXStttHgLYzEAy8/bz9eFbIiF96JdK7u2VWz/tCAoGK7mfEbJQLq/dIVA==}
 
-  '@projectstorm/react-workspaces-model-tabs@2.3.10':
-    resolution: {integrity: sha512-z6NfRrZGpGprxpsQRc6m6XhWnS9zDZV3TBrkMscuIWp+XftM8yVFFcXaf/O/k4qN+raEL7oL5q+G83RfSf5E3Q==}
-
   '@projectstorm/react-workspaces-model-tabs@2.3.11':
     resolution: {integrity: sha512-MOlcqrQWflEwpQLmQg4pCEvj4FdsHKylC+g2zdoYgYCAPWQUXHVl91sdOqFdUDJGnl5GaXtPnVskFH0QwYcCFg==}
-
-  '@projectstorm/react-workspaces-model-tray@2.5.11':
-    resolution: {integrity: sha512-p0sEZznk1TC7B8E5oijaV1OhaxUmLgE8MtIAyB4TE2hLkupYwuXJ9DzjGBXpZfKyODB82DTBCBq7KrepZ1ieaA==}
 
   '@projectstorm/react-workspaces-model-tray@2.5.12':
     resolution: {integrity: sha512-G2QsMcMO9a1Mo8nzaJwfI0Qu4PNb5BMH0mRShkyHVC200pgfulMCtIG+wldaRRImIJiA2UKVVIxIc/G19kHKzg==}
@@ -4883,10 +4867,6 @@ packages:
   util@0.12.5:
     resolution: {integrity: sha512-kZf/K6hEIrWHI6XqOFUiiMa+79wE/D8Q+NCNAWclkyg3b4d2k7s0QGepNjiABc+aR3N1PAyHL7p6UcLY6LmrnA==}
 
-  uuid@11.1.0:
-    resolution: {integrity: sha512-0/A9rDy9P7cJ+8w1c9WD9V//9Wj15Ce2MPz8Ri6032usz+NfePxx5AcN3bN+r6ZL6jEo066/yNYB3tn4pQEx+A==}
-    hasBin: true
-
   uuid@13.0.0:
     resolution: {integrity: sha512-XQegIaBTVUjSHliKqcnFqYypAd4S+WCYt5NIeRs6w/UAry7z8Y9j5ZwRRL4kzq9U3sD6v+85er9FvkEaBpji2w==}
     hasBin: true
@@ -6307,12 +6287,6 @@ snapshots:
     dependencies:
       '@fortawesome/fontawesome-common-types': 7.2.0
 
-  '@fortawesome/react-fontawesome@0.2.3(@fortawesome/fontawesome-svg-core@7.2.0)(react@19.2.4)':
-    dependencies:
-      '@fortawesome/fontawesome-svg-core': 7.2.0
-      prop-types: 15.8.1
-      react: 19.2.4
-
   '@fortawesome/react-fontawesome@3.2.0(@fortawesome/fontawesome-svg-core@7.2.0)(react@19.2.4)':
     dependencies:
       '@fortawesome/fontawesome-svg-core': 7.2.0
@@ -6596,13 +6570,13 @@ snapshots:
       - '@types/react'
       - supports-color
 
-  '@projectstorm/react-workspaces-behavior-panel-dropzone@2.3.12(@emotion/react@11.14.0(@types/react@19.2.14)(react@19.2.4))(@types/react@19.2.14)':
+  '@projectstorm/react-workspaces-behavior-panel-dropzone@2.3.13(@emotion/react@11.14.0(@types/react@19.2.14)(react@19.2.4))(@types/react@19.2.14)':
     dependencies:
       '@emotion/styled': 11.14.1(@emotion/react@11.14.0(@types/react@19.2.14)(react@19.2.4))(@types/react@19.2.14)(react@19.2.4)
       '@fortawesome/fontawesome-svg-core': 7.2.0
       '@fortawesome/free-solid-svg-icons': 7.2.0
-      '@fortawesome/react-fontawesome': 0.2.3(@fortawesome/fontawesome-svg-core@7.2.0)(react@19.2.4)
-      '@projectstorm/react-workspaces-core': 4.2.2(@types/react@19.2.14)
+      '@fortawesome/react-fontawesome': 3.2.0(@fortawesome/fontawesome-svg-core@7.2.0)(react@19.2.4)
+      '@projectstorm/react-workspaces-core': 4.2.3(@types/react@19.2.14)
       lodash: 4.17.23
       react: 19.2.4
     transitivePeerDependencies:
@@ -6610,26 +6584,13 @@ snapshots:
       - '@types/react'
       - supports-color
 
-  '@projectstorm/react-workspaces-behavior-resize@2.3.10(@emotion/react@11.14.0(@types/react@19.2.14)(react@19.2.4))(@types/react@19.2.14)':
+  '@projectstorm/react-workspaces-behavior-resize@2.3.11(@emotion/react@11.14.0(@types/react@19.2.14)(react@19.2.4))(@types/react@19.2.14)':
     dependencies:
       '@emotion/styled': 11.14.1(@emotion/react@11.14.0(@types/react@19.2.14)(react@19.2.4))(@types/react@19.2.14)(react@19.2.4)
-      '@projectstorm/react-workspaces-core': 4.2.2(@types/react@19.2.14)
+      '@projectstorm/react-workspaces-core': 4.2.3(@types/react@19.2.14)
       react: 19.2.4
     transitivePeerDependencies:
       - '@emotion/react'
-      - '@types/react'
-      - supports-color
-
-  '@projectstorm/react-workspaces-core@4.2.2(@types/react@19.2.14)':
-    dependencies:
-      '@emotion/react': 11.14.0(@types/react@19.2.14)(react@19.2.4)
-      '@emotion/styled': 11.14.1(@emotion/react@11.14.0(@types/react@19.2.14)(react@19.2.4))(@types/react@19.2.14)(react@19.2.4)
-      color: 5.0.3
-      lodash: 4.17.23
-      react: 19.2.4
-      react-dom: 19.2.4(react@19.2.4)
-      uuid: 11.1.0
-    transitivePeerDependencies:
       - '@types/react'
       - supports-color
 
@@ -6646,39 +6607,26 @@ snapshots:
       - '@types/react'
       - supports-color
 
-  '@projectstorm/react-workspaces-dropzone-plugin-tabs@2.2.14(@emotion/react@11.14.0(@types/react@19.2.14)(react@19.2.4))(@types/react@19.2.14)':
+  '@projectstorm/react-workspaces-dropzone-plugin-tabs@2.2.15(@emotion/react@11.14.0(@types/react@19.2.14)(react@19.2.4))(@types/react@19.2.14)':
     dependencies:
       '@fortawesome/fontawesome-svg-core': 7.2.0
       '@fortawesome/free-solid-svg-icons': 7.2.0
-      '@projectstorm/react-workspaces-behavior-panel-dropzone': 2.3.12(@emotion/react@11.14.0(@types/react@19.2.14)(react@19.2.4))(@types/react@19.2.14)
-      '@projectstorm/react-workspaces-core': 4.2.2(@types/react@19.2.14)
-      '@projectstorm/react-workspaces-model-tabs': 2.3.10(@types/react@19.2.14)
+      '@projectstorm/react-workspaces-behavior-panel-dropzone': 2.3.13(@emotion/react@11.14.0(@types/react@19.2.14)(react@19.2.4))(@types/react@19.2.14)
+      '@projectstorm/react-workspaces-core': 4.2.3(@types/react@19.2.14)
+      '@projectstorm/react-workspaces-model-tabs': 2.3.11(@types/react@19.2.14)
       react: 19.2.4
     transitivePeerDependencies:
       - '@emotion/react'
       - '@types/react'
       - supports-color
 
-  '@projectstorm/react-workspaces-dropzone-plugin-tray@2.2.13(@emotion/react@11.14.0(@types/react@19.2.14)(react@19.2.4))(@types/react@19.2.14)':
+  '@projectstorm/react-workspaces-dropzone-plugin-tray@2.2.14(@emotion/react@11.14.0(@types/react@19.2.14)(react@19.2.4))(@types/react@19.2.14)':
     dependencies:
       '@fortawesome/fontawesome-svg-core': 7.2.0
       '@fortawesome/free-solid-svg-icons': 7.2.0
-      '@projectstorm/react-workspaces-behavior-panel-dropzone': 2.3.12(@emotion/react@11.14.0(@types/react@19.2.14)(react@19.2.4))(@types/react@19.2.14)
-      '@projectstorm/react-workspaces-core': 4.2.2(@types/react@19.2.14)
-      '@projectstorm/react-workspaces-model-tray': 2.5.11(@emotion/react@11.14.0(@types/react@19.2.14)(react@19.2.4))(@types/react@19.2.14)
-      react: 19.2.4
-    transitivePeerDependencies:
-      - '@emotion/react'
-      - '@types/react'
-      - supports-color
-
-  '@projectstorm/react-workspaces-model-floating-window@2.2.13(@emotion/react@11.14.0(@types/react@19.2.14)(react@19.2.4))(@types/react@19.2.14)':
-    dependencies:
-      '@emotion/styled': 11.14.1(@emotion/react@11.14.0(@types/react@19.2.14)(react@19.2.4))(@types/react@19.2.14)(react@19.2.4)
-      '@fortawesome/fontawesome-svg-core': 7.2.0
-      '@fortawesome/free-solid-svg-icons': 7.2.0
-      '@fortawesome/react-fontawesome': 0.2.3(@fortawesome/fontawesome-svg-core@7.2.0)(react@19.2.4)
-      '@projectstorm/react-workspaces-core': 4.2.2(@types/react@19.2.14)
+      '@projectstorm/react-workspaces-behavior-panel-dropzone': 2.3.13(@emotion/react@11.14.0(@types/react@19.2.14)(react@19.2.4))(@types/react@19.2.14)
+      '@projectstorm/react-workspaces-core': 4.2.3(@types/react@19.2.14)
+      '@projectstorm/react-workspaces-model-tray': 2.5.12(@emotion/react@11.14.0(@types/react@19.2.14)(react@19.2.4))(@types/react@19.2.14)
       react: 19.2.4
     transitivePeerDependencies:
       - '@emotion/react'
@@ -6698,17 +6646,6 @@ snapshots:
       - '@types/react'
       - supports-color
 
-  '@projectstorm/react-workspaces-model-tabs@2.3.10(@types/react@19.2.14)':
-    dependencies:
-      '@emotion/react': 11.14.0(@types/react@19.2.14)(react@19.2.4)
-      '@emotion/styled': 11.14.1(@emotion/react@11.14.0(@types/react@19.2.14)(react@19.2.4))(@types/react@19.2.14)(react@19.2.4)
-      '@projectstorm/react-workspaces-core': 4.2.2(@types/react@19.2.14)
-      lodash: 4.17.23
-      react: 19.2.4
-    transitivePeerDependencies:
-      - '@types/react'
-      - supports-color
-
   '@projectstorm/react-workspaces-model-tabs@2.3.11(@types/react@19.2.14)':
     dependencies:
       '@emotion/react': 11.14.0(@types/react@19.2.14)(react@19.2.4)
@@ -6717,18 +6654,6 @@ snapshots:
       lodash: 4.17.23
       react: 19.2.4
     transitivePeerDependencies:
-      - '@types/react'
-      - supports-color
-
-  '@projectstorm/react-workspaces-model-tray@2.5.11(@emotion/react@11.14.0(@types/react@19.2.14)(react@19.2.4))(@types/react@19.2.14)':
-    dependencies:
-      '@emotion/styled': 11.14.1(@emotion/react@11.14.0(@types/react@19.2.14)(react@19.2.4))(@types/react@19.2.14)(react@19.2.4)
-      '@projectstorm/react-workspaces-core': 4.2.2(@types/react@19.2.14)
-      '@projectstorm/react-workspaces-model-floating-window': 2.2.13(@emotion/react@11.14.0(@types/react@19.2.14)(react@19.2.4))(@types/react@19.2.14)
-      lodash: 4.17.23
-      react: 19.2.4
-    transitivePeerDependencies:
-      - '@emotion/react'
       - '@types/react'
       - supports-color
 
@@ -10147,8 +10072,6 @@ snapshots:
       is-generator-function: 1.1.0
       is-typed-array: 1.1.15
       which-typed-array: 1.1.19
-
-  uuid@11.1.0: {}
 
   uuid@13.0.0: {}
 

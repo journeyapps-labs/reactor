@@ -1,8 +1,7 @@
 import _ from 'lodash';
-import { autorun } from 'mobx';
-import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
+import React, { useEffect, useMemo, useRef } from 'react';
+import { observer } from 'mobx-react';
 import { CoreTreeWidget } from '../../../../../widgets/core-tree/CoreTreeWidget';
-import { ReactorTreeEntity } from '../../../../../widgets/core-tree/reactor-tree/reactor-tree-utils';
 import { PanelPlaceholderWidget } from '../../../../../widgets/panel/panel/PanelPlaceholderWidget';
 import { RenderCollectionOptions } from '../../AbstractPresenterContext';
 import { AbstractEntityTreePresenterContext } from './presenter-contexts/AbstractEntityTreePresenterContext';
@@ -15,11 +14,10 @@ export interface EntityTreeCollectionWidgetProps<T extends any> {
   presenterContext: AbstractEntityTreePresenterContext<T>;
 }
 
-export const EntityTreeCollectionWidget = function <T>(props: EntityTreeCollectionWidgetProps<T>) {
+export const EntityTreeCollectionWidget = observer(function <T>(props: EntityTreeCollectionWidgetProps<T>) {
   const { event, presenterContext } = props;
-  const [nodes, setNodes] = useState<ReactorTreeEntity[]>([]);
   const lockedRef = useRef<boolean>(false);
-  const eventRef = useRef(event);
+  const nodes = presenterContext.getTreeNodes(event);
 
   const saveState = useMemo(() => {
     return _.debounce(
@@ -36,27 +34,6 @@ export const EntityTreeCollectionWidget = function <T>(props: EntityTreeCollecti
       saveState.cancel();
     };
   }, [saveState]);
-
-  useEffect(() => {
-    eventRef.current = event;
-  }, [event]);
-
-  useEffect(() => {
-    if (!event.searchEvent?.search) {
-      // Search mode mutates collapse state to reveal matches. When leaving search mode,
-      // rebuild nodes so persisted pre-search tree state is re-applied via deserialize.
-      setNodes(presenterContext.getTreeNodes(eventRef.current));
-    }
-  }, [!event.searchEvent?.search]);
-
-  useEffect(() => {
-    return autorun(
-      () => {
-        setNodes(presenterContext.getTreeNodes(eventRef.current));
-      },
-      { name: `EntityTreeCollectionWidget:${presenterContext.definition.type}` }
-    );
-  }, [presenterContext]);
 
   useEffect(() => {
     return event.events?.registerListener({
@@ -120,4 +97,4 @@ export const EntityTreeCollectionWidget = function <T>(props: EntityTreeCollecti
   });
 
   return <>{jsxElements}</>;
-};
+});

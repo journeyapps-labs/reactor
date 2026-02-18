@@ -11,6 +11,7 @@
     "@emotion/styled": "^11.14.1",
     "@journeyapps-labs/common-utils": "^1.0.1",
     "@journeyapps-labs/reactor-mod": "workspace:^",
+    "@projectstorm/react-workspaces-core": "^4.2.3",
     "react": "19.2.4",
     "uuid": "^13.0.0",
     "mobx": "^6.15.0"
