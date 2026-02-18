@@ -10,6 +10,8 @@ import { PanelPlaceholderWidget } from '../../../../../widgets/panel/panel/Panel
 import { themed } from '../../../../../stores/themes/reactor-theme-fragment';
 import { ActionSource } from '../../../../../actions';
 import { IconWidget } from '../../../../../widgets/icons/IconWidget';
+import { MatchesWidget } from '../../../../../widgets/search/MatchesWidget';
+import { SearchEvent } from '@journeyapps-labs/lib-reactor-search';
 
 export interface EntityCardsCollectionWidgetProps<T> {
   event: RenderCollectionOptions<T>;
@@ -19,6 +21,7 @@ export interface EntityCardsCollectionWidgetProps<T> {
 export interface EntityCardWidgetProps<T> {
   entity: T;
   presenterContext: EntityCardsPresenterContext<T>;
+  searchEvent?: SearchEvent;
 }
 
 namespace S {
@@ -119,6 +122,7 @@ export const EntityCardsCollectionWidget = observer(function <T>(props: EntityCa
             key={props.presenterContext.definition.getEntityUID(entity)}
             entity={entity}
             presenterContext={props.presenterContext}
+            searchEvent={props.event.searchEvent}
           />
         );
       })}
@@ -127,10 +131,17 @@ export const EntityCardsCollectionWidget = observer(function <T>(props: EntityCa
 });
 
 export const EntityCardWidget = observer(function <T>(props: EntityCardWidgetProps<T>) {
-  const { entity, presenterContext } = props;
+  const { entity, presenterContext, searchEvent } = props;
   const encoded = presenterContext.definition.encode(entity, false);
   const selected = presenterContext.batchStore.isSelected(encoded);
   const description = presenterContext.definition.describeEntity(entity);
+  let titleMatch = null;
+  if (description.simpleName) {
+    titleMatch =
+      searchEvent?.matches?.(description.simpleName, {
+        nullIsTrue: false
+      }) || null;
+  }
   const labels = description.labels || [];
   const tags = description.tags || [];
   const nestedTrees = presenterContext.getNestedTreeRenderOptions(entity);
@@ -151,7 +162,13 @@ export const EntityCardWidget = observer(function <T>(props: EntityCardWidgetPro
         title={
           <S.CardTitle>
             {description.icon ? <S.CardTitleIcon icon={description.icon} color={description.iconColor} /> : null}
-            <S.CardTitleLabel>{description.simpleName}</S.CardTitleLabel>
+            <S.CardTitleLabel>
+              {titleMatch ? (
+                <MatchesWidget text={description.simpleName} locators={titleMatch.locators} />
+              ) : (
+                description.simpleName
+              )}
+            </S.CardTitleLabel>
           </S.CardTitle>
         }
         subHeading={description.complexName}

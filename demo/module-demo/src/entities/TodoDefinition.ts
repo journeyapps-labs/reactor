@@ -6,6 +6,7 @@ import {
   EntityDescriberComponent,
   EntityPanelComponent,
   inject,
+  InlineEntityEncoderComponent,
   InlineTreePresenterComponent,
   SimpleEntitySearchEngineComponent
 } from '@journeyapps-labs/reactor-mod';
@@ -66,6 +67,18 @@ export class TodoDefinition extends EntityDefinition<TodoModel> {
       })
     );
     this.registerComponent(new EntityCardsPresenterComponent<TodoModel>());
+
+    this.registerComponent(
+      new InlineEntityEncoderComponent<TodoModel, { id: string }>({
+        version: 1,
+        encode: (entity) => {
+          return { id: entity.id };
+        },
+        decode: async (encoded) => {
+          return this.todoStore.todos.find((todo) => todo.id === encoded.id) || null;
+        }
+      })
+    );
 
     // allow todos to expose nested sub todos to tree/card renderers
     this.registerComponent(

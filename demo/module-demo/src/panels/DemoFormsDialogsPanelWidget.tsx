@@ -181,9 +181,8 @@ namespace S {
     display: flex;
     flex-direction: column;
     row-gap: 12px;
-    height: 100%;
+    min-height: 100%;
     box-sizing: border-box;
-    overflow: auto;
   `;
 
   export const Buttons = styled.div`

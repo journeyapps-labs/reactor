@@ -7,7 +7,7 @@ import { FooterLoaderWidget } from '../footer/FooterLoaderWidget';
 import { LoadingDirectiveState } from '../../stores';
 import { MetaBarWidget } from '../meta/MetaBarWidget';
 import { ReadOnlyMetadataWidgetProps } from '../meta/ReadOnlyMetadataWidget';
-import { getDarkenedColor } from '@journeyapps-labs/lib-reactor-utils';
+import { getDarkenedColor, getTransparentColor } from '@journeyapps-labs/lib-reactor-utils';
 import { themed } from '../../stores/themes/reactor-theme-fragment';
 
 export interface CardWidgetProps {
@@ -27,11 +27,25 @@ export interface CardWidgetProps {
   };
 }
 
+export const CardTop = styled.div`
+  display: flex;
+  padding: 10px;
+`;
+
+export const CardContent = themed.div`
+  flex-grow: 1;
+  border-top: solid 1px ${(p) => getTransparentColor(p.theme.cards.border, 0.4)};
+  padding: 10px;
+  min-width: 0;
+  overflow-x: auto;
+`;
+
 namespace S {
   export const Container = themed.div<{ selected?: boolean; selectedBorderColor?: string }>`
     border-radius: 5px;
     background: ${(p) => p.theme.cards.background};
-    border: solid 1px ${(p) => (p.selected ? p.selectedBorderColor || p.theme.status.loading : p.theme.cards.border)};
+    border: solid 1px
+      ${(p) => (p.selected ? p.selectedBorderColor || p.theme.tabs.selectedAccentSingle : p.theme.cards.border)};
     display: flex;
     flex-direction: column;
   `;
@@ -51,10 +65,7 @@ namespace S {
     padding-left: 5px;
   `;
 
-  export const Top = styled.div`
-    display: flex;
-    padding: 10px;
-  `;
+  export const Top = CardTop;
 
   export const Info = styled.div`
     flex-grow: 1;
@@ -71,11 +82,7 @@ namespace S {
     color: ${(p) => p.color || p.theme.cards.foreground};
   `;
 
-  export const Content = themed.div`
-    flex-grow: 1;
-    border-top: solid 1px ${(p) => p.theme.panels.background};
-    padding: 10px;
-  `;
+  export const Content = CardContent;
 
   export const Buttons = styled.div`
     display: flex;

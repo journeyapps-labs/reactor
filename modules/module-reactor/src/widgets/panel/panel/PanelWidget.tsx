@@ -133,6 +133,7 @@ namespace S {
   export const Container = themed.div<{ attention: boolean }>`
     width: 100%;
     height: 100%;
+    min-height: 0;
     display: flex;
     flex-direction: column;
     overflow-y: hidden;
@@ -144,6 +145,7 @@ namespace S {
     background: ${(p) => p.theme.panels.background};
     position: relative;
     flex-grow: 1;
+    min-height: 0;
     overflow: hidden;
     box-sizing: border-box;
   `;
@@ -152,6 +154,7 @@ namespace S {
     background: ${(p) => p.theme.panels.background};
     position: relative;
     flex-grow: 1;
+    min-height: 0;
     overflow-y: auto;
     padding: ${PANEL_CONTENT_PADDING}px;
     box-sizing: border-box;

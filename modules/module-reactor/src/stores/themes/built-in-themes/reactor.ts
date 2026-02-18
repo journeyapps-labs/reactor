@@ -57,7 +57,7 @@ export const DarkTheme = theme.addThemeValues({
     },
     trees: {
       labelColor: '#eef5ff',
-      selectedBackground: '#1a222d'
+      selectedBackground: 'rgba(0, 192, 255, 0.14)'
     },
     guide: {
       accent: '#ff6a1a',
@@ -80,7 +80,7 @@ export const DarkTheme = theme.addThemeValues({
       border: '#3b4a5f'
     },
     status: {
-      cardBackground: '#14181e',
+      cardBackground: '#172130',
       failed: '#862c00',
       failedForeground: 'black',
       loading: '#00b4ff',

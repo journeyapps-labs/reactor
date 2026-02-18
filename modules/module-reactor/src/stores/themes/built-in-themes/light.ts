@@ -44,7 +44,7 @@ theme.addThemeValues({
       tabForeground: 'rgba(45,55,70,0.65)',
       tabForegroundSelected: '#1f2936',
       tabBackgroundSelected: '#ffffff',
-      itemIconColorSelected: '#2f7fb5',
+      itemIconColorSelected: '#6a7482',
       titleForeground: '#1f2936',
       scrollBar: '#9fb0c4',
       trayButton: '#edf1f6',
@@ -155,6 +155,7 @@ theme.addThemeValues({
       inputForeground: '#1f2936',
       inputBackground: '#f5f7fa',
       inputBorder: '#a9b6c6',
+      groupLabelForeground: '#2f3a48',
       toggleOnColor: '#1f2936',
       toggleHandleColor: 'white',
       description: '#646f7d'

@@ -49,6 +49,10 @@ theme.addThemeValues({
       startButton: '#546e79',
       startButtonText: '#fff'
     },
+    trees: {
+      ...DarkTheme.trees,
+      selectedBackground: 'rgba(255, 140, 43, 0.16)'
+    },
     footer: {
       background: '#253238'
     },

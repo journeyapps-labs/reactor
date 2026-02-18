@@ -19,7 +19,8 @@ export class DemoFormsDialogsPanelFactory extends ReactorPanelFactory<DemoFormsD
       icon: 'vial',
       name: 'Form & Dialog Lab',
       category: PanelCategory.IDE,
-      isMultiple: true
+      isMultiple: true,
+      padding: true
     });
   }
 

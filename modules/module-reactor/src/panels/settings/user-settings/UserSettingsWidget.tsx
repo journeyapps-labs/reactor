@@ -6,7 +6,7 @@ import { IndividualSettingsWidget } from '../IndividualSettingsWidget';
 import * as _ from 'lodash';
 import { observer } from 'mobx-react';
 import { ProviderControl } from '../../../settings/ProviderControl';
-import { CardWidget } from '../../../widgets/cards/CardWidget';
+import { CardContent, CardTop, CardWidget } from '../../../widgets/cards/CardWidget';
 import { styled } from '../../../stores/themes/reactor-theme-fragment';
 import { SearchablePanelWidget } from '../../../widgets/search/SearchablePanelWidget';
 import { EntityControl } from '../../../controls/EntityControl';
@@ -16,17 +16,20 @@ namespace S {
   export const Card = styled(CardWidget)`
     margin-bottom: 5px;
     margin-right: 5px;
+
     &:last-of-type {
       margin-bottom: 0;
     }
   `;
 
-  export const Setting = styled(IndividualSettingsWidget)`
-    margin-bottom: 2px;
+  export const Settings = styled.div`
+    display: flex;
+    flex-direction: column;
+    row-gap: 6px;
+  `;
 
-    &:last-of-type {
-      margin-bottom: 0;
-    }
+  export const Setting = styled(IndividualSettingsWidget)`
+    margin-bottom: 0;
   `;
 }
 
@@ -89,7 +92,7 @@ export class UserSettingsWidget<P extends {} = {}> extends React.Component<P> {
                         key: 'main',
                         content: () => {
                           return (
-                            <>
+                            <S.Settings>
                               {this.sortControls(controls).map((result) => (
                                 <S.Setting
                                   search={result.match}
@@ -100,7 +103,7 @@ export class UserSettingsWidget<P extends {} = {}> extends React.Component<P> {
                                   {result.control.generateControl()}
                                 </S.Setting>
                               ))}
-                            </>
+                            </S.Settings>
                           );
                         }
                       }
