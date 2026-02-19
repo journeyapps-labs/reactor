@@ -1,10 +1,7 @@
 import * as React from 'react';
 import * as _ from 'lodash';
 import { CommandPalletWidget } from './CommandPalletWidget';
-import {
-  CMDPalletSearchEngineResult,
-  CommandPalletSearchResultEntry
-} from '../../cmd-pallet/CMDPalletSearchEngine';
+import { CMDPalletSearchEngineResult, CommandPalletSearchResultEntry } from '../../cmd-pallet/CMDPalletSearchEngine';
 import { ioc } from '../../inversify.config';
 import { MousePosition } from '../combo/SmartPositionWidget';
 import { TabDirective } from '../../widgets/tabs/GenericTabSelectionWidget';
