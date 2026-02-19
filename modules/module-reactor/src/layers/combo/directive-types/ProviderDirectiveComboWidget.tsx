@@ -4,7 +4,7 @@ import * as _ from 'lodash';
 import { ComboBoxItem, ProviderComboBoxItem, UIProviderDirective } from '../../../stores/combo/ComboBoxDirectives';
 import { SmartPositionWidget } from '../SmartPositionWidget';
 import { ComboSearchBoxWidget } from '../ComboSearchBoxWidget';
-import { ProviderSearchResult } from '../../../providers';
+import { ProviderSearchResult } from '../../../providers/ProviderSearchResult';
 import { createSearchEventMatcher } from '@journeyapps-labs/lib-reactor-search';
 
 export interface ProviderDirectiveComboWidgetProps {

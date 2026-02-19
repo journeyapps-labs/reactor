@@ -1,5 +1,6 @@
 import { Action, ActionEvent } from '../../Action';
-import { keyType, ShortcutChord, WorkspaceStore } from '../../../stores';
+import { keyType, ShortcutChord } from '../../../stores/shortcuts/Shortcut';
+import { WorkspaceStore } from '../../../stores/workspace/WorkspaceStore';
 import { inject } from '../../../inversify.config';
 import { WorkspaceTabModel } from '@projectstorm/react-workspaces-model-tabs';
 

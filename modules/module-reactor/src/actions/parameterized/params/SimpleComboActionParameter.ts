@@ -1,5 +1,5 @@
 import { inject } from '../../../inversify.config';
-import { ComboBoxItem } from '../../../stores';
+import { ComboBoxItem } from '../../../stores/combo/ComboBoxDirectives';
 import { ComboBoxStore2 } from '../../../stores/combo2/ComboBoxStore2';
 import {
   SimpleComboBoxDirective,

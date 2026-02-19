@@ -5,7 +5,7 @@ import { InlineTreePresenterComponent } from '../../entities/components/presente
 import { EntityDescriberComponent } from '../../entities/components/meta/EntityDescriberComponent';
 import { ReactorPanelFactory } from '../../stores/workspace/react-workspaces/ReactorPanelFactory';
 import { inject } from '../../inversify.config';
-import { WorkspaceStore } from '../../stores';
+import { WorkspaceStore } from '../../stores/workspace/WorkspaceStore';
 import { SimpleEntitySearchEngineComponent } from '../../entities/components/search/SimpleEntitySearchEngineComponent';
 import { AddPanelWorkspaceAction } from '../../actions/builtin-actions/workspace/AddPanelWorkspaceAction';
 import { EntityActionHandlerComponent } from '../../entities/components/handler/EntityActionHandlerComponent';

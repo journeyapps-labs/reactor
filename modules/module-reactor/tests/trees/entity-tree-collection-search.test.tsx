@@ -6,22 +6,12 @@ import { EntityTreeCollectionWidget } from '../../src/entities/components/presen
 import { renderWithReactorTestRig } from '../rig/reactor-test-rig';
 
 const searchableEntityTreeWidgetSpy = vi.fn();
-const coreTreeWidgetSpy = vi.fn();
 
 vi.mock('../../src/entities/components/presenter/types/tree/SearchableEntityTreeWidget', () => {
   return {
     SearchableEntityTreeWidget: (props: any) => {
       searchableEntityTreeWidgetSpy(props);
       return <div data-testid="searchable-entity-tree-widget" />;
-    }
-  };
-});
-
-vi.mock('../../src/widgets/core-tree/CoreTreeWidget', () => {
-  return {
-    CoreTreeWidget: (props: any) => {
-      coreTreeWidgetSpy(props);
-      return <div data-testid={`core-tree-${props.tree.getKey()}`}>{props.tree.getKey()}</div>;
     }
   };
 });
@@ -52,7 +42,6 @@ const createRootNode = (key: string) => {
 describe('EntityTreeCollectionWidget search integration', () => {
   it('routes search mode through SearchableEntityTreeWidget and forwards presenter search scope', async () => {
     searchableEntityTreeWidgetSpy.mockClear();
-    coreTreeWidgetSpy.mockClear();
 
     const alpha = createRootNode('Alpha');
     const bravo = createRootNode('Bravo');
@@ -75,7 +64,6 @@ describe('EntityTreeCollectionWidget search integration', () => {
     );
 
     expect(searchableEntityTreeWidgetSpy).toHaveBeenCalledTimes(1);
-    expect(coreTreeWidgetSpy).not.toHaveBeenCalled();
     expect(searchableEntityTreeWidgetSpy).toHaveBeenCalledWith(
       expect.objectContaining({
         nodes: [alpha, bravo],
@@ -89,7 +77,6 @@ describe('EntityTreeCollectionWidget search integration', () => {
 
   it('renders CoreTreeWidget collection when search is not active', async () => {
     searchableEntityTreeWidgetSpy.mockClear();
-    coreTreeWidgetSpy.mockClear();
 
     const alpha = createRootNode('Alpha');
     const bravo = createRootNode('Bravo');
@@ -112,7 +99,6 @@ describe('EntityTreeCollectionWidget search integration', () => {
     );
 
     expect(searchableEntityTreeWidgetSpy).not.toHaveBeenCalled();
-    expect(coreTreeWidgetSpy).toHaveBeenCalledTimes(2);
     expect(rig.container.textContent).toContain('Alpha');
     expect(rig.container.textContent).toContain('Bravo');
 

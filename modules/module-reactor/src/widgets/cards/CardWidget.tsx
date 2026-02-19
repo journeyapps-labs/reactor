@@ -4,7 +4,7 @@ import styled from '@emotion/styled';
 import { PanelBtn, PanelButtonWidget } from '../forms/PanelButtonWidget';
 import { Observer } from 'mobx-react';
 import { FooterLoaderWidget } from '../footer/FooterLoaderWidget';
-import { LoadingDirectiveState } from '../../stores';
+import { LoadingDirectiveState } from '../../stores/visor/VisorLoadingDirective';
 import { MetaBarWidget } from '../meta/MetaBarWidget';
 import { ReadOnlyMetadataWidgetProps } from '../meta/ReadOnlyMetadataWidget';
 import { getDarkenedColor, getTransparentColor } from '@journeyapps-labs/lib-reactor-utils';

@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { observer } from 'mobx-react';
 import { ioc } from '../../inversify.config';
-import { VisorStore } from '../../stores';
+import { VisorStore } from '../../stores/visor/VisorStore';
 import { FooterLoaderWidget } from './FooterLoaderWidget';
 
 export const SmartFooterLoaderWidget: React.FC = observer((props) => {

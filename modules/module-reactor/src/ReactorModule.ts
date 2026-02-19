@@ -1,16 +1,13 @@
 import './fonts';
-import {
-  CMDPalletProviderSearchEngine,
-  CMDPalletStore,
-  ComboBoxStore,
-  keyType,
-  NotificationStore,
-  PrefsStore,
-  ShortcutChord,
-  ShortcutStore,
-  UXStore,
-  WorkspaceStore
-} from './stores';
+import { CMDPalletProviderSearchEngine } from './cmd-pallet/CMDPalletProviderSearchEngine';
+import { CMDPalletStore } from './stores/CMDPalletStore';
+import { ComboBoxStore } from './stores/combo/ComboBoxStore';
+import { keyType, ShortcutChord } from './stores/shortcuts/Shortcut';
+import { NotificationStore } from './stores/NotificationStore';
+import { PrefsStore } from './stores/PrefsStore';
+import { ShortcutStore } from './stores/shortcuts/ShortcutStore';
+import { UXStore } from './stores/UXStore';
+import { WorkspaceStore } from './stores/workspace/WorkspaceStore';
 import { System } from './core/System';
 import { setupPrefs } from './setup/setup-preferences';
 import { ChangeThemeAction } from './actions/builtin-actions/ChangeThemeAction';

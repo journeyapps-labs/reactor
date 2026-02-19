@@ -4,7 +4,7 @@ import { FormInputOptions, FormInputRenderOptions } from '../FormInput';
 import { FileControl } from '../../controls/FileControl';
 import styled from '@emotion/styled';
 import { PanelButtonMode, PanelButtonWidget } from '../../widgets/forms/PanelButtonWidget';
-import { DialogStore } from '../../stores';
+import { DialogStore } from '../../stores/DialogStore';
 import { inject } from '../../inversify.config';
 import { InputDialogType } from '../../layers/dialog/InputDialogWidget';
 
