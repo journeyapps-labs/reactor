@@ -2,11 +2,11 @@ import _ from 'lodash';
 import React, { useEffect, useMemo, useRef } from 'react';
 import { observer } from 'mobx-react';
 import { CoreTreeWidget } from '../../../../../widgets/core-tree/CoreTreeWidget';
+import { ReactorTreeLeaf } from '../../../../../widgets/core-tree/reactor-tree/ReactorTreeLeaf';
+import { ReactorTreeNode } from '../../../../../widgets/core-tree/reactor-tree/ReactorTreeNode';
 import { PanelPlaceholderWidget } from '../../../../../widgets/panel/panel/PanelPlaceholderWidget';
 import { RenderCollectionOptions } from '../../AbstractPresenterContext';
 import { AbstractEntityTreePresenterContext } from './presenter-contexts/AbstractEntityTreePresenterContext';
-import { EntityReactorNode } from './EntityReactorNode';
-import { EntityReactorLeaf } from './EntityReactorLeaf';
 import { SearchableEntityTreeWidget } from './SearchableEntityTreeWidget';
 
 export interface EntityTreeCollectionWidgetProps<T extends any> {
@@ -43,10 +43,15 @@ export const EntityTreeCollectionWidget = observer(function <T>(props: EntityTre
         }
         _.chain(nodes)
           .flatMap((n) => n.flatten())
-          .filter((n) => n instanceof EntityReactorNode || n instanceof EntityReactorLeaf)
-          .forEach((n: EntityReactorNode) => {
-            if (n.entity === entity) {
-              let p = n.getParent();
+          .forEach((n) => {
+            if (!(n instanceof ReactorTreeNode || n instanceof ReactorTreeLeaf)) {
+              return;
+            }
+
+            const candidate = n as ReactorTreeNode & { entity?: unknown };
+
+            if (candidate.entity === entity) {
+              let p = candidate.getParent();
 
               // already visible, no need to do anything
               if (!p) {
