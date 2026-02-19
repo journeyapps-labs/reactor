@@ -80,6 +80,7 @@ export * from './preferences/ShowChangelogSetting';
 
 export * from './panels/settings/keys/KeyboardShortcutPillsWidget';
 export * from './panels/settings/SettingsPanelFactory';
+export * from './panels/settings/SettingsPanelModel';
 export * from './panels/empty/EmptyPanelWorkspaceFactory';
 export * from './panels/settings/user-settings/UserSettingsWidget';
 export * from './panels/settings/IndividualSettingsWidget';

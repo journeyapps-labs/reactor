@@ -19,7 +19,7 @@ export class ChangeThemeAction extends EntityAction<Theme> {
   }
 
   async fireEvent(event: EntityActionEvent<Theme>): Promise<any> {
-    this.themeStore.selectedTheme.setItem(event.targetEntity);
+    this.themeStore.setSelectedTheme(event.targetEntity);
   }
 
   static get() {

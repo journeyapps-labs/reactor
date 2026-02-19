@@ -87,7 +87,10 @@ theme.addThemeValues({
     cards: {
       background: '#121212',
       foreground: '#c7c7c7',
-      border: '#333333'
+      border: '#333333',
+      tagBackground: '#58595d',
+      tagLabelBackground: 'rgba(0, 0, 0, 0.16)',
+      tagLabelForeground: 'rgba(240, 240, 240, 0.92)'
     },
     status: {
       ...DarkTheme.status,

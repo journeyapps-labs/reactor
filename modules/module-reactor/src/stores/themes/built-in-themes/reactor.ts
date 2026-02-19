@@ -77,7 +77,10 @@ export const DarkTheme = theme.addThemeValues({
     cards: {
       background: '#151c27',
       foreground: '#c6d2e1',
-      border: '#3b4a5f'
+      border: '#3b4a5f',
+      tagBackground: '#5b6a80',
+      tagLabelBackground: 'rgba(0, 0, 0, 0.12)',
+      tagLabelForeground: 'rgba(236, 244, 255, 0.92)'
     },
     status: {
       cardBackground: '#172130',

@@ -1,6 +1,7 @@
 import React from 'react';
 import { observer } from 'mobx-react';
 import styled from '@emotion/styled';
+import { useTheme } from '@emotion/react';
 import { RenderCollectionOptions } from '../../AbstractPresenterContext';
 import { EntityCardsPresenterContext, NestedTreeRenderOption } from './EntityCardsPresenterComponent';
 import { CardWidget } from '../../../../../widgets/cards/CardWidget';
@@ -49,27 +50,7 @@ namespace S {
   `;
 
   export const TagPill = themed(PillWidget)`
-    background: ${(p) =>
-      p.theme.light
-        ? 'rgba(129, 139, 153, 0.9)'
-        : p.theme.guide.accent === 'rgb(184 107 255)'
-          ? 'rgba(112, 128, 145, 0.62)'
-          : 'rgba(98, 114, 134, 0.7)'} !important;
-
-    > div:first-of-type {
-      background: ${(p) =>
-        p.theme.light
-          ? 'rgba(0, 0, 0, 0.18)'
-          : p.theme.guide.accent === 'rgb(184 107 255)'
-            ? 'rgba(0, 0, 0, 0.08)'
-            : 'rgba(0, 0, 0, 0.12)'};
-      color: ${(p) =>
-        p.theme.light
-          ? 'rgba(255, 255, 255, 0.95)'
-          : p.theme.guide.accent === 'rgb(184 107 255)'
-            ? 'rgba(222, 232, 242, 0.88)'
-            : 'rgba(227, 236, 249, 0.92)'};
-    }
+    background: ${(p) => p.theme.cards.tagBackground};
   `;
 
   export const CardTitle = styled.div`
@@ -132,6 +113,7 @@ export const EntityCardsCollectionWidget = observer(function <T>(props: EntityCa
 
 export const EntityCardWidget = observer(function <T>(props: EntityCardWidgetProps<T>) {
   const { entity, presenterContext, searchEvent } = props;
+  const theme = useTheme() as any;
   const encoded = presenterContext.definition.encode(entity, false);
   const selected = presenterContext.batchStore.isSelected(encoded);
   const description = presenterContext.definition.describeEntity(entity);
@@ -189,7 +171,13 @@ export const EntityCardWidget = observer(function <T>(props: EntityCardWidgetPro
                   return (
                     <S.PillRow>
                       {tags.map((tag) => (
-                        <S.TagPill key={`tag-${tag}`} label={tag} />
+                        <S.TagPill
+                          key={`tag-${tag}`}
+                          label={tag}
+                          color={theme.cards.tagBackground}
+                          labelBackground={theme.cards.tagLabelBackground}
+                          labelColor={theme.cards.tagLabelForeground}
+                        />
                       ))}
                     </S.PillRow>
                   );

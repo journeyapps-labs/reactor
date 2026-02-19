@@ -74,7 +74,10 @@ theme.addThemeValues({
     cards: {
       background: '#26343a',
       foreground: '#d6e2e9',
-      border: '#4a626d'
+      border: '#4a626d',
+      tagBackground: '#716b62',
+      tagLabelBackground: 'rgba(0, 0, 0, 0.12)',
+      tagLabelForeground: 'rgba(245, 236, 226, 0.92)'
     },
     meta: {
       background: 'rgba(204,178,148,0.18)',

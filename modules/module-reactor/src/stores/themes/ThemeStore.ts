@@ -1,9 +1,9 @@
 import { AbstractStore } from '../AbstractStore';
 import * as _ from 'lodash';
 import { ColorDefinition, GetTheme, ThemeFragment } from './ThemeFragment';
-import { ProviderControl } from '../../settings/ProviderControl';
-import { ThemeProvider } from '../../providers/ThemeProvider';
+import { EntitySetting } from '../../settings/EntitySetting';
 import { EntityDefinition } from '../../entities/EntityDefinition';
+import { ReactorEntities } from '../../entities-reactor/ReactorEntities';
 
 export enum Themes {
   OXIDE = 'oxide',
@@ -16,17 +16,24 @@ export enum Themes {
   BUNNY = 'bunny'
 }
 
-export interface Theme {
+export class Theme {
   key: string;
   label: string;
   core: true;
   light: boolean;
+
+  constructor(theme: { key: string; label: string; core: true; light: boolean }) {
+    this.key = theme.key;
+    this.label = theme.label;
+    this.core = theme.core;
+    this.light = theme.light;
+  }
 }
 
 export class ThemeStore extends AbstractStore {
   protected themes: Map<string, Theme>;
   protected _fragments: Set<ThemeFragment>;
-  public selectedTheme: ProviderControl<Theme>;
+  public selectedTheme: EntitySetting<Theme>;
 
   constructor() {
     super({
@@ -34,58 +41,74 @@ export class ThemeStore extends AbstractStore {
     });
     this.themes = new Map();
     this._fragments = new Set();
-    this.registerTheme({
-      key: Themes.REACTOR,
-      label: 'Reactor',
-      core: true,
-      light: false
-    });
-    this.registerTheme({
-      key: Themes.REACTOR_DARK,
-      label: 'Reactor dark',
-      core: true,
-      light: false
-    });
-    this.registerTheme({
-      key: Themes.REACTOR_LIGHT,
-      label: 'Reactor Light',
-      core: true,
-      light: true
-    });
-    this.registerTheme({
-      key: Themes.OXIDE,
-      label: 'OXIDE',
-      core: true,
-      light: false
-    });
-    this.registerTheme({
-      key: Themes.JOURNEY,
-      label: 'JourneyApps',
-      core: true,
-      light: false
-    });
-    this.registerTheme({
-      key: Themes.SCARLET,
-      label: 'Scarlet',
-      core: true,
-      light: false
-    });
-    this.registerTheme({
-      key: Themes.HEXAGON,
-      label: 'Hexagon',
-      core: true,
-      light: false
-    });
-    this.registerTheme({
-      key: Themes.BUNNY,
-      label: 'Bunny',
-      core: true,
-      light: false
-    });
+    this.registerTheme(
+      new Theme({
+        key: Themes.REACTOR,
+        label: 'Reactor',
+        core: true,
+        light: false
+      })
+    );
+    this.registerTheme(
+      new Theme({
+        key: Themes.REACTOR_DARK,
+        label: 'Reactor dark',
+        core: true,
+        light: false
+      })
+    );
+    this.registerTheme(
+      new Theme({
+        key: Themes.REACTOR_LIGHT,
+        label: 'Reactor Light',
+        core: true,
+        light: true
+      })
+    );
+    this.registerTheme(
+      new Theme({
+        key: Themes.OXIDE,
+        label: 'OXIDE',
+        core: true,
+        light: false
+      })
+    );
+    this.registerTheme(
+      new Theme({
+        key: Themes.JOURNEY,
+        label: 'JourneyApps',
+        core: true,
+        light: false
+      })
+    );
+    this.registerTheme(
+      new Theme({
+        key: Themes.SCARLET,
+        label: 'Scarlet',
+        core: true,
+        light: false
+      })
+    );
+    this.registerTheme(
+      new Theme({
+        key: Themes.HEXAGON,
+        label: 'Hexagon',
+        core: true,
+        light: false
+      })
+    );
+    this.registerTheme(
+      new Theme({
+        key: Themes.BUNNY,
+        label: 'Bunny',
+        core: true,
+        light: false
+      })
+    );
 
     this.selectedTheme = this.addControl(
-      new ProviderControl<Theme>({
-        provider: new ThemeProvider(),
+      new EntitySetting<Theme>({
+        type: ReactorEntities.THEME,
         defaultEntity: this.themes.get(Themes.REACTOR),
         category: 'User',
         key: 'selected-theme',
@@ -100,6 +123,14 @@ export class ThemeStore extends AbstractStore {
 
   getThemes() {
     return Array.from(this.themes.values());
+  }
+
+  getThemeByKey(key: string): Theme {
+    return this.themes.get(key);
+  }
+
+  setSelectedTheme(theme: Theme) {
+    this.selectedTheme.setItem(theme);
   }
 
   registerTheme(theme: Theme) {

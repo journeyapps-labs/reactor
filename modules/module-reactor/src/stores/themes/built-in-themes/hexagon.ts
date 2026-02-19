@@ -67,7 +67,10 @@ theme.addThemeValues({
     cards: {
       background: 'rgba(58, 58, 60, 1)',
       foreground: 'white',
-      border: 'rgb(95 95 95)'
+      border: 'rgb(95 95 95)',
+      tagBackground: '#696a6c',
+      tagLabelBackground: 'rgba(0, 0, 0, 0.14)',
+      tagLabelForeground: 'rgba(255, 255, 255, 0.92)'
     },
     table: {
       ...DarkTheme.table,

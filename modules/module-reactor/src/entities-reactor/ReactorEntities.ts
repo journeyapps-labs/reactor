@@ -1,6 +1,7 @@
 export enum ReactorEntities {
   ACTION = 'action',
-  PANEL = 'panel'
+  PANEL = 'panel',
+  THEME = 'theme'
 }
 
 export enum ReactorEntityCategories {

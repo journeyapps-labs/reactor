@@ -61,7 +61,10 @@ export const Bunny = theme.addThemeValues({
     cards: {
       background: '#201834',
       foreground: '#e8ddff',
-      border: '#40305f'
+      border: '#40305f',
+      tagBackground: '#5f5378',
+      tagLabelBackground: 'rgba(0, 0, 0, 0.1)',
+      tagLabelForeground: 'rgba(242, 236, 255, 0.92)'
     },
     status: {
       cardBackground: '#1c162d',

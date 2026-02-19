@@ -80,7 +80,10 @@ theme.addThemeValues({
     cards: {
       background: '#f5f7fa',
       foreground: '#283445',
-      border: '#b2bdcb'
+      border: '#b2bdcb',
+      tagBackground: '#94a1b3',
+      tagLabelBackground: 'rgba(0, 0, 0, 0.16)',
+      tagLabelForeground: 'rgba(255, 255, 255, 0.95)'
     },
     status: {
       cardBackground: '#edf2f8',

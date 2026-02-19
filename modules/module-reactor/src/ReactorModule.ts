@@ -25,7 +25,6 @@ import { VisorStore } from './stores/visor/VisorStore';
 import { MediaEngine } from './media-engine/MediaEngine';
 import { ImageMediaType } from './media-engine/types/images/ImageMediaType';
 import { ActionShortcutHandler } from './actions/shortcuts/ActionShortcutHandler';
-import { ThemeProvider } from './providers/ThemeProvider';
 import { CopyPanelURLAction } from './actions/builtin-actions/CopyPanelURLAction';
 import { TabAction } from './actions/builtin-actions/TabAction';
 import { ExportWorkspaceAction } from './actions/builtin-actions/workspace/ExportWorkspaceAction';
@@ -54,6 +53,7 @@ import './stores/themes/built-in-themes/scarlet';
 import './stores/themes/built-in-themes/oxide';
 import './stores/themes/built-in-themes/bunny';
 import { PanelEntityDefinition } from './entities-reactor/panels/PanelEntityDefinition';
+import { ThemeEntityDefinition } from './entities-reactor/themes/ThemeEntityDefinition';
 import { AddPanelWorkspaceAction } from './actions/builtin-actions/workspace/AddPanelWorkspaceAction';
 import { DNDStore } from './stores/dnd/DNDStore';
 import { ReactorEntities } from './entities-reactor/ReactorEntities';
@@ -165,11 +165,11 @@ export class ReactorModule extends AbstractReactorModule {
 
     // providers (legacy)
     system.registerProvider(new WorkspaceProvider());
-    system.registerProvider(new ThemeProvider());
 
     // entity definitions (new)
     system.registerDefinition(new ActionEntityDefinition());
     system.registerDefinition(new PanelEntityDefinition());
+    system.registerDefinition(new ThemeEntityDefinition());
 
     // register panels
     workspaceStore.registerFactory(new SettingsPanelFactory());
