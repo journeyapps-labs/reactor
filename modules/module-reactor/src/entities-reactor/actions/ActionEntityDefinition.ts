@@ -119,7 +119,7 @@ export class ActionEntityDefinition extends EntityDefinition<Action> {
         legacyType: 'actions',
         label: 'Actions',
         getEntities: () => {
-          return this.system.getActions();
+          return this.actionStore.getActions();
         }
       })
     );

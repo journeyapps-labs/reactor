@@ -5,8 +5,7 @@ import { inject } from '../../../inversify.config';
 import { IndividualSettingsWidget } from '../IndividualSettingsWidget';
 import * as _ from 'lodash';
 import { observer } from 'mobx-react';
-import { ProviderControl } from '../../../settings/ProviderControl';
-import { CardContent, CardTop, CardWidget } from '../../../widgets/cards/CardWidget';
+import { CardWidget } from '../../../widgets/cards/CardWidget';
 import { styled } from '../../../stores/themes/reactor-theme-fragment';
 import { SearchablePanelWidget } from '../../../widgets/search/SearchablePanelWidget';
 import { EntityControl } from '../../../controls/EntityControl';
@@ -68,7 +67,6 @@ export class UserSettingsWidget<P extends {} = {}> extends React.Component<P> {
   sortControls(controls: ControlResult[]) {
     return _.chain(controls)
       .sortBy([(c) => c.control.options.name])
-      .sortBy([(c) => (c.control instanceof ProviderControl ? -1 : 1)])
       .sortBy([(c) => (c.control instanceof EntityControl ? -1 : 1)])
       .value();
   }

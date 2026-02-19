@@ -1,9 +1,9 @@
 import { ioc, inject } from '../../../inversify.config';
-import { System } from '../../../core/System';
 import React from 'react';
 import { ShortcutStore } from '../../../stores/shortcuts/ShortcutStore';
 import { Action, ActionEvent } from '../../Action';
 import { setupDeleteConfirmation } from '../../action-utils';
+import { ActionStore } from '../../../stores/actions/ActionStore';
 
 export class ResetShortcutsAction extends Action {
   @inject(ShortcutStore)
@@ -23,7 +23,7 @@ export class ResetShortcutsAction extends Action {
   }
 
   static get(): ResetShortcutsAction {
-    return ioc.get(System).getAction(ResetShortcutsAction.NAME);
+    return ioc.get(ActionStore).getAction(ResetShortcutsAction.NAME);
   }
 
   async fireEvent(event: ActionEvent): Promise<any> {

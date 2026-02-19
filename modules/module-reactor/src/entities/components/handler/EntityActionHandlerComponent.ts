@@ -1,6 +1,8 @@
 import { EntityHandlerComponent } from './EntityHandlerComponent';
 import { ComboBoxItem } from '../../../stores/combo/ComboBoxDirectives';
 import { EntityAction } from '../../../actions/parameterized/EntityAction';
+import { ioc } from '../../../inversify.config';
+import { ActionStore } from '../../../stores/actions/ActionStore';
 
 export class EntityActionHandlerComponent extends EntityHandlerComponent {
   constructor(protected actionID: string) {
@@ -12,7 +14,7 @@ export class EntityActionHandlerComponent extends EntityHandlerComponent {
   }
 
   protected getAction(): EntityAction {
-    return this.system.getActionByID<EntityAction>(this.actionID);
+    return ioc.get(ActionStore).getActionByID<EntityAction>(this.actionID);
   }
 
   openEntity(event) {

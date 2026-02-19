@@ -8,7 +8,6 @@ import {
 } from './selections/common';
 import { inject } from '../../inversify.config';
 import { System } from '../../core/System';
-import { ActionSource } from '../../actions/Action';
 import { BaseObserver } from '@journeyapps-labs/common-utils';
 
 export interface GuideWorkflowListener {
@@ -95,13 +94,6 @@ export class GuideWorkflow<
 
   exit() {
     this.end();
-    this.system.tracer.logAction({
-      source: ActionSource.GUIDE,
-      action_id: `${this.options.id}_EXITED_STEP_${this.currentStepIndex()}`,
-      start_timestamp: new Date().toISOString(),
-      end_timestamp: new Date().toISOString(),
-      success: true
-    });
   }
 
   complete() {
@@ -153,17 +145,6 @@ export class GuideWorkflow<
 
   registerStep(step: GuideStep) {
     step.setWorkflow(this);
-    step.registerListener({
-      completed: () => {
-        this.system.tracer.logAction({
-          source: ActionSource.GUIDE,
-          action_id: `${this.options.id}_STEP_${step.getIndexNumber()}`,
-          start_timestamp: new Date().toISOString(),
-          end_timestamp: new Date().toISOString(),
-          success: true
-        });
-      }
-    });
     this.steps.push(step);
   }
 }

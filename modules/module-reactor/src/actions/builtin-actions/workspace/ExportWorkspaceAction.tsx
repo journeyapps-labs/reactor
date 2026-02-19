@@ -1,10 +1,10 @@
 import { inject, ioc } from '../../../inversify.config';
 import { WorkspaceStore, IDEWorkspace } from '../../../stores/workspace/WorkspaceStore';
-import { System } from '../../../core/System';
 import React from 'react';
 import { DownloadWorkspaceIcon } from './ExportWorkspacesAction';
 import { EntityAction, EntityActionEvent } from '../../parameterized/EntityAction';
-import { WorkspaceProvider } from '../../../providers/WorkspaceProvider';
+import { ReactorEntities } from '../../../entities-reactor/ReactorEntities';
+import { ActionStore } from '../../../stores/actions/ActionStore';
 
 export class ExportWorkspaceAction extends EntityAction<IDEWorkspace> {
   static NAME = 'Export workspace';
@@ -15,12 +15,12 @@ export class ExportWorkspaceAction extends EntityAction<IDEWorkspace> {
       id: 'EXPORT_WORKSPACE',
       name: ExportWorkspaceAction.NAME,
       icon: 'upload',
-      target: WorkspaceProvider.NAME
+      target: ReactorEntities.WORKSPACE
     });
   }
 
   static get(): ExportWorkspaceAction {
-    return ioc.get(System).getAction(ExportWorkspaceAction.NAME);
+    return ioc.get(ActionStore).getAction(ExportWorkspaceAction.NAME);
   }
 
   async fireEvent(event: EntityActionEvent<IDEWorkspace>): Promise<any> {

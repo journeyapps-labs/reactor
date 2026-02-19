@@ -9,7 +9,6 @@ import {
   EntityInput,
   FileInput,
   GroupInput,
-  ProviderInput,
   ImageInput,
   MultiSelectInput,
   NumberInput,
@@ -152,17 +151,6 @@ export class DemoFormModel extends ColumnsFormModel {
         label: 'Linked todo',
         desc: 'Type: EntityInput',
         entityType: DemoEntities.TODO_ITEM,
-        value: null
-      }),
-      1
-    );
-
-    this.addInput(
-      new ProviderInput({
-        name: 'workspaceProvider',
-        label: 'Workspace provider',
-        desc: 'Type: ProviderInput',
-        entityType: 'workspace',
         value: null
       }),
       1

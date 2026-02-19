@@ -14,10 +14,12 @@ import { createRef } from 'react';
 import { AbstractStore, AbstractStoreListener } from '../AbstractStore';
 import { DialogStore } from '../DialogStore';
 import { parallelLimit } from 'async';
+import { ActionStore } from '../actions/ActionStore';
 
 export interface BatchStoreOptions {
   comboBoxStore: ComboBoxStore2;
   dialogStore: DialogStore;
+  actionStore: ActionStore;
   system: System;
   visorStore: VisorStore;
 }
@@ -88,7 +90,8 @@ export class BatchStore extends AbstractStore<any, BatchStoreListener> {
   }
 
   getBatchActionsForType(type: string): EntityAction[] {
-    return _.values(this.options2.system.actions)
+    return this.options2.actionStore
+      .getActions()
       .filter((a) => {
         return a instanceof EntityAction;
       })

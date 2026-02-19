@@ -1,5 +1,4 @@
 import './fonts';
-import { CMDPalletProviderSearchEngine } from './cmd-pallet/CMDPalletProviderSearchEngine';
 import { CMDPalletStore } from './stores/CMDPalletStore';
 import { ComboBoxStore } from './stores/combo/ComboBoxStore';
 import { keyType, ShortcutChord } from './stores/shortcuts/Shortcut';
@@ -17,7 +16,6 @@ import { ResetPreferencesAction } from './actions/builtin-actions/ResetPreferenc
 
 import { DialogStore } from './stores/DialogStore';
 import { CMDPalletPreferencesSearchEngine } from './cmd-pallet/CMDPalletPreferencesSearchEngine';
-import { WorkspaceProvider } from './providers/WorkspaceProvider';
 import { SwitchWorkspaceAction } from './actions/builtin-actions/SwitchWorkspaceAction';
 import { SettingsPanelFactory } from './panels/settings/SettingsPanelFactory';
 import { ResetWorkspacesAction } from './actions/builtin-actions/workspace/ResetWorkspacesAction';
@@ -40,7 +38,6 @@ import { ActionEntityDefinition } from './entities-reactor/actions/ActionEntityD
 import { ComboBoxStore2 } from './stores/combo2/ComboBoxStore2';
 import { BatchStore } from './stores/batch/BatchStore';
 import { EmptyPanelWorkspaceFactory } from './panels/empty/EmptyPanelWorkspaceFactory';
-import * as _ from 'lodash';
 import { ThemeStore } from './stores/themes/ThemeStore';
 import { theme } from './stores/themes/reactor-theme-fragment';
 
@@ -52,6 +49,7 @@ import './stores/themes/built-in-themes/light';
 import './stores/themes/built-in-themes/scarlet';
 import './stores/themes/built-in-themes/oxide';
 import './stores/themes/built-in-themes/bunny';
+
 import { PanelEntityDefinition } from './entities-reactor/panels/PanelEntityDefinition';
 import { ThemeEntityDefinition } from './entities-reactor/themes/ThemeEntityDefinition';
 import { AddPanelWorkspaceAction } from './actions/builtin-actions/workspace/AddPanelWorkspaceAction';
@@ -67,6 +65,8 @@ import { Container } from '@journeyapps-labs/common-ioc';
 import { DateFormatVisorMetadata } from './visor/DateFormatVisorMetadata';
 import { DateTimezoneVisorMetadata } from './visor/DateTimezoneVisorMetadata';
 import { DialogStore2 } from './stores/dialog2/DialogStore2';
+import { ActionStore } from './stores/actions/ActionStore';
+import { WorkspaceEntityDefinition } from './entities-reactor/workspaces/WorkspaceEntityDefinition';
 
 export class ReactorModule extends AbstractReactorModule {
   constructor() {
@@ -88,12 +88,19 @@ export class ReactorModule extends AbstractReactorModule {
   }
 
   register(ioc: Container) {
-    const system = new System();
-
-    ioc.bind(System).toConstantValue(system);
-
     const oldComboBoxStore = new ComboBoxStore();
     const comboBoxStore = new ComboBoxStore2();
+    const actionStore = new ActionStore({
+      comboBoxStore2: comboBoxStore
+    });
+    const system = new System({
+      actionStore: actionStore,
+      comboBoxStore2: comboBoxStore
+    });
+
+    ioc.bind(System).toConstantValue(system);
+    ioc.bind(ActionStore).toConstantValue(actionStore);
+
     const visorStore = new VisorStore();
     const workspaceStore = new WorkspaceStore();
     const keyboardStore = new KeyboardStore();
@@ -116,10 +123,10 @@ export class ReactorModule extends AbstractReactorModule {
     const batchStore = new BatchStore({
       visorStore: visorStore,
       system: system,
+      actionStore: actionStore,
       comboBoxStore: comboBoxStore,
       dialogStore: dialogStore
     });
-
     system.addStore(GuideStore, guideStore);
     system.addStore(WorkspaceStore, workspaceStore);
     system.addStore(PrefsStore, prefsStore);
@@ -143,33 +150,31 @@ export class ReactorModule extends AbstractReactorModule {
     ioc.bind(NotificationStore).toConstantValue(new NotificationStore());
     ioc.bind(LayerManager).toConstantValue(new LayerManager());
 
-    system.registerAction(new ChangeThemeAction());
-    system.registerAction(new ResetPreferencesAction());
-    system.registerAction(new ResetWorkspacesAction());
-    system.registerAction(new SwitchWorkspaceAction());
-    system.registerAction(new CopyPanelURLAction());
-    system.registerAction(new TabAction(true));
-    system.registerAction(new TabAction(false));
-    system.registerAction(new CreateWorkspaceAction());
-    system.registerAction(new CycleOpenTabsAction(true));
-    system.registerAction(new CycleOpenTabsAction(false));
+    actionStore.registerAction(new ChangeThemeAction());
+    actionStore.registerAction(new ResetPreferencesAction());
+    actionStore.registerAction(new ResetWorkspacesAction());
+    actionStore.registerAction(new SwitchWorkspaceAction());
+    actionStore.registerAction(new CopyPanelURLAction());
+    actionStore.registerAction(new TabAction(true));
+    actionStore.registerAction(new TabAction(false));
+    actionStore.registerAction(new CreateWorkspaceAction());
+    actionStore.registerAction(new CycleOpenTabsAction(true));
+    actionStore.registerAction(new CycleOpenTabsAction(false));
 
     // exports
-    system.registerAction(new ExportWorkspaceAction());
-    system.registerAction(new ExportWorkspacesAction());
-    system.registerAction(new ImportWorkspaceAction());
-    system.registerAction(new ExportShortcutsAction());
-    system.registerAction(new ImportShortcutsAction());
-    system.registerAction(new ResetShortcutsAction());
-    system.registerAction(new AddPanelWorkspaceAction());
-
-    // providers (legacy)
-    system.registerProvider(new WorkspaceProvider());
+    actionStore.registerAction(new ExportWorkspaceAction());
+    actionStore.registerAction(new ExportWorkspacesAction());
+    actionStore.registerAction(new ImportWorkspaceAction());
+    actionStore.registerAction(new ExportShortcutsAction());
+    actionStore.registerAction(new ImportShortcutsAction());
+    actionStore.registerAction(new ResetShortcutsAction());
+    actionStore.registerAction(new AddPanelWorkspaceAction());
 
     // entity definitions (new)
     system.registerDefinition(new ActionEntityDefinition());
     system.registerDefinition(new PanelEntityDefinition());
     system.registerDefinition(new ThemeEntityDefinition());
+    system.registerDefinition(new WorkspaceEntityDefinition());
 
     // register panels
     workspaceStore.registerFactory(new SettingsPanelFactory());
@@ -272,20 +277,6 @@ export class ReactorModule extends AbstractReactorModule {
     // phase 3: initialize preferences before URL hydration to avoid partial state races
     await prefsStore.init();
     await workspaceStore.hydratePanelFromURL();
-
-    // register all the providers as search engines for the command pallet
-    _.forEach(ioc.get(System).providers, (provider) => {
-      // not all providers are search engine compatible
-      if (!provider.options.cmdPallet) {
-        return;
-      }
-      cmdPaletteStore.registerSearchEngine(
-        new CMDPalletProviderSearchEngine({
-          provider: provider,
-          themeStore: themeStore
-        })
-      );
-    });
 
     // register entity definition search engines
     system.getEntityDefinitions().forEach((def) => {

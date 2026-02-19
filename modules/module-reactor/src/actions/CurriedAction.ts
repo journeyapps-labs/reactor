@@ -1,5 +1,5 @@
 import { ParameterizedAction, ParameterizedActionEvent } from './parameterized/ParameterizedAction';
-import { SystemInterface } from '../core/SystemInterface';
+import { ActionStore } from '../stores/actions/ActionStore';
 
 export interface CurriedActionOptions {
   entities?: { [key: string]: any };
@@ -19,8 +19,9 @@ export class CurriedAction extends ParameterizedAction {
     this.params = options.params;
   }
 
-  setApplication(app: SystemInterface) {
-    this.action.setApplication(app);
+  setActionStore(app: ActionStore) {
+    super.setActionStore(app);
+    this.action.setActionStore(app);
   }
 
   protected fireEvent(event: ParameterizedActionEvent): Promise<any> {

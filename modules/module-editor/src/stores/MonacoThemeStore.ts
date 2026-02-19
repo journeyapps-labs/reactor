@@ -1,17 +1,17 @@
 import { COUPLED_IDE_THEMES, DARK_THEME, normalizeVSCodeTheme, VSIXTheme } from '../theme/theme-utils';
 import {
   AbstractStore,
+  EntitySetting,
+  EntitySettingOptions,
   ioc,
-  ProviderControl,
-  ProviderControlOptions,
   Themes,
   ThemeStore
 } from '@journeyapps-labs/reactor-mod';
 import * as _ from 'lodash';
 import * as monaco from 'monaco-editor';
-import { EditorThemeProvider } from '../providers/EditorThemeProvider';
 import { StoredThemesSettings } from '../settings/StoredThemesSettings';
 import * as uuid from 'uuid';
+import { EditorThemeEntityDefinition } from '../entities/EditorThemeEntityDefinition';
 
 export interface EditorTheme {
   label: string;
@@ -21,10 +21,10 @@ export interface EditorTheme {
   compatibility: boolean;
 }
 
-export class EditorThemeControl extends ProviderControl<EditorTheme> {
+export class EditorThemeControl extends EntitySetting<EditorTheme> {
   store: MonacoThemeStore;
 
-  constructor(options: ProviderControlOptions<EditorTheme>, store: MonacoThemeStore) {
+  constructor(options: EntitySettingOptions<EditorTheme>, store: MonacoThemeStore) {
     super(options);
     this.store = store;
   }
@@ -37,7 +37,7 @@ export class EditorThemeControl extends ProviderControl<EditorTheme> {
 }
 
 export class MonacoThemeStore extends AbstractStore {
-  selectedTheme: ProviderControl<EditorTheme>;
+  selectedTheme: EntitySetting<EditorTheme>;
   storedThemes: StoredThemesSettings;
   additionalThemes: Map<string, string>;
 
@@ -49,7 +49,7 @@ export class MonacoThemeStore extends AbstractStore {
     this.selectedTheme = this.addControl(
       new EditorThemeControl(
         {
-          provider: new EditorThemeProvider(this),
+          type: EditorThemeEntityDefinition.TYPE,
           defaultEntity: this.getSystemThemes()[Themes.REACTOR],
           category: 'User',
           key: 'selected-editor-theme',

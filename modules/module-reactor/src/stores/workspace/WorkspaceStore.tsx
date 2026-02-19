@@ -27,7 +27,6 @@ import { SimpleLayoutEngine } from './layout-engines/SimpleLayoutEngine';
 import { ReactorTrayModel } from './react-workspaces/ReactorTrayFactory';
 import { WorkspaceTrayMode } from '@projectstorm/react-workspaces-model-tray';
 import { LocalStorageSerializer } from '../serializers/LocalStorageSerializer';
-import { EmptyReactorPanelModel } from '../../panels/empty/EmptyReactorPanelModel';
 
 export interface WorkspacePrefsSerialized {
   type: 'workspaces';
@@ -364,7 +363,10 @@ export class WorkspaceStore extends AbstractStore<WorkspacePrefsSerialized, Work
     // Keep Reactor usable by bootstrapping a minimal empty workspace.
     if (this.workspaces.length === 0) {
       const model = this.generateRootModel();
-      model.addModel(new EmptyReactorPanelModel());
+      const emptyPanel = this.engine.getFactory('empty')?.generateModel();
+      if (emptyPanel) {
+        model.addModel(emptyPanel);
+      }
       this.registerWorkspaces({
         name: 'Default',
         model

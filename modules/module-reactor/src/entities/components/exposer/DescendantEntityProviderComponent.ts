@@ -8,6 +8,7 @@ import { SimpleComboBoxDirective } from '../../../stores/combo2/directives/simpl
 import { AbstractEntityTreePresenterContext } from '../presenter/types/tree/presenter-contexts/AbstractEntityTreePresenterContext';
 import { Action } from '../../../actions/Action';
 import { EntityAction } from '../../../actions/parameterized/EntityAction';
+import { ActionStore } from '../../../stores/actions/ActionStore';
 
 export type CategoryInfo = Omit<TreeWidgetProps, 'forwardRef' | 'children' | 'rightClick'> & { sortKey?: string };
 
@@ -33,6 +34,9 @@ export class DescendantEntityProviderComponent<Parent = any, Descendant = any> e
   @inject(ComboBoxStore2)
   accessor comboBoxStore: ComboBoxStore2;
 
+  @inject(ActionStore)
+  accessor actionStore: ActionStore;
+
   cache: Map<AbstractEntityTreePresenterContext<Descendant>, ReactorTreeNode>;
 
   constructor(protected options: DescendantEntityProviderComponentOptions<Parent, Descendant>) {
@@ -56,7 +60,7 @@ export class DescendantEntityProviderComponent<Parent = any, Descendant = any> e
         return {
           ...categoryInfo,
           rightClick: (e) => {
-            const actions = this.system
+            const actions = this.actionStore
               .getActions()
               .filter((a) => {
                 if (a.options.category?.entityType === this.options.descendantType) {

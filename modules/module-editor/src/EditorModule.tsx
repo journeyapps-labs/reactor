@@ -1,4 +1,5 @@
 import {
+  ActionStore,
   AbstractReactorModule,
   CMDPalletStore,
   PrefsStore,
@@ -14,12 +15,12 @@ import { MonacoCommandPalletSearchEngine } from './MonacoCommandPalletSearchEngi
 import * as React from 'react';
 import { MonacoThemeStore } from './stores/MonacoThemeStore';
 import { ChangeEditorThemeAction } from './actions/ChangeEditorThemeAction';
-import { EditorThemeProvider } from './providers/EditorThemeProvider';
 import { SmartEditorThemePreferencesWidget } from './theme/SmartEditorThemePreferencesWidget';
 import { patchThemeService } from './theme/patchThemeService';
 import { EnableVimSetting } from './settings/VimSupportSetting';
 import { theme } from './theme-reactor/editor-theme-fragment';
 import { MonacoKeybindingStore } from './stores/keybindings/MonacoKeybindingStore';
+import { EditorThemeEntityDefinition } from './entities/EditorThemeEntityDefinition';
 
 export class EditorModule extends AbstractReactorModule {
   constructor() {
@@ -68,8 +69,8 @@ export class EditorModule extends AbstractReactorModule {
       }
     });
     prefsStore.registerPreference(new EnableVimSetting());
-    system.registerAction(new ChangeEditorThemeAction());
-    system.registerProvider(new EditorThemeProvider(monacoThemeStore));
+    ioc.get(ActionStore).registerAction(new ChangeEditorThemeAction());
+    system.registerDefinition(new EditorThemeEntityDefinition());
 
     // changing an IDE theme should change the corresponding editor theme
     const selectedTheme = themeStore.selectedTheme;

@@ -34,6 +34,7 @@ export * from './shortcuts/MonacoShortcutHandler';
 export * from './shortcuts/MonacoShortcut';
 export * from './stores/MonacoStore';
 export * from './stores/MonacoThemeStore';
+export * from './entities/EditorThemeEntityDefinition';
 export * from './EditorModule';
 export * from './theme-reactor/editor-theme-fragment';
 export * from './utils/paths';

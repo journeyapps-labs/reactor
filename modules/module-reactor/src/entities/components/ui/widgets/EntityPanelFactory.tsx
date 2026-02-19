@@ -22,6 +22,7 @@ import { Btn } from '../../../../definitions/common';
 import { System } from '../../../../core/System';
 import * as _ from 'lodash';
 import { AbstractPresenterContext } from '../../presenter/AbstractPresenterContext';
+import { ActionStore } from '../../../../stores/actions/ActionStore';
 
 export interface EntityPanelModelListener<T extends any = any> extends WorkspaceModelListener, SelectEntityListener<T> {
   contextGenerated: (context: AbstractPresenterContext<T>) => any;
@@ -136,6 +137,9 @@ export class EntityPanelFactory<T> extends ReactorPanelFactory<EntityPanelModel<
   @inject(System)
   accessor system: System;
 
+  @inject(ActionStore)
+  accessor actionStore: ActionStore;
+
   constructor(public component: EntityPanelComponent) {
     super({
       type: component.generateFactoryType(),
@@ -156,7 +160,9 @@ export class EntityPanelFactory<T> extends ReactorPanelFactory<EntityPanelModel<
   getAdditionalButtons(event: RenderTitleBarEvent<EntityPanelModel<T>>): Btn[] {
     return [
       ...super.getAdditionalButtons(event),
-      ...this.component.additionalActions.map((a) => this.system.getActionByID(a).representAsControl().representAsBtn())
+      ...this.component.additionalActions.map((a) =>
+        this.actionStore.getActionByID(a).representAsControl().representAsBtn()
+      )
     ];
   }
 

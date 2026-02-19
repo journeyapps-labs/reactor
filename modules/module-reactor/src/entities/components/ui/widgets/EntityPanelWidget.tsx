@@ -12,6 +12,7 @@ import { SimpleComboBoxDirective } from '../../../../stores/combo2/directives/si
 import { BatchStore } from '../../../../stores/batch/BatchStore';
 import { autorun } from 'mobx';
 import { useForceUpdate } from '../../../../hooks/useForceUpdate';
+import { ActionStore } from '../../../../stores/actions/ActionStore';
 
 export interface EntityPanelWidgetProps {
   model: EntityPanelModel;
@@ -21,6 +22,7 @@ export const EntityPanelWidget: React.FC<EntityPanelWidgetProps> = observer((pro
   const system = ioc.get(System);
   const comboBoxStore = ioc.get(ComboBoxStore2);
   const batchStore = ioc.get(BatchStore);
+  const actionStore = ioc.get(ActionStore);
   const forceUpdate = useForceUpdate();
 
   const { model } = props;
@@ -64,7 +66,7 @@ export const EntityPanelWidget: React.FC<EntityPanelWidgetProps> = observer((pro
               e.preventDefault();
 
               // 1) get actions based on the category
-              let actions = system
+              let actions = actionStore
                 .getActions()
                 .filter((a) => a.options.category?.entityType === props.model.definition.type)
                 .concat();
@@ -75,7 +77,7 @@ export const EntityPanelWidget: React.FC<EntityPanelWidgetProps> = observer((pro
                   .filter((a) => {
                     return !actions.find((existing) => existing.id == a);
                   })
-                  .map((a) => system.getActionByID(a))
+                  .map((a) => actionStore.getActionByID(a))
               );
 
               comboBoxStore.show(

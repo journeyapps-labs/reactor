@@ -4,7 +4,7 @@ import { WorkspaceStore } from '../../../stores/workspace/WorkspaceStore';
 import { themed } from '../../../stores/themes/reactor-theme-fragment';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { Action, ActionEvent } from '../../Action';
-import { System } from '../../../core/System';
+import { ActionStore } from '../../../stores/actions/ActionStore';
 
 namespace S {
   export const Download = themed.a`
@@ -52,7 +52,7 @@ export class ExportWorkspacesAction extends Action {
   }
 
   static get(): ExportWorkspacesAction {
-    return ioc.get(System).getAction(ExportWorkspacesAction.NAME);
+    return ioc.get(ActionStore).getAction(ExportWorkspacesAction.NAME);
   }
 
   async fireEvent(event: ActionEvent): Promise<any> {

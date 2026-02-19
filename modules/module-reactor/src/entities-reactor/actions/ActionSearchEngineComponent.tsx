@@ -20,15 +20,19 @@ import { EntitySearchResultEntry } from '../../entities/components/search/Entity
 import { styled } from '../../stores/themes/reactor-theme-fragment';
 import { ActionMetaWidget } from '../../actions/ActionMetaWidget';
 import { useMemo } from 'react';
+import { ActionStore } from '../../stores/actions/ActionStore';
 
 export class ActionSearchEngineComponent extends SimpleEntitySearchEngineComponent<Action> {
   constructor() {
     super({
       label: 'Default',
       getEntities: async () => {
-        return this.system.getActions().filter((action) => {
-          return action.validatePassively() !== PassiveActionValidationState.DISALLOWED;
-        });
+        return ioc
+          .get(ActionStore)
+          .getActions()
+          .filter((action) => {
+            return action.validatePassively() !== PassiveActionValidationState.DISALLOWED;
+          });
       }
     });
   }

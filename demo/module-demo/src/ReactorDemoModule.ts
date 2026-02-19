@@ -1,5 +1,12 @@
 import { Container } from '@journeyapps-labs/common-ioc';
-import { AbstractReactorModule, System, UXStore, VisorStore, WorkspaceStore } from '@journeyapps-labs/reactor-mod';
+import {
+  AbstractReactorModule,
+  ActionStore,
+  System,
+  UXStore,
+  VisorStore,
+  WorkspaceStore
+} from '@journeyapps-labs/reactor-mod';
 import { DemoBodyWidget } from './BodyWidget';
 import { setupWorkspaces } from './setupWorkspaces';
 import { TodoStore } from './stores/TodoStore';
@@ -30,11 +37,11 @@ export class ReactorDemoModule extends AbstractReactorModule {
 
     system.registerDefinition(new TodoDefinition());
 
-    system.registerAction(new CreateTodoAction());
-    system.registerAction(new DeleteTodoAction());
-    system.registerAction(new SetCurrentTodoItemAction());
-    system.registerAction(new AddSubTodoAction());
-    system.registerAction(new ShowDemoFormAction());
+    ioc.get(ActionStore).registerAction(new CreateTodoAction());
+    ioc.get(ActionStore).registerAction(new DeleteTodoAction());
+    ioc.get(ActionStore).registerAction(new SetCurrentTodoItemAction());
+    ioc.get(ActionStore).registerAction(new AddSubTodoAction());
+    ioc.get(ActionStore).registerAction(new ShowDemoFormAction());
     workspaceStore.registerFactory(new DemoFormsDialogsPanelFactory());
     workspaceStore.registerFactory(new DemoEditorsPanelFactory());
 

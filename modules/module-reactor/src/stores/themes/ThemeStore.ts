@@ -172,10 +172,12 @@ export class ThemeStore extends AbstractStore {
   );
 
   getCurrentEntityTheme(entity: EntityDefinition) {
-    return this.getEntityOverrides(this.selectedTheme.entity.key, entity);
+    const selectedThemeKey = this.selectedTheme.entity.key;
+    return this.getEntityOverrides(selectedThemeKey, entity);
   }
 
   getCurrentTheme<T extends ThemeFragment>(fragment?: T): GetTheme<T> & { light: boolean } {
-    return this.getThemeValues(this.selectedTheme.entity.key);
+    const selectedThemeKey = this.selectedTheme.entity.key;
+    return this.getThemeValues(selectedThemeKey);
   }
 }

@@ -33,6 +33,7 @@ import {
 import { ProviderActionParameter } from '../actions/parameterized/params/ProviderActionParameter';
 import { DescendantEntityProviderComponent } from './components/exposer/DescendantEntityProviderComponent';
 import { ThemeStore } from '../stores/themes/ThemeStore';
+import { ActionStore } from '../stores/actions/ActionStore';
 
 export interface EntityDefinitionOptions {
   type: string;
@@ -57,6 +58,9 @@ export abstract class EntityDefinition<T extends any = any> {
 
   @inject(ThemeStore)
   accessor themeStore: ThemeStore;
+
+  @inject(ActionStore)
+  accessor actionStore: ActionStore;
 
   private describers: EntityDescriberBank<T>;
   private docsComponents: ComponentBank<EntityDocsComponent<T>>;
@@ -276,11 +280,11 @@ export abstract class EntityDefinition<T extends any = any> {
 
   getActionsForEntity(entity: T): Action[] {
     return [
-      ...this.system.getActionsForEntityDecoded({
+      ...this.actionStore.getActionsForEntityDecoded({
         type: this.type,
         entity: entity
       }),
-      ...this.additionalActionIds.map((id) => this.system.getActionByID(id))
+      ...this.additionalActionIds.map((id) => this.actionStore.getActionByID(id))
     ].filter((a) => this.isActionAllowedForEntity(a, entity));
   }
 
