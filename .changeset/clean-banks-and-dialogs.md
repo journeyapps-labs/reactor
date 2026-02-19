@@ -1,8 +1,9 @@
 ---
-"@journeyapps-labs/reactor-mod": minor
+"@journeyapps-labs/reactor-mod": major
+"@journeyapps-labs/reactor-mod-editor": major
 ---
 
-Modernized entity definition internals and improved dialog/form behavior.
+Modernized core entity/action internals and removed deprecated provider + legacy DnD surfaces.
 
 - Added and expanded entity card presentation support, including richer describer-driven metadata rendering (`tags`, structured `labels`, and icon usage in cards).
 - Extended the describer API surface:
@@ -29,3 +30,10 @@ Modernized entity definition internals and improved dialog/form behavior.
 - Refined built-in theme card borders across Reactor/Scarlet/Oxide/Journey and improved Reactor Light hierarchy/contrast balance for clearer panel/tray/header boundaries.
 - Overhauled the Reactor Light theme palette to be easier on the eyes while improving structural clarity (surfaces, separators, metadata readability, and card/tag presentation).
 - Fixed a tree-search clear regression where stale text matches could persist until hover, by ensuring tree leaf/node widgets perform a post-listener-registration refresh.
+
+Breaking/migration notes:
+
+- Removed deprecated provider-based flows from core/editor paths and migrated key selections to entity definitions (`Workspace`, `EditorTheme`).
+- `System` is no longer the action access surface in active code paths; action lookup/registration now goes through `ActionStore`.
+- Migrated remaining legacy drag/drop integrations in active widget paths to `dnd3` hooks (`useDraggableEntity` / `useDraggableRaw`), and removed old `dnd`/`dnd2` usage from migrated surfaces.
+- Updated built-in and demo/editor module wiring to register and resolve actions through `ActionStore` instead of legacy `System` action helpers.

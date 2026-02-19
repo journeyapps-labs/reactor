@@ -8,6 +8,7 @@ import { EntityActionHandlerComponent } from '../../entities/components/handler/
 import { SwitchWorkspaceAction } from '../../actions/builtin-actions/SwitchWorkspaceAction';
 import { ReactorRootWorkspaceModel } from '../../stores/workspace/react-workspaces/ReactorRootWorkspaceModel';
 import { inject } from '../../inversify.config';
+import { EntityPanelComponent } from '../../entities/components/ui/EntityPanelComponent';
 
 interface EncodedWorkspace {
   id: string;
@@ -59,6 +60,14 @@ export class WorkspaceEntityDefinition extends EntityDefinition<IDEWorkspace> {
     );
 
     this.registerComponent(new EntityActionHandlerComponent(SwitchWorkspaceAction.ID));
+    this.registerComponent(
+      new EntityPanelComponent<IDEWorkspace>({
+        label: 'Workspaces',
+        getEntities: () => {
+          return this.workspaceStore.workspaces;
+        }
+      })
+    );
   }
 
   getEntityUID(entity: IDEWorkspace): string {

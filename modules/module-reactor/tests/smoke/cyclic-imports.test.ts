@@ -8,7 +8,8 @@ describe('Cyclic import smoke tests', () => {
     (globalThis as any).process = (globalThis as any).process || { env: {} };
   });
 
-  it('loads the dist-module bundle without TDZ runtime errors', async () => {
+  it('loads the reactor bundle and reports module load', async () => {
     await expect(import('../../dist-module/bundle.js')).resolves.toBeDefined();
+    expect((window as any).reactorModuleLoaded).toHaveBeenCalledWith('module-reactor');
   }, 15000);
 });

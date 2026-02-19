@@ -1,9 +1,9 @@
 ---
-"@journeyapps-labs/reactor-mod": minor
-"@journeyapps-labs/reactor-mod-editor": patch
+"@journeyapps-labs/reactor-mod": major
+"@journeyapps-labs/reactor-mod-editor": major
 ---
 
-Expanded and refined built-in theming across Reactor and Editor modules.
+Expanded built-in theming and completed major editor/core migration off deprecated systems.
 
 - Added a new built-in core theme: `Bunny` (purple-forward), including registration, module wiring, and exports.
 - Refined core dark-theme polish for `Reactor` and `JourneyApps` to improve surface hierarchy, readability, card/table integration, and accent consistency.
@@ -17,3 +17,9 @@ Expanded and refined built-in theming across Reactor and Editor modules.
 - Reduced divider/separator intensity on key cards and settings surfaces so section boundaries read clearly without overpowering content.
 - Added safer theme-fragment resolution fallback logic to avoid hard runtime failures when a fragment lacks a requested theme key.
 - Added editor theme coupling for `Bunny` and guarded editor theme sync paths to avoid undefined selection/serialization regressions.
+- Updated action retrieval helpers in editor/demo/core touchpoints to use `ActionStore` directly.
+
+Breaking/migration notes:
+
+- Replaced editor theme provider workflow with entity-definition workflow (`EditorThemeEntityDefinition`) and migrated editor theme selection setting from `ProviderControl` to `EntitySetting`.
+- Removed legacy `EditorThemeProvider` usage and registration in editor module bootstrap.
