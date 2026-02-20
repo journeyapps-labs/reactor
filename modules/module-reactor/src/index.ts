@@ -193,5 +193,6 @@ export * from './entities/components/ui/widgets/EntityPanelFactory';
 export * from './entities/components/ui/widgets/EntityPanelWidget';
 export * from './entities/EntityDefinition';
 export * from './entities/EntityDefinitionComponent';
+export * from './entities/EntityDefinitionError';
 
 export default ReactorModule;

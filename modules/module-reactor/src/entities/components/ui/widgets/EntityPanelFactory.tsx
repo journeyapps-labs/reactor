@@ -23,6 +23,7 @@ import { System } from '../../../../core/System';
 import * as _ from 'lodash';
 import { AbstractPresenterContext } from '../../presenter/AbstractPresenterContext';
 import { ActionStore } from '../../../../stores/actions/ActionStore';
+import { EntityDefinitionError } from '../../../EntityDefinitionError';
 
 export interface EntityPanelModelListener<T extends any = any> extends WorkspaceModelListener, SelectEntityListener<T> {
   contextGenerated: (context: AbstractPresenterContext<T>) => any;
@@ -63,6 +64,18 @@ export class EntityPanelModel<T extends any = any> extends ReactorPanelModel<Ent
 
   getPresenter(): EntityPresenterComponent<T> {
     let presenters = this.factory.component.definition.getPresenters();
+    if (presenters.length === 0) {
+      throw new EntityDefinitionError({
+        definition: this.factory.component.definition,
+        message:
+          `Entity panel "${this.factory.type}" cannot be created because definition ` +
+          `"${this.factory.component.definition.type}" has no presenters registered.`,
+        context: {
+          panelType: this.factory.type,
+          requestedPresenterKey: this.presenter
+        }
+      });
+    }
     let found = presenters.find((p) => {
       return p.label === this.presenter;
     });
