@@ -11,7 +11,7 @@ import * as _ from 'lodash';
 import * as monaco from 'monaco-editor';
 import { StoredThemesSettings } from '../settings/StoredThemesSettings';
 import * as uuid from 'uuid';
-import { EditorThemeEntityDefinition } from '../entities/EditorThemeEntityDefinition';
+import { EditorEntities } from '../entities/EditorEntities';
 
 export interface EditorTheme {
   label: string;
@@ -49,7 +49,7 @@ export class MonacoThemeStore extends AbstractStore {
     this.selectedTheme = this.addControl(
       new EditorThemeControl(
         {
-          type: EditorThemeEntityDefinition.TYPE,
+          type: EditorEntities.THEME,
           defaultEntity: this.getSystemThemes()[Themes.REACTOR],
           category: 'User',
           key: 'selected-editor-theme',

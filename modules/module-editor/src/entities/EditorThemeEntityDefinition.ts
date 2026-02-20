@@ -3,22 +3,20 @@ import {
   EntityActionHandlerComponent,
   EntityDescriberComponent,
   InlineEntityEncoderComponent,
-  inject,
+  ioc,
   ReactorEntityCategories,
   SimpleEntitySearchEngineComponent
 } from '@journeyapps-labs/reactor-mod';
 import { ChangeEditorThemeAction } from '../actions/ChangeEditorThemeAction';
 import { EditorTheme, MonacoThemeStore } from '../stores/MonacoThemeStore';
+import { EditorEntities } from './EditorEntities';
 
 interface EncodedEditorTheme {
   themeID: string;
 }
 
 export class EditorThemeEntityDefinition extends EntityDefinition<EditorTheme> {
-  static TYPE = 'editor-theme';
-
-  @inject(MonacoThemeStore)
-  accessor monacoThemeStore: MonacoThemeStore;
+  static TYPE = EditorEntities.THEME;
 
   constructor() {
     super({
@@ -49,7 +47,7 @@ export class EditorThemeEntityDefinition extends EntityDefinition<EditorTheme> {
           };
         },
         decode: async (entity) => {
-          return this.monacoThemeStore.getTheme(entity.themeID);
+          return ioc.get(MonacoThemeStore).getTheme(entity.themeID);
         }
       })
     );
@@ -58,7 +56,7 @@ export class EditorThemeEntityDefinition extends EntityDefinition<EditorTheme> {
       new SimpleEntitySearchEngineComponent<EditorTheme>({
         label: 'Editor themes',
         getEntities: async () => {
-          return Object.values(this.monacoThemeStore.getThemes());
+          return Object.values(ioc.get(MonacoThemeStore).getThemes());
         }
       })
     );
