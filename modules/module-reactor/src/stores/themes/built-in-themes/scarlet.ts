@@ -132,7 +132,8 @@ export const Scarlet = theme.addThemeValues({
     },
     floating: {
       background: 'rgba(20,24,29,0.8)',
-      backgroundInactive: 'rgba(25,30,37,0.45)'
+      backgroundInactive: 'rgba(25,30,37,0.45)',
+      border: 'rgba(255, 74, 166, 0.28)'
     }
   }
 });

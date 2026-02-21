@@ -23,10 +23,11 @@ theme.addThemeValues({
       titleBackground: 'rgba(58, 58, 60, 1)',
       searchBackground: 'rgba(28, 28, 30, 1)',
       searchForeground: 'rgba(174, 174, 178, 1)',
-      tabForeground: 'rgba(174, 174, 178, 1)',
+      tabForeground: 'rgba(174, 174, 178, 0.62)',
       tabForegroundSelected: 'white',
       tabBackgroundSelected: 'rgba(28, 28, 30, 1)',
       itemIconColorSelected: 'rgb(0,192,255)',
+      trayButton: 'rgba(0, 0, 0, 0.28)',
       trayButtonSelected: 'rgb(34 34 36)'
     },
     header: {
@@ -117,7 +118,8 @@ theme.addThemeValues({
     },
     floating: {
       background: 'rgba(0, 0, 0, 0.3)',
-      backgroundInactive: 'rgba(0, 0, 0, 0.5)'
+      backgroundInactive: 'rgba(0, 0, 0, 0.5)',
+      border: 'rgba(255, 143, 0, 0.32)'
     }
   }
 });

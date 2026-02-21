@@ -1,6 +1,6 @@
 {
   "type": "dark",
-  "inherit": false,
+  "inherit": true,
   "colors": {
     "foreground": "#475259",
     "focusBorder": "#31393f",

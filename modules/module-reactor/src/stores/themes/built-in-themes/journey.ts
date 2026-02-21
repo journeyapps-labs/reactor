@@ -126,6 +126,11 @@ theme.addThemeValues({
       background: '#33444c',
       backgroundSelected: '#3f545e',
       headerBackground: '#3f545e'
+    },
+    floating: {
+      background: 'rgba(41, 55, 63, 0.82)',
+      backgroundInactive: 'rgba(41, 55, 63, 0.58)',
+      border: 'rgba(111, 135, 146, 0.42)'
     }
   }
 });

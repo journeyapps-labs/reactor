@@ -170,7 +170,8 @@ export const DarkTheme = theme.addThemeValues({
     },
     floating: {
       background: 'rgba(20,24,29,0.8)',
-      backgroundInactive: 'rgba(25,30,37,0.45)'
+      backgroundInactive: 'rgba(25,30,37,0.45)',
+      border: 'rgba(184,204,231,0.22)'
     }
   }
 });

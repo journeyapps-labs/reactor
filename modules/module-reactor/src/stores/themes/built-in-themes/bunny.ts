@@ -152,7 +152,8 @@ export const Bunny = theme.addThemeValues({
     },
     floating: {
       background: 'rgba(32,24,54,0.86)',
-      backgroundInactive: 'rgba(32,24,54,0.55)'
+      backgroundInactive: 'rgba(32,24,54,0.55)',
+      border: 'rgba(197,161,255,0.35)'
     }
   }
 });

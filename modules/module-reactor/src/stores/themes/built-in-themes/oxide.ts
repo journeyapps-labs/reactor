@@ -114,7 +114,8 @@ theme.addThemeValues({
     },
     floating: {
       background: 'rgba(28, 28, 30, 0.8)',
-      backgroundInactive: 'rgba(28, 28, 30, 0.5)'
+      backgroundInactive: 'rgba(28, 28, 30, 0.5)',
+      border: 'rgba(255,255,255,0.2)'
     }
   }
 });

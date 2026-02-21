@@ -1,6 +1,6 @@
 {
 	"name": "Noctis Lilac",
-	"inherit": false,
+	"inherit": true,
 	"colors": {
 		"selection.background": "#b4adebbb",
 		"descriptionForeground": "#908ea4",

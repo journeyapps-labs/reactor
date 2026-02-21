@@ -235,7 +235,8 @@ export const theme = new ThemeFragment({
       label: 'Floating panels',
       colors: {
         background: 'Background color',
-        backgroundInactive: 'Background color when inactive'
+        backgroundInactive: 'Background color when inactive',
+        border: 'Border color'
       }
     }
   }

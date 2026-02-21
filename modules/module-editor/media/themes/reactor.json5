@@ -1,7 +1,7 @@
 {
   "name": "Material-Theme-Palenight",
   "semanticHighlighting": true,
-  "inherit": false,
+  "inherit": true,
   "tokenColors": [
     {
       "name": "Global settings",
