@@ -1,6 +1,7 @@
 import * as React from 'react';
 import { FormInput, FormInputGenerics, FormInputRenderOptions } from '../FormInput';
-import { ImageMedia, MediaEngine } from '../../media-engine';
+import { MediaEngine } from '../../media-engine/MediaEngine';
+import { ImageMedia } from '../../media-engine/types/images/ImageMedia';
 import { styled } from '../../stores/themes/reactor-theme-fragment';
 import { inject } from '../../inversify.config';
 import { UploadImagePreviewWidget } from '../../media-engine/types/images/UploadImagePreviewWidget';

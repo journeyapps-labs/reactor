@@ -4,7 +4,7 @@ import { ComboBoxStore } from '../../stores/combo/ComboBoxStore';
 import { inject } from '../../inversify.config';
 import { observer } from 'mobx-react';
 import { WorkspaceStore } from '../../stores/workspace/WorkspaceStore';
-import { DialogStore } from '../../stores';
+import { DialogStore } from '../../stores/DialogStore';
 import { AdvancedWorkspacePreference } from '../../preferences/AdvancedWorkspacePreference';
 import { TabSelectionKeyboardWidget } from '../tabs/TabSelectionKeyboardWidget';
 import { ResetWorkspacesAction } from '../../actions/builtin-actions/workspace/ResetWorkspacesAction';

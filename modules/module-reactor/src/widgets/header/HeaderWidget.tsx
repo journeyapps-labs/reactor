@@ -4,7 +4,7 @@ import * as _ from 'lodash';
 import { inject } from '../../inversify.config';
 import { observer } from 'mobx-react';
 import { PinnableZoneWidget } from './PinnableZoneWidget';
-import { CMDPalletStore } from '../../stores';
+import { CMDPalletStore } from '../../stores/CMDPalletStore';
 import { AdvancedWorkspacePreference } from '../../preferences/AdvancedWorkspacePreference';
 import { Btn } from '../../definitions/common';
 import { PanelButtonMode, PanelButtonWidget } from '../forms/PanelButtonWidget';

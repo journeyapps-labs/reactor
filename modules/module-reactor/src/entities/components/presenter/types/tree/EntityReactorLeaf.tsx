@@ -1,8 +1,9 @@
-import { CoreTreeWidgetProps, ReactorTreeLeaf } from '../../../../../widgets';
+import { CoreTreeWidgetProps } from '../../../../../widgets/core-tree/CoreTreeWidget';
+import { ReactorTreeLeaf } from '../../../../../widgets/core-tree/reactor-tree/ReactorTreeLeaf';
 import { ReactorEntityDnDWrapper } from './widgets/ReactorEntityDnDWrapperWidget';
 import { ReactorEntityWrapperWidget } from './widgets/ReactorEntityWrapperWidget';
 import React from 'react';
-import { EntityReactorNodeOptions } from './EntityReactorNode';
+import type { EntityReactorNodeOptions } from './EntityReactorNode';
 
 export class EntityReactorLeaf extends ReactorTreeLeaf {
   constructor(protected options2: EntityReactorNodeOptions) {

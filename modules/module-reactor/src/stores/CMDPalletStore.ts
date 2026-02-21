@@ -1,10 +1,10 @@
 import { CMDPalletSearchEngine } from '../cmd-pallet/CMDPalletSearchEngine';
 import { makeObservable, observable } from 'mobx';
 import { Action, ActionEvent } from '../actions/Action';
-import { ioc, inject } from '../inversify.config';
-import { System } from '../core/System';
+import { ioc } from '../inversify.config';
 import * as _ from 'lodash';
 import { keyType, ShortcutChord } from './shortcuts/Shortcut';
+import { ActionStore } from './actions/ActionStore';
 
 export interface CMDPalletSearchEngineCategory {
   engines: CMDPalletSearchEngine[];
@@ -43,9 +43,6 @@ export class CMDPalletStore {
   accessor show: string;
 
   static EVERYTHING = 'Everything';
-
-  @inject(System)
-  accessor system: System;
 
   constructor() {
     this.categories = {};
@@ -102,7 +99,7 @@ export class CMDPalletStore {
 
   init() {
     this.generateActions().forEach((action) => {
-      ioc.get(System).registerAction(action);
+      ioc.get(ActionStore).registerAction(action);
     });
   }
 }

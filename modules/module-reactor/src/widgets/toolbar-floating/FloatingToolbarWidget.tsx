@@ -27,6 +27,7 @@ namespace S {
   export const Container = themed.div<{ active: boolean }>`
       border-radius: 5px;
       background: ${(p) => p.theme.floating.background};
+      border: 1px solid ${(p) => p.theme.floating.border || 'rgba(255, 255, 255, 0.12)'};
       opacity: ${(p) => (p.active ? 1 : 0.5)};
       padding: 4px;
       user-select: none;

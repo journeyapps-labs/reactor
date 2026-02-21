@@ -1,6 +1,7 @@
 import * as React from 'react';
 import ReactMarkdown from 'react-markdown';
-import { FloatingPanelWidget, PanelButtonMode, PanelButtonWidget } from '../../../widgets';
+import { FloatingPanelWidget } from '../../../widgets/floating/FloatingPanelWidget';
+import { PanelButtonMode, PanelButtonWidget } from '../../../widgets/forms/PanelButtonWidget';
 import { GuideStep, GuideStepOptions } from './GuideStep';
 import { ReactorComponentSelections } from '../selections/common';
 import { Layer, LayerManager } from '../../layer/LayerManager';

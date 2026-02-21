@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { SearchEngine } from '../SearchEngine';
-import { SearchWidget } from '../../widgets';
+import { SearchWidget } from '../../widgets/search/SearchWidget';
 import { useSearchEngine } from './useSearchEngine';
 import { useEffect, useState } from 'react';
 import { SearchResult } from '@journeyapps-labs/lib-reactor-search';

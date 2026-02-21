@@ -1,7 +1,7 @@
 import { Action, ActionEvent } from '../../Action';
 import { inject, ioc } from '../../../inversify.config';
-import { System } from '../../../core/System';
 import { WorkspaceStore } from '../../../stores/workspace/WorkspaceStore';
+import { ActionStore } from '../../../stores/actions/ActionStore';
 
 export class ResetWorkspacesAction extends Action {
   static NAME = 'Reset workspaces';
@@ -15,7 +15,7 @@ export class ResetWorkspacesAction extends Action {
   }
 
   static get(): ResetWorkspacesAction {
-    return ioc.get(System).getAction(ResetWorkspacesAction.NAME);
+    return ioc.get(ActionStore).getAction(ResetWorkspacesAction.NAME);
   }
 
   protected async fireEvent(event: ActionEvent): Promise<any> {

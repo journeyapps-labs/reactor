@@ -1,7 +1,6 @@
 import { AbstractActionParameter, AbstractActionParameterOptions } from './AbstractActionParameter';
 import { System } from '../../../core/System';
 import { ioc } from '../../../inversify.config';
-import { Provider } from '../../../providers/Provider';
 import { RenderCalloutFunction } from '../../../stores/combo/ComboBoxDirectives';
 import { ParameterizedActionEvent } from '../ParameterizedAction';
 import { EntityDefinition } from '../../../entities/EntityDefinition';
@@ -16,31 +15,8 @@ export interface ProviderActionParameterOptions<T> extends AbstractActionParamet
 }
 
 export class ProviderActionParameter<T> extends AbstractActionParameter<ProviderActionParameterOptions<T>> {
-  /**
-   * @deprecated
-   */
-  getProvider(): Provider {
-    return ioc.get(System).getProvider(this.options.type);
-  }
-
   getDefinition(): EntityDefinition<T> {
     return ioc.get(System).getDefinition(this.options.type);
-  }
-
-  async getProviderEntity(event: ParameterizedActionEvent) {
-    const provider = this.getProvider();
-    let initialValue = null;
-    if (this.options.getInitialDecoded) {
-      initialValue = await this.options.getInitialDecoded(event);
-    }
-
-    return await provider.selectEntity({
-      event: event.position,
-      renderCallout: this.options.renderCallout,
-      initialValue: initialValue,
-      param: event.params?.[this.options.name],
-      filter: this.options.filter
-    });
   }
 
   async getValue(event: ParameterizedActionEvent): Promise<boolean> {
@@ -56,7 +32,7 @@ export class ProviderActionParameter<T> extends AbstractActionParameter<Provider
       return true;
     }
 
-    // fetch one from  the definition
+    // fetch one from the definition
     const def = this.getDefinition();
     if (def) {
       const selectedItem = await def.resolveOneEntity({
@@ -80,14 +56,6 @@ export class ProviderActionParameter<T> extends AbstractActionParameter<Provider
       return true;
     }
 
-    //!----------- LEGACY -----------
-
-    const target = await this.getProviderEntity(event);
-    if (!target) {
-      return false;
-    }
-    event.entities[this.options.name] = target;
-
-    return true;
+    return false;
   }
 }

@@ -1,5 +1,5 @@
 import { MouseEvent } from 'react';
-import { MousePosition } from '../widgets';
+import { MousePosition } from '../layers/combo/SmartPositionWidget';
 import * as _ from 'lodash';
 import { Btn } from '../definitions/common';
 import {

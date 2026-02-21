@@ -1,7 +1,7 @@
 import { ioc, inject } from '../../inversify.config';
 import { EntityAction, EntityActionEvent } from '../parameterized/EntityAction';
-import { System } from '../../core/System';
 import { Theme, ThemeStore } from '../../stores/themes/ThemeStore';
+import { ActionStore } from '../../stores/actions/ActionStore';
 
 export class ChangeThemeAction extends EntityAction<Theme> {
   static NAME = 'Change theme';
@@ -19,10 +19,10 @@ export class ChangeThemeAction extends EntityAction<Theme> {
   }
 
   async fireEvent(event: EntityActionEvent<Theme>): Promise<any> {
-    this.themeStore.selectedTheme.setItem(event.targetEntity);
+    this.themeStore.setSelectedTheme(event.targetEntity);
   }
 
   static get() {
-    return ioc.get(System).getAction<ChangeThemeAction>(ChangeThemeAction.NAME);
+    return ioc.get(ActionStore).getAction<ChangeThemeAction>(ChangeThemeAction.NAME);
   }
 }

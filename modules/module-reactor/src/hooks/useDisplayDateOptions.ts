@@ -1,4 +1,4 @@
-import { DateDisplayWidgetProps } from '../widgets';
+import { DateDisplayWidgetProps } from '../widgets/info/DateDisplayWidget';
 import { DateFormatPreference } from '../preferences/DateFormatPreference';
 import { useForceUpdate } from './useForceUpdate';
 import { useEffect } from 'react';

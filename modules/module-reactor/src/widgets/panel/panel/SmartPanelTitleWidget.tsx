@@ -9,7 +9,7 @@ import { AdvancedWorkspacePreference } from '../../../preferences/AdvancedWorksp
 import { ReactorIcon } from '../../icons/IconWidget';
 import { ReactorPanelFactory } from '../../../stores/workspace/react-workspaces/ReactorPanelFactory';
 import { ReactorPanelModel } from '../../../stores/workspace/react-workspaces/ReactorPanelModel';
-import { WorkspaceStore } from '../../../stores';
+import { WorkspaceStore } from '../../../stores/workspace/WorkspaceStore';
 import { ReactorWindowModel } from '../../../stores/workspace/react-workspaces/ReactorWindowFactory';
 import { System } from '../../../core/System';
 import { ReactorEntities } from '../../../entities-reactor/ReactorEntities';

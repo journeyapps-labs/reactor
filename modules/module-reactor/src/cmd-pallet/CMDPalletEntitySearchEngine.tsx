@@ -8,12 +8,12 @@ import {
   CommandPalletSearchResultEntry
 } from './CMDPalletSearchEngine';
 import {
-  ActionSource,
-  EntityDefinition,
   EntitySearchEngineComponent,
-  EntitySearchResultEntry,
-  useDraggableEntity
-} from '../index';
+  EntitySearchResultEntry
+} from '../entities/components/search/EntitySearchEngineComponent';
+import { EntityDefinition } from '../entities/EntityDefinition';
+import { ActionSource } from '../actions/Action';
+import { useDraggableEntity } from '../widgets/dnd3/entities/useDraggableEntity';
 import { SearchEvent } from '@journeyapps-labs/lib-reactor-search';
 import { CommandPalletEntryWidget } from '../layers/command-pallet/CommandPalletEntryWidget';
 

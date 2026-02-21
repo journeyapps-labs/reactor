@@ -1,5 +1,4 @@
 import { MousePosition } from '../layers/combo/SmartPositionWidget';
-import { System } from '../core/System';
 import { ReactorIcon } from '../widgets/icons/IconWidget';
 import { VisorStore } from '../stores/visor/VisorStore';
 import { inject } from '../inversify.config';
@@ -10,7 +9,6 @@ import { Btn } from '../definitions/common';
 import * as React from 'react';
 import { ShortcutChord } from '../stores/shortcuts/Shortcut';
 import { ComboBoxItem } from '../stores/combo/ComboBoxDirectives';
-import { SystemInterface } from '../core/SystemInterface';
 import * as _ from 'lodash';
 import { ActionValidatorContext } from './validators/ActionValidatorContext';
 import { ActionButtonControl, ActionButtonWidget, EventType } from '../controls/ActionButtonControl';
@@ -19,6 +17,11 @@ import { processCallbackWithValidation } from '../hooks/useValidator';
 import { BaseObserver } from '@journeyapps-labs/common-utils';
 import { Logger } from '@journeyapps-labs/common-logger';
 import { createLogger } from '../core/logging';
+import { ActionStore } from '../stores/actions/ActionStore';
+import { ActionSource } from './ActionSource';
+
+// @deprecated
+export { ActionSource } from './ActionSource';
 
 export interface SerializedAction {
   _action: string;
@@ -67,20 +70,6 @@ export interface ActionOptions {
   rollbackMechanic?: ActionRollbackMechanic;
 }
 
-export enum ActionSource {
-  COMMAND_PALLET = 'cmd-palette',
-  BUTTON = 'button',
-  TREE_LEAF = 'tree-leaf',
-  COMBO_BOX_CALLOUT = 'combo-box-callout',
-  RIGHT_CLICK = 'right-click',
-  ACTION = 'action-chain',
-  DND = 'dnd',
-  HOTKEY = 'hotkey',
-  NETWORK_EVENT = 'network-event',
-  VISOR = 'visor',
-  GUIDE = 'guide'
-}
-
 export interface ActionComboBoxItem<T extends Action = Action> extends ComboBoxItem {
   actionObject: T;
 }
@@ -111,7 +100,6 @@ export abstract class Action<
   L extends ActionListener<T['EVENT']> = ActionListener<T['EVENT']>
 > extends BaseObserver<L> {
   options: T['OPTIONS'];
-  application: SystemInterface;
 
   private singletonValidationContext: ActionValidatorContext;
   protected logger: Logger;
@@ -122,6 +110,8 @@ export abstract class Action<
   @inject(DialogStore)
   accessor dialogStore: DialogStore;
 
+  actionStore: ActionStore;
+
   constructor(options: T['OPTIONS']) {
     super();
     this.options = {
@@ -130,6 +120,10 @@ export abstract class Action<
     };
     this.logger = createLogger(options.name);
     this.singletonValidationContext = null;
+  }
+
+  setActionStore(store: ActionStore) {
+    this.actionStore = store;
   }
 
   get id() {
@@ -152,7 +146,7 @@ export abstract class Action<
 
   getExclusiveExecutionLock(event?: { allowed?: (e: Partial<T['EVENT']>) => boolean }): () => any {
     this.logger.debug('Getting exclusivity lock');
-    const listener = this.application.registerListener({
+    const listener = this.actionStore.registerListener({
       actionWillFire: async (globalEvent) => {
         // we allow some actions to fire
         if (globalEvent.action.options.exemptFromExclusiveExecutionLock) {
@@ -279,10 +273,6 @@ export abstract class Action<
     return 'Standard Action';
   }
 
-  setApplication(app: System) {
-    this.application = app;
-  }
-
   serialize(): SerializedAction {
     return {
       _action: this.options.name
@@ -356,21 +346,6 @@ export abstract class Action<
   }
 
   /**
-   * Runs the action, but with tracing
-   * // TODO this can actually be setup on the system
-   */
-  protected async _runActionInTrace(event: T['EVENT']) {
-    const trace = this.application.tracer.createActionTrace(event);
-    try {
-      const res = await this._runAction(event);
-      trace.end(true);
-      return res;
-    } catch (ex) {
-      trace.end(false);
-    }
-  }
-
-  /**
    * Runs at the end of the action
    */
   protected _postFlightChecks(event: T['EVENT'], result) {
@@ -392,7 +367,7 @@ export abstract class Action<
       return;
     }
     // 3. run!
-    const result = await this._runActionInTrace(modified_event);
+    const result = await this._runAction(modified_event);
 
     // 4. cleanup
     this._postFlightChecks(modified_event, result);

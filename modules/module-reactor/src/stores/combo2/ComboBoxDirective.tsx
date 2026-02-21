@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { MousePosition } from '../../widgets';
+import { MousePosition } from '../../layers/combo/SmartPositionWidget';
 import { ComboBoxItem } from '../combo/ComboBoxDirectives';
 import { Btn } from '../../definitions/common';
 import { BaseObserver } from '@journeyapps-labs/common-utils';
@@ -77,6 +77,10 @@ export abstract class ComboBoxDirective<
   setSearch(search: string) {
     this.search = search;
     this.iterateListeners((cb) => cb.searchChanged?.());
+  }
+
+  setParent(parent: any) {
+    // optional parent-aware behavior for specific directives
   }
 
   abstract getContent(): React.JSX.Element;

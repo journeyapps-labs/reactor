@@ -1,10 +1,12 @@
 import { IDEWorkspace, WorkspaceStore } from '../../stores/workspace/WorkspaceStore';
-import { WorkspaceProvider } from '../../providers/WorkspaceProvider';
 import { inject, ioc } from '../../inversify.config';
 import { EntityAction, EntityActionEvent } from '../parameterized/EntityAction';
-import { System } from '../../core/System';
+import { ReactorEntities } from '../../entities-reactor/ReactorEntities';
+import { ActionStore } from '../../stores/actions/ActionStore';
 
 export class SwitchWorkspaceAction extends EntityAction<IDEWorkspace> {
+  static ID = 'SWITCH_WORKSPACE';
+
   @inject(WorkspaceStore)
   accessor workspaceStore: WorkspaceStore;
 
@@ -12,15 +14,15 @@ export class SwitchWorkspaceAction extends EntityAction<IDEWorkspace> {
 
   constructor() {
     super({
-      id: 'SWITCH_WORKSPACE',
+      id: SwitchWorkspaceAction.ID,
       name: SwitchWorkspaceAction.NAME,
       icon: 'th-large',
-      target: WorkspaceProvider.NAME
+      target: ReactorEntities.WORKSPACE
     });
   }
 
   static get() {
-    return ioc.get(System).getAction<SwitchWorkspaceAction>(SwitchWorkspaceAction.NAME);
+    return ioc.get(ActionStore).getAction<SwitchWorkspaceAction>(SwitchWorkspaceAction.NAME);
   }
 
   protected async fireEvent(event: EntityActionEvent<IDEWorkspace>): Promise<any> {

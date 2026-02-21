@@ -2,8 +2,6 @@ import * as React from 'react';
 import styled from '@emotion/styled';
 import { PanelWidget } from '../../widgets/panel/panel/PanelWidget';
 import { WorkspaceCollectionModel, WorkspaceModelFactoryEvent } from '@projectstorm/react-workspaces-core';
-import { WorkspaceStore } from '../../stores/workspace/WorkspaceStore';
-import { inject } from '../../inversify.config';
 import { observer } from 'mobx-react';
 import { AdvancedWorkspacePreference } from '../../preferences/AdvancedWorkspacePreference';
 import * as _ from 'lodash';
@@ -12,7 +10,7 @@ import { PanelTitleWidget } from '../../widgets/panel/panel/title/PanelTitleWidg
 import { ReactorPanelModel } from '../../stores/workspace/react-workspaces/ReactorPanelModel';
 import { ReactorPanelFactory } from '../../stores/workspace/react-workspaces/ReactorPanelFactory';
 import { themed } from '../../stores/themes/reactor-theme-fragment';
-import { EntityPlaceholderWidget, ProviderPlaceholderWidget } from '../../widgets';
+import { EntityPlaceholderWidget } from '../../widgets/panel/panel/EntityPlaceholderWidget';
 import { ReactorEntities } from '../../entities-reactor/ReactorEntities';
 
 export interface EmptyWorkspacePanelProps {
@@ -48,9 +46,6 @@ namespace S {
 
 @observer
 export class EmptyWorkspacePanel extends React.Component<EmptyWorkspacePanelProps> {
-  @inject(WorkspaceStore)
-  accessor workspaceStore: WorkspaceStore;
-
   getSelector() {
     return (
       <S.Container>
@@ -72,11 +67,12 @@ export class EmptyWorkspacePanel extends React.Component<EmptyWorkspacePanelProp
   }
 
   getHint() {
-    const panels = this.workspaceStore
-      .flatten(this.workspaceStore.getRoot())
+    const rootModel = this.props.event.model.getRootModel();
+    const panels = rootModel
+      .flatten()
       .map((p) => {
         try {
-          const factory = this.workspaceStore.engine.getFactory(p);
+          const factory = this.props.event.engine.getFactory(p.type);
           if (factory instanceof ReactorPanelFactory && factory.generateEditorPanelSiblingSuggestion()) {
             return factory.generateEditorPanelSiblingSuggestion();
           }

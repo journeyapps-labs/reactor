@@ -1,4 +1,5 @@
-import { CoreTreeWidgetProps, ReactorTreeNode } from '../../../../../widgets';
+import { CoreTreeWidgetProps } from '../../../../../widgets/core-tree/CoreTreeWidget';
+import { ReactorTreeNode } from '../../../../../widgets/core-tree/reactor-tree/ReactorTreeNode';
 import * as React from 'react';
 import { EntityDefinition } from '../../../../EntityDefinition';
 import { ReactorEntityDnDWrapper } from './widgets/ReactorEntityDnDWrapperWidget';

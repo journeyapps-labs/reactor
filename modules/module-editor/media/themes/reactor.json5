@@ -1,6 +1,7 @@
 {
   "name": "Material-Theme-Palenight",
   "semanticHighlighting": true,
+  "inherit": true,
   "tokenColors": [
     {
       "name": "Global settings",
@@ -597,7 +598,7 @@
     "tab.inactiveModifiedBorder": "#904348",
     "tab.unfocusedActiveModifiedBorder": "#c05a60",
     "tab.unfocusedInactiveModifiedBorder": "#904348",
-    "editor.background": "#00000000",
+    "editor.background": "#1b212b",
     "editor.foreground": "#A6ACCD",
     "editorLineNumber.foreground": "#3A3F58",
     "editorLineNumber.activeForeground": "#676E95",

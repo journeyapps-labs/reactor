@@ -1,4 +1,4 @@
-import { EntityAction, EntityActionEvent, ioc, System } from '@journeyapps-labs/reactor-mod';
+import { ActionStore, EntityAction, EntityActionEvent, ioc } from '@journeyapps-labs/reactor-mod';
 import { TodoModel } from '../models/TodoModel';
 import { DemoEntities } from '../DemoEntities';
 
@@ -19,6 +19,6 @@ export class SetCurrentTodoItemAction extends EntityAction<TodoModel> {
   }
 
   static get() {
-    return ioc.get(System).getActionByID<SetCurrentTodoItemAction>(SetCurrentTodoItemAction.ID);
+    return ioc.get(ActionStore).getActionByID<SetCurrentTodoItemAction>(SetCurrentTodoItemAction.ID);
   }
 }

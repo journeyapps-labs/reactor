@@ -17,5 +17,9 @@ export abstract class SearchEngine<T extends SearchResult = SearchResult> {
     this.parameters.add(param);
   }
 
+  async autoSelectIsolatedItem(event: { value: string | null }): Promise<any | null> {
+    return null;
+  }
+
   abstract search(event: SearchEngineSearchEvent): T;
 }

@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { WorkspaceModelContext } from '../panel/panel/PanelWidget';
+import { WorkspaceModelContext } from '../panel/panel/WorkspaceModelContext';
 import { useContext, useEffect, useState, useRef } from 'react';
 import { v4 } from 'uuid';
 import { ioc } from '../../inversify.config';

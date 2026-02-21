@@ -1,17 +1,12 @@
 import { observable } from 'mobx';
-import { ActionSource, Btn, ioc, System } from '../../..';
+import { Btn } from '../../..';
 import { FormModel } from '../../../forms/FormModel';
 import { AbstractDialogDirective, AbstractDialogDirectiveOptions } from '../AbstractDialogDirective';
 import * as React from 'react';
-import { v4 } from 'uuid';
 
 export interface FormDialogDirectiveOptions<T extends FormModel = FormModel> extends AbstractDialogDirectiveOptions {
   form: T;
   handler?: (form: T) => Promise<any>;
-  trace?: {
-    enabled: boolean;
-    context: string;
-  };
 }
 
 export class FormDialogDirective<T extends FormModel = FormModel> extends AbstractDialogDirective {
@@ -48,9 +43,6 @@ export class FormDialogDirective<T extends FormModel = FormModel> extends Abstra
             if (this.options2.handler) {
               await this.options2.handler(this.form);
             }
-            if (this.options2.trace?.enabled) {
-              this.submitTrace();
-            }
             this.dispose(false);
           } finally {
             loading(false);
@@ -59,19 +51,6 @@ export class FormDialogDirective<T extends FormModel = FormModel> extends Abstra
         }
       }
     ];
-  }
-
-  submitTrace() {
-    try {
-      ioc.get(System).tracer.logAction({
-        success: true,
-        source: ActionSource.BUTTON,
-        action_id: `FORM_DIALOG.${this.options2.trace.context.toUpperCase()}`,
-        start_timestamp: new Date().toISOString(),
-        end_timestamp: new Date().toISOString(),
-        trace_id: v4()
-      });
-    } catch (ex) {}
   }
 
   get form(): T {

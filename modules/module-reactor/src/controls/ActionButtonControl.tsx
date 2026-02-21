@@ -2,7 +2,7 @@ import * as React from 'react';
 import { useEffect, useState } from 'react';
 import { ButtonControl } from './ButtonControl';
 import { RepresentAsControlOptions } from './AbstractControl';
-import { Action } from '../actions/Action';
+import type { Action } from '../actions/Action';
 import { PassiveActionValidationState, ValidationResult } from '../actions/validators/ActionValidator';
 import { Btn } from '../definitions/common';
 import { observer } from 'mobx-react';

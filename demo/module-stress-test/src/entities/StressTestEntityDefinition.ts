@@ -4,6 +4,7 @@ import {
   EntityDescriberComponent,
   EntityPanelComponent,
   InlineTreePresenterComponent,
+  SearchableTreeSearchScope,
   SimpleEntitySearchEngineComponent
 } from '@journeyapps-labs/reactor-mod';
 import { StressTestModel } from '../models/StressTestModel';
@@ -50,7 +51,8 @@ export class StressTestEntityDefinition extends EntityDefinition<StressTestModel
       new InlineTreePresenterComponent<StressTestModel>({
         label: 'uncached',
         cacheTreeEntities: false,
-        loadChildrenAsNodesAreOpened: true
+        loadChildrenAsNodesAreOpened: true,
+        searchScope: SearchableTreeSearchScope.VISIBLE_ONLY
       })
     );
 
@@ -58,7 +60,8 @@ export class StressTestEntityDefinition extends EntityDefinition<StressTestModel
       new InlineTreePresenterComponent<StressTestModel>({
         label: 'cached',
         cacheTreeEntities: true,
-        loadChildrenAsNodesAreOpened: true
+        loadChildrenAsNodesAreOpened: true,
+        searchScope: SearchableTreeSearchScope.VISIBLE_ONLY
       })
     );
 

@@ -100,7 +100,7 @@ export class SmartDialogWidget extends React.Component<SmartDialogWidgetProps> {
           type={inputDirective.fieldType}
           title={inputDirective.title}
           desc={inputDirective.message}
-          defaultValue=""
+          defaultValue={inputDirective.value || ''}
           submit={(value) => {
             // this will also forward the value through to the promise
             this.dialogStore.closeDialog(this.props.directive, value);

@@ -4,11 +4,11 @@ import {
   ColumnsFormModel,
   DialogStore2,
   FormDialogDirective,
+  ActionStore,
   inject,
   ioc,
   MultiSelectInput,
   SelectInput,
-  System,
   TextAreaInput,
   TextInput,
   TextInputType
@@ -101,6 +101,6 @@ export class ShowDemoFormAction extends Action {
   }
 
   static get() {
-    return ioc.get(System).getActionByID<ShowDemoFormAction>(ShowDemoFormAction.ID);
+    return ioc.get(ActionStore).getActionByID<ShowDemoFormAction>(ShowDemoFormAction.ID);
   }
 }

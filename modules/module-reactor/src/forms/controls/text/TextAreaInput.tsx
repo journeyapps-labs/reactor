@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { TextArea } from '../../../widgets';
+import { TextArea } from '../../../widgets/forms/textAreas';
 import { FormInputRenderOptions } from '../../FormInput';
 import { AbstractTextInput } from './AbstractTextInput';
 

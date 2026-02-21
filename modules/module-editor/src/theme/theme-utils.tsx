@@ -3,14 +3,15 @@ import * as platform from 'monaco-editor/esm/vs/platform/registry/common/platfor
 import { Extensions } from 'monaco-editor/esm/vs/platform/theme/common/colorUtils.js';
 import { Themes } from '@journeyapps-labs/reactor-mod';
 import { colorToAHex } from '@journeyapps-labs/lib-reactor-utils';
-import * as _ from 'lodash';
 
 const THEME_JOURNEY = require('../../media/themes/journey.json5');
 const THEME_REACTOR = require('../../media/themes/reactor.json5');
+const THEME_REACTOR_DARK = require('../../media/themes/reactor-dark.json5');
 const THEME_OXIDE = require('../../media/themes/oxide.json5');
 const THEME_SCARLET = require('../../media/themes/scarlet.json5');
 const THEME_AYU_MIRAGE = require('../../media/themes/ayu-mirage.json5');
 const THEME_AYU_LIGHT = require('../../media/themes/ayu-light.json5');
+const THEME_BUNNY = require('../../media/themes/bunny.json5');
 
 export type ColorContribution = {
   id: string;
@@ -47,6 +48,8 @@ export type VSIXTheme = {
   name: string;
   tokenColors: TokenColor[];
   colors: { [key: string]: string };
+  inherit?: boolean;
+  base?: monaco.editor.BuiltinTheme;
 };
 
 export type VSIXPackage = {
@@ -99,16 +102,10 @@ export const normalizeVSCodeTheme = (themeObject: VSIXTheme): monaco.editor.ISta
   }
 
   return {
-    base: 'vs-dark',
-    inherit: true,
-    colors: {
-      ..._.pickBy(
-        _.mapValues(themeObject.colors, (m) => {
-          return colorToAHex(m);
-        })
-      ),
-      'editor.background': colorToAHex(themeObject.colors['editor.background']) || '#00000000'
-    },
+    ...themeObject,
+    base: themeObject.base || 'vs-dark',
+    inherit: themeObject.inherit ?? true,
+    colors: themeObject.colors,
     encodedTokensColors: [],
     rules: rules
   };
@@ -121,8 +118,10 @@ export const DARK_THEME = 'journey-dark';
 export const COUPLED_IDE_THEMES = {
   [Themes.JOURNEY]: normalizeVSCodeTheme(THEME_JOURNEY.default),
   [Themes.REACTOR]: normalizeVSCodeTheme(THEME_REACTOR.default),
+  [Themes.REACTOR_DARK]: normalizeVSCodeTheme(THEME_REACTOR_DARK.default),
   [Themes.OXIDE]: normalizeVSCodeTheme(THEME_OXIDE.default),
   [Themes.SCARLET]: normalizeVSCodeTheme(THEME_SCARLET.default),
   [Themes.HEXAGON]: normalizeVSCodeTheme(THEME_AYU_MIRAGE.default),
-  [Themes.REACTOR_LIGHT]: normalizeVSCodeTheme(THEME_AYU_LIGHT.default)
+  [Themes.REACTOR_LIGHT]: normalizeVSCodeTheme(THEME_AYU_LIGHT.default),
+  [Themes.BUNNY]: normalizeVSCodeTheme(THEME_BUNNY.default)
 };

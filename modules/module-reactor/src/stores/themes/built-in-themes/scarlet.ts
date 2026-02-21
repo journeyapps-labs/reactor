@@ -38,7 +38,10 @@ export const Scarlet = theme.addThemeValues({
     cards: {
       background: '#191e25',
       foreground: 'rgb(205,205,205)',
-      border: 'rgba(0,0,0,0)'
+      border: '#2f3744',
+      tagBackground: '#67515a',
+      tagLabelBackground: 'rgba(0, 0, 0, 0.14)',
+      tagLabelForeground: 'rgba(244, 232, 238, 0.92)'
     },
     status: {
       cardBackground: '#14181e',
@@ -97,7 +100,7 @@ export const Scarlet = theme.addThemeValues({
     },
     trees: {
       ...DarkTheme.trees,
-      selectedBackground: '#3c1824'
+      selectedBackground: 'rgba(255, 74, 166, 0.18)'
     },
     buttonPrimary: {
       background: '#0a0d14',
@@ -129,7 +132,8 @@ export const Scarlet = theme.addThemeValues({
     },
     floating: {
       background: 'rgba(20,24,29,0.8)',
-      backgroundInactive: 'rgba(25,30,37,0.45)'
+      backgroundInactive: 'rgba(25,30,37,0.45)',
+      border: 'rgba(255, 74, 166, 0.28)'
     }
   }
 });

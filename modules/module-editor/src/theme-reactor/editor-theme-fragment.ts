@@ -6,7 +6,6 @@ export const theme = new ThemeFragment({
     editor: {
       label: 'Code editor',
       colors: {
-        background: 'Editor background color',
         backgroundSticky: 'Sticky editor layer background color'
       }
     }
@@ -17,8 +16,15 @@ theme.addThemeValues({
   name: Themes.REACTOR,
   values: {
     editor: {
-      background: '#1d222a',
-      backgroundSticky: '#1d222a'
+      backgroundSticky: '#1b212b'
+    }
+  }
+});
+theme.addThemeValues({
+  name: Themes.REACTOR_DARK,
+  values: {
+    editor: {
+      backgroundSticky: '#0f0f0f'
     }
   }
 });
@@ -26,7 +32,6 @@ theme.addThemeValues({
   name: Themes.HEXAGON,
   values: {
     editor: {
-      background: 'rgb(22,22,23)',
       backgroundSticky: 'rgb(22,22,23)'
     }
   }
@@ -35,7 +40,6 @@ theme.addThemeValues({
   name: Themes.JOURNEY,
   values: {
     editor: {
-      background: 'rgb(38, 50, 56)',
       backgroundSticky: 'rgb(38, 50, 56)'
     }
   }
@@ -44,7 +48,6 @@ theme.addThemeValues({
   name: Themes.REACTOR_LIGHT,
   values: {
     editor: {
-      background: '#cccccc',
       backgroundSticky: '#cccccc'
     }
   }
@@ -53,7 +56,6 @@ export const Scarlet = theme.addThemeValues({
   name: Themes.SCARLET,
   values: {
     editor: {
-      background: '#1d222a',
       backgroundSticky: '#1d222a'
     }
   }
@@ -62,8 +64,15 @@ theme.addThemeValues({
   name: Themes.OXIDE,
   values: {
     editor: {
-      background: 'rgb(32,32,33)',
       backgroundSticky: 'rgb(32,32,33)'
+    }
+  }
+});
+theme.addThemeValues({
+  name: Themes.BUNNY,
+  values: {
+    editor: {
+      backgroundSticky: '#161322'
     }
   }
 });

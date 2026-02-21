@@ -10,7 +10,7 @@ import { CheckboxLabelWidget } from '../../../widgets/forms/CheckboxLabelWidget'
 import { ExportShortcutsAction } from '../../../actions/builtin-actions/shortcuts/ExportShortcutsAction';
 import { ImportShortcutsAction } from '../../../actions/builtin-actions/shortcuts/ImportShortcutsAction';
 import { ResetShortcutsAction } from '../../../actions/builtin-actions/shortcuts/ResetShortcutsAction';
-import { getScrollableCSS, PANEL_CONTENT_PADDING } from '../../../widgets';
+import { getScrollableCSS, PANEL_CONTENT_PADDING } from '../../../widgets/panel/panel/PanelWidget';
 import { styled } from '../../../stores/themes/reactor-theme-fragment';
 
 namespace S {

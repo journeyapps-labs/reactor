@@ -3,7 +3,7 @@ import { UXStore } from '../../stores/UXStore';
 import { inject, ioc } from '../../inversify.config';
 import * as _ from 'lodash';
 import { keyType, ShortcutChord } from '../../stores/shortcuts/Shortcut';
-import { System } from '../../core/System';
+import { ActionStore } from '../../stores/actions/ActionStore';
 
 export class TabAction extends Action {
   @inject(UXStore)
@@ -35,7 +35,7 @@ export class TabAction extends Action {
   }
 
   static get(left: boolean) {
-    return ioc.get(System).getActionByID<TabAction>(left ? TabAction.NAME_LEFT : TabAction.NAME_RIGHT);
+    return ioc.get(ActionStore).getActionByID<TabAction>(left ? TabAction.NAME_LEFT : TabAction.NAME_RIGHT);
   }
 
   protected async fireEvent(event: ActionEvent): Promise<any> {

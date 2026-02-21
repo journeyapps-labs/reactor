@@ -1,11 +1,9 @@
 import { EntityTreePresenterComponent, EntityTreePresenterComponentOptions } from './EntityTreePresenterComponent';
-import {
-  ReactorTreeEntity,
-  ReactorTreeLeaf,
-  ReactorTreeNode,
-  TreeLeafWidgetProps,
-  TreeWidgetProps
-} from '../../../../../widgets';
+import { TreeLeafWidgetProps } from '../../../../../widgets/tree/TreeLeafWidget';
+import { TreeWidgetProps } from '../../../../../widgets/tree/TreeWidget';
+import { ReactorTreeEntity } from '../../../../../widgets/core-tree/reactor-tree/reactor-tree-utils';
+import { ReactorTreeLeaf } from '../../../../../widgets/core-tree/reactor-tree/ReactorTreeLeaf';
+import { ReactorTreeNode } from '../../../../../widgets/core-tree/reactor-tree/ReactorTreeNode';
 import { EntityTreePresenterContext } from './presenter-contexts/EntityTreePresenterContext';
 import {
   AbstractEntityTreePresenterContext,

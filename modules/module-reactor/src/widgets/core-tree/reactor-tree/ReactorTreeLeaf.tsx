@@ -15,13 +15,19 @@ const ReactorTreeLeafWidget: React.FC<{
 }> = observer(({ event, tree }) => {
   const forceUpdate = useForceUpdate();
   useEffect(() => {
-    return tree.registerListener({
+    const disposer = tree.registerListener({
       propGeneratorsChanged: () => {
         forceUpdate({
           defer: true
         });
       }
     });
+    // Ensure we render once after listener registration so stale props
+    // (for example old search matches) are not kept until the next hover/update.
+    forceUpdate({
+      defer: true
+    });
+    return disposer;
   }, [tree]);
 
   useEffect(() => {

@@ -7,12 +7,12 @@ theme.addThemeValues({
   values: {
     ...DarkTheme,
     canvas: {
-      background: 'rgb(38, 50, 56)',
-      grid: 'rgb(40,56,64)'
+      background: '#253238',
+      grid: '#33444c'
     },
     workspace: {
       ...DarkTheme.workspace,
-      background: '#1b2328',
+      background: '#1f2a31',
       overlayBackground: 'rgba(32,45,51,0.4)',
       overlayBorder: 'rgba(0,192,255,0)',
       overlayBackgroundHover: 'rgba(32,45,51,0.8)',
@@ -22,22 +22,25 @@ theme.addThemeValues({
     },
     panels: {
       ...DarkTheme.panels,
-      iconBackground: 'rgb(55,71,79)',
-      background: 'rgb(55,71,79)',
-      divider: '#273239',
-      trayBackground: 'rgb(32,45,51)',
-      titleBackground: 'rgb(69,90,100)',
-      searchBackground: 'rgba(38, 50, 56, 1)',
-      searchForeground: 'rgba(144, 164, 174, 1)',
-      tabForeground: 'rgba(144, 164, 174, 1)',
-      tabForegroundSelected: 'white',
-      tabBackgroundSelected: 'rgb(32,45,51)',
-      itemIconColorSelected: 'rgb(0,192,255)'
+      iconBackground: '#2c3b42',
+      background: '#33444c',
+      divider: '#41565f',
+      trayBackground: '#29373f',
+      titleBackground: '#3f545e',
+      searchBackground: '#2f3f47',
+      searchForeground: '#cad7de',
+      tabForeground: '#a6bcc7',
+      tabForegroundSelected: '#ffe7d1',
+      tabBackgroundSelected: 'rgba(255,100,0,0.16)',
+      itemIconColorSelected: '#ff8c2b',
+      scrollBar: 'rgba(202,215,222,0.35)',
+      trayButton: 'rgba(255,255,255,0.05)',
+      trayButtonSelected: 'rgba(0,0,0,0.32)'
     },
     tabs: {
-      selectedAccentSingle: 'rgb(255,100,0)',
-      selectedBackground: 'rgb(32,45,51)',
-      selectedAccent: 'rgb(255,100,0)'
+      selectedAccentSingle: '#ff8c2b',
+      selectedBackground: 'rgba(255,100,0,0.14)',
+      selectedAccent: '#ff8c2b'
     },
     guide: {
       accent: 'rgb(184 107 255)',
@@ -46,14 +49,18 @@ theme.addThemeValues({
       startButton: '#546e79',
       startButtonText: '#fff'
     },
+    trees: {
+      ...DarkTheme.trees,
+      selectedBackground: 'rgba(255, 140, 43, 0.16)'
+    },
     footer: {
-      background: '#273239'
+      background: '#253238'
     },
     header: {
       ...DarkTheme.header,
       backgroundLogo: 'rgba(255,255,255,0.07)',
       backgroundLogoHover: 'rgba(255,255,255,0.15)',
-      background: '#273239'
+      background: '#253238'
     },
     changelog: {
       codeForeground: 'white',
@@ -62,52 +69,68 @@ theme.addThemeValues({
     status: {
       ...DarkTheme.status,
       failed: 'rgb(141,49,73)',
-      cardBackground: 'rgb(32,45,51)'
+      cardBackground: '#29373f'
     },
     cards: {
-      background: 'rgba(38, 50, 56, 1)',
-      foreground: 'white',
-      border: 'rgba(0,0,0,0)'
+      background: '#26343a',
+      foreground: '#d6e2e9',
+      border: '#4a626d',
+      tagBackground: '#716b62',
+      tagLabelBackground: 'rgba(0, 0, 0, 0.12)',
+      tagLabelForeground: 'rgba(245, 236, 226, 0.92)'
+    },
+    meta: {
+      background: 'rgba(204,178,148,0.18)',
+      foreground: '#e9dfd2'
     },
     table: {
       ...DarkTheme.table,
-      odd: 'rgb(40,56,64)',
-      pills: '#476979',
-      pillsSpecial: 'rgb(255 100 0)'
+      text: 'rgba(227,238,244,0.84)',
+      odd: '#39505a',
+      pills: '#58727d',
+      pillsSpecial: '#ff7a1a',
+      columnBackground: '#24333b',
+      columnForeground: '#eef4f7'
     },
     text: {
-      primary: 'white',
-      secondary: 'rgba(144, 164, 174, 1)'
+      primary: '#edf4f8',
+      secondary: '#b6c9d2'
     },
     button: {
-      background: '#273239',
-      border: 'rgba(144, 164, 174, 1)',
+      background: '#29373f',
+      border: '#6f8792',
       colorHover: 'white',
-      color: 'rgba(210,210,210)',
-      icon: 'rgba(255,255,255,0.3)'
+      color: '#d9e4ea',
+      icon: 'rgba(255,255,255,0.4)'
     },
     buttonPrimary: {
-      background: '#273239',
+      background: '#29373f',
       border: 'rgb(255,100,0)',
       colorHover: 'white',
-      color: 'rgba(210,210,210)',
+      color: '#e5edf1',
       icon: 'rgb(255,100,0)'
     },
     forms: {
       ...DarkTheme.forms,
-      checkbox: '#333',
-      checkboxChecked: 'white',
-      inputBackground: 'rgb(40 57 65)',
-      inputForeground: 'white',
-      inputBorder: '#5e6675',
-      toggleOnColor: 'rgb(0,192,255)',
+      checkbox: '#3a4d55',
+      checkboxChecked: 'rgb(255,100,0)',
+      inputBackground: '#2f3f47',
+      inputForeground: '#edf4f8',
+      inputBorder: '#5d7581',
+      toggleOnColor: 'rgb(255,100,0)',
       toggleHandleColor: '#fff'
     },
     combobox: {
       ...DarkTheme.combobox,
-      border: '#556e7a',
-      background: 'rgba(55, 71, 79, 1)',
-      headerBackground: 'rgb(69,90,100)'
+      border: '#5f7985',
+      background: '#33444c',
+      backgroundSelected: '#3f545e',
+      headerBackground: '#3f545e'
+    },
+    floating: {
+      background: 'rgba(41, 55, 63, 0.82)',
+      backgroundInactive: 'rgba(41, 55, 63, 0.58)',
+      border: 'rgba(111, 135, 146, 0.42)'
     }
   }
 });

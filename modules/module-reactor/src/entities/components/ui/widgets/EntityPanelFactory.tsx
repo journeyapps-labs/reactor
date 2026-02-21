@@ -22,6 +22,8 @@ import { Btn } from '../../../../definitions/common';
 import { System } from '../../../../core/System';
 import * as _ from 'lodash';
 import { AbstractPresenterContext } from '../../presenter/AbstractPresenterContext';
+import { ActionStore } from '../../../../stores/actions/ActionStore';
+import { EntityDefinitionError } from '../../../EntityDefinitionError';
 
 export interface EntityPanelModelListener<T extends any = any> extends WorkspaceModelListener, SelectEntityListener<T> {
   contextGenerated: (context: AbstractPresenterContext<T>) => any;
@@ -62,6 +64,18 @@ export class EntityPanelModel<T extends any = any> extends ReactorPanelModel<Ent
 
   getPresenter(): EntityPresenterComponent<T> {
     let presenters = this.factory.component.definition.getPresenters();
+    if (presenters.length === 0) {
+      throw new EntityDefinitionError({
+        definition: this.factory.component.definition,
+        message:
+          `Entity panel "${this.factory.type}" cannot be created because definition ` +
+          `"${this.factory.component.definition.type}" has no presenters registered.`,
+        context: {
+          panelType: this.factory.type,
+          requestedPresenterKey: this.presenter
+        }
+      });
+    }
     let found = presenters.find((p) => {
       return p.label === this.presenter;
     });
@@ -136,6 +150,9 @@ export class EntityPanelFactory<T> extends ReactorPanelFactory<EntityPanelModel<
   @inject(System)
   accessor system: System;
 
+  @inject(ActionStore)
+  accessor actionStore: ActionStore;
+
   constructor(public component: EntityPanelComponent) {
     super({
       type: component.generateFactoryType(),
@@ -156,7 +173,9 @@ export class EntityPanelFactory<T> extends ReactorPanelFactory<EntityPanelModel<
   getAdditionalButtons(event: RenderTitleBarEvent<EntityPanelModel<T>>): Btn[] {
     return [
       ...super.getAdditionalButtons(event),
-      ...this.component.additionalActions.map((a) => this.system.getActionByID(a).representAsControl().representAsBtn())
+      ...this.component.additionalActions.map((a) =>
+        this.actionStore.getActionByID(a).representAsControl().representAsBtn()
+      )
     ];
   }
 

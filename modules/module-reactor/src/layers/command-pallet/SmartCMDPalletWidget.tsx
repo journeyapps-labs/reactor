@@ -1,9 +1,10 @@
 import * as React from 'react';
 import { inject } from '../../inversify.config';
-import { CMDPalletStore, CommandPalletSearchResultEntry } from '../../stores';
+import { CMDPalletStore } from '../../stores/CMDPalletStore';
+import { CommandPalletSearchResultEntry } from '../../cmd-pallet/CMDPalletSearchEngine';
 import { ControlledCommandPalletWidget } from './ControlledCommandPalletWidget';
 import * as _ from 'lodash';
-import { MousePosition } from '../../widgets';
+import { MousePosition } from '../combo/SmartPositionWidget';
 import { createSearchEventMatcher } from '@journeyapps-labs/lib-reactor-search';
 
 export interface SmartCMDPalletWidgetProps {

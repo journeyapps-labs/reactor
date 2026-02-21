@@ -1,14 +1,10 @@
 import * as React from 'react';
 import * as _ from 'lodash';
 import { CommandPalletWidget } from './CommandPalletWidget';
-import {
-  CMDPalletSearchEngineResult,
-  CommandPalletSearchResultEntry,
-  ioc,
-  inject,
-  MousePosition,
-  TabDirective
-} from '../../index';
+import { CMDPalletSearchEngineResult, CommandPalletSearchResultEntry } from '../../cmd-pallet/CMDPalletSearchEngine';
+import { ioc } from '../../inversify.config';
+import { MousePosition } from '../combo/SmartPositionWidget';
+import { TabDirective } from '../../widgets/tabs/GenericTabSelectionWidget';
 import { SmartCommandPalletCategorywidget } from './SmartCommandPalletCategorywidget';
 import { autorun, IReactionDisposer } from 'mobx';
 import { CommonKeys, KeyboardContext, KeyboardStore } from '../../stores/KeyboardStore';
@@ -34,7 +30,7 @@ export class ControlledCommandPalletWidget extends React.Component<
   ControlledCommandPalletWidgetProps,
   ControlledCommandPalletWidgetState
 > {
-  dispose: IReactionDisposer;
+  selectFirstDisposer: IReactionDisposer;
   scrollTimeout: any;
 
   keyboardContext: KeyboardContext;
@@ -64,8 +60,9 @@ export class ControlledCommandPalletWidget extends React.Component<
   }
 
   selectFirst(res: CMDPalletSearchEngineResult[]) {
-    autorun((reaction) => {
-      for (let searchResult of this.state.searchResults) {
+    this.selectFirstDisposer?.();
+    this.selectFirstDisposer = autorun((reaction) => {
+      for (let searchResult of res) {
         if (!searchResult.loading && searchResult.results.length > 0) {
           this.setState(
             {
@@ -73,7 +70,7 @@ export class ControlledCommandPalletWidget extends React.Component<
               highlightedCategory: searchResult.engine.id
             },
             () => {
-              this.dispose = null;
+              this.selectFirstDisposer = null;
               reaction.dispose();
             }
           );
@@ -108,6 +105,9 @@ export class ControlledCommandPalletWidget extends React.Component<
       action: () => {
         // get the previous available entry
         const flattened = this.getFlattened();
+        if (flattened.length === 0) {
+          return;
+        }
         const flattenedKeys = _.map(this.getFlattened(), 'key');
         let index = flattenedKeys.indexOf(this.state.highlighted);
         index--;
@@ -125,6 +125,9 @@ export class ControlledCommandPalletWidget extends React.Component<
       action: () => {
         // get the next available entry
         const flattened = this.getFlattened();
+        if (flattened.length === 0) {
+          return;
+        }
         const flattenedKeys = _.map(this.getFlattened(), 'key');
         let index = flattenedKeys.indexOf(this.state.highlighted);
         index++;
@@ -149,7 +152,7 @@ export class ControlledCommandPalletWidget extends React.Component<
 
   componentWillUnmount(): void {
     this.keyboardContext.dispose();
-    this.dispose && this.dispose();
+    this.selectFirstDisposer?.();
     this.scrollTimeout && clearTimeout(this.scrollTimeout);
   }
 
@@ -158,10 +161,6 @@ export class ControlledCommandPalletWidget extends React.Component<
     prevState: Readonly<ControlledCommandPalletWidgetState>,
     snapshot?: any
   ): void {
-    if (this.dispose) {
-      this.dispose();
-    }
-
     let found: CMDPalletSearchEngineResult = null;
     for (let searchResult of this.state.searchResults) {
       if (searchResult.engine.id === this.state.highlightedCategory) {

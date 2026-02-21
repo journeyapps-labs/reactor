@@ -10,6 +10,7 @@ import { TreeContentWidget } from '../tree/TreeContentWidget';
 import { MetadataWidget, MetadataWidgetProps } from '../meta/MetadataWidget';
 import { TreeLeafWidget } from '../tree/TreeLeafWidget';
 import { IconWidget, ReactorIcon } from '../icons/IconWidget';
+import { getTransparentColor } from '@journeyapps-labs/lib-reactor-utils';
 
 export enum StatusCardState {
   LOADING = 'loading',
@@ -37,6 +38,7 @@ namespace S {
     overflow: hidden;
     display: flex;
     background: ${(p) => p.theme.status.cardBackground};
+    border: solid 1px ${(p) => getTransparentColor(p.theme.cards.border, 0.5)};
     width: 100%;
   `;
 

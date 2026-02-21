@@ -7,7 +7,7 @@ import { AdvancedWorkspacePreference } from '../../../../preferences/AdvancedWor
 import { observer } from 'mobx-react';
 import { AttentionWrapperWidget } from '../../../guide/AttentionWrapperWidget';
 import { PanelTitleIconSimpleWidget, PanelTitleIconWidget } from './PanelTitleIconWidget';
-import { WorkspaceModelContext } from '../PanelWidget';
+import { WorkspaceModelContext } from '../WorkspaceModelContext';
 import { ButtonComponentSelection, ReactorComponentType } from '../../../../stores/guide/selections/common';
 import { ReactorPanelModel } from '../../../../stores/workspace/react-workspaces/ReactorPanelModel';
 import { ComboBoxStore2 } from '../../../../stores/combo2/ComboBoxStore2';

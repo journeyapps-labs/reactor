@@ -7,9 +7,6 @@ import { GetTheme } from '../../stores/themes/ThemeFragment';
 import { styled, theme } from '../../stores/themes/reactor-theme-fragment';
 import { IconWidget } from '../icons/IconWidget';
 import { ioc } from '../../inversify.config';
-import { System } from '../../core/System';
-import { ActionSource } from '../../actions/Action';
-import * as _ from 'lodash';
 import { ThemeStore } from '../../stores/themes/ThemeStore';
 import { setupTooltipProps, TooltipPosition } from '../info/tooltips';
 
@@ -64,10 +61,6 @@ namespace S {
 export interface PanelBtn extends Btn {
   mode?: PanelButtonMode;
   iconColor?: string;
-  trace?: {
-    enabled: boolean;
-    context?: string;
-  };
 }
 
 export enum PanelButtonMode {
@@ -103,21 +96,6 @@ export const PanelButtonWidget: React.FC<
       className={props.className}
       {...setupTooltipProps({ tooltip: tooltip, tooltipPos: props.tooltipPos || TooltipPosition.BOTTOM })}
       onClick={(event) => {
-        if (props.trace?.enabled) {
-          ioc.get(System).tracer.logAction({
-            success: true,
-            source: ActionSource.BUTTON,
-            action_id: [
-              `BUTTON`,
-              props.trace.context?.toUpperCase(),
-              props.label ? _.snakeCase(props.label).toUpperCase() : null
-            ]
-              .filter((i) => !!i)
-              .join('.'),
-            start_timestamp: new Date().toISOString(),
-            end_timestamp: new Date().toISOString()
-          });
-        }
         onClick(event);
       }}
     >

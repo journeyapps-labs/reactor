@@ -1,10 +1,10 @@
 import { inject, ioc } from '../../../inversify.config';
 import { WorkspaceStore } from '../../../stores/workspace/WorkspaceStore';
-import { System } from '../../../core/System';
 import { ParameterizedAction, ParameterizedActionEvent } from '../../parameterized/ParameterizedAction';
 import { TextActionParameter } from '../../parameterized/params/TextActionParameter';
 import * as _ from 'lodash';
 import { WorkspaceActionValidator } from './WorkspaceActionValidator';
+import { ActionStore } from '../../../stores/actions/ActionStore';
 
 export type CreateWorkspaceActionEvent = ParameterizedActionEvent<{ name: string }>;
 
@@ -30,7 +30,7 @@ export class CreateWorkspaceAction extends ParameterizedAction<{ EVENT: CreateWo
   }
 
   static get() {
-    return ioc.get(System).getAction<CreateWorkspaceAction>(CreateWorkspaceAction.NAME);
+    return ioc.get(ActionStore).getAction<CreateWorkspaceAction>(CreateWorkspaceAction.NAME);
   }
 
   async fireEvent(event: CreateWorkspaceActionEvent): Promise<any> {

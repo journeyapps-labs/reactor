@@ -7,7 +7,7 @@ import { ComboBoxStore2 } from '../../stores/combo2/ComboBoxStore2';
 import { inject } from '../../inversify.config';
 import { SimpleComboBoxDirective } from '../../stores/combo2/directives/simple/SimpleComboBoxDirective';
 import { SearchStore } from '../../stores/SearchStore';
-import { ComboBoxItem } from '../../stores';
+import { ComboBoxItem } from '../../stores/combo/ComboBoxDirectives';
 import { getTransparentColor } from '@journeyapps-labs/lib-reactor-utils';
 
 export interface SearchWidgetProps {
@@ -33,13 +33,13 @@ export const SEARCH_ICON_WIDTH = 30;
 
 namespace S {
   export const IconRight = themed.div`
-    color: white;
-    opacity: 0.3;
+    color: ${(p) => p.theme.panels.searchForeground};
+    opacity: 0.58;
     padding: 5px;
     cursor: pointer;
 
     &:hover{
-      opacity: 1;
+      opacity: 0.9;
     }
   `;
 

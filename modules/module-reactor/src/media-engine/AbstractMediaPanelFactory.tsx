@@ -11,7 +11,7 @@ import {
   ReactorPanelFactory
 } from '../stores/workspace/react-workspaces/ReactorPanelFactory';
 import { PanelCategory } from '../definitions/common';
-import { LoadingPanelWidget } from '../widgets';
+import { LoadingPanelWidget } from '../widgets/panel/panel/LoadingPanelWidget';
 
 export class AbstractMediaPanelModel<T extends AbstractMedia = AbstractMedia> extends ReactorPanelModel {
   @observable

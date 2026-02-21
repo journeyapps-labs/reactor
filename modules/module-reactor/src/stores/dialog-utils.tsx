@@ -4,7 +4,7 @@ import { ioc } from '../inversify.config';
 import { DialogStore } from './DialogStore';
 import { styled } from './themes/reactor-theme-fragment';
 import { Duration } from 'luxon';
-import { ScrollableDivCss } from '../widgets';
+import { ScrollableDivCss } from '../widgets/panel/panel/PanelWidget';
 import { NotificationStore } from './NotificationStore';
 
 namespace S {

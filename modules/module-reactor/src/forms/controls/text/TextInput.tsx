@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { Input } from '../../../widgets';
+import { Input } from '../../../widgets/forms/inputs';
 import { FormInputRenderOptions } from '../../FormInput';
 import { AbstractTextInput, AbstractTextInputOptions, TextInputFormGenerics } from './AbstractTextInput';
 

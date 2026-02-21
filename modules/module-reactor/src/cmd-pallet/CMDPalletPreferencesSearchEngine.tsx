@@ -1,11 +1,14 @@
 import {
   CMDPalletSearchEngine,
   CMDPalletSearchEngineResult,
-  CommandPalletSearchResultEntry,
-  PrefsStore,
-  WorkspaceStore
-} from '../stores';
-import { BooleanSetting, ioc, MousePosition, SettingsPanelModel } from '../index';
+  CommandPalletSearchResultEntry
+} from './CMDPalletSearchEngine';
+import { PrefsStore } from '../stores/PrefsStore';
+import { WorkspaceStore } from '../stores/workspace/WorkspaceStore';
+import { BooleanSetting } from '../settings/BooleanSetting';
+import { ioc } from '../inversify.config';
+import { MousePosition } from '../layers/combo/SmartPositionWidget';
+import { SettingsPanelModel } from '../panels/settings/SettingsPanelModel';
 import * as _ from 'lodash';
 import { CommandPalletEntryWidget } from '../layers/command-pallet/CommandPalletEntryWidget';
 import * as React from 'react';

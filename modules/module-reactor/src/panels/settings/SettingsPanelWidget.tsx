@@ -6,7 +6,7 @@ import { inject } from '../../inversify.config';
 import { TabDirective } from '../../widgets/tabs/GenericTabSelectionWidget';
 import { TabSelectionWidget } from '../../widgets/tabs/TabSelectionWidget';
 import * as _ from 'lodash';
-import { SettingsPanelModel } from './SettingsPanelFactory';
+import { SettingsPanelModel } from './SettingsPanelModel';
 
 namespace S {
   export const Content = styled.div`

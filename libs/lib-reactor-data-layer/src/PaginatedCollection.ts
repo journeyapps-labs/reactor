@@ -97,7 +97,7 @@ export class PaginatedCollection<T = any, R = any> extends Collection<T> {
       if (event.aborted || res.done || !res.value) {
         return this.items;
       }
-      this.hasMore = res.value.more;
+      this.hasMore = this.options.hasMore(res.value);
       this.lastResponse = res.value;
       return this.items.concat(this.getData(res.value));
     });

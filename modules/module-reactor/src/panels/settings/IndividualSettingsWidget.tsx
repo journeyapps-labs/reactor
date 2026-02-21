@@ -14,17 +14,16 @@ namespace S {
   export const Container = styled.div`
     margin-bottom: 2px;
     border-radius: 3px;
-    padding: 7px 12px;
   `;
   export const Name = styled.div`
     color: ${(p) => p.theme.text.primary};
-    font-size: 16px;
+    font-size: 14px;
     white-space: nowrap;
   `;
 
   export const Desc = styled.p`
-    font-size: 13px;
-    margin-top: 5px;
+    font-size: 12px;
+    margin-top: 4px;
     color: ${(p) => p.theme.text.secondary};
     max-width: 400px;
   `;
@@ -35,7 +34,7 @@ namespace S {
   `;
 
   export const Control = styled.div`
-    padding-left: 10px;
+    padding-left: 8px;
   `;
 }
 

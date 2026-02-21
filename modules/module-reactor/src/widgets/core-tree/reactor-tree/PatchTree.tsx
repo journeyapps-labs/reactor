@@ -27,7 +27,7 @@ export interface IBaseReactorTree extends TreeEntityInterface {
   addPropGenerator(transformer: ReactorTreePropsTransformer): () => any;
   renderWidget(event: CoreTreeWidgetProps): React.JSX.Element;
   match(event: SearchEvent): SearchEventMatch;
-  setSearch(event: SearchEvent): boolean;
+  setSearch(event: SearchEvent, options?: { revealMatch?: boolean }): boolean;
   setSortKey(key: string): void;
 
   /**
@@ -127,7 +127,7 @@ export function PatchTree<T extends GConstructor<TreeEntity<ReactorTreeListener>
       return null;
     }
 
-    setSearch(event: SearchEvent) {
+    setSearch(event: SearchEvent, options?: { revealMatch?: boolean }) {
       this.searchGeneratorDisposer?.();
       this.searchGeneratorDisposer = null;
       if (!event) {
@@ -140,7 +140,9 @@ export function PatchTree<T extends GConstructor<TreeEntity<ReactorTreeListener>
             matches: result
           };
         });
-        this.open({ reveal: true });
+        if (options?.revealMatch) {
+          this.open({ reveal: true });
+        }
         return true;
       }
       return false;

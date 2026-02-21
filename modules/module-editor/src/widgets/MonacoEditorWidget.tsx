@@ -4,6 +4,8 @@ import styled from '@emotion/styled';
 import { useEffect, useRef } from 'react';
 import ITextModel = editor.ITextModel;
 import { DARK_THEME } from '../theme/theme-utils';
+import * as monaco from 'monaco-editor';
+import _ from 'lodash';
 
 export interface MonacoEditorWidgetProps {
   className?: any;
@@ -22,6 +24,9 @@ export const MonacoEditorWidget: React.FC<MonacoEditorWidgetProps> = (props) => 
       theme: DARK_THEME
     });
     props.editorDidMount?.(editorRef);
+    _.defer(() => {
+      monaco.editor.setTheme(DARK_THEME);
+    });
     return () => {
       editorRef.dispose();
     };

@@ -1,5 +1,5 @@
 import { observable } from 'mobx';
-import { ReactorIcon } from '../../widgets';
+import { ReactorIcon } from '../../widgets/icons/IconWidget';
 import { MouseEventHandler } from 'react';
 import * as _ from 'lodash';
 

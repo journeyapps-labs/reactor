@@ -51,6 +51,10 @@ export class PrefsStore extends AbstractStore<PrefsSerialized> {
   }
 
   registerPreference(pref: AbstractSetting) {
+    if (this.controls[pref.options.key]) {
+      return;
+    }
+
     this.controls[pref.options.key] = pref;
     pref.registerListener({
       updated: () => {

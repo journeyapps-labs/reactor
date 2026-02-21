@@ -1,4 +1,4 @@
-import { Action, ActionEvent, inject, ioc, System } from '@journeyapps-labs/reactor-mod';
+import { Action, ActionEvent, ActionStore, inject, ioc } from '@journeyapps-labs/reactor-mod';
 import { TodoModel } from '../models/TodoModel';
 import { TodoStore } from '../stores/TodoStore';
 
@@ -30,6 +30,6 @@ export class CreateTodoAction extends Action {
   }
 
   static get() {
-    return ioc.get(System).getActionByID<CreateTodoAction>(CreateTodoAction.ID);
+    return ioc.get(ActionStore).getActionByID<CreateTodoAction>(CreateTodoAction.ID);
   }
 }

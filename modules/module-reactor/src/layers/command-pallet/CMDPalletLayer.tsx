@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { CMDPalletStore } from '../../stores';
+import { CMDPalletStore } from '../../stores/CMDPalletStore';
 import { inject } from '../../inversify.config';
 import { SmartCMDPalletWidget } from './SmartCMDPalletWidget';
 import { LayerDirective } from '../../stores/layer/LayerDirective';

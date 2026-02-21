@@ -3,35 +3,11 @@ import * as React from 'react';
 import { PanelCategory } from '../../definitions/common';
 import { SettingsPanelWidget } from './SettingsPanelWidget';
 import { ReactorPanelFactory } from '../../stores/workspace/react-workspaces/ReactorPanelFactory';
-import { ReactorPanelModel } from '../../stores/workspace/react-workspaces/ReactorPanelModel';
-import { WorkspaceEngineInterface, WorkspaceModelFactoryEvent } from '@projectstorm/react-workspaces-core';
-import { makeObservable, observable } from 'mobx';
-
-export class SettingsPanelModel extends ReactorPanelModel {
-  @observable
-  accessor selectedTab: string;
-
-  constructor() {
-    super(SettingsPanelFactory.TYPE);
-    this.setExpand(true, true);
-    this.selectedTab = null;
-  }
-
-  toArray() {
-    return {
-      ...super.toArray(),
-      selectedTab: this.selectedTab
-    };
-  }
-
-  fromArray(payload: ReturnType<this['toArray']>, engine: WorkspaceEngineInterface) {
-    super.fromArray(payload, engine);
-    this.selectedTab = payload.selectedTab;
-  }
-}
+import { WorkspaceModelFactoryEvent } from '@projectstorm/react-workspaces-core';
+import { SETTINGS_PANEL_TYPE, SettingsPanelModel } from './SettingsPanelModel';
 
 export class SettingsPanelFactory extends ReactorPanelFactory<SettingsPanelModel> {
-  static TYPE = 'settings';
+  static TYPE = SETTINGS_PANEL_TYPE;
 
   constructor() {
     super({

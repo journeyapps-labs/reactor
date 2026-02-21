@@ -2,18 +2,14 @@ import { observable } from 'mobx';
 import * as _ from 'lodash';
 import { Action } from '../../actions/Action';
 import { MousePosition } from '../../layers/combo/SmartPositionWidget';
-import { Provider } from '../../providers/Provider';
 import {
   ComboBoxCheckedItem,
   ComboBoxItem,
   ComboBoxSearchEngine,
   ComboBoxSearchEngineResultEntry,
-  ProviderComboBoxItem,
-  RenderCalloutFunction,
   UIDirective,
   UIDirectiveType,
   UIItemsDirective,
-  UIProviderDirective,
   UISearchEngineDirective
 } from './ComboBoxDirectives';
 import { PassiveActionValidationState } from '../../actions/validators/ActionValidator';
@@ -23,14 +19,6 @@ export interface ComboBoxOptions {
   title?: string;
   title2?: string;
 }
-
-export type ProviderComboBoxOptions<T> = {
-  initialValue?: any;
-  param?: any;
-  renderCallout?: RenderCalloutFunction;
-  filter?: (item: T) => boolean;
-  transform?: (box: ProviderComboBoxItem<T>) => ProviderComboBoxItem;
-};
 
 export interface ComboBoxItemSelectedEvent {
   items: ComboBoxItem[];
@@ -82,32 +70,6 @@ export class ComboBoxStore extends BaseObserver<ComboBoxStoreListener> {
     this.directive.resolve(items);
     this.directive = null;
     return true;
-  }
-
-  async showSearchComboBoxForProvider<T>(
-    provider: Provider,
-    position?: MousePosition,
-    options: ProviderComboBoxOptions<T> = {}
-  ): Promise<T> {
-    let initialValue = null;
-    if (options.initialValue) {
-      initialValue = options.initialValue;
-    }
-
-    const vals = await this.setupDirective<ProviderComboBoxItem<T>>({
-      provider: provider,
-      position: position,
-      type: UIDirectiveType.PROVIDER,
-      renderCallout: options.renderCallout,
-      initialValue: initialValue,
-      param: options?.param,
-      filter: options?.filter,
-      transform: options?.transform
-    } as UIProviderDirective<T>);
-    if (!vals || vals.length === 0) {
-      return null;
-    }
-    return vals[0].providerItem;
   }
 
   async showMultiSelectComboBox(

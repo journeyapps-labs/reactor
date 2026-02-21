@@ -7,6 +7,8 @@ import { setupTooltipProps } from '../info/tooltips';
 export interface PillWidgetProps {
   label: string;
   color?: string;
+  labelBackground?: string;
+  labelColor?: string;
   className?;
   action?: (event: React.MouseEvent) => any;
   rightClick?: (event: MouseEvent) => any;
@@ -30,9 +32,9 @@ namespace S {
     cursor: ${(p) => (p.$cursor ? 'pointer' : 'inherit')};
   `;
 
-  export const Label = styled.div<{ hasIcon: boolean }>`
-    background: rgba(0, 0, 0, 0.3);
-    color: rgba(255, 255, 255, 0.8);
+  export const Label = styled.div<{ hasIcon: boolean; background?: string; color?: string }>`
+    background: ${(p) => p.background || 'rgba(0, 0, 0, 0.3)'};
+    color: ${(p) => p.color || 'rgba(255, 255, 255, 0.8)'};
     border-top-right-radius: ${(p) => (p.hasIcon ? 0 : RADIUS)}px;
     border-bottom-right-radius: ${(p) => (p.hasIcon ? 0 : RADIUS)}px;
     padding: 2px 5px;
@@ -72,7 +74,9 @@ export const PillWidget: React.FC<PillWidgetProps> = (props) => {
       color={props.color || 'rgb(150,150,150)'}
       {...setupTooltipProps({ tooltip: props.tooltip })}
     >
-      <S.Label hasIcon={!!props.meta}>{props.label}</S.Label>
+      <S.Label hasIcon={!!props.meta} background={props.labelBackground} color={props.labelColor}>
+        {props.label}
+      </S.Label>
       {props.meta ? (
         <S.Meta>
           {props.meta.icon ? <IconWidget icon={props.meta.icon} /> : null}

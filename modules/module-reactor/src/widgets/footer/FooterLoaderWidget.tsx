@@ -2,7 +2,7 @@ import * as React from 'react';
 import { useEffect, useState } from 'react';
 import styled from '@emotion/styled';
 import { keyframes } from '@emotion/react';
-import { LoadingDirectiveState } from '../../stores';
+import { LoadingDirectiveState } from '../../stores/visor/VisorLoadingDirective';
 import { ioc } from '../../inversify.config';
 import { ThemeStore } from '../../stores/themes/ThemeStore';
 import { theme } from '../../stores/themes/reactor-theme-fragment';

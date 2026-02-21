@@ -67,17 +67,10 @@ namespace S {
     overflow: hidden;
 
     .monaco-editor {
-      background-color: transparent !important;
       outline: none;
-
-      .monaco-editor-background {
-        background-color: transparent !important;
-      }
-
       .margin {
         background-color: transparent !important;
       }
-
       .cursors-layer .cursor {
         display: none;
       }

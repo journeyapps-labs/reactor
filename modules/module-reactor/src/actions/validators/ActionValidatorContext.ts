@@ -1,4 +1,4 @@
-import { Action } from '../Action';
+import type { Action } from '../Action';
 import { PassiveActionValidationState, ValidationResult } from './ActionValidator';
 import { computed } from 'mobx';
 import * as _ from 'lodash';
