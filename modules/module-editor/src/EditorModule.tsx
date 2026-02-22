@@ -14,6 +14,7 @@ import { MonacoShortcutHandler } from './shortcuts/MonacoShortcutHandler';
 import { MonacoCommandPalletSearchEngine } from './MonacoCommandPalletSearchEngine';
 import * as React from 'react';
 import { MonacoThemeStore } from './stores/MonacoThemeStore';
+import { MonacoSystemThemeStore } from './stores/MonacoSystemThemeStore';
 import { ChangeEditorThemeAction } from './actions/ChangeEditorThemeAction';
 import { SmartEditorThemePreferencesWidget } from './theme/SmartEditorThemePreferencesWidget';
 import { patchThemeService } from './theme/patchThemeService';
@@ -40,7 +41,8 @@ export class EditorModule extends AbstractReactorModule {
     workspaceStore.engine.layerManager.setInitialZIndex(12);
 
     // new instances
-    const monacoThemeStore = new MonacoThemeStore();
+    const monacoSystemThemeStore = new MonacoSystemThemeStore();
+    const monacoThemeStore = new MonacoThemeStore(monacoSystemThemeStore);
     const monacoStore = new MonacoStore();
     const monacoKeybindingsStore = new MonacoKeybindingStore({
       editorStore: monacoStore,
@@ -56,6 +58,7 @@ export class EditorModule extends AbstractReactorModule {
 
     // register stores
     system.addStore(MonacoStore, monacoStore);
+    system.addStore(MonacoSystemThemeStore, monacoSystemThemeStore);
     system.addStore(MonacoThemeStore, monacoThemeStore);
     system.addStore(MonacoKeybindingStore, monacoKeybindingsStore);
 

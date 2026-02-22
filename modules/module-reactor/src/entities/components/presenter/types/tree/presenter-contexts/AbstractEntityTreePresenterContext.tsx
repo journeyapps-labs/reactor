@@ -175,6 +175,8 @@ export abstract class AbstractEntityTreePresenterContext<
       return {
         icon: described.icon,
         iconColor: described.iconColor,
+        icon2: described.icon2,
+        icon2Color: described.icon2Color,
         label: described.simpleName,
         label2: described.complexName
       };

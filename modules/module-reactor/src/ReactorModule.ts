@@ -89,7 +89,31 @@ export class ReactorModule extends AbstractReactorModule {
       kernel.registerModule(new m());
     });
 
-    kernel.boot();
+    kernel.boot().catch((ex) => {
+      ReactorModule.showBootError(ex);
+      throw ex;
+    });
+  }
+
+  private static showBootError(ex: unknown) {
+    const getMessage = () => {
+      if (ex instanceof Error && ex.message) {
+        return ex.message;
+      }
+      if (typeof ex === 'string' && ex.length > 0) {
+        return ex;
+      }
+      return 'Unknown boot error';
+    };
+
+    const message = `Boot failed: ${getMessage()}`;
+    const loaderText = document.querySelector('.loading-text') as HTMLElement | null;
+    if (loaderText) {
+      loaderText.innerText = message;
+      loaderText.style.color = '#ff8b8b';
+      loaderText.style.opacity = '0.95';
+      loaderText.title = message;
+    }
   }
 
   register(ioc: Container) {

@@ -26,6 +26,7 @@ export * from './footer/FooterWidget';
 export * from './footer/FooterLoaderWidget';
 export * from './icons/IconWidget';
 export * from './icons/IconWidget';
+export * from './icons/DualIconWidget';
 
 export * from './graphs/GraphWidget';
 

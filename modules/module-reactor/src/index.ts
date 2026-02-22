@@ -184,6 +184,7 @@ export * from './entities/components/presenter/types/tree/presenter-contexts/Cac
 export * from './entities/components/presenter/types/tree/presenter-contexts/EntityTreePresenterContext';
 export * from './entities/components/presenter/types/tree/widgets/ReactorEntityDnDWrapperWidget';
 export * from './entities/components/presenter/types/tree/widgets/ReactorEntityWrapperWidget';
+export * from './widgets/core-tree/reactor-tree/ReactorTreeNode';
 export * from './entities/components/search/EntitySearchEngineComponent';
 export * from './entities/components/search/EntitySearchBank';
 export * from './entities/components/search/SimpleEntitySearchEngineComponent';

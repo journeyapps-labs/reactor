@@ -33,6 +33,7 @@ export * from './theme/theme-utils';
 export * from './shortcuts/MonacoShortcutHandler';
 export * from './shortcuts/MonacoShortcut';
 export * from './stores/MonacoStore';
+export * from './stores/MonacoSystemThemeStore';
 export * from './stores/MonacoThemeStore';
 export * from './entities/EditorEntities';
 export * from './entities/EditorThemeEntityDefinition';

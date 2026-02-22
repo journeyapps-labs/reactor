@@ -20,6 +20,8 @@ export interface EntityDescription {
   complexName?: string;
   icon?: ReactorIcon;
   iconColor?: string;
+  icon2?: ReactorIcon;
+  icon2Color?: string;
   /**
    * Optional metadata entries shown by card-style presenters.
    */

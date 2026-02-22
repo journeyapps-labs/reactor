@@ -29,6 +29,7 @@ export class ReactorKernel {
         module.register(ioc);
       } catch (ex) {
         this.logger.error(`Failed to register module ${module.options.name}`, ex);
+        throw ex;
       }
     }
     await this.init();

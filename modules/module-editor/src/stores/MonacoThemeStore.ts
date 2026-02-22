@@ -1,4 +1,4 @@
-import { COUPLED_IDE_THEMES, DARK_THEME, normalizeVSCodeTheme, VSIXTheme } from '../theme/theme-utils';
+import { DARK_THEME, normalizeVSCodeTheme, VSIXTheme } from '../theme/theme-utils';
 import {
   AbstractStore,
   EntitySetting,
@@ -12,6 +12,7 @@ import * as monaco from 'monaco-editor';
 import { StoredThemesSettings } from '../settings/StoredThemesSettings';
 import * as uuid from 'uuid';
 import { EditorEntities } from '../entities/EditorEntities';
+import { MonacoSystemThemeStore } from './MonacoSystemThemeStore';
 
 export interface EditorTheme {
   label: string;
@@ -39,18 +40,20 @@ export class EditorThemeControl extends EntitySetting<EditorTheme> {
 export class MonacoThemeStore extends AbstractStore {
   selectedTheme: EntitySetting<EditorTheme>;
   storedThemes: StoredThemesSettings;
-  additionalThemes: Map<string, string>;
+  systemThemeStore: MonacoSystemThemeStore;
 
-  constructor() {
+  constructor(systemThemeStore?: MonacoSystemThemeStore) {
     super({
       name: 'MONACO_THEME_STORE'
     });
-    this.additionalThemes = new Map();
+    this.systemThemeStore = systemThemeStore || new MonacoSystemThemeStore();
+    const systemThemes = this.systemThemeStore.getSystemThemes();
+    const defaultTheme = systemThemes[Themes.REACTOR];
     this.selectedTheme = this.addControl(
       new EditorThemeControl(
         {
           type: EditorEntities.THEME,
-          defaultEntity: this.getSystemThemes()[Themes.REACTOR],
+          defaultEntity: defaultTheme,
           category: 'User',
           key: 'selected-editor-theme',
           name: 'Selected code theme',
@@ -66,7 +69,7 @@ export class MonacoThemeStore extends AbstractStore {
       )
     );
     this.storedThemes = this.addControl(new StoredThemesSettings());
-    monaco.editor.defineTheme(DARK_THEME, this.getSystemThemes()[Themes.REACTOR].theme);
+    monaco.editor.defineTheme(DARK_THEME, defaultTheme.theme);
     monaco.editor.setTheme(DARK_THEME);
   }
 
@@ -118,77 +121,12 @@ export class MonacoThemeStore extends AbstractStore {
     this.selectedTheme.setItem(editorTheme);
   }
 
-  getMonacoThemeForReactorTheme(theme: string) {
-    const themeOb = this.getSystemThemes()[theme];
-    if (themeOb) {
-      return themeOb;
-    }
-
-    return this.getSystemThemes()[this.additionalThemes.get(theme)];
+  getMonacoThemeForReactorTheme(theme: string): EditorTheme | null {
+    return this.systemThemeStore.getMonacoThemeForReactorTheme(theme);
   }
 
   getSystemThemes(): { [key: string]: EditorTheme } {
-    return _.mapKeys(
-      [
-        {
-          key: Themes.JOURNEY,
-          label: 'Journey',
-          theme: COUPLED_IDE_THEMES[Themes.JOURNEY],
-          system: true,
-          compatibility: false
-        },
-        {
-          key: Themes.REACTOR,
-          label: 'Reactor',
-          theme: COUPLED_IDE_THEMES[Themes.REACTOR],
-          system: true,
-          compatibility: false
-        },
-        {
-          key: Themes.REACTOR_DARK,
-          label: 'Reactor dark',
-          theme: COUPLED_IDE_THEMES[Themes.REACTOR_DARK],
-          system: true,
-          compatibility: false
-        },
-        {
-          key: Themes.OXIDE,
-          label: 'OXIDE',
-          theme: COUPLED_IDE_THEMES[Themes.OXIDE],
-          system: true,
-          compatibility: true
-        },
-        {
-          key: Themes.SCARLET,
-          label: 'Scarlet',
-          theme: COUPLED_IDE_THEMES[Themes.SCARLET],
-          system: true,
-          compatibility: true
-        },
-        {
-          key: Themes.HEXAGON,
-          label: 'Hexagon',
-          theme: COUPLED_IDE_THEMES[Themes.HEXAGON],
-          system: true,
-          compatibility: true
-        },
-        {
-          key: Themes.BUNNY,
-          label: 'Bunny',
-          theme: COUPLED_IDE_THEMES[Themes.BUNNY],
-          system: true,
-          compatibility: true
-        },
-        {
-          key: Themes.REACTOR_LIGHT,
-          label: 'Reactor Light',
-          theme: COUPLED_IDE_THEMES[Themes.REACTOR_LIGHT],
-          system: true,
-          compatibility: true
-        }
-      ],
-      (m) => m.key
-    );
+    return this.systemThemeStore.getSystemThemes();
   }
 
   async getTheme(key: string): Promise<EditorTheme> {
