@@ -398,7 +398,7 @@ export class WorkspaceStore extends AbstractStore<WorkspacePrefsSerialized, Work
     this.activatedModel = model;
   }
 
-  async hydratePanelFromURL() {
+  hydratePanelFromURL() {
     if (window.location.hash) {
       const query = queryString.parse(window.location.hash);
       if (query?.type) {

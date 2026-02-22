@@ -7,21 +7,27 @@ import { Newable } from '@journeyapps-labs/common-ioc';
 import { ActionStore } from '../stores/actions/ActionStore';
 import { ComboBoxStore2 } from '../stores/combo2/ComboBoxStore2';
 import { Action } from '../actions/Action';
+import { BaseObserver } from '@journeyapps-labs/common-utils';
 
 export interface SystemOptions {
   actionStore: ActionStore;
   comboBoxStore2: ComboBoxStore2;
 }
 
-export class System {
+export interface SystemListener {
+  definitionRegistered?: (definition: EntityDefinition) => any;
+  storeRegistered?: (store: AbstractStore) => any;
+}
+
+export class System extends BaseObserver<SystemListener> {
   @observable
   accessor ideName: string;
 
   // providers
   definitions: Map<string, EntityDefinition>;
   stores: Set<AbstractStore>;
-
   constructor(protected options: SystemOptions) {
+    super();
     this.stores = new Set();
     this.definitions = new Map();
     this.ideName = 'Reactor';
@@ -32,6 +38,9 @@ export class System {
   addStore<T extends AbstractStore>(symbol: Newable<T>, store: T) {
     this.stores.add(store);
     ioc.bind(symbol).toConstantValue(store);
+    this.iterateListeners((l) => {
+      l.storeRegistered?.(store);
+    });
   }
 
   unbindStore<T extends AbstractStore>(symbol: Newable<T>) {
@@ -52,6 +61,9 @@ export class System {
   registerDefinition(definition: EntityDefinition) {
     definition.setSystem(this);
     this.definitions.set(definition.type, definition);
+    this.iterateListeners((l) => {
+      l.definitionRegistered?.(definition);
+    });
   }
 
   getDefinition<T>(type: string): EntityDefinition<T> | null {

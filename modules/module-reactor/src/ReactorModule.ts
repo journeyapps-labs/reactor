@@ -62,11 +62,16 @@ import { SimpleEntitySearchEngineComponent } from './entities/components/search/
 import { KeyboardStore } from './stores/KeyboardStore';
 import { patchLightThemeEntityColors } from './stores/themes/built-in-themes/light';
 import { Container } from '@journeyapps-labs/common-ioc';
+import { EntityDefinition } from './entities/EntityDefinition';
+import { AbstractStore } from './stores/AbstractStore';
 import { DateFormatVisorMetadata } from './visor/DateFormatVisorMetadata';
 import { DateTimezoneVisorMetadata } from './visor/DateTimezoneVisorMetadata';
 import { DialogStore2 } from './stores/dialog2/DialogStore2';
 import { ActionStore } from './stores/actions/ActionStore';
 import { WorkspaceEntityDefinition } from './entities-reactor/workspaces/WorkspaceEntityDefinition';
+import { ioc } from './inversify.config';
+import { createRoot } from 'react-dom/client';
+import React from 'react';
 
 export class ReactorModule extends AbstractReactorModule {
   constructor() {
@@ -127,6 +132,34 @@ export class ReactorModule extends AbstractReactorModule {
       comboBoxStore: comboBoxStore,
       dialogStore: dialogStore
     });
+
+    // register entity definition search engines and preferences before registrations happen
+    system.registerListener({
+      storeRegistered: (store: AbstractStore) => {
+        store.getControls().forEach((control) => {
+          prefsStore.registerPreference(control);
+        });
+      },
+      definitionRegistered: (def: EntityDefinition) => {
+        def.getPanelComponents().forEach((fact) => {
+          workspaceStore.registerFactory(fact.generatePanelFactory());
+        });
+
+        let searchEngines = def.getSearchEngines();
+        searchEngines = searchEngines.filter((s) => s instanceof SimpleEntitySearchEngineComponent);
+        if (searchEngines.length === 0) {
+          return;
+        }
+
+        searchEngines.forEach((s) => {
+          const engine = s.getCmdPaletteSearchEngine();
+          if (engine) {
+            cmdPaletteStore.registerSearchEngine(engine);
+          }
+        });
+      }
+    });
+
     system.addStore(GuideStore, guideStore);
     system.addStore(WorkspaceStore, workspaceStore);
     system.addStore(PrefsStore, prefsStore);
@@ -241,10 +274,8 @@ export class ReactorModule extends AbstractReactorModule {
     patchLightThemeEntityColors();
 
     const cmdPaletteStore = ioc.get(CMDPalletStore);
-    const system = ioc.get(System);
     const uxStore = ioc.get(UXStore);
     const prefsStore = ioc.get(PrefsStore);
-    const themeStore = ioc.get(ThemeStore);
     const workspaceStore = ioc.get(WorkspaceStore);
     const visorStore = ioc.get(VisorStore);
 
@@ -255,46 +286,20 @@ export class ReactorModule extends AbstractReactorModule {
     });
     //!-------------------------------------
 
-    // register panel factories for each component type
-    system.getEntityDefinitions().forEach((def) => {
-      def.getPanelComponents().forEach((fact) => {
-        workspaceStore.registerFactory(fact.generatePanelFactory());
-      });
-    });
-
-    // phase 1: initialize core stateful stores deterministically
-    await workspaceStore.init();
     cmdPaletteStore.init();
-    await visorStore.init();
+    visorStore.init();
 
-    // phase 2: register preference controls from all stores
-    system.getStores().forEach((s) => {
-      s.getControls().forEach((c) => {
-        prefsStore.registerPreference(c);
-      });
+    // these purposefully left async
+    Promise.all([workspaceStore.init(), prefsStore.init(), uxStore.init()]).then(() => {
+      this.render();
+      workspaceStore.hydratePanelFromURL();
     });
+  }
 
-    // phase 3: initialize preferences before URL hydration to avoid partial state races
-    await prefsStore.init();
-    await workspaceStore.hydratePanelFromURL();
-
-    // register entity definition search engines
-    system.getEntityDefinitions().forEach((def) => {
-      let searchEngines = def.getSearchEngines();
-      searchEngines = searchEngines.filter((s) => s instanceof SimpleEntitySearchEngineComponent);
-      if (searchEngines.length === 0) {
-        return;
-      }
-
-      searchEngines.forEach((s) => {
-        const engine = s.getCmdPaletteSearchEngine();
-        if (engine) {
-          cmdPaletteStore.registerSearchEngine(engine);
-        }
-      });
-    });
-
-    // phase 4: activate UX once foundational stores are initialized
-    await uxStore.init();
+  render() {
+    document.querySelector('.loader').remove();
+    const root = ioc.get(UXStore).rootComponent;
+    const rootElement = createRoot(document.querySelector('#application'));
+    rootElement.render(React.createElement(root));
   }
 }

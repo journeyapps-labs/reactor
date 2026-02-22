@@ -1,16 +1,13 @@
 import { configure } from 'mobx';
+import { AbstractReactorModule } from './AbstractReactorModule';
+import { ioc } from '../inversify.config';
+import { Logger } from '@journeyapps-labs/common-logger';
+import { createLogger } from './logging';
+
 configure({
   enforceActions: 'never',
   disableErrorBoundaries: false
 });
-
-import { AbstractReactorModule } from './AbstractReactorModule';
-import { ioc } from '../inversify.config';
-import { Logger } from '@journeyapps-labs/common-logger';
-import { createRoot } from 'react-dom/client';
-import * as React from 'react';
-import { UXStore } from '../stores/UXStore';
-import { createLogger } from './logging';
 
 export class ReactorKernel {
   logger: Logger;
@@ -34,16 +31,7 @@ export class ReactorKernel {
         this.logger.error(`Failed to register module ${module.options.name}`, ex);
       }
     }
-
     await this.init();
-    await this.render();
-  }
-
-  async render() {
-    document.querySelector('.loader').remove();
-    const root = ioc.get(UXStore).rootComponent;
-    const rootElement = createRoot(document.querySelector('#application'));
-    rootElement.render(React.createElement(root));
   }
 
   protected async init() {

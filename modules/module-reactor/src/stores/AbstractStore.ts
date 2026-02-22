@@ -34,6 +34,7 @@ export class AbstractStore<T = any, L extends AbstractStoreListener = AbstractSt
 
   private bootstrapSerializer() {
     if (this.options.listenToExternalChanges && this.options.serializer) {
+      this.serializationListener?.();
       this.serializationListener = this.options.serializer.registerListener({
         gotExternalChanges: () => {
           this.runDeserialization();
@@ -99,8 +100,6 @@ export class AbstractStore<T = any, L extends AbstractStoreListener = AbstractSt
   updateOptions(options: Omit<AbstractStoreOptions<T>, 'name'>) {
     // run disposers
     this.options.serializer?.dispose?.();
-    this.serializationListener?.();
-
     this.options = {
       ...this.options,
       ...options
