@@ -20,6 +20,8 @@ import { ShowDemoFormAction } from './actions/ShowDemoFormAction';
 import { DemoFormsDialogsPanelFactory } from './panels/DemoFormsDialogsPanelFactory';
 import { AddSubTodoAction } from './actions/AddSubTodoAction';
 import { DemoEditorsPanelFactory } from './panels/DemoEditorsPanelFactory';
+import { RenameTodoAction } from './actions/RenameTodoAction';
+import { DuplicateTodoAction } from './actions/DuplicateTodoAction';
 
 export class ReactorDemoModule extends AbstractReactorModule {
   constructor() {
@@ -41,6 +43,8 @@ export class ReactorDemoModule extends AbstractReactorModule {
     ioc.get(ActionStore).registerAction(new DeleteTodoAction());
     ioc.get(ActionStore).registerAction(new SetCurrentTodoItemAction());
     ioc.get(ActionStore).registerAction(new AddSubTodoAction());
+    ioc.get(ActionStore).registerAction(new RenameTodoAction());
+    ioc.get(ActionStore).registerAction(new DuplicateTodoAction());
     ioc.get(ActionStore).registerAction(new ShowDemoFormAction());
     workspaceStore.registerFactory(new DemoFormsDialogsPanelFactory());
     workspaceStore.registerFactory(new DemoEditorsPanelFactory());

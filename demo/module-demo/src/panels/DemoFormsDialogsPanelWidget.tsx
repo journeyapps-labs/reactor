@@ -13,11 +13,15 @@ import {
   PanelButtonWidget,
   ReactorPanelModel,
   SimpleComboBoxDirective,
+  System,
   StatusCardState,
   StatusCardWidget,
   ioc
 } from '@journeyapps-labs/reactor-mod';
 import { DemoFormModel } from '../forms/DemoFormModel';
+import { TodoStore } from '../stores/TodoStore';
+import { DemoEntities } from '../DemoEntities';
+import { TodoModel } from '../models/TodoModel';
 
 export interface DemoFormsDialogsPanelWidgetProps {
   model: ReactorPanelModel;
@@ -353,6 +357,21 @@ export const DemoFormsDialogsPanelWidget: React.FC<DemoFormsDialogsPanelWidgetPr
     );
   };
 
+  const runEntityContextComboDemo = async (position: any) => {
+    const todoStore = ioc.get(TodoStore);
+    const entity = todoStore.activeTodo || todoStore.todos[0];
+    if (!entity) {
+      await dialogStore.showMessageDialog({
+        title: 'No todo items',
+        message: 'Create at least one todo item first.'
+      });
+      return;
+    }
+
+    const definition = ioc.get(System).getDefinition<TodoModel>(DemoEntities.TODO_ITEM);
+    definition.showContextMenuForEntity(entity, position);
+  };
+
   const resetInlineForm = () => {
     setInlineForm(new DemoFormModel());
   };
@@ -400,6 +419,7 @@ export const DemoFormsDialogsPanelWidget: React.FC<DemoFormsDialogsPanelWidgetPr
                     action={runNestedComboDemo}
                     mode={PanelButtonMode.PRIMARY}
                   />
+                  <PanelButtonWidget label="Open real entity menu" icon="cube" action={runEntityContextComboDemo} />
                 </S.Buttons>
               );
             }

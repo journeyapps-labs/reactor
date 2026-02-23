@@ -9,7 +9,10 @@ export class DeleteTodoAction extends EntityAction<TodoModel> {
       id: 'DELETE_TODO',
       name: 'Delete todo item',
       icon: 'trash',
-      target: DemoEntities.TODO_ITEM
+      target: DemoEntities.TODO_ITEM,
+      category: {
+        grouping: 'danger'
+      }
     });
     setupDeleteConfirmation({
       action: this

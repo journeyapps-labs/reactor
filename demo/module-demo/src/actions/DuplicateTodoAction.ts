@@ -1,0 +1,41 @@
+import { EntityAction, EntityActionEvent, inject } from '@journeyapps-labs/reactor-mod';
+import { TodoModel } from '../models/TodoModel';
+import { DemoEntities } from '../DemoEntities';
+import { TodoStore } from '../stores/TodoStore';
+
+export class DuplicateTodoAction extends EntityAction<TodoModel> {
+  static ID = 'DUPLICATE_TODO';
+
+  @inject(TodoStore)
+  accessor todoStore: TodoStore;
+
+  constructor() {
+    super({
+      id: DuplicateTodoAction.ID,
+      name: 'Duplicate todo',
+      icon: 'copy',
+      target: DemoEntities.TODO_ITEM,
+      category: {
+        grouping: 'structure'
+      }
+    });
+  }
+
+  protected cloneTree(todo: TodoModel): TodoModel {
+    const clone = new TodoModel(`${todo.name} (copy)`);
+    todo.children.forEach((child) => {
+      clone.addChild(this.cloneTree(child));
+    });
+    return clone;
+  }
+
+  async fireEvent(event: EntityActionEvent<TodoModel>): Promise<any> {
+    const clone = this.cloneTree(event.targetEntity);
+    const parent = event.targetEntity.parent;
+    if (parent) {
+      this.todoStore.addSubTodo(parent, clone);
+      return;
+    }
+    this.todoStore.addTodo(clone);
+  }
+}

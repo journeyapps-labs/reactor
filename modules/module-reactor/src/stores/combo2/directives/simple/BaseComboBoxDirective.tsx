@@ -85,6 +85,7 @@ export const SimpleComboBoxDirectiveWidget: React.FC<BaseComboBoxDirectiveWidget
   const childDirective = useRef<{
     directive: SimpleComboBoxDirective;
     key: string;
+    listener: () => any;
   }>(null);
 
   useEffect(() => {
@@ -119,18 +120,29 @@ export const SimpleComboBoxDirectiveWidget: React.FC<BaseComboBoxDirectiveWidget
           if (!dimensions || item.key === childDirective.current?.key) {
             return;
           }
+          childDirective.current?.listener();
           childDirective.current?.directive.dismiss();
           childDirective.current = null;
           if (item.children?.length > 0) {
+            let directive = new SimpleComboBoxDirective({
+              items: item.children,
+              event: {
+                clientX: dimensions.x + dimensions.width,
+                clientY: dimensions.y
+              }
+            });
+
+            let l1 = directive.registerListener({
+              dismissed: () => {
+                l1();
+                props.directive.dismiss();
+              }
+            });
+
             childDirective.current = {
               key: item.key,
-              directive: new SimpleComboBoxDirective({
-                items: item.children,
-                event: {
-                  clientX: dimensions.x + dimensions.width,
-                  clientY: dimensions.y
-                }
-              })
+              directive,
+              listener: l1
             };
             store.show(childDirective.current.directive);
           }

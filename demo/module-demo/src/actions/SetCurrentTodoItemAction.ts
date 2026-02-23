@@ -10,7 +10,10 @@ export class SetCurrentTodoItemAction extends EntityAction<TodoModel> {
       id: SetCurrentTodoItemAction.ID,
       name: 'Set current todo item',
       icon: 'arrow-right',
-      target: DemoEntities.TODO_ITEM
+      target: DemoEntities.TODO_ITEM,
+      category: {
+        grouping: 'state'
+      }
     });
   }
 

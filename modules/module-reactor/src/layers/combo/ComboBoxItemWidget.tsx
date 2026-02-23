@@ -35,9 +35,6 @@ namespace S {
     font-size: 13px;
     padding: 4px ${COMBOBOX_ITEM_H_PADDING}px;
     cursor: pointer;
-    transition:
-      background-color 0.2s,
-      color 0.2s;
     display: flex;
     align-items: center;
   `;
