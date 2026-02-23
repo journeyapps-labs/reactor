@@ -1,4 +1,5 @@
 import * as React from 'react';
+import { useEffect, useRef } from 'react';
 import { ComboBoxDirective, ComboBoxDirectiveOptions } from '../../ComboBoxDirective';
 import { ComboBoxItem } from '../../../combo/ComboBoxDirectives';
 import { ComboBoxWidget } from '../../../../layers/combo/ComboBoxWidget';
@@ -7,6 +8,9 @@ import { ControlledSearchWidget } from '../../../../widgets/search/ControlledSea
 import * as _ from 'lodash';
 import { createSearchEventMatcherBool } from '@journeyapps-labs/lib-reactor-search';
 import { styled } from '../../../themes/reactor-theme-fragment';
+import { ioc } from '../../../../inversify.config';
+import { ComboBoxStore2 } from '../../ComboBoxStore2';
+import { SimpleComboBoxDirective } from './SimpleComboBoxDirective';
 
 export interface BaseComboBoxDirectiveOptions<T extends ComboBoxItem = ComboBoxItem> extends ComboBoxDirectiveOptions {
   items: T[];
@@ -77,6 +81,19 @@ export interface BaseComboBoxDirectiveWidgetProps {
 
 export const SimpleComboBoxDirectiveWidget: React.FC<BaseComboBoxDirectiveWidgetProps> = (props) => {
   const forceUpdate = useForceUpdate();
+  const store = ioc.get(ComboBoxStore2);
+  const childDirective = useRef<{
+    directive: SimpleComboBoxDirective;
+    key: string;
+  }>(null);
+
+  useEffect(() => {
+    return props.directive.registerListener({
+      dismissed: () => {
+        childDirective.current?.directive.dismiss();
+      }
+    });
+  }, [props.directive]);
 
   if (props.directive.getAllItems().length === 0) {
     return <S.NoItems>No items</S.NoItems>;
@@ -98,6 +115,26 @@ export const SimpleComboBoxDirectiveWidget: React.FC<BaseComboBoxDirectiveWidget
         initialSelected={null}
         placeholder={props.directive.searchPlaceholder}
         items={props.directive.getItems()}
+        hovered={(item, dimensions) => {
+          if (!dimensions || item.key === childDirective.current?.key) {
+            return;
+          }
+          childDirective.current?.directive.dismiss();
+          childDirective.current = null;
+          if (item.children?.length > 0) {
+            childDirective.current = {
+              key: item.key,
+              directive: new SimpleComboBoxDirective({
+                items: item.children,
+                event: {
+                  clientX: dimensions.x + dimensions.width,
+                  clientY: dimensions.y
+                }
+              })
+            };
+            store.show(childDirective.current.directive);
+          }
+        }}
         selected={(item, event) => {
           if (item.link) {
             window.open(item.link, '_blank');

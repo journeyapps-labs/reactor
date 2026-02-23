@@ -1,163 +1,126 @@
 import * as React from 'react';
 import * as _ from 'lodash';
-import { CommonKeys, KeyboardContext, KeyboardStore } from '../../stores/KeyboardStore';
-import { inject } from '../../inversify.config';
+import { CommonKeys } from '../../stores/KeyboardStore';
+import { useKeyboardContext } from '../../hooks/useKeyboardContext';
 
 export interface ListItemRenderEvent {
   ref: React.RefObject<HTMLDivElement>;
   selected: boolean;
-  select: () => any;
+  hover: () => any;
+  select: (event: React.MouseEvent) => any;
   index: number;
 }
 
 export interface ListItem {
   key: string;
   render: (event: ListItemRenderEvent) => React.JSX.Element;
+  forwardRef?: React.RefObject<HTMLDivElement>;
 }
 
 export interface ControlledListWidgetProps {
   items: ListItem[];
   initialSelected?: string;
-  selected: (item: ListItem) => any;
+  selected: (item: ListItem, event: React.MouseEvent) => any;
   hovered?: (item: ListItem) => any;
   useKeyboard: boolean;
 }
 
-export interface ControlledListWidgetState {
-  selected: string;
-}
+export const ControlledListWidget: React.FC<ControlledListWidgetProps> = (props) => {
+  const selectedRef = React.useRef<HTMLDivElement>(null);
+  const selectedKeyRef = React.useRef<string>(null);
+  const [selected, setSelectedState] = React.useState<string>(props.initialSelected || props.items[0]?.key);
 
-export class ControlledListWidget extends React.Component<ControlledListWidgetProps, ControlledListWidgetState> {
-  listener: any;
-  selectedRef: React.RefObject<HTMLDivElement>;
+  React.useEffect(() => {
+    selectedKeyRef.current = selected;
+  }, [selected]);
 
-  @inject(KeyboardStore)
-  accessor keyboardStore: KeyboardStore;
+  const fireHover = React.useCallback(
+    (key: string) => {
+      if (!key || !props.hovered) {
+        return;
+      }
+      props.hovered(_.find(props.items, { key }));
+    },
+    [props.hovered, props.items]
+  );
 
-  keyboardContext: KeyboardContext;
+  const setSelected = React.useCallback(
+    (key: string) => {
+      if (!key || selectedKeyRef.current === key) {
+        return;
+      }
+      setSelectedState(key);
+      fireHover(key);
+    },
+    [fireHover]
+  );
 
-  constructor(props: ControlledListWidgetProps) {
-    super(props);
-    this.selectedRef = React.createRef();
-    this.state = {
-      selected: props.initialSelected || (props.items[0] && props.items[0].key)
-    };
-  }
-
-  componentDidUpdate(
-    prevProps: Readonly<ControlledListWidgetProps>,
-    prevState: Readonly<ControlledListWidgetState>,
-    snapshot?: any
-  ): void {
-    if (!prevProps.useKeyboard && this.props.useKeyboard) {
-      this.setupKeyboard();
-    } else if (prevProps.useKeyboard && !this.props.useKeyboard) {
-      this.destroyKeyboard();
+  useKeyboardContext({
+    enabled: props.useKeyboard,
+    handlers: {
+      [CommonKeys.ENTER]: () => {
+        props.selected(_.find(props.items, { key: selectedKeyRef.current }), null);
+      },
+      [CommonKeys.DOWN]: () => {
+        let index = _.findIndex(props.items, { key: selectedKeyRef.current });
+        index++;
+        if (index > props.items.length - 1) {
+          index = 0;
+        }
+        setSelected(props.items[index]?.key);
+      },
+      [CommonKeys.UP]: () => {
+        let index = _.findIndex(props.items, { key: selectedKeyRef.current });
+        index--;
+        if (index < 0) {
+          index = props.items.length - 1;
+        }
+        setSelected(props.items[index]?.key);
+      }
     }
+  });
 
-    if (prevState.selected !== this.state.selected && this.selectedRef.current) {
-      this.selectedRef.current.scrollIntoView({
+  React.useEffect(() => {
+    if (selected && selectedRef.current) {
+      selectedRef.current.scrollIntoView({
         behavior: 'smooth',
         block: 'nearest'
       });
     }
+  }, [selected]);
 
-    // always ensure that at least one thing is selected when we update
-    const first = _.first(this.props.items);
-    if (!this.state.selected && first) {
-      this.setState({
-        selected: first.key
-      });
+  React.useEffect(() => {
+    if (!selected && props.items[0]) {
+      setSelected(props.items[0].key);
     }
-  }
+  }, [props.items, selected, setSelected]);
 
-  componentDidMount(): void {
-    if (this.props.useKeyboard) {
-      this.setupKeyboard();
+  React.useEffect(() => {
+    if (selected) {
+      fireHover(selected);
     }
+  }, []);
 
-    // fire the first hover
-    if (this.state.selected) {
-      this.fireHover();
-    }
-  }
-
-  componentWillUnmount(): void {
-    this.destroyKeyboard();
-  }
-
-  fireHover() {
-    if (this.state.selected && this.props.hovered) {
-      this.props.hovered(_.find(this.props.items, { key: this.state.selected }));
-    }
-  }
-
-  setSelected(key: string) {
-    if (this.state.selected === key) {
-      return;
-    }
-    this.setState(
-      {
-        selected: key
-      },
-      () => {
-        this.fireHover();
-      }
-    );
-  }
-
-  destroyKeyboard() {
-    this.keyboardContext?.dispose();
-    this.keyboardContext = null;
-  }
-
-  setupKeyboard() {
-    if (this.keyboardContext) {
-      return;
-    }
-
-    this.keyboardContext = this.keyboardStore.pushContext();
-    this.keyboardContext.handle({
-      key: CommonKeys.ENTER,
-      action: () => {
-        this.props.selected(_.find(this.props.items, { key: this.state.selected }));
-      }
-    });
-    this.keyboardContext.handle({
-      key: CommonKeys.DOWN,
-      action: () => {
-        let index = _.findIndex(this.props.items, { key: this.state.selected });
-        index++;
-        if (index > this.props.items.length - 1) {
-          index = 0;
-        }
-        this.setSelected(this.props.items[index].key);
-      }
-    });
-    this.keyboardContext.handle({
-      key: CommonKeys.UP,
-      action: () => {
-        let index = _.findIndex(this.props.items, { key: this.state.selected });
-        index--;
-        if (index < 0) {
-          index = this.props.items.length - 1;
-        }
-        this.setSelected(this.props.items[index].key);
-      }
-    });
-  }
-
-  render() {
-    return _.map(this.props.items, (item, index) => {
-      const selected = this.state.selected === item.key;
-      return item.render({
-        selected: selected,
-        ref: selected ? this.selectedRef : null,
-        index: index,
-        select: () => {
-          this.setSelected(item.key);
-        }
-      });
-    });
-  }
-}
+  return (
+    <>
+      {_.map(props.items, (item, index) => {
+        const isSelected = selected === item.key;
+        return item.render({
+          selected: isSelected,
+          ref: isSelected ? selectedRef : null,
+          index,
+          hover: () => {
+            if (selectedKeyRef.current === item.key) {
+              fireHover(item.key);
+              return;
+            }
+            setSelected(item.key);
+          },
+          select: (event) => {
+            props.selected(item, event);
+          }
+        });
+      })}
+    </>
+  );
+};

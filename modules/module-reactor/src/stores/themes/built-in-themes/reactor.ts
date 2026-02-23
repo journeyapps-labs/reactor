@@ -109,7 +109,7 @@ export const DarkTheme = theme.addThemeValues({
       textSelected: 'white',
       headerForeground: 'white',
       background: '#0f141d',
-      backgroundSelected: 'rgb(56, 69, 87)',
+      backgroundSelected: 'rgba(0, 192, 255, 0.24)',
       text: 'rgb(214,222,235)',
       headerBackground: '#151d29',
       border: '#2f3d4f',

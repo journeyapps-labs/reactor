@@ -14,17 +14,24 @@ export class ComboBox2Layer extends LayerDirective {
   accessor comboBoxStore: ComboBoxStore2;
 
   show() {
-    return !!this.comboBoxStore.directive;
+    return this.comboBoxStore.directives.size > 0;
   }
 
   getLayerContent(): React.JSX.Element {
-    if (this.comboBoxStore.directive) {
-      return <ComboBoxWrapper directive={this.comboBoxStore.directive} />;
+    const directives = Array.from(this.comboBoxStore.directives.values());
+    if (directives.length > 0) {
+      return (
+        <>
+          {directives.map((directive, index) => (
+            <ComboBoxWrapper directive={directive} key={`combo2-${directive.id}`} />
+          ))}
+        </>
+      );
     }
   }
 
   layerWillHide() {
-    this.comboBoxStore.directive?.dismiss();
+    Array.from(this.comboBoxStore.directives.values()).forEach((directive) => directive.dismiss());
     return true;
   }
 }
@@ -55,9 +62,7 @@ export const ComboBoxWrapper: React.FC<ComboBoxWrapperProps> = (props) => {
   );
 };
 namespace S {
-  export const Container = styled.div`
-    padding: 5px;
-  `;
+  export const Container = styled.div``;
 
   export const Buttons = styled.div`
     padding-top: 5px;

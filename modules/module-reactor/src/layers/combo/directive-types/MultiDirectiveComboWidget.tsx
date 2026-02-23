@@ -149,7 +149,7 @@ export class MultiDirectiveComboWidget extends React.Component<
                       selected={event.selected}
                       item={item}
                       key={item.key}
-                      selectedEvent={() => {
+                      onMouseClick={() => {
                         this.setState({
                           checked: {
                             ...this.state.checked,
@@ -157,12 +157,10 @@ export class MultiDirectiveComboWidget extends React.Component<
                           }
                         });
                       }}
-                      forwardRef={event.ref}
-                      {...{
-                        onMouseOver: () => {
-                          event.select();
-                        }
+                      onMouseOver={() => {
+                        event.hover();
                       }}
+                      forwardRef={event.ref}
                     >
                       <S.Padding>
                         <CheckboxWidget

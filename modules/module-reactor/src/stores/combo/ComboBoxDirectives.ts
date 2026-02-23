@@ -17,6 +17,7 @@ export interface ComboBoxItem {
   action?: (event: MousePosition) => Promise<any>;
   right?: React.JSX.Element;
   disabled?: boolean;
+  forwardRef?: React.RefObject<HTMLDivElement>;
   badge?: {
     label: string;
     foreground: string;

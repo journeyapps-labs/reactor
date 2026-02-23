@@ -111,7 +111,7 @@ theme.addThemeValues({
       ...DarkTheme.combobox,
       headerForeground: 'white',
       textSelected: 'white',
-      backgroundSelected: 'linear-gradient(155deg, #575757, #3a3a3a)',
+      backgroundSelected: 'linear-gradient(155deg, rgba(255, 143, 0, 0.2), rgba(255, 23, 68,0.2))',
       background: 'rgb(25 25 25)',
       border: '#2a2a2a',
       headerBackground: 'linear-gradient(131deg, rgba(255,143,0,1) 0%, rgba(255,23,68,1) 12%, rgba(44, 44, 46, 1) 43%)'
