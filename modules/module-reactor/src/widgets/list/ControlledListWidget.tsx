@@ -27,12 +27,7 @@ export interface ControlledListWidgetProps {
 
 export const ControlledListWidget: React.FC<ControlledListWidgetProps> = (props) => {
   const selectedRef = React.useRef<HTMLDivElement>(null);
-  const selectedKeyRef = React.useRef<string>(null);
   const [selected, setSelectedState] = React.useState<string>(props.initialSelected || props.items[0]?.key);
-
-  React.useEffect(() => {
-    selectedKeyRef.current = selected;
-  }, [selected]);
 
   const fireHover = React.useCallback(
     (key: string) => {
@@ -46,23 +41,23 @@ export const ControlledListWidget: React.FC<ControlledListWidgetProps> = (props)
 
   const setSelected = React.useCallback(
     (key: string) => {
-      if (!key || selectedKeyRef.current === key) {
+      if (!key || selected === key) {
         return;
       }
       setSelectedState(key);
       fireHover(key);
     },
-    [fireHover]
+    [fireHover, selected]
   );
 
   useKeyboardContext({
     enabled: props.useKeyboard,
     handlers: {
       [CommonKeys.ENTER]: () => {
-        props.selected(_.find(props.items, { key: selectedKeyRef.current }), null);
+        props.selected(_.find(props.items, { key: selected }), null);
       },
       [CommonKeys.DOWN]: () => {
-        let index = _.findIndex(props.items, { key: selectedKeyRef.current });
+        let index = _.findIndex(props.items, { key: selected });
         index++;
         if (index > props.items.length - 1) {
           index = 0;
@@ -70,7 +65,7 @@ export const ControlledListWidget: React.FC<ControlledListWidgetProps> = (props)
         setSelected(props.items[index]?.key);
       },
       [CommonKeys.UP]: () => {
-        let index = _.findIndex(props.items, { key: selectedKeyRef.current });
+        let index = _.findIndex(props.items, { key: selected });
         index--;
         if (index < 0) {
           index = props.items.length - 1;
@@ -110,7 +105,7 @@ export const ControlledListWidget: React.FC<ControlledListWidgetProps> = (props)
           ref: isSelected ? selectedRef : null,
           index,
           hover: () => {
-            if (selectedKeyRef.current === item.key) {
+            if (selected === item.key) {
               fireHover(item.key);
               return;
             }

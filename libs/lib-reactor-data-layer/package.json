@@ -24,7 +24,7 @@
     "mobx": "^6.15.0"
   },
   "devDependencies": {
-    "@types/lodash": "^4.17.23",
+    "@types/lodash": "^4.17.24",
     "vitest": "^4.0.18"
   }
 }
