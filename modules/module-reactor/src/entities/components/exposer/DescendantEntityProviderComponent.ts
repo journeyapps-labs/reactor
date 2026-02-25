@@ -1,10 +1,14 @@
 import { EntityDefinitionComponent } from '../../EntityDefinitionComponent';
-import { ReactorTreeEntity, ReactorTreeNode, TreeWidgetProps } from '../../../widgets';
+import { ReactorTreeNode } from '../../../widgets/core-tree/reactor-tree/ReactorTreeNode';
+import { ReactorTreeEntity } from '../../../widgets/core-tree/reactor-tree/reactor-tree-utils';
+import { TreeWidgetProps } from '../../../widgets/tree/TreeWidget';
 import { inject } from '../../../inversify.config';
 import { ComboBoxStore2 } from '../../../stores/combo2/ComboBoxStore2';
 import { SimpleComboBoxDirective } from '../../../stores/combo2/directives/simple/SimpleComboBoxDirective';
 import { AbstractEntityTreePresenterContext } from '../presenter/types/tree/presenter-contexts/AbstractEntityTreePresenterContext';
-import { Action, EntityAction } from '../../../actions';
+import { Action } from '../../../actions/Action';
+import { EntityAction } from '../../../actions/parameterized/EntityAction';
+import { ActionStore } from '../../../stores/actions/ActionStore';
 
 export type CategoryInfo = Omit<TreeWidgetProps, 'forwardRef' | 'children' | 'rightClick'> & { sortKey?: string };
 
@@ -30,6 +34,9 @@ export class DescendantEntityProviderComponent<Parent = any, Descendant = any> e
   @inject(ComboBoxStore2)
   accessor comboBoxStore: ComboBoxStore2;
 
+  @inject(ActionStore)
+  accessor actionStore: ActionStore;
+
   cache: Map<AbstractEntityTreePresenterContext<Descendant>, ReactorTreeNode>;
 
   constructor(protected options: DescendantEntityProviderComponentOptions<Parent, Descendant>) {
@@ -53,7 +60,7 @@ export class DescendantEntityProviderComponent<Parent = any, Descendant = any> e
         return {
           ...categoryInfo,
           rightClick: (e) => {
-            const actions = this.system
+            const actions = this.actionStore
               .getActions()
               .filter((a) => {
                 if (a.options.category?.entityType === this.options.descendantType) {
@@ -137,7 +144,7 @@ export class DescendantEntityProviderComponent<Parent = any, Descendant = any> e
     entity: Parent,
     context: AbstractEntityTreePresenterContext<Descendant>
   ): { entities: ReactorTreeEntity[]; options: DescendantEntityGeneratedOptions<Descendant> } {
-    const descendantOptions = this.options.generateOptions(entity);
+    const descendantOptions = this.getDescendantOptions(entity);
     return {
       options: descendantOptions,
       entities: this.doGetReactorTreeEntities({
@@ -146,5 +153,9 @@ export class DescendantEntityProviderComponent<Parent = any, Descendant = any> e
         context
       })
     };
+  }
+
+  getDescendantOptions(entity: Parent): DescendantEntityGeneratedOptions<Descendant> | null {
+    return this.options.generateOptions(entity);
   }
 }

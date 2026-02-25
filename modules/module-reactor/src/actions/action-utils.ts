@@ -1,6 +1,6 @@
 import { Action, ActionRollbackMechanic } from './Action';
 import { ioc } from '../inversify.config';
-import { DialogStore } from '../stores';
+import { DialogStore } from '../stores/DialogStore';
 import { BatchStore } from '../stores/batch/BatchStore';
 import { EntityAction, EntityActionEvent } from './parameterized/EntityAction';
 import { System } from '../core/System';

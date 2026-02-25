@@ -1,5 +1,6 @@
 import { autorun } from 'mobx';
-import { ReactorTreeLeaf, ReactorTreeNode } from '../widgets';
+import { ReactorTreeLeaf } from '../widgets/core-tree/reactor-tree/ReactorTreeLeaf';
+import { ReactorTreeNode } from '../widgets/core-tree/reactor-tree/ReactorTreeNode';
 import { SearchResult, SearchResultEntry } from '@journeyapps-labs/lib-reactor-search';
 
 export interface SetupNodeOptions<T extends SearchResultEntry> {

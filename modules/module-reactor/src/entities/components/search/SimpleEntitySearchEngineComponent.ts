@@ -33,8 +33,11 @@ export class SimpleEntitySearchEngine<T> extends SearchEngine<SearchResult<Entit
     super();
   }
 
-  async autoSelectIsolatedItem(event: SearchEngineSearchEvent) {
-    let result = await this.getFilteredEntities(event);
+  async autoSelectIsolatedItem(event: { value: string | null }) {
+    let result = await this.getFilteredEntities({
+      ...event,
+      value: event.value || ''
+    });
     if (result.length === 1) {
       return result[0];
     }

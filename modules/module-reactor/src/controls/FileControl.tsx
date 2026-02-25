@@ -1,5 +1,5 @@
 import { RepresentAsComboBoxItemsEvent } from './AbstractControl';
-import { ComboBoxItem } from '../stores';
+import { ComboBoxItem } from '../stores/combo/ComboBoxDirectives';
 import { PanelButtonMode, PanelButtonWidget } from '../widgets/forms/PanelButtonWidget';
 import * as React from 'react';
 import { useEffect } from 'react';

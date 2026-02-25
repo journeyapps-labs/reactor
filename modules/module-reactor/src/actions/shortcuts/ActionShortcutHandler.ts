@@ -7,10 +7,14 @@ import { ShortcutHandler, ShortcutHandlerAction } from '../../stores/shortcuts/S
 import { ShortcutKey } from '../../stores/shortcuts/Shortcut';
 import { Hotkeys } from './Hotkeys';
 import { ACTION_SHORTCUT_HANDLER } from './action-shortcut-common';
+import { ActionStore } from '../../stores/actions/ActionStore';
 
 export class ActionShortcutHandler extends ShortcutHandler<ActionShortcut> {
   @inject(System)
   accessor system: System;
+
+  @inject(ActionStore)
+  accessor actionStore: ActionStore;
 
   stack: ShortcutKey[][];
   hotkeys: Hotkeys;
@@ -52,12 +56,12 @@ export class ActionShortcutHandler extends ShortcutHandler<ActionShortcut> {
   }
 
   getPossibleActions(): ShortcutHandlerAction[] {
-    return _.map(this.system.actions, (action) => {
+    return this.actionStore.getActions().map((action) => {
       return this.generateActionShortcut(action);
     });
   }
 
   getMetaForAction(id: string): ShortcutHandlerAction {
-    return this.generateActionShortcut(ioc.get(System).getAction(id));
+    return this.generateActionShortcut(this.actionStore.getAction(id));
   }
 }

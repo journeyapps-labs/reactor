@@ -13,7 +13,7 @@ import { styled } from '../../../stores/themes/reactor-theme-fragment';
 import * as _ from 'lodash';
 import { useForceUpdate } from '../../../hooks/useForceUpdate';
 import { LoadingPanelWidget } from '../../../widgets/panel/panel/LoadingPanelWidget';
-import { PanelButtonMode, PanelButtonWidget } from '../../../widgets';
+import { PanelButtonMode, PanelButtonWidget } from '../../../widgets/forms/PanelButtonWidget';
 import { Btn } from '../../../definitions/common';
 
 export interface ArraySetInputOptions<T> extends FormInputOptions<{ [key: string]: T }> {

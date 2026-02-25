@@ -3,6 +3,7 @@ import { MouseEvent } from 'react';
 import styled from '@emotion/styled';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { IconWidget, ReactorIcon } from '../icons/IconWidget';
+import { DualIconWidget } from '../icons/DualIconWidget';
 import { observer } from 'mobx-react';
 import { TreeContentWidget } from './TreeContentWidget';
 import { SearchEventMatch } from '@journeyapps-labs/lib-reactor-search';
@@ -26,8 +27,10 @@ export interface TreeLeafWidgetCommonProps {
   tooltip?: string;
   labelColor?: string;
   icon?: ReactorIcon;
+  icon2?: ReactorIcon;
   iconSpin?: boolean;
   iconColor?: string;
+  icon2Color?: string;
   selected?: boolean;
   deactivated?: boolean;
   forwardRef?: React.RefObject<HTMLDivElement>;
@@ -138,6 +141,20 @@ export class TreeLeafWidget extends React.Component<TreeLeafWidgetProps> {
     if (!this.props.icon) {
       return null;
     }
+
+    if (this.props.icon2) {
+      return (
+        <S.Icon>
+          <DualIconWidget
+            icon1={this.props.icon}
+            icon2={this.props.icon2}
+            color1={this.props.iconColor}
+            color2={this.props.icon2Color}
+          />
+        </S.Icon>
+      );
+    }
+
     return (
       <S.Icon style={{ color: this.props.iconColor }}>
         <S.NestedIcon icon={this.props.icon as any} spin={this.props.iconSpin} />

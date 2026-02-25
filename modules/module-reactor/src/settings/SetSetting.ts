@@ -1,6 +1,6 @@
 import { SetControl, SetControlOption } from '../controls/SetControl';
 import { SimpleComboBoxDirective } from '../stores/combo2/directives/simple/SimpleComboBoxDirective';
-import { MousePosition } from '../widgets';
+import { MousePosition } from '../layers/combo/SmartPositionWidget';
 import { AbstractInteractiveControlOptions } from './AbstractInteractiveSetting';
 import { AbstractUserSetting } from './AbstractUserSetting';
 import { computed, observable } from 'mobx';
@@ -37,6 +37,30 @@ export class SetSetting extends AbstractUserSetting<SetControl, SetSettingOption
 
   @computed get value() {
     return this.control.value;
+  }
+
+  canBeChanged() {
+    return this.options.options.length > 1;
+  }
+
+  setValue(value: string) {
+    this.control.value = value;
+  }
+
+  setOptions(options: SetControlOption<string>[]) {
+    this.options = {
+      ...this.options,
+      options
+    };
+    this.control.updateOptions({
+      options
+    });
+    if (options.length === 0) {
+      return;
+    }
+    if (!options.find((o) => o.key === this.control.value)) {
+      this.control.value = options[0].key;
+    }
   }
 
   protected deserialize(data) {

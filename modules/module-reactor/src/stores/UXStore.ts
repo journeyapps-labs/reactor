@@ -7,10 +7,10 @@ import { AbstractStore } from './AbstractStore';
 import { v4 } from 'uuid';
 import { ComboBoxStore2 } from './combo2/ComboBoxStore2';
 import { SimpleComboBoxDirective } from './combo2/directives/simple/SimpleComboBoxDirective';
-import { ChangeThemeAction } from '../actions';
+import { ChangeThemeAction } from '../actions/builtin-actions/ChangeThemeAction';
 import { System } from '../core/System';
 import { WorkspaceStore } from './workspace/WorkspaceStore';
-import { SettingsPanelModel } from '../panels/settings/SettingsPanelFactory';
+import { SettingsPanelModel } from '../panels/settings/SettingsPanelModel';
 
 const createFavicon = (url: string) => {
   const selector = document.head.querySelector(`link[type="image/x-icon"]`);

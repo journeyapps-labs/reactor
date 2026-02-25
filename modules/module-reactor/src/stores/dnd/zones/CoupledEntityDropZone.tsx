@@ -1,7 +1,8 @@
 import { HandleDropEvent } from './AbstractDropZone';
 import { inject } from '../../../inversify.config';
 import { System } from '../../../core/System';
-import { ActionSource, CoupledAction } from '../../../actions';
+import { ActionSource } from '../../../actions/Action';
+import { CoupledAction } from '../../../actions/parameterized/CoupledAction';
 import { EntityDefinition } from '../../../entities/EntityDefinition';
 import { EncodedEntity } from '../../../entities/components/encoder/EntityEncoderComponent';
 import * as _ from 'lodash';
@@ -11,6 +12,7 @@ import { NotificationStore } from '../../NotificationStore';
 import { MousePosition } from '../../../layers/combo/SmartPositionWidget';
 import { DialogStore } from '../../DialogStore';
 import { AbstractEntityDropZone, EntityMimeEncoding } from './AbstractEntityDropZone';
+import { ActionStore } from '../../actions/ActionStore';
 
 export class CoupledEntityDropZone extends AbstractEntityDropZone {
   @inject(System)
@@ -25,6 +27,9 @@ export class CoupledEntityDropZone extends AbstractEntityDropZone {
   @inject(DialogStore)
   accessor dialogStore: DialogStore;
 
+  @inject(ActionStore)
+  accessor actionStore: ActionStore;
+
   definition: EntityDefinition<unknown>;
   coupledActions: CoupledAction[];
   entity_id: string;
@@ -35,7 +40,7 @@ export class CoupledEntityDropZone extends AbstractEntityDropZone {
     if (!this.definition) {
       console.error(`Cannot find definition for entity: `, entity);
     }
-    this.coupledActions = this.system
+    this.coupledActions = this.actionStore
       .getActions()
       .filter((a) => a instanceof CoupledAction)
       .filter((a: CoupledAction) => {

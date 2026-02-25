@@ -6,7 +6,7 @@ import { MediaEngine } from '../../MediaEngine';
 import { ioc } from '../../../inversify.config';
 import { ImagePreviewWidget } from './ImagePreviewWidget';
 import { styled } from '../../../stores/themes/reactor-theme-fragment';
-import { PanelButtonWidget } from '../../../widgets';
+import { PanelButtonWidget } from '../../../widgets/forms/PanelButtonWidget';
 
 export interface UploadImagePreviewWidgetProps {
   onUpload: (media: ImageMedia) => Promise<void> | void;

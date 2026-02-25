@@ -34,6 +34,10 @@ theme.addThemeValues({
       backgroundLogoHover: 'rgba(255,255,255,0.15)',
       background: 'rgba(44, 44, 46, 1)'
     },
+    trees: {
+      ...DarkTheme.trees,
+      selectedBackground: 'rgba(255, 255, 255, 0.08)'
+    },
     guide: {
       accent: 'rgb(248,171,4)',
       tooltipBackground: 'hsl(41deg 35% 22%)',
@@ -62,7 +66,10 @@ theme.addThemeValues({
     cards: {
       background: 'rgba(58, 58, 60, 1)',
       foreground: 'white',
-      border: 'rgba(0,0,0,0)'
+      border: '#666668',
+      tagBackground: '#6f6f71',
+      tagLabelBackground: 'rgba(0, 0, 0, 0.14)',
+      tagLabelForeground: 'rgba(255, 255, 255, 0.92)'
     },
     table: {
       ...DarkTheme.table,
@@ -107,7 +114,8 @@ theme.addThemeValues({
     },
     floating: {
       background: 'rgba(28, 28, 30, 0.8)',
-      backgroundInactive: 'rgba(28, 28, 30, 0.5)'
+      backgroundInactive: 'rgba(28, 28, 30, 0.5)',
+      border: 'rgba(255,255,255,0.2)'
     }
   }
 });

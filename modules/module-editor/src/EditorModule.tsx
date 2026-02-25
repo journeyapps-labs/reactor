@@ -1,4 +1,5 @@
 import {
+  ActionStore,
   AbstractReactorModule,
   CMDPalletStore,
   PrefsStore,
@@ -13,13 +14,14 @@ import { MonacoShortcutHandler } from './shortcuts/MonacoShortcutHandler';
 import { MonacoCommandPalletSearchEngine } from './MonacoCommandPalletSearchEngine';
 import * as React from 'react';
 import { MonacoThemeStore } from './stores/MonacoThemeStore';
+import { MonacoSystemThemeStore } from './stores/MonacoSystemThemeStore';
 import { ChangeEditorThemeAction } from './actions/ChangeEditorThemeAction';
-import { EditorThemeProvider } from './providers/EditorThemeProvider';
 import { SmartEditorThemePreferencesWidget } from './theme/SmartEditorThemePreferencesWidget';
 import { patchThemeService } from './theme/patchThemeService';
 import { EnableVimSetting } from './settings/VimSupportSetting';
 import { theme } from './theme-reactor/editor-theme-fragment';
 import { MonacoKeybindingStore } from './stores/keybindings/MonacoKeybindingStore';
+import { EditorThemeEntityDefinition } from './entities/EditorThemeEntityDefinition';
 
 export class EditorModule extends AbstractReactorModule {
   constructor() {
@@ -39,7 +41,8 @@ export class EditorModule extends AbstractReactorModule {
     workspaceStore.engine.layerManager.setInitialZIndex(12);
 
     // new instances
-    const monacoThemeStore = new MonacoThemeStore();
+    const monacoSystemThemeStore = new MonacoSystemThemeStore();
+    const monacoThemeStore = new MonacoThemeStore(monacoSystemThemeStore);
     const monacoStore = new MonacoStore();
     const monacoKeybindingsStore = new MonacoKeybindingStore({
       editorStore: monacoStore,
@@ -55,6 +58,7 @@ export class EditorModule extends AbstractReactorModule {
 
     // register stores
     system.addStore(MonacoStore, monacoStore);
+    system.addStore(MonacoSystemThemeStore, monacoSystemThemeStore);
     system.addStore(MonacoThemeStore, monacoThemeStore);
     system.addStore(MonacoKeybindingStore, monacoKeybindingsStore);
 
@@ -68,16 +72,17 @@ export class EditorModule extends AbstractReactorModule {
       }
     });
     prefsStore.registerPreference(new EnableVimSetting());
-    system.registerAction(new ChangeEditorThemeAction());
-    system.registerProvider(new EditorThemeProvider(monacoThemeStore));
+    ioc.get(ActionStore).registerAction(new ChangeEditorThemeAction());
+    system.registerDefinition(new EditorThemeEntityDefinition());
 
     // changing an IDE theme should change the corresponding editor theme
     const selectedTheme = themeStore.selectedTheme;
     selectedTheme.registerListener({
       updated(): any {
-        monacoThemeStore.selectedTheme.setItem(
-          monacoThemeStore.getMonacoThemeForReactorTheme(selectedTheme.entity.key)
-        );
+        const monacoTheme = monacoThemeStore.getMonacoThemeForReactorTheme(selectedTheme.entity.key);
+        if (monacoTheme) {
+          monacoThemeStore.selectedTheme.setItem(monacoTheme);
+        }
       }
     });
 

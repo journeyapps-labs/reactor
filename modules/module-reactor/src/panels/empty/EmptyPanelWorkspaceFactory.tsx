@@ -3,10 +3,10 @@ import { WorkspaceModelFactoryEvent } from '@projectstorm/react-workspaces-core'
 import { EmptyWorkspacePanel } from './EmptyWorkspacePanel';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { ReactorPanelFactory } from '../../stores/workspace/react-workspaces/ReactorPanelFactory';
-import { ReactorPanelModel } from '../../stores/workspace/react-workspaces/ReactorPanelModel';
 import { TabRendererEvent } from '@projectstorm/react-workspaces-model-tabs';
 import { TAB_BAR_HEIGHT } from '../../stores/workspace/react-workspaces/ReactorTabFactory';
 import { themed } from '../../stores/themes/reactor-theme-fragment';
+import { EMPTY_REACTOR_PANEL_TYPE, EmptyReactorPanelModel } from './EmptyReactorPanelModel';
 
 namespace S {
   export const Container = themed.div`
@@ -22,15 +22,8 @@ namespace S {
   `;
 }
 
-export class EmptyReactorPanelModel extends ReactorPanelModel {
-  constructor() {
-    super(EmptyPanelWorkspaceFactory.TYPE);
-    this.setExpand(true, true);
-  }
-}
-
 export class EmptyPanelWorkspaceFactory extends ReactorPanelFactory<EmptyReactorPanelModel> {
-  static TYPE = 'empty';
+  static TYPE = EMPTY_REACTOR_PANEL_TYPE;
 
   constructor() {
     super({

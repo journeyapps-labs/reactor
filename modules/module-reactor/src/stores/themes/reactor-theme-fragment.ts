@@ -137,7 +137,10 @@ export const theme = new ThemeFragment({
       colors: {
         background: 'Background color',
         foreground: 'Text color',
-        border: 'Border color'
+        border: 'Border color',
+        tagBackground: 'Tag pill background color',
+        tagLabelBackground: 'Tag label background color',
+        tagLabelForeground: 'Tag label text color'
       }
     },
     combobox: {
@@ -232,7 +235,8 @@ export const theme = new ThemeFragment({
       label: 'Floating panels',
       colors: {
         background: 'Background color',
-        backgroundInactive: 'Background color when inactive'
+        backgroundInactive: 'Background color when inactive',
+        border: 'Border color'
       }
     }
   }

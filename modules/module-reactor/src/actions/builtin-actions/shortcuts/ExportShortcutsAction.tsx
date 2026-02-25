@@ -1,9 +1,9 @@
 import { inject, ioc } from '../../../inversify.config';
-import { System } from '../../../core/System';
 import React from 'react';
 import { DownloadWorkspaceIcon } from '../workspace/ExportWorkspacesAction';
 import { ShortcutStore } from '../../../stores/shortcuts/ShortcutStore';
 import { Action, ActionEvent } from '../../Action';
+import { ActionStore } from '../../../stores/actions/ActionStore';
 
 export class ExportShortcutsAction extends Action {
   @inject(ShortcutStore)
@@ -21,7 +21,7 @@ export class ExportShortcutsAction extends Action {
   }
 
   static get(): ExportShortcutsAction {
-    return ioc.get(System).getAction(ExportShortcutsAction.NAME);
+    return ioc.get(ActionStore).getAction(ExportShortcutsAction.NAME);
   }
 
   async fireEvent(event: ActionEvent): Promise<any> {

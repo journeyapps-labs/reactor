@@ -1,10 +1,10 @@
 import * as React from 'react';
 import { AbstractInteractiveControlOptions } from './AbstractInteractiveSetting';
 import { makeObservable, observable } from 'mobx';
-import { System } from '../core/System';
-import { inject } from '../inversify.config';
+import { ioc } from '../inversify.config';
 import { AbstractUserSetting } from './AbstractUserSetting';
 import { EntityControl } from '../controls/EntityControl';
+import { System } from '../core/System';
 
 export interface EntitySettingOptions<I> extends AbstractInteractiveControlOptions {
   type: string;
@@ -15,9 +15,6 @@ export interface EntitySettingOptions<I> extends AbstractInteractiveControlOptio
 export class EntitySetting<I> extends AbstractUserSetting<EntityControl<I>, EntitySettingOptions<I>> {
   @observable
   accessor entity: I;
-
-  @inject(System)
-  accessor system: System;
 
   constructor(options: EntitySettingOptions<I>) {
     super(
@@ -45,7 +42,7 @@ export class EntitySetting<I> extends AbstractUserSetting<EntityControl<I>, Enti
 
   async deserialize(data: ReturnType<this['serialize']>) {
     try {
-      const entity = await this.system.decodeEntity<I>(data.entity);
+      const entity = await ioc.get(System).decodeEntity<I>(data.entity);
       if (!!entity) {
         this.control.value = entity;
       }
@@ -60,7 +57,7 @@ export class EntitySetting<I> extends AbstractUserSetting<EntityControl<I>, Enti
 
   serialize() {
     return {
-      entity: this.system.getDefinition(this.options.type).encode(this.entity)
+      entity: ioc.get(System).getDefinition(this.options.type).encode(this.entity)
     };
   }
 }

@@ -1,9 +1,9 @@
 import { Action, ActionEvent } from '../../Action';
 import { inject, ioc } from '../../../inversify.config';
 import { WorkspaceStore } from '../../../stores/workspace/WorkspaceStore';
-import { System } from '../../../core/System';
 import { NotificationStore } from '../../../stores/NotificationStore';
 import { WorkspaceActionValidator } from './WorkspaceActionValidator';
+import { ActionStore } from '../../../stores/actions/ActionStore';
 
 export class ImportWorkspaceAction extends Action {
   @inject(WorkspaceStore)
@@ -24,7 +24,7 @@ export class ImportWorkspaceAction extends Action {
   }
 
   static get(): ImportWorkspaceAction {
-    return ioc.get(System).getAction(ImportWorkspaceAction.NAME);
+    return ioc.get(ActionStore).getAction(ImportWorkspaceAction.NAME);
   }
 
   async fireEvent(event: ActionEvent): Promise<any> {

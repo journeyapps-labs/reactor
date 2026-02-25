@@ -4,19 +4,23 @@ import styled from '@emotion/styled';
 import { PanelBtn, PanelButtonWidget } from '../forms/PanelButtonWidget';
 import { Observer } from 'mobx-react';
 import { FooterLoaderWidget } from '../footer/FooterLoaderWidget';
-import { LoadingDirectiveState } from '../../stores';
+import { LoadingDirectiveState } from '../../stores/visor/VisorLoadingDirective';
 import { MetaBarWidget } from '../meta/MetaBarWidget';
 import { ReadOnlyMetadataWidgetProps } from '../meta/ReadOnlyMetadataWidget';
-import { getDarkenedColor } from '@journeyapps-labs/lib-reactor-utils';
+import { getDarkenedColor, getTransparentColor } from '@journeyapps-labs/lib-reactor-utils';
 import { themed } from '../../stores/themes/reactor-theme-fragment';
+import { getScrollableCSS } from '../panel/panel/PanelWidget';
 
 export interface CardWidgetProps {
   btns?: PanelBtn[];
   title: string | React.JSX.Element;
-  subHeading?: string;
+  subHeading?: string | React.JSX.Element;
   color?: string;
+  subHeadingColor?: string;
+  selected?: boolean;
+  selectedBorderColor?: string;
   className?;
-  sections: { content: () => React.JSX.Element; key: string }[];
+  sections: { content: () => React.JSX.Element | null; key: string }[];
   loader?: {
     color?: string;
     percentage: number;
@@ -25,10 +29,11 @@ export interface CardWidgetProps {
 }
 
 namespace S {
-  export const Container = themed.div`
+  export const Container = themed.div<{ selected?: boolean; selectedBorderColor?: string }>`
     border-radius: 5px;
     background: ${(p) => p.theme.cards.background};
-    border: solid 1px ${(p) => p.theme.cards.border};
+    border: solid 1px
+      ${(p) => (p.selected ? p.selectedBorderColor || p.theme.tabs.selectedAccentSingle : p.theme.cards.border)};
     display: flex;
     flex-direction: column;
   `;
@@ -70,8 +75,11 @@ namespace S {
 
   export const Content = themed.div`
     flex-grow: 1;
-    border-top: solid 1px ${(p) => p.theme.panels.background};
+    border-top: solid 1px ${(p) => getTransparentColor(p.theme.cards.border, 0.4)};
     padding: 10px;
+    min-width: 0;
+    overflow-x: auto;
+    ${(p) => getScrollableCSS(p.theme)};
   `;
 
   export const Buttons = styled.div`
@@ -109,13 +117,27 @@ export class CardWidget extends React.Component<CardWidgetProps> {
     return <S.Title>{this.props.title}</S.Title>;
   }
 
+  getSubHeading() {
+    if (!this.props.subHeading) {
+      return null;
+    }
+    if (React.isValidElement(this.props.subHeading)) {
+      return this.props.subHeading;
+    }
+    return <S.Subtitle color={this.props.subHeadingColor || this.props.color}>{this.props.subHeading}</S.Subtitle>;
+  }
+
   render() {
     return (
-      <S.Container className={this.props.className}>
+      <S.Container
+        className={this.props.className}
+        selected={this.props.selected}
+        selectedBorderColor={this.props.selectedBorderColor}
+      >
         <S.Top>
           <S.Info>
             {this.getTitle()}
-            {this.props.subHeading ? <S.Subtitle color={this.props.color}>{this.props.subHeading}</S.Subtitle> : null}
+            {this.getSubHeading()}
           </S.Info>
           <S.Buttons>
             {this.props.btns?.map((btn, index) => {
@@ -129,9 +151,16 @@ export class CardWidget extends React.Component<CardWidgetProps> {
               return null;
             }
             return (
-              <S.Content key={section.key}>
-                <Observer render={section.content} />
-              </S.Content>
+              <Observer
+                key={section.key}
+                render={() => {
+                  const content = section.content();
+                  if (!content) {
+                    return null;
+                  }
+                  return <S.Content>{content}</S.Content>;
+                }}
+              />
             );
           })}
         </>

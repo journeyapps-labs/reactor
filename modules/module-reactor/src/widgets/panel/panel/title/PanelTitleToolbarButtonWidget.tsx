@@ -9,7 +9,7 @@ import { useButton } from '../../../../hooks/useButton';
 import { observer } from 'mobx-react';
 import { ThemeStore } from '../../../../stores/themes/ThemeStore';
 import { ioc } from '../../../../inversify.config';
-import { ValidationResult } from '../../../../actions';
+import { ValidationResult } from '../../../../actions/validators/ActionValidator';
 
 export interface PanelTitleToolbarButtonProps extends Btn {
   enabled?: boolean;

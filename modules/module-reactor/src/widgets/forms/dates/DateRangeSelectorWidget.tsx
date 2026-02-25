@@ -3,7 +3,7 @@ import * as React from 'react';
 import { styled } from '../../../stores/themes/reactor-theme-fragment';
 import { DateTime, Duration } from 'luxon';
 import { ioc } from '../../../inversify.config';
-import { ComboBoxItem } from '../../../stores';
+import { ComboBoxItem } from '../../../stores/combo/ComboBoxDirectives';
 import { Layer, LayerManager } from '../../../stores/layer/LayerManager';
 import { getTransparentColor } from '@journeyapps-labs/lib-reactor-utils';
 import { DateTimePickerLayerWidget } from './DateTimePickerLayerWidget';

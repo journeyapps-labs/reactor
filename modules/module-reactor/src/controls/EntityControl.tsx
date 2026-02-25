@@ -1,7 +1,7 @@
 import { RepresentAsComboBoxItemsEvent } from './AbstractControl';
-import { ComboBoxItem } from '../stores';
+import { ComboBoxItem } from '../stores/combo/ComboBoxDirectives';
 import { v4 } from 'uuid';
-import { inject } from '../inversify.config';
+import { ioc } from '../inversify.config';
 import { System } from '../core/System';
 import { EntityButtonWidget } from '../widgets/forms/EntityButtonWidget';
 import * as React from 'react';
@@ -16,15 +16,12 @@ export interface EntityControlOptions<Entity extends any> extends AbstractValueC
 }
 
 export class EntityControl<Entity = any> extends AbstractValueControl<Entity, EntityControlOptions<Entity>> {
-  @inject(System)
-  accessor system: System;
-
   get entityType() {
     return this.options.entityType;
   }
 
   get definition() {
-    return this.system.getDefinition<Entity>(this.entityType);
+    return ioc.get(System).getDefinition<Entity>(this.entityType);
   }
 
   get parent() {

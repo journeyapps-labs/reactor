@@ -25,6 +25,7 @@ export function useForceUpdate() {
     // this essentially prevents a re-render during a re-render (which would throw a warning)
     if (props.defer) {
       setValueDebounced((value) => value + 1);
+      return;
     }
     setValue((value) => value + 1);
   };

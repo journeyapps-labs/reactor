@@ -1,54 +1,57 @@
 import _ from 'lodash';
-import { autorun } from 'mobx';
-import React, { useCallback, useEffect, useRef, useState } from 'react';
-import { CoreTreeWidget, ReactorTreeEntity, SearchableCoreTreeWidget } from '../../../../../widgets';
+import React, { useEffect, useMemo, useRef } from 'react';
+import { observer } from 'mobx-react';
+import { CoreTreeWidget } from '../../../../../widgets/core-tree/CoreTreeWidget';
+import { ReactorTreeLeaf } from '../../../../../widgets/core-tree/reactor-tree/ReactorTreeLeaf';
+import { ReactorTreeNode } from '../../../../../widgets/core-tree/reactor-tree/ReactorTreeNode';
+import { PanelPlaceholderWidget } from '../../../../../widgets/panel/panel/PanelPlaceholderWidget';
 import { RenderCollectionOptions } from '../../AbstractPresenterContext';
 import { AbstractEntityTreePresenterContext } from './presenter-contexts/AbstractEntityTreePresenterContext';
-import { EntityReactorNode } from './EntityReactorNode';
-import { EntityReactorLeaf } from './EntityReactorLeaf';
+import { SearchableEntityTreeWidget } from './SearchableEntityTreeWidget';
 
 export interface EntityTreeCollectionWidgetProps<T extends any> {
   event: RenderCollectionOptions<T>;
   presenterContext: AbstractEntityTreePresenterContext<T>;
 }
 
-export const EntityTreeCollectionWidget = function <T>(props: EntityTreeCollectionWidgetProps<T>) {
+export const EntityTreeCollectionWidget = observer(function <T>(props: EntityTreeCollectionWidgetProps<T>) {
   const { event, presenterContext } = props;
-  const [nodes, setNodes] = useState<ReactorTreeEntity[]>([]);
   const lockedRef = useRef<boolean>(false);
+  const nodes = presenterContext.getTreeNodes(event);
 
-  const saveState = useCallback(
-    _.debounce(
+  const saveState = useMemo(() => {
+    return _.debounce(
       () => {
         presenterContext.saveState();
       },
       100,
       { leading: false, trailing: true }
-    ),
-    []
-  );
-
-  useEffect(() => {
-    return autorun(
-      () => {
-        setNodes(presenterContext.getTreeNodes(event));
-      },
-      { name: `EntityTreeCollectionWidget:${presenterContext.definition.type}` }
     );
-  }, [event]);
+  }, [presenterContext]);
 
   useEffect(() => {
-    return props.event.events?.registerListener({
+    return () => {
+      saveState.cancel();
+    };
+  }, [saveState]);
+
+  useEffect(() => {
+    return event.events?.registerListener({
       selectEntity: (entity) => {
         if (lockedRef.current) {
           return;
         }
         _.chain(nodes)
           .flatMap((n) => n.flatten())
-          .filter((n) => n instanceof EntityReactorNode || n instanceof EntityReactorLeaf)
-          .forEach((n: EntityReactorNode) => {
-            if (n.entity === entity) {
-              let p = n.getParent();
+          .forEach((n) => {
+            if (!(n instanceof ReactorTreeNode || n instanceof ReactorTreeLeaf)) {
+              return;
+            }
+
+            const candidate = n as ReactorTreeNode & { entity?: unknown };
+
+            if (candidate.entity === entity) {
+              let p = candidate.getParent();
 
               // already visible, no need to do anything
               if (!p) {
@@ -64,7 +67,7 @@ export const EntityTreeCollectionWidget = function <T>(props: EntityTreeCollecti
               // fire the events again so the leaf which is now visible, scrolls into view
               _.defer(() => {
                 lockedRef.current = true;
-                props.event.events.iterateListeners((cb) => cb.selectEntity?.(entity));
+                event.events.iterateListeners((cb) => cb.selectEntity?.(entity));
                 _.defer(() => {
                   lockedRef.current = false;
                 });
@@ -74,26 +77,23 @@ export const EntityTreeCollectionWidget = function <T>(props: EntityTreeCollecti
           .value();
       }
     });
-  }, [nodes]);
+  }, [event.events, nodes]);
 
-  // common properties for each node / leaf
+  if (nodes.length === 0) {
+    return <PanelPlaceholderWidget center={true} icon="clone" text="No entities to display" />;
+  }
+
+  if (event.searchEvent?.search) {
+    return (
+      <SearchableEntityTreeWidget
+        nodes={nodes}
+        search={event.searchEvent.search}
+        searchScope={presenterContext.presenter.searchScope}
+      />
+    );
+  }
+
   const jsxElements = nodes.map((tree) => {
-    // render as searchable tree
-    if (event.searchEvent?.search) {
-      return (
-        <SearchableCoreTreeWidget
-          tree={tree}
-          key={tree.getPathAsString()}
-          matchNode={() => {
-            return false;
-          }}
-          matchLeaf={() => {
-            return false;
-          }}
-          search={event.searchEvent.search}
-        />
-      );
-    }
     return (
       <CoreTreeWidget
         tree={tree}
@@ -106,5 +106,6 @@ export const EntityTreeCollectionWidget = function <T>(props: EntityTreeCollecti
       />
     );
   });
+
   return <>{jsxElements}</>;
-};
+});

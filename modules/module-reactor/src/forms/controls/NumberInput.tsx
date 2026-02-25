@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { FormInput, FormInputGenerics, FormInputOptions, FormInputRenderOptions } from '../FormInput';
-import { Input } from '../../widgets';
+import { Input } from '../../widgets/forms/inputs';
 import { Observer } from 'mobx-react';
 import { observable } from 'mobx';
 

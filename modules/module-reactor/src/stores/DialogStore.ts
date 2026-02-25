@@ -3,7 +3,7 @@ import { Btn } from '../definitions/common';
 import * as uuid from 'uuid';
 import * as _ from 'lodash';
 import { ComboBoxItem } from './combo/ComboBoxDirectives';
-import { FormModel } from '../forms';
+import { FormModel } from '../forms/FormModel';
 import { InputDialogType } from '../layers/dialog/InputDialogWidget';
 import * as React from 'react';
 import { BaseObserver } from '@journeyapps-labs/common-utils';
@@ -140,7 +140,9 @@ export class DialogStore extends BaseObserver<DialogListener> {
       directive.resolve(val);
     }
     const index = _.findIndex(this.directives, { id: directive.id });
-    this.directives.splice(index, 1);
+    if (index !== -1) {
+      this.directives.splice(index, 1);
+    }
   }
 
   showFormDialog<T extends FormModel>(options: { model: T } & CommonDialogOptions): Promise<T | null>;

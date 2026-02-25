@@ -1,6 +1,5 @@
 import { ReactorIcon } from '../../widgets/icons/IconWidget';
 import { MousePosition } from '../../layers/combo/SmartPositionWidget';
-import { Provider } from '../../providers/Provider';
 import { SearchResultEntry, SearchEngineInterface } from '@journeyapps-labs/lib-reactor-search';
 
 export interface ComboBoxItem {
@@ -26,17 +25,12 @@ export interface ComboBoxItem {
   };
 }
 
-export interface ProviderComboBoxItem<T = any> extends ComboBoxItem {
-  providerItem: T;
-}
-
 export interface ComboBoxCheckedItem extends ComboBoxItem {
   checked?: boolean;
 }
 
 export enum UIDirectiveType {
   ITEMS = 'items',
-  PROVIDER = 'provider',
   SEARCH_ENGINE = 'search',
   MULTI = 'multi'
 }
@@ -61,13 +55,6 @@ export interface UIDirective {
 export interface UIItemsDirective<T extends ComboBoxItem = ComboBoxItem> extends UIDirective {
   items: T[];
   buttons?: boolean;
-}
-
-export interface UIProviderDirective<T extends any = any> extends UIDirective {
-  provider: Provider;
-  param?: any;
-  filter?: (item: T) => boolean;
-  transform?: (item: ProviderComboBoxItem<T>) => ProviderComboBoxItem<T>;
 }
 
 export interface UISearchEngineDirective extends UIDirective {

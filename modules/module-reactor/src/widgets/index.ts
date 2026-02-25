@@ -7,17 +7,10 @@ export * from '../layers/combo/ComboBoxWidget';
 export * from '../layers/combo/ComboSearchBoxWidget';
 export * from '../layers/combo/SmartPositionWidget';
 export * from '../layers/combo/directive-types/ItemsDirectiveComboWidget';
-export * from '../layers/combo/directive-types/ProviderDirectiveComboWidget';
 
 export * from './cron/CronEditor';
 
 export * from '../layers/command-pallet/CommandPalletWidget';
-
-export * from './dnd/DraggableWidget';
-export * from './dnd/DropzoneDividerWidget';
-export * from './dnd/DropzoneWidget';
-
-export * from './dnd2/useDropZone';
 
 export * from './info/tooltips';
 export * from './info/DateDisplayWidget';
@@ -33,6 +26,7 @@ export * from './footer/FooterWidget';
 export * from './footer/FooterLoaderWidget';
 export * from './icons/IconWidget';
 export * from './icons/IconWidget';
+export * from './icons/DualIconWidget';
 
 export * from './graphs/GraphWidget';
 
@@ -65,7 +59,6 @@ export * from './panel/panel/PanelWidget';
 export * from './panel/panel/SmartPanelTitleWidget';
 export * from './panel/panel/PanelPlaceholderWidget';
 export * from './panel/panel/EntityPlaceholderWidget';
-export * from './panel/panel/ProviderPlaceholderWidget';
 export * from './panel/panel/PanelWithFooterWidget';
 
 export * from './panel/tray/SmartTrayTitleWidget';
@@ -95,6 +88,7 @@ export * from './tabs/TabSelectionKeyboardWidget';
 export * from './collections/PaginatedCollectionWidget';
 
 export * from './core-tree/SearchableCoreTreeWidget';
+export * from './core-tree/SearchableTreeSearchScope';
 export * from './core-tree/CoreTreeWidget';
 export * from './core-tree/reactor-tree/PatchTree';
 export * from './core-tree/reactor-tree/ReactorTreeNode';
@@ -140,7 +134,6 @@ export * from './sliding-panel/SlidingPanelWidget';
 
 export * from './forms/InputContainerWidget';
 export * from './forms/inputs';
-export * from './forms/ProviderButtonWidget';
 export * from './forms/textAreas';
 export * from './forms/selects';
 export * from './forms/buttons';

@@ -1,9 +1,12 @@
 import {
+  DescendantLoadingEntityProviderComponent,
+  EntityCardsPresenterComponent,
   EntityActionHandlerComponent,
   EntityDefinition,
   EntityDescriberComponent,
   EntityPanelComponent,
   inject,
+  InlineEntityEncoderComponent,
   InlineTreePresenterComponent,
   SimpleEntitySearchEngineComponent
 } from '@journeyapps-labs/reactor-mod';
@@ -12,6 +15,7 @@ import { TodoStore } from '../stores/TodoStore';
 import { TodoModel } from '../models/TodoModel';
 import { CreateTodoAction } from '../actions/CreateTodoAction';
 import { SetCurrentTodoItemAction } from '../actions/SetCurrentTodoItemAction';
+import { AddSubTodoAction } from '../actions/AddSubTodoAction';
 
 export class TodoDefinition extends EntityDefinition<TodoModel> {
   @inject(TodoStore)
@@ -53,18 +57,55 @@ export class TodoDefinition extends EntityDefinition<TodoModel> {
     );
 
     // allow the todos to be represented as tree items
-    this.registerComponent(new InlineTreePresenterComponent<TodoModel>());
+    this.registerComponent(
+      new InlineTreePresenterComponent<TodoModel>({
+        augmentTreeNodeProps: () => {
+          return {
+            openOnSingleClick: false
+          };
+        }
+      })
+    );
+    this.registerComponent(new EntityCardsPresenterComponent<TodoModel>());
+
+    this.registerComponent(
+      new InlineEntityEncoderComponent<TodoModel, { id: string }>({
+        version: 1,
+        encode: (entity) => {
+          return { id: entity.id };
+        },
+        decode: async (encoded) => {
+          return this.todoStore.todos.find((todo) => todo.id === encoded.id) || null;
+        }
+      })
+    );
+
+    // allow todos to expose nested sub todos to tree/card renderers
+    this.registerComponent(
+      new DescendantLoadingEntityProviderComponent<TodoModel, TodoModel>({
+        descendantType: DemoEntities.TODO_ITEM,
+        generateOptions: (todo) => {
+          return {
+            descendants: todo.children,
+            refreshDescendants: () => {
+              return null;
+            }
+          };
+        }
+      })
+    );
 
     // by default let reactor set up a todos panel and use the tree presenter above
     this.registerComponent(
       new EntityPanelComponent<TodoModel>({
         label: 'Todos!',
         getEntities: () => {
-          return this.todoStore.todos;
+          return this.todoStore.rootTodos;
         },
         additionalActions: [
           // add the create action as an additional right click item on the panel
-          CreateTodoAction.ID
+          CreateTodoAction.ID,
+          AddSubTodoAction.ID
         ]
       })
     );

@@ -17,6 +17,9 @@
     },
     {
       "path": "../../modules/module-reactor"
+    },
+    {
+      "path": "../../modules/module-editor"
     }
   ]
 }

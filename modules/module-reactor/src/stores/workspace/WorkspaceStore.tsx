@@ -6,7 +6,7 @@ import {
   WorkspaceModel,
   WorkspaceNodeModel
 } from '@projectstorm/react-workspaces-core';
-import { action, autorun, observable } from 'mobx';
+import { action, autorun, IReactionDisposer, observable } from 'mobx';
 
 import { inject, ioc } from '../../inversify.config';
 import { AbstractLayoutEngine, AddModelsOptions } from './layout-engines/AbstractLayoutEngine';
@@ -114,10 +114,12 @@ export class WorkspaceStore extends AbstractStore<WorkspacePrefsSerialized, Work
     this.simpleLayoutEngine = new SimpleLayoutEngine();
     this.advancedLayoutEngine = new AdvancedLayoutEngine();
 
+    let autorunListener: IReactionDisposer;
     this.engine.registerListener({
       modelUpdated: () => {
+        autorunListener?.();
         let listener: () => any;
-        autorun(() => {
+        autorunListener = autorun(() => {
           listener?.();
           if (this.currentModel && this.engine) {
             listener = overConstrainRecomputeBehavior({
@@ -357,6 +359,20 @@ export class WorkspaceStore extends AbstractStore<WorkspacePrefsSerialized, Work
       this.registerWorkspaces(w);
     }
 
+    // Safety net: generators can be disabled/misconfigured and return no workspaces.
+    // Keep Reactor usable by bootstrapping a minimal empty workspace.
+    if (this.workspaces.length === 0) {
+      const model = this.generateRootModel();
+      const emptyPanel = this.engine.getFactory('empty')?.generateModel();
+      if (emptyPanel) {
+        model.addModel(emptyPanel);
+      }
+      this.registerWorkspaces({
+        name: 'Default',
+        model
+      });
+    }
+
     this.iterateListeners((listener) => {
       listener.reset?.();
     });
@@ -382,7 +398,7 @@ export class WorkspaceStore extends AbstractStore<WorkspacePrefsSerialized, Work
     this.activatedModel = model;
   }
 
-  async hydratePanelFromURL() {
+  hydratePanelFromURL() {
     if (window.location.hash) {
       const query = queryString.parse(window.location.hash);
       if (query?.type) {

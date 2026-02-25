@@ -87,7 +87,22 @@ export class ThemeFragment<T extends ThemeFragmentStructure = ThemeFragmentStruc
   }
 
   getThemeValues(key: string) {
-    return this.themes.get(key).values;
+    const selected = this.themes.get(key);
+    if (selected) {
+      return selected.values;
+    }
+
+    const reactorDefault = this.themes.get('reactor');
+    if (reactorDefault) {
+      return reactorDefault.values;
+    }
+
+    const first = this.themes.values().next().value as ThemeValues<T> | undefined;
+    if (first) {
+      return first.values;
+    }
+
+    throw new Error(`No theme values were registered for this fragment (requested key: ${key})`);
   }
 
   styled(): CreateStyled<ThemeColors<T> & { light: boolean }> {

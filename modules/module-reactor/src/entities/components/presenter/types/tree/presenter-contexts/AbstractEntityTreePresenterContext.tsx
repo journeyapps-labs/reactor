@@ -1,6 +1,8 @@
 import React from 'react';
 import _ from 'lodash';
-import { CoreTreeWidget, ReactorTreeEntity, ReactorTreeNode } from '../../../../../../widgets';
+import { CoreTreeWidget } from '../../../../../../widgets/core-tree/CoreTreeWidget';
+import { ReactorTreeEntity } from '../../../../../../widgets/core-tree/reactor-tree/reactor-tree-utils';
+import { ReactorTreeNode } from '../../../../../../widgets/core-tree/reactor-tree/ReactorTreeNode';
 import {
   AbstractPresenterContext,
   PresenterContextListener,
@@ -17,7 +19,7 @@ import {
 import { SelectEntityListener } from '../../../EntityPresenterComponent';
 import { BatchStore } from '../../../../../../stores/batch/BatchStore';
 import { inject } from '../../../../../../inversify.config';
-import { ActionSource } from '../../../../../../actions';
+import { ActionSource } from '../../../../../../actions/Action';
 import { System } from '../../../../../../core/System';
 import { SetControl } from '../../../../../../controls/SetControl';
 import { TreeNode } from '@journeyapps-labs/common-tree';
@@ -26,6 +28,7 @@ import { BaseObserverInterface } from '@journeyapps-labs/common-utils';
 import { AbstractDescendentContextOptions } from '../descendent/AbstractDescendentContext';
 import { LazyDescendentContext } from '../descendent/LazyDescendentContext';
 import { ImmediateDescendentContext } from '../descendent/ImmediateDescendentContext';
+import { untracked } from 'mobx';
 
 export interface GenerateTreeOptions<T> {
   events?: BaseObserverInterface<SelectEntityListener<T>>;
@@ -107,10 +110,21 @@ export abstract class AbstractEntityTreePresenterContext<
   getSortedEntities(entities: T[]) {
     const controlValues = this.getControlValues();
     if (controlValues[EntityTreePresenterSetting.SORT] === SortDirection.ASC) {
-      entities = _.sortBy(entities, (e) => this.definition.describeEntity(e).simpleName?.toLowerCase());
+      entities = _.sortBy(entities, (e) => {
+        // Sorting should not subscribe the outer tree-generation reaction to entity UI state
+        // (for example active/highlighted describer fields), otherwise cosmetic updates can
+        // trigger full node regeneration and visible flicker when cacheTreeEntities is disabled.
+        return untracked(() => {
+          return this.definition.describeEntity(e).simpleName?.toLowerCase();
+        });
+      });
     }
     if (controlValues[EntityTreePresenterSetting.SORT] === SortDirection.DESC) {
-      entities = _.sortBy(entities, (e) => this.definition.describeEntity(e).simpleName?.toLowerCase()).reverse();
+      entities = _.sortBy(entities, (e) => {
+        return untracked(() => {
+          return this.definition.describeEntity(e).simpleName?.toLowerCase();
+        });
+      }).reverse();
     }
     return entities;
   }
@@ -161,6 +175,8 @@ export abstract class AbstractEntityTreePresenterContext<
       return {
         icon: described.icon,
         iconColor: described.iconColor,
+        icon2: described.icon2,
+        icon2Color: described.icon2Color,
         label: described.simpleName,
         label2: described.complexName
       };

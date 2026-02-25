@@ -10,11 +10,11 @@ export const DarkTheme = theme.addThemeValues({
       border: '#b90a73'
     },
     canvas: {
-      background: '#1d222a',
-      grid: '#212731'
+      background: '#1a2028',
+      grid: '#232a34'
     },
     workspace: {
-      background: '#191d24',
+      background: '#181f27',
       overlayBackground: 'rgba(33,39,49,0.4)',
       overlayBorder: 'rgba(0,0,0,0)',
       overlayBackgroundHover: 'rgba(33,39,49,0.8)',
@@ -31,33 +31,33 @@ export const DarkTheme = theme.addThemeValues({
       foreground: '#fff'
     },
     panels: {
-      iconBackground: '#252c37',
-      trayBackground: '#15191f',
-      background: '#1c2129',
-      titleBackground: '#1f252e',
-      divider: '#191d24',
-      searchBackground: '#171c24',
+      iconBackground: '#242d39',
+      trayBackground: '#131821',
+      background: '#1b212b',
+      titleBackground: '#212a36',
+      divider: '#324053',
+      searchBackground: '#161d28',
       searchForeground: 'white',
-      tabForeground: 'rgba(255,255,255,0.5)',
+      tabForeground: 'rgba(255,255,255,0.62)',
       tabForegroundSelected: 'white',
-      tabBackgroundSelected: '#171b23',
+      tabBackgroundSelected: '#141b24',
       itemIconColorSelected: 'rgb(0,192,255)',
       titleForeground: '#fff',
-      scrollBar: 'rgba(255,255,255,0.2)',
-      trayButton: 'rgba(0,0,0,0.1)',
-      trayButtonSelected: 'rgba(0,0,0,0.5)'
+      scrollBar: 'rgba(184,204,231,0.4)',
+      trayButton: 'rgba(255,255,255,0.04)',
+      trayButtonSelected: 'rgba(0,0,0,0.45)'
     },
     meta: {
-      background: 'rgba(0,0,0,0.1)',
-      foreground: '#fff'
+      background: 'rgba(133,156,186,0.2)',
+      foreground: 'rgba(224,235,250,0.9)'
     },
     icons: {
       dualIconBackground: 'rgba(0,0,0,0.8)',
       color: 'white'
     },
     trees: {
-      labelColor: '#fff',
-      selectedBackground: '#15191f'
+      labelColor: '#eef5ff',
+      selectedBackground: 'rgba(0, 192, 255, 0.14)'
     },
     guide: {
       accent: '#ff6a1a',
@@ -75,12 +75,15 @@ export const DarkTheme = theme.addThemeValues({
       thresholdLine: '#ff4800'
     },
     cards: {
-      background: '#15191e',
-      foreground: 'rgb(164,164,164)',
-      border: 'rgba(0,0,0,0)'
+      background: '#151c27',
+      foreground: '#c6d2e1',
+      border: '#3b4a5f',
+      tagBackground: '#5b6a80',
+      tagLabelBackground: 'rgba(0, 0, 0, 0.12)',
+      tagLabelForeground: 'rgba(236, 244, 255, 0.92)'
     },
     status: {
-      cardBackground: '#14181e',
+      cardBackground: '#172130',
       failed: '#862c00',
       failedForeground: 'black',
       loading: '#00b4ff',
@@ -88,7 +91,7 @@ export const DarkTheme = theme.addThemeValues({
       successForeground: 'white'
     },
     header: {
-      background: '#191d24',
+      background: '#161d26',
       primary: '#ff6851',
       secondary: '#9370db',
       backgroundLogo: '#13171c',
@@ -100,16 +103,16 @@ export const DarkTheme = theme.addThemeValues({
       codeBackground: 'rgb(4,33,40)'
     },
     footer: {
-      background: '#191d24'
+      background: '#161d26'
     },
     combobox: {
       textSelected: 'white',
       headerForeground: 'white',
-      background: '#0f121a',
-      backgroundSelected: 'rgb(50, 60, 75)',
-      text: 'rgb(205,205,205)',
-      headerBackground: '#131822',
-      border: '#292f35',
+      background: '#0f141d',
+      backgroundSelected: 'rgb(56, 69, 87)',
+      text: 'rgb(214,222,235)',
+      headerBackground: '#151d29',
+      border: '#2f3d4f',
       shadowColor: 'rgba(0, 0, 0, 0.5)'
     },
     tabs: {
@@ -121,11 +124,11 @@ export const DarkTheme = theme.addThemeValues({
       background: 'rgba(0, 0, 0, 0.2)'
     },
     button: {
-      background: '#0a0d14',
-      border: 'rgb(50,50,50)',
+      background: '#0d121b',
+      border: '#3f4e64',
       color: 'rgba(255,255,255,0.8)',
       colorHover: 'white',
-      icon: 'rgba(255,255, 255,0.3)'
+      icon: 'rgba(205,220,241,0.45)'
     },
     buttonLink: {
       background: 'transparent',
@@ -135,39 +138,40 @@ export const DarkTheme = theme.addThemeValues({
       icon: 'rgba(255, 255, 255 ,0.3)'
     },
     buttonPrimary: {
-      background: '#0a0d14',
+      background: '#101725',
       border: 'rgb(0,192,255)',
       color: 'rgba(255,255,255,0.8)',
       colorHover: 'white',
       icon: 'rgb(0,192,255)'
     },
     text: {
-      primary: 'rgba(255,255,255,0.8)',
-      secondary: 'rgba(255,255,255,0.5)'
+      primary: 'rgba(236,244,255,0.88)',
+      secondary: 'rgba(199,214,236,0.76)'
     },
     forms: {
       checkbox: '#323841',
       checkboxChecked: 'rgb(0,192,255)',
       inputForeground: 'white',
-      inputBackground: '#15191f',
-      inputBorder: '#343a46',
+      inputBackground: '#131a24',
+      inputBorder: '#44556d',
       toggleOnColor: 'rgb(0,192,255)',
       toggleHandleColor: 'white',
-      groupBorder: 'rgba(255,255,255,0.1)',
+      groupBorder: 'rgba(184,204,231,0.22)',
       groupLabelForeground: '#fff',
-      description: 'rgb(118 120 124)'
+      description: '#97a8bf'
     },
     table: {
-      text: 'rgba(255,255,255,0.7)',
-      odd: '#1a1e24',
-      pills: '#323841',
-      pillsSpecial: 'rgb(0,79,110)',
-      columnBackground: 'rgba(0, 0, 0, 0.3)',
-      columnForeground: '#fff'
+      text: 'rgba(218,231,248,0.84)',
+      odd: '#1b2430',
+      pills: '#3f4d61',
+      pillsSpecial: '#006a94',
+      columnBackground: '#15202d',
+      columnForeground: '#ecf4ff'
     },
     floating: {
       background: 'rgba(20,24,29,0.8)',
-      backgroundInactive: 'rgba(25,30,37,0.45)'
+      backgroundInactive: 'rgba(25,30,37,0.45)',
+      border: 'rgba(184,204,231,0.22)'
     }
   }
 });

@@ -1,12 +1,8 @@
-import {
-  EmptyReactorPanelModel,
-  ReactorEntities,
-  SettingsPanelModel,
-  System,
-  WorkspaceStore
-} from '@journeyapps-labs/reactor-mod';
+import { ReactorEntities, SettingsPanelModel, System, WorkspaceStore } from '@journeyapps-labs/reactor-mod';
 import { ioc } from '@journeyapps-labs/reactor-mod';
 import { DemoEntities } from './DemoEntities';
+import { DemoFormsDialogsPanelModel } from './panels/DemoFormsDialogsPanelFactory';
+import { DemoEditorsPanelModel } from './panels/DemoEditorsPanelFactory';
 
 export const setupWorkspaces = () => {
   const workspaceStore = ioc.get(WorkspaceStore);
@@ -44,6 +40,18 @@ export const setupWorkspaces = () => {
     return model;
   };
 
+  const generateFormsWorkspace = () => {
+    let model = workspaceStore.generateRootModel();
+    model.addModel(new DemoFormsDialogsPanelModel());
+    return model;
+  };
+
+  const generateEditorsWorkspace = () => {
+    let model = workspaceStore.generateRootModel();
+    model.addModel(new DemoEditorsPanelModel());
+    return model;
+  };
+
   workspaceStore.registerWorkspaceGenerator({
     generateAdvancedWorkspace: async () => {
       return {
@@ -74,6 +82,40 @@ export const setupWorkspaces = () => {
         name: 'Complex workspace',
         priority: 1,
         model: generateComplexWorkspace()
+      };
+    }
+  });
+
+  workspaceStore.registerWorkspaceGenerator({
+    generateAdvancedWorkspace: async () => {
+      return {
+        name: 'Forms & dialogs workspace',
+        priority: 1,
+        model: generateFormsWorkspace()
+      };
+    },
+    generateSimpleWorkspace: async () => {
+      return {
+        name: 'Forms & dialogs workspace',
+        priority: 1,
+        model: generateFormsWorkspace()
+      };
+    }
+  });
+
+  workspaceStore.registerWorkspaceGenerator({
+    generateAdvancedWorkspace: async () => {
+      return {
+        name: 'Editors workspace',
+        priority: 1,
+        model: generateEditorsWorkspace()
+      };
+    },
+    generateSimpleWorkspace: async () => {
+      return {
+        name: 'Editors workspace',
+        priority: 1,
+        model: generateEditorsWorkspace()
       };
     }
   });

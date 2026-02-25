@@ -1,5 +1,5 @@
 import { EntityHandlerComponent, OpenEntityEvent } from './EntityHandlerComponent';
-import { ComboBoxItem } from '../../../stores';
+import { ComboBoxItem } from '../../../stores/combo/ComboBoxDirectives';
 
 export interface InlineEntityHandlerComponentOptions<T> {
   cb: (event: OpenEntityEvent<T>) => any;

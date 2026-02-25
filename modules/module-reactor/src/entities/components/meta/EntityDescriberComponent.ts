@@ -1,11 +1,35 @@
 import { EntityDefinitionComponent } from '../../EntityDefinitionComponent';
-import { ReactorIcon } from '../../../widgets';
+import { ReactorIcon } from '../../../widgets/icons/IconWidget';
+
+export interface EntityLabel {
+  label: string;
+  value: string;
+  color?: string;
+  colorForeground?: string;
+  icon?: {
+    name: ReactorIcon;
+    color: string;
+    spin?: boolean;
+  };
+  active?: boolean;
+  tooltip?: string;
+}
 
 export interface EntityDescription {
   simpleName: string;
   complexName?: string;
   icon?: ReactorIcon;
   iconColor?: string;
+  icon2?: ReactorIcon;
+  icon2Color?: string;
+  /**
+   * Optional metadata entries shown by card-style presenters.
+   */
+  labels?: EntityLabel[];
+  /**
+   * Optional tag chips shown by card-style presenters.
+   */
+  tags?: string[];
 }
 
 export interface EntityDescriberComponentOptions<T> {

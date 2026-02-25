@@ -2,8 +2,10 @@ import * as React from 'react';
 import { useEffect, useRef, useState } from 'react';
 import { MonacoDiffEditor, MonacoDiffEditorProps } from 'react-monaco-editor';
 import { styled } from '@journeyapps-labs/reactor-mod';
+import { themed } from '../theme-reactor/editor-theme-fragment';
 import { IDisposable } from 'monaco-editor';
 import { DARK_THEME } from '../theme/theme-utils';
+import _ from 'lodash';
 
 export interface DualEditorWidgetProps extends MonacoDiffEditorProps {
   getLeftHeaderContent: () => React.JSX.Element;
@@ -42,6 +44,9 @@ export const DualEditorWidget: React.FC<DualEditorWidgetProps> = (props) => {
           theme={DARK_THEME}
           editorDidMount={(editor, monaco) => {
             props.editorDidMount?.(editor, monaco);
+            _.defer(() => {
+              monaco.editor.setTheme(DARK_THEME);
+            });
 
             const doLayout = () => {
               const info = editor.getOriginalEditor().getLayoutInfo();
@@ -68,13 +73,13 @@ export const DualEditorWidget: React.FC<DualEditorWidgetProps> = (props) => {
 };
 
 namespace S {
-  export const EditorContainer = styled.div`
+  export const EditorContainer = themed.div`
     position: relative;
     flex-grow: 1;
     overflow: hidden;
   `;
 
-  export const Container = styled.div`
+  export const Container = themed.div`
     width: 100%;
     height: 100%;
     display: flex;

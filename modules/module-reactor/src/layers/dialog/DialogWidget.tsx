@@ -6,11 +6,13 @@ import { Btn } from '../../definitions/common';
 import * as _ from 'lodash';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { inject } from '../../inversify.config';
-import { ComboBoxItem, ComboBoxStore, DialogButtonStyle } from '../../stores';
+import { ComboBoxItem } from '../../stores/combo/ComboBoxDirectives';
+import { ComboBoxStore } from '../../stores/combo/ComboBoxStore';
+import { DialogButtonStyle } from '../../stores/DialogStore';
 import { AttentionWrapperWidget } from '../../widgets/guide/AttentionWrapperWidget';
 import ReactMarkdown from 'react-markdown';
 import { ReactorComponentType } from '../../stores/guide/selections/common';
-import { PanelButtonWidget } from '../../widgets/index';
+import { PanelButtonWidget } from '../../widgets/forms/PanelButtonWidget';
 import rehypeExternalLinks from 'rehype-external-links';
 
 export interface DialogWidgetProps {

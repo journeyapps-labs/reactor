@@ -1,17 +1,18 @@
-import { COUPLED_IDE_THEMES, DARK_THEME, normalizeVSCodeTheme, VSIXTheme } from '../theme/theme-utils';
+import { DARK_THEME, normalizeVSCodeTheme, VSIXTheme } from '../theme/theme-utils';
 import {
   AbstractStore,
+  EntitySetting,
+  EntitySettingOptions,
   ioc,
-  ProviderControl,
-  ProviderControlOptions,
   Themes,
   ThemeStore
 } from '@journeyapps-labs/reactor-mod';
 import * as _ from 'lodash';
 import * as monaco from 'monaco-editor';
-import { EditorThemeProvider } from '../providers/EditorThemeProvider';
 import { StoredThemesSettings } from '../settings/StoredThemesSettings';
 import * as uuid from 'uuid';
+import { EditorEntities } from '../entities/EditorEntities';
+import { MonacoSystemThemeStore } from './MonacoSystemThemeStore';
 
 export interface EditorTheme {
   label: string;
@@ -21,10 +22,10 @@ export interface EditorTheme {
   compatibility: boolean;
 }
 
-export class EditorThemeControl extends ProviderControl<EditorTheme> {
+export class EditorThemeControl extends EntitySetting<EditorTheme> {
   store: MonacoThemeStore;
 
-  constructor(options: ProviderControlOptions<EditorTheme>, store: MonacoThemeStore) {
+  constructor(options: EntitySettingOptions<EditorTheme>, store: MonacoThemeStore) {
     super(options);
     this.store = store;
   }
@@ -37,20 +38,22 @@ export class EditorThemeControl extends ProviderControl<EditorTheme> {
 }
 
 export class MonacoThemeStore extends AbstractStore {
-  selectedTheme: ProviderControl<EditorTheme>;
+  selectedTheme: EntitySetting<EditorTheme>;
   storedThemes: StoredThemesSettings;
-  additionalThemes: Map<string, string>;
+  systemThemeStore: MonacoSystemThemeStore;
 
-  constructor() {
+  constructor(systemThemeStore?: MonacoSystemThemeStore) {
     super({
       name: 'MONACO_THEME_STORE'
     });
-    this.additionalThemes = new Map();
+    this.systemThemeStore = systemThemeStore || new MonacoSystemThemeStore();
+    const systemThemes = this.systemThemeStore.getSystemThemes();
+    const defaultTheme = systemThemes[Themes.REACTOR];
     this.selectedTheme = this.addControl(
       new EditorThemeControl(
         {
-          provider: new EditorThemeProvider(this),
-          defaultEntity: this.getSystemThemes()[Themes.REACTOR],
+          type: EditorEntities.THEME,
+          defaultEntity: defaultTheme,
           category: 'User',
           key: 'selected-editor-theme',
           name: 'Selected code theme',
@@ -58,6 +61,7 @@ export class MonacoThemeStore extends AbstractStore {
           changed: (item) => {
             if (!!item) {
               monaco.editor.defineTheme(DARK_THEME, item.theme);
+              monaco.editor.setTheme(DARK_THEME);
             }
           }
         },
@@ -65,6 +69,8 @@ export class MonacoThemeStore extends AbstractStore {
       )
     );
     this.storedThemes = this.addControl(new StoredThemesSettings());
+    monaco.editor.defineTheme(DARK_THEME, defaultTheme.theme);
+    monaco.editor.setTheme(DARK_THEME);
   }
 
   clone(): EditorTheme {
@@ -88,6 +94,7 @@ export class MonacoThemeStore extends AbstractStore {
     this.selectedTheme.setItem(editorTheme);
     this.selectedTheme.save();
     monaco.editor.defineTheme(DARK_THEME, editorTheme.theme);
+    monaco.editor.setTheme(DARK_THEME);
   }
 
   deleteTheme(editorTheme: EditorTheme) {
@@ -114,63 +121,12 @@ export class MonacoThemeStore extends AbstractStore {
     this.selectedTheme.setItem(editorTheme);
   }
 
-  getMonacoThemeForReactorTheme(theme: string) {
-    const themeOb = this.getSystemThemes()[theme];
-    if (themeOb) {
-      return themeOb;
-    }
-
-    return this.getSystemThemes()[this.additionalThemes.get(theme)];
+  getMonacoThemeForReactorTheme(theme: string): EditorTheme | null {
+    return this.systemThemeStore.getMonacoThemeForReactorTheme(theme);
   }
 
   getSystemThemes(): { [key: string]: EditorTheme } {
-    return _.mapKeys(
-      [
-        {
-          key: Themes.JOURNEY,
-          label: 'Journey dark',
-          theme: COUPLED_IDE_THEMES[Themes.JOURNEY],
-          system: true,
-          compatibility: false
-        },
-        {
-          key: Themes.REACTOR,
-          label: 'Reactor dark',
-          theme: COUPLED_IDE_THEMES[Themes.REACTOR],
-          system: true,
-          compatibility: false
-        },
-        {
-          key: Themes.OXIDE,
-          label: 'OXIDE dark',
-          theme: COUPLED_IDE_THEMES[Themes.OXIDE],
-          system: true,
-          compatibility: true
-        },
-        {
-          key: Themes.SCARLET,
-          label: 'Scarlet',
-          theme: COUPLED_IDE_THEMES[Themes.SCARLET],
-          system: true,
-          compatibility: true
-        },
-        {
-          key: Themes.HEXAGON,
-          label: 'Ayu Mirage',
-          theme: COUPLED_IDE_THEMES[Themes.HEXAGON],
-          system: true,
-          compatibility: true
-        },
-        {
-          key: Themes.REACTOR_LIGHT,
-          label: 'Ayu Light',
-          theme: COUPLED_IDE_THEMES[Themes.REACTOR_LIGHT],
-          system: true,
-          compatibility: true
-        }
-      ],
-      (m) => m.key
-    );
+    return this.systemThemeStore.getSystemThemes();
   }
 
   async getTheme(key: string): Promise<EditorTheme> {

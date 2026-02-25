@@ -1,8 +1,8 @@
 import { Action, ActionEvent } from '../../Action';
 import { inject, ioc } from '../../../inversify.config';
-import { System } from '../../../core/System';
 import { NotificationStore } from '../../../stores/NotificationStore';
 import { ShortcutStore } from '../../../stores/shortcuts/ShortcutStore';
+import { ActionStore } from '../../../stores/actions/ActionStore';
 
 export class ImportShortcutsAction extends Action {
   @inject(ShortcutStore)
@@ -22,7 +22,7 @@ export class ImportShortcutsAction extends Action {
   }
 
   static get(): ImportShortcutsAction {
-    return ioc.get(System).getAction(ImportShortcutsAction.NAME);
+    return ioc.get(ActionStore).getAction(ImportShortcutsAction.NAME);
   }
 
   async fireEvent(event: ActionEvent): Promise<any> {

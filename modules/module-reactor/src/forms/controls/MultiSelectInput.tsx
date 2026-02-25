@@ -1,5 +1,5 @@
 import { FormInput, FormInputGenerics, FormInputOptions, FormInputRenderOptions } from '../FormInput';
-import { CheckboxLabelWidget } from '../../widgets';
+import { CheckboxLabelWidget } from '../../widgets/forms/CheckboxLabelWidget';
 import * as React from 'react';
 import * as _ from 'lodash';
 import { useForceUpdate } from '../../hooks/useForceUpdate';

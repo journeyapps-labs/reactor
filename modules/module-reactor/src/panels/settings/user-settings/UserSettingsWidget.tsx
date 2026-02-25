@@ -5,8 +5,7 @@ import { inject } from '../../../inversify.config';
 import { IndividualSettingsWidget } from '../IndividualSettingsWidget';
 import * as _ from 'lodash';
 import { observer } from 'mobx-react';
-import { ProviderControl } from '../../../settings/ProviderControl';
-import { CardWidget } from '../../../widgets';
+import { CardWidget } from '../../../widgets/cards/CardWidget';
 import { styled } from '../../../stores/themes/reactor-theme-fragment';
 import { SearchablePanelWidget } from '../../../widgets/search/SearchablePanelWidget';
 import { EntityControl } from '../../../controls/EntityControl';
@@ -16,17 +15,20 @@ namespace S {
   export const Card = styled(CardWidget)`
     margin-bottom: 5px;
     margin-right: 5px;
+
     &:last-of-type {
       margin-bottom: 0;
     }
   `;
 
-  export const Setting = styled(IndividualSettingsWidget)`
-    margin-bottom: 2px;
+  export const Settings = styled.div`
+    display: flex;
+    flex-direction: column;
+    row-gap: 6px;
+  `;
 
-    &:last-of-type {
-      margin-bottom: 0;
-    }
+  export const Setting = styled(IndividualSettingsWidget)`
+    margin-bottom: 0;
   `;
 }
 
@@ -44,6 +46,7 @@ export class UserSettingsWidget<P extends {} = {}> extends React.Component<P> {
     [category: string]: ControlResult[];
   } {
     return _.chain(this.prefsStore.getInteractiveControls())
+      .filter((c) => c.canBeChanged())
       .map((c) => {
         return { match: search.matches(c.options.name), control: c };
       })
@@ -64,7 +67,6 @@ export class UserSettingsWidget<P extends {} = {}> extends React.Component<P> {
   sortControls(controls: ControlResult[]) {
     return _.chain(controls)
       .sortBy([(c) => c.control.options.name])
-      .sortBy([(c) => (c.control instanceof ProviderControl ? -1 : 1)])
       .sortBy([(c) => (c.control instanceof EntityControl ? -1 : 1)])
       .value();
   }
@@ -88,7 +90,7 @@ export class UserSettingsWidget<P extends {} = {}> extends React.Component<P> {
                         key: 'main',
                         content: () => {
                           return (
-                            <>
+                            <S.Settings>
                               {this.sortControls(controls).map((result) => (
                                 <S.Setting
                                   search={result.match}
@@ -99,7 +101,7 @@ export class UserSettingsWidget<P extends {} = {}> extends React.Component<P> {
                                   {result.control.generateControl()}
                                 </S.Setting>
                               ))}
-                            </>
+                            </S.Settings>
                           );
                         }
                       }

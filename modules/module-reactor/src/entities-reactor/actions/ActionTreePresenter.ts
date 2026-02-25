@@ -1,7 +1,10 @@
 import { EntityTreePresenterComponent } from '../../entities/components/presenter/types/tree/EntityTreePresenterComponent';
-import { Action, ParameterizedAction } from '../../actions';
+import { Action } from '../../actions/Action';
+import { ParameterizedAction } from '../../actions/parameterized/ParameterizedAction';
 import { EntityTreePresenterContext } from '../../entities/components/presenter/types/tree/presenter-contexts/EntityTreePresenterContext';
-import { ReactorTreeEntity, ReactorTreeLeaf, ReactorTreeNode } from '../../widgets';
+import { ReactorTreeLeaf } from '../../widgets/core-tree/reactor-tree/ReactorTreeLeaf';
+import { ReactorTreeNode } from '../../widgets/core-tree/reactor-tree/ReactorTreeNode';
+import { ReactorTreeEntity } from '../../widgets/core-tree/reactor-tree/reactor-tree-utils';
 
 export class ActionTreePresenterContext extends EntityTreePresenterContext<Action> {
   doGenerateTreeNode(entity: Action, options): ReactorTreeEntity {

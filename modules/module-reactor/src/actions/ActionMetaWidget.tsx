@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { useState } from 'react';
 import { useValidator } from '../hooks/useValidator';
-import { Action } from './Action';
+import type { Action } from './Action';
 import { PassiveActionValidationState, ValidationDisabledReason } from './validators/ActionValidator';
 import { ActionShortcutPillsWidget } from '../panels/settings/keys/ActionShortcutPillsWidget';
 import { styled } from '../stores/themes/reactor-theme-fragment';

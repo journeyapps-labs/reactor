@@ -1,27 +1,25 @@
-import { EntityAction, EntityActionEvent, System, ioc, inject } from '@journeyapps-labs/reactor-mod';
+import { ActionStore, EntityAction, EntityActionEvent, ioc } from '@journeyapps-labs/reactor-mod';
 import { EditorTheme, MonacoThemeStore } from '../stores/MonacoThemeStore';
-import { EditorThemeProvider } from '../providers/EditorThemeProvider';
+import { EditorEntities } from '../entities/EditorEntities';
 
 export class ChangeEditorThemeAction extends EntityAction<EditorTheme> {
+  static ID = 'CHANGE_EDITOR_THEME';
   static NAME = 'Change code theme';
-
-  @inject(MonacoThemeStore)
-  accessor reactorThemeStore: MonacoThemeStore;
 
   constructor() {
     super({
       name: ChangeEditorThemeAction.NAME,
       icon: 'paint-brush',
-      id: 'CHANGE_EDITOR_THEME',
-      target: EditorThemeProvider.TYPE
+      id: ChangeEditorThemeAction.ID,
+      target: EditorEntities.THEME
     });
   }
 
   protected async fireEvent(event: EntityActionEvent<EditorTheme>): Promise<any> {
-    this.reactorThemeStore.selectedTheme.setItem(event.targetEntity);
+    ioc.get(MonacoThemeStore).selectedTheme.setItem(event.targetEntity);
   }
 
   static get() {
-    return ioc.get(System).getAction<ChangeEditorThemeAction>(ChangeEditorThemeAction.NAME);
+    return ioc.get(ActionStore).getAction<ChangeEditorThemeAction>(ChangeEditorThemeAction.NAME);
   }
 }

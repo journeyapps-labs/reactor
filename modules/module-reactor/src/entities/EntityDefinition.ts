@@ -1,39 +1,39 @@
 import { EntityComboBoxItem, EntitySearchEngineComponent } from './components/search/EntitySearchEngineComponent';
 import { EncodedEntity, EntityEncoderComponent } from './components/encoder/EntityEncoderComponent';
+import { EntityEncoderBank } from './components/encoder/EntityEncoderBank';
+import { EntitySearchBank } from './components/search/EntitySearchBank';
 import { EntityDefinitionComponent } from './EntityDefinitionComponent';
 import { System } from '../core/System';
-import { MousePosition, ReactorIcon } from '../widgets';
-import * as _ from 'lodash';
+import { MousePosition } from '../layers/combo/SmartPositionWidget';
+import { ReactorIcon } from '../widgets/icons/IconWidget';
 import { EntityPresenterComponent } from './components/presenter/EntityPresenterComponent';
 import { EntityHandlerComponent, OpenEntityEvent } from './components/handler/EntityHandlerComponent';
-import { ComboBoxItem } from '../stores';
+import { ComboBoxItem } from '../stores/combo/ComboBoxDirectives';
 import { inject } from '../inversify.config';
 import { EntityPanelComponent } from './components/ui/EntityPanelComponent';
 import { EntityDescriberComponent, EntityDescription } from './components/meta/EntityDescriberComponent';
-import { computed, observable } from 'mobx';
+import { EntityDescriberBank } from './components/meta/EntityDescriberBank';
+import { computed } from 'mobx';
 import { EntityDocsComponent } from './components/meta/EntityDocsComponent';
+import { ComponentBank } from './components/banks/ComponentBank';
 import { ComboBoxStore2 } from '../stores/combo2/ComboBoxStore2';
 import {
   SimpleComboBoxDirective,
   SimpleComboBoxDirectiveOptions
 } from '../stores/combo2/directives/simple/SimpleComboBoxDirective';
 import { ComboBoxDirective } from '../stores/combo2/ComboBoxDirective';
-import { ComposableComboBoxDirective } from '../stores/combo2/directives/ComposableComboBoxDirective';
+import { Action } from '../actions/Action';
+import { CoupledAction, CoupledActionEvent, CoupledActionFocusOption } from '../actions/parameterized/CoupledAction';
+import { EntityAction } from '../actions/parameterized/EntityAction';
 import {
-  Action,
-  CoupledAction,
-  CoupledActionEvent,
-  CoupledActionFocusOption,
-  EntityAction,
   ParameterizedAction,
   ParameterizedActionEvent,
-  ParameterizedActionOptions,
-  ProviderActionParameter
-} from '../actions';
+  ParameterizedActionOptions
+} from '../actions/parameterized/ParameterizedAction';
+import { ProviderActionParameter } from '../actions/parameterized/params/ProviderActionParameter';
 import { DescendantEntityProviderComponent } from './components/exposer/DescendantEntityProviderComponent';
-import { CascadingSearchEngineComboBoxDirective } from '../stores/combo2/directives/CascadingSearchEngineComboBoxDirective';
 import { ThemeStore } from '../stores/themes/ThemeStore';
-import { SimpleEntitySearchEngine } from './components/search/SimpleEntitySearchEngineComponent';
+import { ActionStore } from '../stores/actions/ActionStore';
 
 export interface EntityDefinitionOptions {
   type: string;
@@ -51,7 +51,6 @@ export interface EntityPickOptions<T extends any = any> {
 }
 
 export abstract class EntityDefinition<T extends any = any> {
-  components: Set<EntityDefinitionComponent>;
   system: System;
 
   @inject(ComboBoxStore2)
@@ -60,14 +59,29 @@ export abstract class EntityDefinition<T extends any = any> {
   @inject(ThemeStore)
   accessor themeStore: ThemeStore;
 
-  @observable
-  private accessor preferredDescriber: string;
+  @inject(ActionStore)
+  accessor actionStore: ActionStore;
+
+  private describers: EntityDescriberBank<T>;
+  private docsComponents: ComponentBank<EntityDocsComponent<T>>;
+  private encoders: EntityEncoderBank<T>;
+  private searches: EntitySearchBank<T>;
+  private presenterComponents: ComponentBank<EntityPresenterComponent>;
+  private handlerComponents: ComponentBank<EntityHandlerComponent>;
+  private panelComponents: ComponentBank<EntityPanelComponent>;
+  private exposerComponents: ComponentBank<DescendantEntityProviderComponent<T, any>>;
 
   private additionalActionIds: string[];
 
   constructor(protected options: EntityDefinitionOptions) {
-    this.components = new Set();
-    this.preferredDescriber = null;
+    this.describers = new EntityDescriberBank<T>(this);
+    this.docsComponents = new ComponentBank<EntityDocsComponent<T>>();
+    this.encoders = new EntityEncoderBank<T>({ type: this.options.type });
+    this.searches = new EntitySearchBank<T>({ label: this.options.label });
+    this.presenterComponents = new ComponentBank<EntityPresenterComponent>();
+    this.handlerComponents = new ComponentBank<EntityHandlerComponent>();
+    this.panelComponents = new ComponentBank<EntityPanelComponent>();
+    this.exposerComponents = new ComponentBank<DescendantEntityProviderComponent<T, any>>();
     this.additionalActionIds = [];
   }
 
@@ -77,13 +91,37 @@ export abstract class EntityDefinition<T extends any = any> {
 
   registerComponent(component: EntityDefinitionComponent) {
     component.setDefinition(this);
-    this.components.add(component);
     if (component instanceof EntityDescriberComponent) {
-      component.registerListener({
-        preferred: () => {
-          this.preferredDescriber = component.label;
-        }
-      });
+      this.describers.register(component as EntityDescriberComponent<T>);
+      return;
+    }
+    if (component instanceof EntityDocsComponent) {
+      this.docsComponents.register(component as EntityDocsComponent<T>);
+      return;
+    }
+    if (component instanceof EntityEncoderComponent) {
+      this.encoders.register(component as EntityEncoderComponent<T>);
+      return;
+    }
+    if (component instanceof EntitySearchEngineComponent) {
+      this.searches.register(component as EntitySearchEngineComponent<T>);
+      return;
+    }
+    if (component instanceof EntityPresenterComponent) {
+      this.presenterComponents.register(component);
+      return;
+    }
+    if (component instanceof EntityHandlerComponent) {
+      this.handlerComponents.register(component);
+      return;
+    }
+    if (component instanceof EntityPanelComponent) {
+      this.panelComponents.register(component);
+      return;
+    }
+    if (component instanceof DescendantEntityProviderComponent) {
+      this.exposerComponents.register(component as DescendantEntityProviderComponent<T, any>);
+      return;
     }
   }
 
@@ -116,46 +154,11 @@ export abstract class EntityDefinition<T extends any = any> {
   abstract matchEntity(t: any): boolean;
 
   async resolveOneEntity(options: EntityPickOptions<T> = {}): Promise<T | null> {
-    const engineComponents = this.getSearchEngines();
-    if (engineComponents.length === 1 && options.autoSelectedIsolatedEntity) {
-      let engine = engineComponents[0].getSearchEngine();
-      if (engine instanceof SimpleEntitySearchEngine) {
-        let res = await engine.autoSelectIsolatedItem({
-          value: null
-        });
-        if (res) {
-          return res;
-        }
-      }
-    }
-
-    const directive = await this.comboBoxStore.show(this.getComboBoxDirective(options));
-    return directive.getSelected()[0]?.entity || null;
+    return this.searches.resolveOneEntity(options, this.comboBoxStore);
   }
 
   getComboBoxDirective(options: EntityPickOptions<T>): ComboBoxDirective<EntityComboBoxItem<T>> {
-    const setupDirective = (component: EntitySearchEngineComponent) => {
-      const directive = component.getComboBoxDirective({
-        position: options.event,
-        filter: options.filter
-      });
-
-      if (options.parent && directive instanceof CascadingSearchEngineComboBoxDirective) {
-        directive.setParent(options.parent);
-      }
-      return directive;
-    };
-    if (this.getSearchEngines().length > 1) {
-      return new ComposableComboBoxDirective<EntityComboBoxItem<T>>({
-        title: `Select ${this.label}`,
-        event: options.event,
-        directives: this.getSearchEngines().map((e) => {
-          return setupDirective(e);
-        })
-      });
-    }
-    const d = this.getSearchEngines()[0];
-    return setupDirective(d);
+    return this.searches.getComboBoxDirective(options);
   }
 
   getAsComboBoxItem(t: T): EntityComboBoxItem<T> {
@@ -277,72 +280,57 @@ export abstract class EntityDefinition<T extends any = any> {
 
   getActionsForEntity(entity: T): Action[] {
     return [
-      ...this.system.getActionsForEntityDecoded({
+      ...this.actionStore.getActionsForEntityDecoded({
         type: this.type,
         entity: entity
       }),
-      ...this.additionalActionIds.map((id) => this.system.getActionByID(id))
+      ...this.additionalActionIds.map((id) => this.actionStore.getActionByID(id))
     ].filter((a) => this.isActionAllowedForEntity(a, entity));
   }
 
   getPreferredDescriber() {
-    if (this.preferredDescriber) {
-      return this.getDescribers().find((d) => d.label === this.preferredDescriber);
-    }
-    return this.getDescribers()[0];
+    return this.describers.getPreferred();
+  }
+
+  getSettings() {
+    return this.describers.getSettings();
   }
 
   registerAdditionalAction(actionId: string) {
     this.additionalActionIds.push(actionId);
   }
 
-  getDocumenters = _.memoize(() => {
-    return Array.from(this.components.values()).filter(
-      (c) => c.type === EntityDocsComponent.TYPE
-    ) as EntityDocsComponent<T>[];
-  });
+  getDocumenters(): EntityDocsComponent<T>[] {
+    return this.docsComponents.getItems();
+  }
 
-  getDescribers = _.memoize(() => {
-    return Array.from(this.components.values()).filter(
-      (c) => c.type === EntityDescriberComponent.TYPE
-    ) as EntityDescriberComponent<T>[];
-  });
+  getDescribers() {
+    return this.describers.getItems();
+  }
 
-  getEncoders = _.memoize(() => {
-    return Array.from(this.components.values()).filter(
-      (c) => c.type === EntityEncoderComponent.TYPE
-    ) as EntityEncoderComponent[];
-  });
+  getEncoders(): EntityEncoderComponent<T>[] {
+    return this.encoders.getItems();
+  }
 
-  getSearchEngines = _.memoize(() => {
-    return Array.from(this.components.values()).filter(
-      (c) => c.type === EntitySearchEngineComponent.TYPE
-    ) as EntitySearchEngineComponent<T>[];
-  });
+  getSearchEngines(): EntitySearchEngineComponent<T>[] {
+    return this.searches.getItems();
+  }
 
-  getPresenters = _.memoize(() => {
-    return Array.from(this.components.values()).filter(
-      (c) => c.type === EntityPresenterComponent.TYPE
-    ) as EntityPresenterComponent[];
-  });
+  getPresenters(): EntityPresenterComponent[] {
+    return this.presenterComponents.getItems();
+  }
 
-  getHandlers = _.memoize(() => {
-    return Array.from(this.components.values()).filter(
-      (c) => c.type === EntityHandlerComponent.TYPE
-    ) as EntityHandlerComponent[];
-  });
+  getHandlers(): EntityHandlerComponent[] {
+    return this.handlerComponents.getItems();
+  }
 
-  getPanelComponents = _.memoize(() => {
-    return Array.from(this.components.values()).filter(
-      (c) => c.type === EntityPanelComponent.TYPE
-    ) as EntityPanelComponent[];
-  });
+  getPanelComponents(): EntityPanelComponent[] {
+    return this.panelComponents.getItems();
+  }
 
-  getExposers = _.memoize(() => {
-    return Array.from(this.components.values()).filter(
-      (c) => c.type === DescendantEntityProviderComponent.TYPE
-    ) as DescendantEntityProviderComponent<T, any>[];
-  });
+  getExposers(): DescendantEntityProviderComponent<T, any>[] {
+    return this.exposerComponents.getItems();
+  }
 
   // !-------------- handling ---------------
 
@@ -377,34 +365,15 @@ export abstract class EntityDefinition<T extends any = any> {
 
   // !-------------- encoding ---------------
 
-  getEncoder = _.memoize((version?: number): EntityEncoderComponent<T> => {
-    // always prioritize the latest encoder
-    if (!version) {
-      return _.chain(this.getEncoders()).orderBy(['version'], ['desc']).first().value() as EntityEncoderComponent<T>;
-    }
-
-    return this.getEncoders().filter((e) => e.version === version)[0] as EntityEncoderComponent<T>;
-  });
+  getEncoder(version?: number): EntityEncoderComponent<T> {
+    return this.encoders.getEncoder(version);
+  }
 
   encode(entity: T, throws = true): EncodedEntity {
-    if (!this.getEncoder()) {
-      if (throws) {
-        throw new Error(`There is no encoder registered for entity: [${this.type}]`);
-      }
-      return null;
-    }
-    return this.getEncoder().encode(entity);
+    return this.encoders.encode(entity, throws);
   }
 
   decode(entity: EncodedEntity): Promise<T> {
-    if (entity.type !== this.type) {
-      throw new Error(`Entity of type: ${entity.type} cannot be decoded using this entity definition (${this.type})`);
-    }
-
-    let encoder = this.getEncoder(entity.version);
-    if (!encoder) {
-      throw new Error(`There is no encoder registered for entity: [${this.type}] with version: [${entity.version}]`);
-    }
-    return encoder.decode(entity);
+    return this.encoders.decode(entity);
   }
 }

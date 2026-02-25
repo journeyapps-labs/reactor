@@ -5,10 +5,13 @@ import { Btn } from '../definitions/common';
 import { useForceUpdate } from '../hooks/useForceUpdate';
 import { RepresentAsComboBoxItemsEvent, RepresentAsControlOptions } from './AbstractControl';
 import { DateTimePickerType } from '../widgets/forms/dates/DateTimePickerWidget';
-import { ComboBoxItem, DialogStore } from '../stores/index';
-import { DateTimeButtonWidget, ReactorIcon } from '../widgets/index';
+import { ComboBoxItem } from '../stores/combo/ComboBoxDirectives';
+import { DialogStore } from '../stores/DialogStore';
+import { DateTimeButtonWidget } from '../widgets/forms/dates/DateTimeButtonWidget';
+import { ReactorIcon } from '../widgets/icons/IconWidget';
 import { observable } from 'mobx';
-import { DateInput, FormModel } from '../forms/index';
+import { DateInput } from '../forms/controls/DateInput';
+import { FormModel } from '../forms/FormModel';
 import { ioc } from '../inversify.config';
 
 export interface DateControlOptions extends AbstractValueControlOptions<Date> {

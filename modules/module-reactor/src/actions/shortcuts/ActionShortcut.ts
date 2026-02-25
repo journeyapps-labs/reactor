@@ -2,9 +2,9 @@ import { Shortcut, ShortcutChord } from '../../stores/shortcuts/Shortcut';
 import { ActionSource } from '../Action';
 import { ShortcutHandlerAction } from '../../stores/shortcuts/ShortcutHandler';
 import { ioc } from '../../inversify.config';
-import { System } from '../../core/System';
 import { ActionShortcutHandler } from './ActionShortcutHandler';
 import * as _ from 'lodash';
+import { ActionStore } from '../../stores/actions/ActionStore';
 
 export class ActionShortcut extends Shortcut {
   private disposer: () => any;
@@ -21,7 +21,7 @@ export class ActionShortcut extends Shortcut {
   }
 
   getAction() {
-    return ioc.get(System).getAction(this.action.id);
+    return ioc.get(ActionStore).getAction(this.action.id);
   }
 
   enable(enabled: boolean) {

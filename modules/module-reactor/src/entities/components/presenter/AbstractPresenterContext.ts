@@ -2,7 +2,7 @@ import _ from 'lodash';
 import { SearchEvent } from '@journeyapps-labs/lib-reactor-search';
 import { EntityPresenterComponent, SelectEntityListener } from './EntityPresenterComponent';
 import { observable } from 'mobx';
-import { ReactorIcon } from '../../../widgets';
+import { ReactorIcon } from '../../../widgets/icons/IconWidget';
 import { AbstractValueControl } from '../../../controls/AbstractValueControl';
 import { ButtonControl } from '../../../controls/ButtonControl';
 import { BaseObserver, BaseObserverInterface } from '@journeyapps-labs/common-utils';

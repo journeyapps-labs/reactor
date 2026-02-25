@@ -1,6 +1,7 @@
 {
   name: 'Dark+ (default dark)',
   type: 'dark',
+  "inherit": true,
   colors: {
     'list.dropBackground': '#383b3d',
     'editor.background': '#1e1e1e',

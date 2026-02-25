@@ -10,7 +10,8 @@ import {
   CMDPalletEntitySearchEngineOptions,
   CommandPalletEntryWidgetWrapped
 } from '../../cmd-pallet/CMDPalletEntitySearchEngine';
-import { Action, PassiveActionValidationState } from '../../actions';
+import { Action } from '../../actions/Action';
+import { PassiveActionValidationState } from '../../actions/validators/ActionValidator';
 import * as React from 'react';
 import { processCallbackWithValidation, useValidator } from '../../hooks/useValidator';
 import { ioc } from '../../inversify.config';
@@ -19,15 +20,19 @@ import { EntitySearchResultEntry } from '../../entities/components/search/Entity
 import { styled } from '../../stores/themes/reactor-theme-fragment';
 import { ActionMetaWidget } from '../../actions/ActionMetaWidget';
 import { useMemo } from 'react';
+import { ActionStore } from '../../stores/actions/ActionStore';
 
 export class ActionSearchEngineComponent extends SimpleEntitySearchEngineComponent<Action> {
   constructor() {
     super({
       label: 'Default',
       getEntities: async () => {
-        return this.system.getActions().filter((action) => {
-          return action.validatePassively() !== PassiveActionValidationState.DISALLOWED;
-        });
+        return ioc
+          .get(ActionStore)
+          .getActions()
+          .filter((action) => {
+            return action.validatePassively() !== PassiveActionValidationState.DISALLOWED;
+          });
       }
     });
   }
