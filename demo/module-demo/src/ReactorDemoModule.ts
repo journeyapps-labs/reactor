@@ -20,8 +20,13 @@ import { ShowDemoFormAction } from './actions/ShowDemoFormAction';
 import { DemoFormsDialogsPanelFactory } from './panels/DemoFormsDialogsPanelFactory';
 import { AddSubTodoAction } from './actions/AddSubTodoAction';
 import { DemoEditorsPanelFactory } from './panels/DemoEditorsPanelFactory';
-import { RenameTodoAction } from './actions/RenameTodoAction';
 import { DuplicateTodoAction } from './actions/DuplicateTodoAction';
+import { RenameTodoAction } from './actions/RenameTodoAction';
+import { TodoNoteDefinition } from './entities/TodoNoteDefinition';
+import { AddTodoNoteAction } from './actions/AddTodoNoteAction';
+import { EditTodoNoteAction } from './actions/EditTodoNoteAction';
+import { DeleteTodoNoteAction } from './actions/DeleteTodoNoteAction';
+import { TodoNoteModel } from './models/TodoNoteModel';
 
 export class ReactorDemoModule extends AbstractReactorModule {
   constructor() {
@@ -39,14 +44,18 @@ export class ReactorDemoModule extends AbstractReactorModule {
     ioc.bind(TodoStore).toConstantValue(new TodoStore());
 
     system.registerDefinition(new TodoDefinition());
+    system.registerDefinition(new TodoNoteDefinition());
 
     actionStore.registerAction(new CreateTodoAction());
     actionStore.registerAction(new DeleteTodoAction());
     actionStore.registerAction(new SetCurrentTodoItemAction());
     actionStore.registerAction(new AddSubTodoAction());
+    actionStore.registerAction(new AddTodoNoteAction());
+    actionStore.registerAction(new EditTodoNoteAction());
+    actionStore.registerAction(new DeleteTodoNoteAction());
+    actionStore.registerAction(new RenameTodoAction());
     actionStore.registerAction(new ShowDemoFormAction());
     actionStore.registerAction(new DuplicateTodoAction());
-    actionStore.registerAction(new ShowDemoFormAction());
 
     workspaceStore.registerFactory(new DemoFormsDialogsPanelFactory());
     workspaceStore.registerFactory(new DemoEditorsPanelFactory());
@@ -63,11 +72,14 @@ export class ReactorDemoModule extends AbstractReactorModule {
     uxStore.primaryLogo = require('../media/logo.png');
 
     const coffee = new TodoModel('Make some coffee');
+    coffee.addNote(new TodoNoteModel('Try medium roast next time'));
+    coffee.addNote(new TodoNoteModel('Use filtered water for better taste'));
     coffee.addChild(new TodoModel('Boil water'));
     coffee.addChild(new TodoModel('Grind beans'));
     coffee.addChild(new TodoModel('Brew and serve'));
 
     const eggs = new TodoModel('Fry some eggs');
+    eggs.addNote(new TodoNoteModel('Use butter instead of oil'));
     eggs.addChild(new TodoModel('Heat pan'));
     eggs.addChild(new TodoModel('Crack eggs'));
 

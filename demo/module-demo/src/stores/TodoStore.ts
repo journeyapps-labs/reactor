@@ -1,5 +1,6 @@
 import { TodoModel } from '../models/TodoModel';
 import { computed, observable } from 'mobx';
+import { TodoNoteModel } from '../models/TodoNoteModel';
 
 export class TodoStore {
   @observable
@@ -49,6 +50,14 @@ export class TodoStore {
     parent.addChild(todo);
   }
 
+  addNote(parent: TodoModel, note: TodoNoteModel) {
+    parent.addNote(note);
+  }
+
+  removeNote(note: TodoNoteModel) {
+    note.parent?.removeNote(note);
+  }
+
   @computed get rootTodos() {
     return Array.from(this._rootTodos.values());
   }
@@ -59,5 +68,10 @@ export class TodoStore {
       return [todo, ...todo.children.flatMap((child) => walk(child))];
     };
     return this.rootTodos.flatMap((todo) => walk(todo));
+  }
+
+  @computed
+  get notes() {
+    return this.todos.flatMap((todo) => todo.notes);
   }
 }

@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { useEffect, useMemo, useState } from 'react';
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { CoreTreeWidget, CoreTreeWidgetProps } from './CoreTreeWidget';
 import { TreeEntity, TreeNode } from '@journeyapps-labs/common-tree';
 import { createSearchEventMatcher, SearchEvent, SearchEventMatch } from '@journeyapps-labs/lib-reactor-search';
@@ -195,6 +195,7 @@ const SearchableCoreTreeWidgetVisibleMode: React.FC<SearchableCoreTreeWidgetProp
 const SearchableCoreTreeWidgetFullMode: React.FC<SearchableCoreTreeWidgetProps> = observer((props) => {
   const [treeVersion, setTreeVersion] = useState(0);
   const matcher = useSearchMatcher(props.search);
+  const openedBySearchRef = useRef<Set<ReactorTreeNode>>(new Set());
 
   const flattened = useMemo(() => {
     return props.tree.flatten();
@@ -202,8 +203,24 @@ const SearchableCoreTreeWidgetFullMode: React.FC<SearchableCoreTreeWidgetProps> 
 
   useTreeVersionListeners(flattened, setTreeVersion);
 
+  const restoreNodesOpenedBySearch = useCallback(() => {
+    openedBySearchRef.current.forEach((tree) => {
+      if (!tree.collapsed) {
+        tree.setCollapsed(true);
+      }
+    });
+    openedBySearchRef.current.clear();
+  }, []);
+
+  useEffect(() => {
+    return () => {
+      restoreNodesOpenedBySearch();
+    };
+  }, [restoreNodesOpenedBySearch]);
+
   useEffect(() => {
     if (!matcher) {
+      restoreNodesOpenedBySearch();
       return;
     }
     // In searchable mode, reveal lazy node branches so descendants can attach/load
@@ -211,11 +228,12 @@ const SearchableCoreTreeWidgetFullMode: React.FC<SearchableCoreTreeWidgetProps> 
     flattened.forEach((tree) => {
       if (tree instanceof ReactorTreeNode) {
         if (tree.collapsed) {
+          openedBySearchRef.current.add(tree);
           tree.open({ reveal: true });
         }
       }
     });
-  }, [flattened, matcher]);
+  }, [flattened, matcher, restoreNodesOpenedBySearch]);
 
   return (
     <FilteredCoreTreeWidget

@@ -1,7 +1,7 @@
 import {
   DescendantLoadingEntityProviderComponent,
-  EntityCardsPresenterComponent,
   EntityActionHandlerComponent,
+  EntityCardsPresenterComponent,
   EntityDefinition,
   EntityDescriberComponent,
   EntityDocsComponent,
@@ -19,6 +19,8 @@ import { SetCurrentTodoItemAction } from '../actions/SetCurrentTodoItemAction';
 import { AddSubTodoAction } from '../actions/AddSubTodoAction';
 import { RenameTodoAction } from '../actions/RenameTodoAction';
 import { DuplicateTodoAction } from '../actions/DuplicateTodoAction';
+import { TodoNoteModel } from '../models/TodoNoteModel';
+import { AddTodoNoteAction } from '../actions/AddTodoNoteAction';
 
 export class TodoDefinition extends EntityDefinition<TodoModel> {
   @inject(TodoStore)
@@ -54,7 +56,9 @@ export class TodoDefinition extends EntityDefinition<TodoModel> {
         describe: (entity: TodoModel) => {
           return {
             simpleName: entity.name,
-            complexName: `${entity.children.length} child todo${entity.children.length === 1 ? '' : 's'}`,
+            complexName:
+              `${entity.children.length} child todo${entity.children.length === 1 ? '' : 's'} · ` +
+              `${entity.notes.length} note${entity.notes.length === 1 ? '' : 's'}`,
             labels: [
               {
                 label: 'Depth',
@@ -95,6 +99,18 @@ export class TodoDefinition extends EntityDefinition<TodoModel> {
     // allow the todos to be represented as tree items
     this.registerComponent(
       new InlineTreePresenterComponent<TodoModel>({
+        label: 'uncached',
+        augmentTreeNodeProps: () => {
+          return {
+            openOnSingleClick: false
+          };
+        }
+      })
+    );
+    this.registerComponent(
+      new InlineTreePresenterComponent<TodoModel>({
+        label: 'cached',
+        cacheTreeEntities: true,
         augmentTreeNodeProps: () => {
           return {
             openOnSingleClick: false
@@ -130,6 +146,22 @@ export class TodoDefinition extends EntityDefinition<TodoModel> {
         }
       })
     );
+    this.registerComponent(
+      new DescendantLoadingEntityProviderComponent<TodoModel, TodoNoteModel>({
+        descendantType: DemoEntities.TODO_NOTE,
+        generateOptions: (todo) => {
+          return {
+            descendants: todo.notes,
+            category: {
+              label: 'Notes'
+            },
+            refreshDescendants: () => {
+              return null;
+            }
+          };
+        }
+      })
+    );
 
     // by default let reactor set up a todos panel and use the tree presenter above
     this.registerComponent(
@@ -148,6 +180,7 @@ export class TodoDefinition extends EntityDefinition<TodoModel> {
 
     // selecting an item via the tree or cmd palette should make it the current todo item by default
     this.registerComponent(new EntityActionHandlerComponent(SetCurrentTodoItemAction.ID));
+    this.registerAdditionalAction(AddTodoNoteAction.ID);
     this.registerAdditionalAction(RenameTodoAction.ID);
     this.registerAdditionalAction(DuplicateTodoAction.ID);
   }
