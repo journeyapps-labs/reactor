@@ -1,5 +1,6 @@
 import * as React from 'react';
 import { SearchWidget, SearchWidgetProps } from './SearchWidget';
+import * as _ from 'lodash';
 
 export interface ControlledSearchWidgetProps extends Omit<SearchWidgetProps, 'search'> {
   searchChanged: (search: string) => any;
@@ -19,6 +20,17 @@ export class ControlledSearchWidget extends React.Component<ControlledSearchWidg
     };
   }
 
+  buffer = _.debounce(
+    () => {
+      this.props.searchChanged(this.state.value);
+    },
+    200,
+    {
+      leading: false,
+      trailing: true
+    }
+  );
+
   render() {
     return (
       <SearchWidget
@@ -30,7 +42,7 @@ export class ControlledSearchWidget extends React.Component<ControlledSearchWidg
               value: search
             },
             () => {
-              this.props.searchChanged(search);
+              this.buffer();
             }
           );
         }}

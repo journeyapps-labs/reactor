@@ -4,6 +4,9 @@ settings:
   autoInstallPeers: true
   excludeLinksFromLockfile: false
 
+overrides:
+  '@journeyapps-labs/common-tree': 0.0.0-dev-20260211180239
+
 importers:
 
   .:
@@ -79,6 +82,25 @@ importers:
       '@types/uuid':
         specifier: ^11.0.0
         version: 11.0.0
+
+  demo/module-stress-test:
+    dependencies:
+      '@faker-js/faker':
+        specifier: ^10.3.0
+        version: 10.3.0
+      '@journeyapps-labs/reactor-mod':
+        specifier: workspace:^
+        version: link:../../modules/module-reactor
+      lodash:
+        specifier: ^4.17.23
+        version: 4.17.23
+    devDependencies:
+      '@journeyapps-labs/lib-reactor-builder':
+        specifier: workspace:^
+        version: link:../../libs/lib-reactor-builder
+      '@types/lodash':
+        specifier: ^4.17.23
+        version: 4.17.23
 
   demo/server:
     dependencies:
@@ -437,8 +459,8 @@ importers:
         specifier: ^1.0.0
         version: 1.0.0
       '@journeyapps-labs/common-tree':
-        specifier: ^1.0.1
-        version: 1.0.1
+        specifier: 0.0.0-dev-20260211180239
+        version: 0.0.0-dev-20260211180239
       '@journeyapps-labs/common-utils':
         specifier: ^1.0.1
         version: 1.0.1
@@ -1527,6 +1549,10 @@ packages:
       '@noble/hashes':
         optional: true
 
+  '@faker-js/faker@10.3.0':
+    resolution: {integrity: sha512-It0Sne6P3szg7JIi6CgKbvTZoMjxBZhcv91ZrqrNuaZQfB5WoqYYbzCUOq89YR+VY8juY9M1vDWmDDa2TzfXCw==}
+    engines: {node: ^20.19.0 || ^22.13.0 || ^23.5.0 || >=24.0.0, npm: '>=10'}
+
   '@fortawesome/fontawesome-common-types@7.1.0':
     resolution: {integrity: sha512-l/BQM7fYntsCI//du+6sEnHOP6a74UixFyOYUyz2DLMXKx+6DEhfR3F2NYGE45XH1JJuIamacb4IZs9S0ZOWLA==}
     engines: {node: '>=6'}
@@ -1693,8 +1719,8 @@ packages:
   '@journeyapps-labs/common-logger@1.0.0':
     resolution: {integrity: sha512-/HeTqDaoU8WBg2/uMcnWm22TizB04ErxiLLLPwFPpu4hIscomPglabNHI57NAI/RP713DDB0WmkNmgyWGbVnnQ==}
 
-  '@journeyapps-labs/common-tree@1.0.1':
-    resolution: {integrity: sha512-NIsJDfD6htutrC97VdWbTsMbG/F0zQkgTO17NzJ/P3v5gMunRoAgeTx4k6trj4ZXeC1/QgQKS545qU94NHOdkg==}
+  '@journeyapps-labs/common-tree@0.0.0-dev-20260211180239':
+    resolution: {integrity: sha512-iyncIl8X82jmyHjDyWayFghl68Sz1vPFbMlyOVstM3xBhMRRPmPAuOd5qYgFamGEvSK6szUui9hdNIq+M3cB5Q==}
 
   '@journeyapps-labs/common-utils@1.0.1':
     resolution: {integrity: sha512-9P1f++wHSveqMQIWulLdGnDgvMdEqXP+j8eIscDm2bAuiMCIbij856AQgdrG0mQPPhL5SlUNlSGrfdKfhul2QA==}
@@ -6245,6 +6271,8 @@ snapshots:
 
   '@exodus/bytes@1.12.0': {}
 
+  '@faker-js/faker@10.3.0': {}
+
   '@fortawesome/fontawesome-common-types@7.1.0': {}
 
   '@fortawesome/fontawesome-svg-core@7.1.0':
@@ -6478,7 +6506,7 @@ snapshots:
     dependencies:
       lodash: 4.17.23
 
-  '@journeyapps-labs/common-tree@1.0.1':
+  '@journeyapps-labs/common-tree@0.0.0-dev-20260211180239':
     dependencies:
       '@journeyapps-labs/common-utils': 1.0.1
 

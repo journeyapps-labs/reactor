@@ -23,6 +23,9 @@ import { SetControl } from '../../../../../../controls/SetControl';
 import { TreeNode } from '@journeyapps-labs/common-tree';
 import { EntityReactorNode } from '../EntityReactorNode';
 import { BaseObserverInterface } from '@journeyapps-labs/common-utils';
+import { AbstractDescendentContextOptions } from '../descendent/AbstractDescendentContext';
+import { LazyDescendentContext } from '../descendent/LazyDescendentContext';
+import { ImmediateDescendentContext } from '../descendent/ImmediateDescendentContext';
 
 export interface GenerateTreeOptions<T> {
   events?: BaseObserverInterface<SelectEntityListener<T>>;
@@ -78,16 +81,17 @@ export abstract class AbstractEntityTreePresenterContext<
     });
   }
 
+  generateDescendentContext(options: AbstractDescendentContextOptions<T>) {
+    if (options.presenter.loadChildrenAsNodesAreOpened) {
+      return new LazyDescendentContext(options);
+    }
+    return new ImmediateDescendentContext(options);
+  }
+
   saveState() {
     this.setState({
       trees: {
-        ...(this.state.trees || {}),
-        ...Array.from(this.nodeCache.values()).reduce((prev, cur) => {
-          return {
-            ...prev,
-            ...cur.serialize()
-          };
-        }, {})
+        open: _.flatMap(Array.from(this.nodeCache.values()).map((n) => n.serialize().open))
       }
     });
   }

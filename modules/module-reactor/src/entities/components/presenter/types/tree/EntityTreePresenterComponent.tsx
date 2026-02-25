@@ -1,4 +1,4 @@
-import { TreeSerialized } from '@journeyapps-labs/common-tree';
+import { TreeSerialized, TreeSerializedV2 } from '@journeyapps-labs/common-tree';
 import {
   EntityPresenterComponent,
   EntityPresenterComponentOptions,
@@ -22,7 +22,12 @@ export interface EntityTreePresenterSettings {
 }
 
 export interface EntityTreePresenterState {
-  trees: TreeSerialized;
+  trees: TreeSerialized | TreeSerializedV2;
+}
+
+export interface EntityTreePresenterComponentOptions extends Omit<EntityPresenterComponentOptions, 'label'> {
+  loadChildrenAsNodesAreOpened?: boolean;
+  label?: string;
 }
 
 export abstract class EntityTreePresenterComponent<T> extends EntityPresenterComponent<
@@ -34,7 +39,14 @@ export abstract class EntityTreePresenterComponent<T> extends EntityPresenterCom
   @inject(BatchStore)
   accessor batchStore: BatchStore;
 
-  constructor(options: EntityPresenterComponentOptions = { label: EntityTreePresenterComponent.DEFAULT_LABEL }) {
-    super(EntityPresenterComponentRenderType.TREE, options);
+  constructor(protected options2: EntityTreePresenterComponentOptions) {
+    super(EntityPresenterComponentRenderType.TREE, {
+      ...options2,
+      label: options2.label || EntityTreePresenterComponent.DEFAULT_LABEL
+    });
+  }
+
+  get loadChildrenAsNodesAreOpened() {
+    return this.options2.loadChildrenAsNodesAreOpened;
   }
 }

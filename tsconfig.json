@@ -29,6 +29,9 @@
       "path": "./demo/module-custom-layout"
     },
     {
+      "path": "./demo/module-stress-test"
+    },
+    {
       "path": "./demo/server"
     }
   ]

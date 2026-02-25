@@ -1,64 +1,15 @@
-import { CoreTreeWidgetProps, ReactorTreeEntity, ReactorTreeNode } from '../../../../../widgets';
+import { CoreTreeWidgetProps, ReactorTreeNode } from '../../../../../widgets';
 import * as React from 'react';
 import { EntityDefinition } from '../../../../EntityDefinition';
 import { ReactorEntityDnDWrapper } from './widgets/ReactorEntityDnDWrapperWidget';
 import { SelectEntityListener } from '../../EntityPresenterComponent';
 import { ReactorEntityWrapperWidget } from './widgets/ReactorEntityWrapperWidget';
-import { DescendantEntityProviderComponent } from '../../../exposer/DescendantEntityProviderComponent';
 import { AbstractEntityTreePresenterContext } from './presenter-contexts/AbstractEntityTreePresenterContext';
-import { autorun, IReactionDisposer } from 'mobx';
 import { EntityTreePresenterComponent } from './EntityTreePresenterComponent';
 import { System } from '../../../../../core/System';
 import { inject } from '../../../../../inversify.config';
-import { TreeNode } from '@journeyapps-labs/common-tree';
 import { BaseObserverInterface } from '@journeyapps-labs/common-utils';
-
-export class DescendentContext<E> {
-  nodes: Set<ReactorTreeEntity>;
-  disposer1: IReactionDisposer;
-  disposer2: () => any;
-  context: AbstractEntityTreePresenterContext;
-
-  constructor(
-    protected presenter: EntityTreePresenterComponent<any>,
-    protected rootContext: AbstractEntityTreePresenterContext<any>,
-    protected descendant: DescendantEntityProviderComponent<E, any>,
-    protected node: EntityReactorNode<E>
-  ) {
-    this.nodes = new Set();
-    this.context = presenter.generateContext();
-    this.context.setRootContext(rootContext);
-    this.disposer1 = autorun(
-      () => {
-        this.clear();
-        const { options, entities } = descendant.getReactorTreeEntities(node.entity, this.context);
-        this.disposer2 = descendant.installParentNode(node, options);
-        entities.forEach((e) => {
-          this.nodes.add(e);
-          node.addChild(e);
-          if (e instanceof TreeNode) {
-            e.deserialize(node.context.state.trees);
-          }
-        });
-      },
-      { name: `descendent-context:${presenter.definition.type}` }
-    );
-  }
-
-  clear() {
-    this.disposer2?.();
-    this.nodes.forEach((n) => {
-      n.delete();
-    });
-    this.nodes.clear();
-  }
-
-  dispose() {
-    this.clear();
-    this.context.dispose();
-    this.disposer1?.();
-  }
-}
+import { AbstractDescendentContext } from './descendent/AbstractDescendentContext';
 
 export interface EntityReactorNodeOptions<E extends any = any> {
   definition: EntityDefinition;
@@ -70,7 +21,7 @@ export class EntityReactorNode<E extends any = any> extends ReactorTreeNode {
   @inject(System)
   accessor system: System;
 
-  descendants: Set<DescendentContext<E>>;
+  descendants: Set<AbstractDescendentContext<E>>;
   context: AbstractEntityTreePresenterContext;
 
   constructor(protected options2: EntityReactorNodeOptions<E>) {
@@ -81,22 +32,27 @@ export class EntityReactorNode<E extends any = any> extends ReactorTreeNode {
       }
     });
     this.descendants = new Set();
-    this.registerListener({
-      attachedChanged: () => {
-        if (this.attached && this.context) {
-          this.attachDescendents();
-        } else {
-          this.disposeDescendents();
-        }
-      }
+  }
+
+  activate() {
+    this.descendants.forEach((d) => {
+      d.activate();
     });
   }
 
-  disposeDescendents() {
+  deactivate() {
     this.descendants.forEach((d) => {
-      d.dispose();
+      d.deactivate();
     });
-    this.descendants.clear();
+  }
+
+  setAttached(attached: boolean): any {
+    super.setAttached(attached);
+    if (attached) {
+      this.activate();
+    } else {
+      this.deactivate();
+    }
   }
 
   attachDescendents() {
@@ -108,14 +64,21 @@ export class EntityReactorNode<E extends any = any> extends ReactorTreeNode {
       if (!presenter) {
         return;
       }
-      this.descendants.add(new DescendentContext(presenter, this.context, e, this));
+      this.descendants.add(
+        this.context.generateDescendentContext({
+          presenter,
+          rootContext: this.context,
+          descendant: e,
+          node: this
+        })
+      );
     });
     this.deserialize(this.context.state.trees);
   }
 
   setRootPresenterContext(context: AbstractEntityTreePresenterContext) {
     this.context = context;
-    if (this.attached && this.descendants.size === 0) {
+    if (this.descendants.size === 0) {
       this.attachDescendents();
     }
   }

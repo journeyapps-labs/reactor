@@ -2,7 +2,7 @@ import * as React from 'react';
 import { EntityPanelWidget } from './EntityPanelWidget';
 import { EntityPanelComponent } from '../EntityPanelComponent';
 import { EntityPresenterComponent, SelectEntityListener } from '../../presenter/EntityPresenterComponent';
-import { makeObservable, observable } from 'mobx';
+import { observable } from 'mobx';
 import {
   PanelTitleToolbarWidget,
   PanelToolbarButton
@@ -166,7 +166,7 @@ export class EntityPanelFactory<T> extends ReactorPanelFactory<EntityPanelModel<
       return null;
     }
     return {
-      name: event.model.getPresenter().label,
+      name: `View: ${event.model.getPresenter().label}`,
       tracking: false,
       onChange: async (event2) => {
         await this.comboBoxStore.show(
@@ -176,7 +176,7 @@ export class EntityPanelFactory<T> extends ReactorPanelFactory<EntityPanelModel<
                 title: p.label,
                 key: p.label,
                 action: async () => {
-                  event.model.presenter = p.label;
+                  event.model.setPresenter(p.label);
                 }
               };
             }),
@@ -193,7 +193,7 @@ export class EntityPanelFactory<T> extends ReactorPanelFactory<EntityPanelModel<
       return null;
     }
     return {
-      name: this.component.definition.getPreferredDescriber()?.label,
+      name: `Info: ${this.component.definition.getPreferredDescriber()?.label}`,
       tracking: false,
       onChange: async (event2) => {
         await this.comboBoxStore.show(
