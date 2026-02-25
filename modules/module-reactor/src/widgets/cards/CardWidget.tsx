@@ -28,20 +28,6 @@ export interface CardWidgetProps {
   };
 }
 
-export const CardTop = styled.div`
-  display: flex;
-  padding: 10px;
-`;
-
-export const CardContent = themed.div`
-  flex-grow: 1;
-  border-top: solid 1px ${(p) => getTransparentColor(p.theme.cards.border, 0.4)};
-  padding: 10px;
-  min-width: 0;
-  overflow-x: auto;
-  ${(p) => getScrollableCSS(p.theme)};
-`;
-
 namespace S {
   export const Container = themed.div<{ selected?: boolean; selectedBorderColor?: string }>`
     border-radius: 5px;
@@ -67,7 +53,10 @@ namespace S {
     padding-left: 5px;
   `;
 
-  export const Top = CardTop;
+  export const Top = styled.div`
+    display: flex;
+    padding: 10px;
+  `;
 
   export const Info = styled.div`
     flex-grow: 1;
@@ -84,7 +73,14 @@ namespace S {
     color: ${(p) => p.color || p.theme.cards.foreground};
   `;
 
-  export const Content = CardContent;
+  export const Content = themed.div`
+    flex-grow: 1;
+    border-top: solid 1px ${(p) => getTransparentColor(p.theme.cards.border, 0.4)};
+    padding: 10px;
+    min-width: 0;
+    overflow-x: auto;
+    ${(p) => getScrollableCSS(p.theme)};
+  `;
 
   export const Buttons = styled.div`
     display: flex;

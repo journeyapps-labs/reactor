@@ -25,10 +25,12 @@ export class PreferredSetBank<T> extends ComponentBank<T> {
       options: [],
       value: ''
     });
-    this.preferredSetting.onValueChanged((value) => {
-      const preferred = this.find((item) => this.options.getOption(item).key === value);
-      if (preferred) {
-        this.onPreferredChanged(preferred);
+    this.preferredSetting.registerListener({
+      updated: () => {
+        const preferred = this.find((item) => this.options.getOption(item).key === this.preferredSetting.value);
+        if (preferred) {
+          this.onPreferredChanged(preferred);
+        }
       }
     });
     try {

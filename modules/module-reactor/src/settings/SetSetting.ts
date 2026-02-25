@@ -43,14 +43,6 @@ export class SetSetting extends AbstractUserSetting<SetControl, SetSettingOption
     return this.options.options.length > 1;
   }
 
-  onValueChanged(cb: (value: string) => any) {
-    return this.control.registerListener({
-      valueChanged: (value) => {
-        cb(value);
-      }
-    });
-  }
-
   setValue(value: string) {
     this.control.value = value;
   }
