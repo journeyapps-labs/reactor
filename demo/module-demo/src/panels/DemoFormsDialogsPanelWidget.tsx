@@ -2,6 +2,8 @@ import * as React from 'react';
 import styled from '@emotion/styled';
 import { observer } from 'mobx-react';
 import {
+  ComboBoxItem,
+  ComboBoxStore2,
   CardWidget,
   DialogStore,
   DialogStore2,
@@ -10,11 +12,16 @@ import {
   PanelButtonMode,
   PanelButtonWidget,
   ReactorPanelModel,
+  SimpleComboBoxDirective,
+  System,
   StatusCardState,
   StatusCardWidget,
   ioc
 } from '@journeyapps-labs/reactor-mod';
 import { DemoFormModel } from '../forms/DemoFormModel';
+import { TodoStore } from '../stores/TodoStore';
+import { DemoEntities } from '../DemoEntities';
+import { TodoModel } from '../models/TodoModel';
 
 export interface DemoFormsDialogsPanelWidgetProps {
   model: ReactorPanelModel;
@@ -23,6 +30,7 @@ export interface DemoFormsDialogsPanelWidgetProps {
 export const DemoFormsDialogsPanelWidget: React.FC<DemoFormsDialogsPanelWidgetProps> = observer(() => {
   const dialogStore = ioc.get(DialogStore);
   const dialogStore2 = ioc.get(DialogStore2);
+  const comboBoxStore2 = ioc.get(ComboBoxStore2);
   const [inlineForm, setInlineForm] = React.useState(() => new DemoFormModel());
 
   const runMessageDialog = async () => {
@@ -111,6 +119,259 @@ export const DemoFormsDialogsPanelWidget: React.FC<DemoFormsDialogsPanelWidgetPr
     await dialogStore2.showDialog(directive);
   };
 
+  const runNestedComboDemo = async (position: any) => {
+    const topLevelMeta = (label: string) => <span style={{ fontSize: 11, opacity: 0.6 }}>{label}</span>;
+
+    const items: ComboBoxItem[] = [
+      {
+        key: 'coffee',
+        title: 'Coffee',
+        group: 'Drinks',
+        right: topLevelMeta('42'),
+        children: [
+          {
+            key: 'coffee-hot',
+            title: 'Hot',
+            group: 'Temperature',
+            children: [
+              {
+                key: 'coffee-hot-americano',
+                title: 'Americano',
+                group: 'Espresso bar',
+                children: [
+                  { key: 'coffee-hot-americano-single', title: 'Single shot', group: 'Size' },
+                  { key: 'coffee-hot-americano-double', title: 'Double shot', group: 'Size' },
+                  { key: 'coffee-hot-americano-long-black', title: 'Long black', group: 'House specials' }
+                ]
+              },
+              {
+                key: 'coffee-hot-flat-white',
+                title: 'Flat White',
+                group: 'Espresso bar',
+                children: [
+                  { key: 'coffee-hot-flat-white-oat', title: 'Oat milk', group: 'Milk' },
+                  { key: 'coffee-hot-flat-white-whole', title: 'Whole milk', group: 'Milk' }
+                ]
+              },
+              {
+                key: 'coffee-hot-cappuccino',
+                title: 'Cappuccino',
+                group: 'Espresso bar',
+                children: [
+                  { key: 'coffee-hot-cappuccino-dry', title: 'Dry foam', group: 'Foam' },
+                  { key: 'coffee-hot-cappuccino-wet', title: 'Wet foam', group: 'Foam' }
+                ]
+              }
+            ]
+          },
+          {
+            key: 'coffee-iced',
+            title: 'Iced',
+            group: 'Temperature',
+            children: [
+              {
+                key: 'coffee-iced-latte',
+                title: 'Iced Latte',
+                group: 'Cold espresso',
+                children: [
+                  { key: 'coffee-iced-latte-vanilla', title: 'Vanilla', group: 'Syrup' },
+                  { key: 'coffee-iced-latte-caramel', title: 'Caramel', group: 'Syrup' }
+                ]
+              },
+              {
+                key: 'coffee-iced-mocha',
+                title: 'Iced Mocha',
+                group: 'Cold espresso',
+                children: [
+                  { key: 'coffee-iced-mocha-dark', title: 'Dark chocolate', group: 'Chocolate' },
+                  { key: 'coffee-iced-mocha-milk', title: 'Milk chocolate', group: 'Chocolate' }
+                ]
+              },
+              {
+                key: 'coffee-iced-cold-brew',
+                title: 'Cold brew',
+                group: 'Cold espresso'
+              }
+            ]
+          },
+          {
+            key: 'coffee-drip',
+            title: 'Filter / Drip',
+            group: 'Brew method',
+            children: [
+              { key: 'coffee-drip-house', title: 'House blend', group: 'Origins' },
+              { key: 'coffee-drip-ethiopia', title: 'Ethiopia', group: 'Origins' },
+              { key: 'coffee-drip-colombia', title: 'Colombia', group: 'Origins' }
+            ]
+          },
+          {
+            key: 'coffee-espresso-shot',
+            title: 'Espresso shot',
+            group: 'Brew method'
+          }
+        ]
+      },
+      {
+        key: 'tea',
+        title: 'Tea',
+        group: 'Drinks',
+        right: topLevelMeta('33'),
+        children: [
+          {
+            key: 'tea-green',
+            title: 'Green',
+            group: 'Tea family',
+            children: [
+              {
+                key: 'tea-green-jasmine',
+                title: 'Jasmine',
+                group: 'Floral',
+                children: [
+                  { key: 'tea-green-jasmine-hot', title: 'Hot', group: 'Serve' },
+                  { key: 'tea-green-jasmine-iced', title: 'Iced', group: 'Serve' }
+                ]
+              },
+              {
+                key: 'tea-green-sencha',
+                title: 'Sencha',
+                group: 'Japanese',
+                children: [
+                  { key: 'tea-green-sencha-first-flush', title: 'First flush', group: 'Harvest' },
+                  { key: 'tea-green-sencha-late-flush', title: 'Late flush', group: 'Harvest' }
+                ]
+              },
+              {
+                key: 'tea-green-matcha',
+                title: 'Matcha',
+                group: 'Japanese'
+              }
+            ]
+          },
+          {
+            key: 'tea-black',
+            title: 'Black',
+            group: 'Tea family',
+            children: [
+              {
+                key: 'tea-black-earl-grey',
+                title: 'Earl Grey',
+                group: 'Blended',
+                children: [
+                  { key: 'tea-black-earl-grey-bergamot', title: 'Extra bergamot', group: 'Blend' },
+                  { key: 'tea-black-earl-grey-classic', title: 'Classic', group: 'Blend' }
+                ]
+              },
+              {
+                key: 'tea-black-assam',
+                title: 'Assam',
+                group: 'Single origin',
+                children: [
+                  { key: 'tea-black-assam-strong', title: 'Strong brew', group: 'Strength' },
+                  { key: 'tea-black-assam-light', title: 'Light brew', group: 'Strength' }
+                ]
+              },
+              {
+                key: 'tea-black-darjeeling',
+                title: 'Darjeeling',
+                group: 'Single origin'
+              }
+            ]
+          },
+          {
+            key: 'tea-herbal',
+            title: 'Herbal',
+            group: 'Tea family',
+            children: [
+              { key: 'tea-herbal-chamomile', title: 'Chamomile', group: 'Caffeine free' },
+              { key: 'tea-herbal-peppermint', title: 'Peppermint', group: 'Caffeine free' },
+              { key: 'tea-herbal-ginger', title: 'Ginger', group: 'Caffeine free' }
+            ]
+          },
+          {
+            key: 'tea-iced',
+            title: 'Iced tea',
+            group: 'Ready to drink'
+          }
+        ]
+      },
+      {
+        key: 'pastry',
+        title: 'Pastry',
+        group: 'Food',
+        right: topLevelMeta('12'),
+        children: [
+          {
+            key: 'pastry-croissant',
+            title: 'Croissant',
+            group: 'Baked',
+            children: [
+              { key: 'pastry-croissant-butter', title: 'Butter', group: 'Style' },
+              { key: 'pastry-croissant-almond', title: 'Almond', group: 'Style' }
+            ]
+          },
+          { key: 'pastry-muffin', title: 'Muffin', group: 'Baked' },
+          { key: 'pastry-scone', title: 'Scone', group: 'Baked' }
+        ]
+      },
+      {
+        key: 'water',
+        title: 'Water',
+        group: 'Drinks',
+        right: topLevelMeta('8'),
+        children: [
+          { key: 'water-still', title: 'Still', group: 'Type' },
+          { key: 'water-sparkling', title: 'Sparkling', group: 'Type' },
+          {
+            key: 'water-flavored',
+            title: 'Flavored',
+            group: 'Type',
+            children: [
+              { key: 'water-flavored-lemon', title: 'Lemon', group: 'Flavor' },
+              { key: 'water-flavored-lime', title: 'Lime', group: 'Flavor' },
+              { key: 'water-flavored-berry', title: 'Berry', group: 'Flavor' }
+            ]
+          }
+        ]
+      },
+      {
+        key: 'merch-gift-card',
+        title: 'Gift card',
+        group: 'Retail',
+        right: topLevelMeta('leaf')
+      },
+      {
+        key: 'retail-mug',
+        title: 'House mug',
+        group: 'Retail',
+        right: topLevelMeta('leaf')
+      }
+    ];
+
+    await comboBoxStore2.show(
+      new SimpleComboBoxDirective({
+        title: 'Nested combobox demo',
+        subtitle: 'Pick a leaf node',
+        event: position,
+        items
+      })
+    );
+  };
+
+  const runEntityContextComboDemo = async (position: any) => {
+    const todoStore = ioc.get(TodoStore);
+    const entity = todoStore.activeTodo || todoStore.todos[0];
+    if (!entity) {
+      await dialogStore.showMessageDialog({
+        title: 'No todo items',
+        message: 'Create at least one todo item first.'
+      });
+      return;
+    }
+
+    const definition = ioc.get(System).getDefinition<TodoModel>(DemoEntities.TODO_ITEM);
+    definition.showContextMenuForEntity(entity, position);
+  };
+
   const resetInlineForm = () => {
     setInlineForm(new DemoFormModel());
   };
@@ -136,6 +397,29 @@ export const DemoFormsDialogsPanelWidget: React.FC<DemoFormsDialogsPanelWidgetPr
                     action={runFormDialog}
                     mode={PanelButtonMode.PRIMARY}
                   />
+                </S.Buttons>
+              );
+            }
+          }
+        ]}
+      />
+
+      <CardWidget
+        title="Combobox playground"
+        subHeading="Nested side-by-side combobox proof of concept"
+        sections={[
+          {
+            key: 'combo-actions',
+            content: () => {
+              return (
+                <S.Buttons>
+                  <PanelButtonWidget
+                    label="Open nested combobox"
+                    icon="sitemap"
+                    action={runNestedComboDemo}
+                    mode={PanelButtonMode.PRIMARY}
+                  />
+                  <PanelButtonWidget label="Open real entity menu" icon="cube" action={runEntityContextComboDemo} />
                 </S.Buttons>
               );
             }

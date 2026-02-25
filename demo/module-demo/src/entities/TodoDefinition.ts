@@ -4,6 +4,7 @@ import {
   EntityActionHandlerComponent,
   EntityDefinition,
   EntityDescriberComponent,
+  EntityDocsComponent,
   EntityPanelComponent,
   inject,
   InlineEntityEncoderComponent,
@@ -16,6 +17,8 @@ import { TodoModel } from '../models/TodoModel';
 import { CreateTodoAction } from '../actions/CreateTodoAction';
 import { SetCurrentTodoItemAction } from '../actions/SetCurrentTodoItemAction';
 import { AddSubTodoAction } from '../actions/AddSubTodoAction';
+import { RenameTodoAction } from '../actions/RenameTodoAction';
+import { DuplicateTodoAction } from '../actions/DuplicateTodoAction';
 
 export class TodoDefinition extends EntityDefinition<TodoModel> {
   @inject(TodoStore)
@@ -43,6 +46,39 @@ export class TodoDefinition extends EntityDefinition<TodoModel> {
             complexName: activeTask ? 'Active task' : null
           };
         }
+      })
+    );
+    this.registerComponent(
+      new EntityDescriberComponent<TodoModel>({
+        label: 'Detailed',
+        describe: (entity: TodoModel) => {
+          return {
+            simpleName: entity.name,
+            complexName: `${entity.children.length} child todo${entity.children.length === 1 ? '' : 's'}`,
+            labels: [
+              {
+                label: 'Depth',
+                value: `${this.getTodoDepth(entity)}`,
+                icon: {
+                  name: 'sitemap',
+                  color: 'currentColor'
+                }
+              }
+            ]
+          };
+        }
+      })
+    );
+    this.registerComponent(
+      new EntityDocsComponent<TodoModel>({
+        label: 'Todo API',
+        getDocLink: () => 'https://react.dev/reference/react/useState'
+      })
+    );
+    this.registerComponent(
+      new EntityDocsComponent<TodoModel>({
+        label: 'Reactor entity docs',
+        getDocLink: () => 'https://github.com/journeyapps'
       })
     );
 
@@ -112,7 +148,20 @@ export class TodoDefinition extends EntityDefinition<TodoModel> {
 
     // selecting an item via the tree or cmd palette should make it the current todo item by default
     this.registerComponent(new EntityActionHandlerComponent(SetCurrentTodoItemAction.ID));
+    this.registerAdditionalAction(RenameTodoAction.ID);
+    this.registerAdditionalAction(DuplicateTodoAction.ID);
   }
+
+  protected getTodoDepth(todo: TodoModel): number {
+    let depth = 0;
+    let current = todo.parent;
+    while (current) {
+      depth++;
+      current = current.parent;
+    }
+    return depth;
+  }
+
   matchEntity(t: any): boolean {
     if (t instanceof TodoModel) {
       return true;

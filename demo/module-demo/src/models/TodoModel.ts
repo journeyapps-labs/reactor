@@ -16,8 +16,12 @@ export class TodoModel extends BaseObserver<TodoModelListener> {
   @observable
   protected accessor _children: Set<TodoModel>;
 
-  constructor(public name: string = '') {
+  @observable
+  accessor name: string;
+
+  constructor(name: string = '') {
     super();
+    this.name = name;
     this.id = v4();
     this.parent = null;
     this._children = new Set<TodoModel>();

@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useState } from 'react';
+import { useCallback, useEffect, useLayoutEffect, useState } from 'react';
 import * as _ from 'lodash';
 
 export interface Dimensions {
@@ -32,7 +32,7 @@ export const useDimensionObserver = (props: UseDimensionObserverOptions, bust: a
     }
   }, [dimensions, ...bust]);
 
-  useEffect(() => {
+  useLayoutEffect(() => {
     check();
     let interval = setInterval(() => {
       check();

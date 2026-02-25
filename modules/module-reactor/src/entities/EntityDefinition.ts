@@ -189,16 +189,15 @@ export abstract class EntityDefinition<T extends any = any> {
     event: MousePosition,
     options: Pick<SimpleComboBoxDirectiveOptions, 'hideSearch'> = {}
   ) {
-    let items: ComboBoxItem[] = [];
+    const docsItems: ComboBoxItem[] = [];
 
-    // actions
+    // docs
     for (let docComponent of this.getDocumenters()) {
       let docs = docComponent.getDocs(entity);
       if (docs) {
-        items.push({
+        docsItems.push({
           key: `docs-${docComponent.label}`,
           title: docComponent.label,
-          group: 'Docs',
           icon: 'external-link',
           color: 'cyan',
           action: async () => {
@@ -208,26 +207,64 @@ export abstract class EntityDefinition<T extends any = any> {
       }
     }
 
-    // actions
-    items = [
-      ...items,
-      ...this.getActionsForEntity(entity)
-        .map((a) => {
-          const item = a.representAsComboBoxItem({
-            installAction: true,
-            eventData: this.getActionEventDataForEntity(entity, a)
-          });
+    const actionItems = this.getActionsForEntity(entity)
+      .map((a) => {
+        const item = a.representAsComboBoxItem({
+          installAction: true,
+          eventData: this.getActionEventDataForEntity(entity, a)
+        });
 
-          if (!item) {
-            return null;
-          }
+        if (!item) {
+          return null;
+        }
 
-          return {
-            ...item,
-            group: item.group || 'General actions'
-          };
-        })
-        .filter((i) => !!i)
+        return {
+          ...item,
+          group: item.group || 'General actions'
+        } as ComboBoxItem;
+      })
+      .filter((i) => !!i);
+
+    const actionGroups = Object.entries(
+      actionItems.reduce(
+        (prev, item) => {
+          const group = item.group || 'General actions';
+          prev[group] = prev[group] || [];
+          prev[group].push(item);
+          return prev;
+        },
+        {} as Record<string, ComboBoxItem[]>
+      )
+    );
+
+    const renderedActions: ComboBoxItem[] =
+      actionGroups.length > 1
+        ? actionGroups.map(([group, groupedItems]) => {
+            return {
+              key: `actions-${group}`,
+              title: group,
+              group: 'Actions',
+              children: groupedItems.map((item) => ({
+                ...item,
+                group: undefined
+              }))
+            } as ComboBoxItem;
+          })
+        : actionItems;
+
+    const items: ComboBoxItem[] = [
+      ...renderedActions,
+      ...(docsItems.length > 0
+        ? [
+            {
+              key: 'docs',
+              title: 'Docs',
+              icon: 'book',
+              group: 'Resources',
+              children: docsItems
+            } as ComboBoxItem
+          ]
+        : [])
     ];
 
     const described = this.describeEntity(entity);
@@ -285,7 +322,10 @@ export abstract class EntityDefinition<T extends any = any> {
         entity: entity
       }),
       ...this.additionalActionIds.map((id) => this.actionStore.getActionByID(id))
-    ].filter((a) => this.isActionAllowedForEntity(a, entity));
+    ]
+      .filter((a) => !!a)
+      .filter((a, index, all) => all.findIndex((candidate) => candidate.id === a.id) === index)
+      .filter((a) => this.isActionAllowedForEntity(a, entity));
   }
 
   getPreferredDescriber() {

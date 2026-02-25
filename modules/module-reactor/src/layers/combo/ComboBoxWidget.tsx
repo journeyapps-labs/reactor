@@ -2,18 +2,19 @@ import * as React from 'react';
 import * as _ from 'lodash';
 import { ComboBoxItem } from '../../stores/combo/ComboBoxDirectives';
 import { ComboBoxItemWidget } from './ComboBoxItemWidget';
-import { ListItemRenderEvent, ListItem } from '../../widgets/list/ControlledListWidget';
+import { ListItem, ListItemRenderEvent } from '../../widgets/list/ControlledListWidget';
 import { RawComboBoxWidget } from './RawComboBoxWidget';
-import { MouseEvent } from 'react';
 import { getTransparentColor } from '@journeyapps-labs/lib-reactor-utils';
 import { themed } from '../../stores/themes/reactor-theme-fragment';
 import { COMBOBOX_ITEM_H_PADDING } from '../../layout';
+import { Dimensions } from '../../hooks/useDimensionObserver';
 
 export interface ComboBoxWidgetProps {
   items: ComboBoxItem[];
   initialSelected?: string;
-  selected: (selected: ComboBoxItem, event: MouseEvent) => any;
-  className?;
+  selected: (selected: ComboBoxItem, event: React.MouseEvent) => any;
+  hovered?: (selected: ComboBoxItem, dimensions?: Dimensions) => any;
+  className?: any;
   placeholder?: string;
   maxHeight?: number;
 }
@@ -28,17 +29,12 @@ namespace S {
   `;
 }
 
-export class ComboBoxWidget extends React.Component<ComboBoxWidgetProps> {
-  listener: any;
-  ref: React.RefObject<HTMLDivElement>;
+export const ComboBoxWidget: React.FC<ComboBoxWidgetProps> = (props) => {
+  const currentHoverRef = React.useRef<string>(null);
+  const dimensionRefs = React.useRef<Record<string, Dimensions>>({});
 
-  constructor(props: ComboBoxWidgetProps) {
-    super(props);
-    this.ref = React.createRef();
-  }
-
-  getGroups(): ListItem[] {
-    const groups = _.groupBy(this.props.items, (item) => item.group);
+  const items = React.useMemo<ListItem[]>(() => {
+    const groups = _.groupBy(props.items, (item) => item.group);
     return _.flatMap(groups, (group, groupName) => {
       return _.map(group, (item, index) => {
         return {
@@ -51,15 +47,23 @@ export class ComboBoxWidget extends React.Component<ComboBoxWidgetProps> {
                 <ComboBoxItemWidget
                   selected={event.selected}
                   item={item}
-                  selectedEvent={(event) => {
-                    this.props.selected(item, event);
+                  onMouseOver={() => {
+                    currentHoverRef.current = item.key;
+                    event.hover();
                   }}
-                  forwardRef={event.ref}
-                  {...{
-                    onMouseOver: () => {
-                      event.select();
+                  gotDimensions={(dimensions) => {
+                    if (_.isEqual(dimensionRefs.current[item.key], dimensions)) {
+                      return;
+                    }
+                    dimensionRefs.current[item.key] = dimensions;
+                    if (currentHoverRef.current === item.key) {
+                      event.hover();
                     }
                   }}
+                  onMouseClick={(event) => {
+                    props.selected(item, event);
+                  }}
+                  forwardRef={event.ref}
                 />
               </React.Fragment>
             );
@@ -67,21 +71,23 @@ export class ComboBoxWidget extends React.Component<ComboBoxWidgetProps> {
         };
       });
     });
-  }
+  }, [props.items, props.selected]);
 
-  render() {
-    return (
-      <RawComboBoxWidget
-        {...this.props}
-        selected={(selected) => {
-          if (!selected) {
-            this.props.selected(null, null);
-            return;
-          }
-          this.props.selected(_.find(this.props.items, { key: selected.key }), null);
-        }}
-        items={this.getGroups()}
-      />
-    );
-  }
-}
+  return (
+    <RawComboBoxWidget
+      {...props}
+      hovered={(item) => {
+        const found = _.find(props.items, { key: item.key });
+        props.hovered?.(found, dimensionRefs.current[item.key]);
+      }}
+      selected={(selected, event) => {
+        if (!selected) {
+          props.selected(null, null);
+          return;
+        }
+        props.selected(_.find(props.items, { key: selected.key }), event);
+      }}
+      items={items}
+    />
+  );
+};

@@ -31,10 +31,11 @@ export class ComboBoxComponentSelection extends ComponentSelection<{ label: stri
       }
     };
 
-    if (this.comboBoxStore2.directive) {
-      this.comboBoxListener2 = this.comboBoxStore2.directive.registerListener({
+    const firstDirective = Array.from(this.comboBoxStore2.directives.values())[0];
+    if (firstDirective) {
+      this.comboBoxListener2 = firstDirective.registerListener({
         selectedItemsChanged: () => {
-          check(this.comboBoxStore2.directive.getSelected());
+          check(firstDirective.getSelected());
         }
       });
     }

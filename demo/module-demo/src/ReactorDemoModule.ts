@@ -20,6 +20,8 @@ import { ShowDemoFormAction } from './actions/ShowDemoFormAction';
 import { DemoFormsDialogsPanelFactory } from './panels/DemoFormsDialogsPanelFactory';
 import { AddSubTodoAction } from './actions/AddSubTodoAction';
 import { DemoEditorsPanelFactory } from './panels/DemoEditorsPanelFactory';
+import { RenameTodoAction } from './actions/RenameTodoAction';
+import { DuplicateTodoAction } from './actions/DuplicateTodoAction';
 
 export class ReactorDemoModule extends AbstractReactorModule {
   constructor() {
@@ -32,17 +34,20 @@ export class ReactorDemoModule extends AbstractReactorModule {
     const system = ioc.get(System);
     const visorStore = ioc.get(VisorStore);
     const workspaceStore = ioc.get(WorkspaceStore);
+    const actionStore = ioc.get(ActionStore);
 
     ioc.bind(TodoStore).toConstantValue(new TodoStore());
 
     system.registerDefinition(new TodoDefinition());
 
-    const actionStore = ioc.get(ActionStore);
     actionStore.registerAction(new CreateTodoAction());
     actionStore.registerAction(new DeleteTodoAction());
     actionStore.registerAction(new SetCurrentTodoItemAction());
     actionStore.registerAction(new AddSubTodoAction());
     actionStore.registerAction(new ShowDemoFormAction());
+    actionStore.registerAction(new DuplicateTodoAction());
+    actionStore.registerAction(new ShowDemoFormAction());
+
     workspaceStore.registerFactory(new DemoFormsDialogsPanelFactory());
     workspaceStore.registerFactory(new DemoEditorsPanelFactory());
 

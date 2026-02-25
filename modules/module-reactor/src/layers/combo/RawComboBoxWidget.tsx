@@ -6,7 +6,7 @@ import { ControlledListWidget, ListItem } from '../../widgets/list/ControlledLis
 export interface RawComboBoxWidgetProps {
   items: ListItem[];
   initialSelected?: string;
-  selected: (item: ListItem) => any;
+  selected: (item: ListItem, event?: React.MouseEvent) => any;
   hovered?: (item: ListItem) => any;
   placeholder?: string;
   maxHeight?: number;

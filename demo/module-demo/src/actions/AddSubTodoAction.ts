@@ -15,7 +15,10 @@ export class AddSubTodoAction extends EntityAction<TodoModel> {
       id: AddSubTodoAction.ID,
       name: 'Add sub todo',
       icon: 'plus-square',
-      target: DemoEntities.TODO_ITEM
+      target: DemoEntities.TODO_ITEM,
+      category: {
+        grouping: 'structure'
+      }
     });
   }
 

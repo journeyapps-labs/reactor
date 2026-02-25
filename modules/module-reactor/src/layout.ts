@@ -8,4 +8,4 @@ export enum LayoutContextSize {
   MEDIUM = 'normal'
 }
 
-export const COMBOBOX_ITEM_H_PADDING = 12;
+export const COMBOBOX_ITEM_H_PADDING = 8;

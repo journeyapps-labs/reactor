@@ -3,6 +3,7 @@ import { MousePosition } from '../../layers/combo/SmartPositionWidget';
 import { ComboBoxItem } from '../combo/ComboBoxDirectives';
 import { Btn } from '../../definitions/common';
 import { BaseObserver } from '@journeyapps-labs/common-utils';
+import { v4 } from 'uuid';
 
 export interface ComboBoxDirectiveListener {
   dismissed: () => any;
@@ -21,6 +22,7 @@ export abstract class ComboBoxDirective<
   T extends ComboBoxItem = ComboBoxItem,
   O extends ComboBoxDirectiveOptions<T> = ComboBoxDirectiveOptions<T>
 > extends BaseObserver<ComboBoxDirectiveListener> {
+  readonly id: string;
   protected search: string;
   protected selected: Set<T>;
 
@@ -29,6 +31,7 @@ export abstract class ComboBoxDirective<
 
   constructor(protected options: O) {
     super();
+    this.id = v4();
     this.search = null;
     this.selected = new Set();
     this._buttons = new Set();

@@ -8,11 +8,11 @@ export interface ComboBoxStore2Listener {
 
 export class ComboBoxStore2 extends BaseObserver<ComboBoxStore2Listener> {
   @observable
-  accessor directive: ComboBoxDirective;
+  accessor directives: Set<ComboBoxDirective>;
 
   constructor() {
     super();
-    this.directive = null;
+    this.directives = observable.set<ComboBoxDirective>() as unknown as Set<ComboBoxDirective>;
   }
 
   /**
@@ -20,12 +20,13 @@ export class ComboBoxStore2 extends BaseObserver<ComboBoxStore2Listener> {
    * @param directive SimpleComboBoxDirective | SearchEngineComboBoxDirective
    */
   async show<T extends ComboBoxDirective>(directive: T): Promise<T> {
-    this.directive = directive;
+    this.directives.add(directive);
     this.iterateListeners((cb) => cb.directiveAdded?.(directive));
+
     await new Promise<void>((resolve) => {
       const l = directive.registerListener({
         dismissed: () => {
-          this.directive = null;
+          this.directives.delete(directive);
           resolve();
           l();
         }

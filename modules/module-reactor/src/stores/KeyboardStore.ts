@@ -41,6 +41,7 @@ export class KeyboardContext extends BaseObserver<KeyboardContextListener> {
     const listener = (event: KeyboardEvent) => {
       for (let listener of this.handlers.values()) {
         if (listener.key === event.key) {
+          event.preventDefault();
           listener.action(event);
         }
       }

@@ -41,7 +41,7 @@ export abstract class EntityTreePresenterComponent<T> extends EntityPresenterCom
   @inject(BatchStore)
   accessor batchStore: BatchStore;
 
-  constructor(protected options2: EntityTreePresenterComponentOptions) {
+  constructor(protected options2: EntityTreePresenterComponentOptions = {}) {
     super(EntityPresenterComponentRenderType.TREE, {
       ...options2,
       label: options2.label || EntityTreePresenterComponent.DEFAULT_LABEL

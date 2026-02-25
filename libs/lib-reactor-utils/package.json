@@ -27,14 +27,14 @@
     "jsonwebtoken": "^9.0.3",
     "lodash": "^4.17.23",
     "luxon": "^3.7.2",
-    "minimatch": "^10.2.1",
+    "minimatch": "^10.2.2",
     "mobx": "^6.15.0"
   },
   "devDependencies": {
     "@types/jsonwebtoken": "^9.0.10",
-    "@types/lodash": "^4.17.23",
+    "@types/lodash": "^4.17.24",
     "@types/luxon": "^3.7.1",
-    "@types/node": "^25.2.3",
+    "@types/node": "^25.3.0",
     "vitest": "^4.0.18"
   }
 }

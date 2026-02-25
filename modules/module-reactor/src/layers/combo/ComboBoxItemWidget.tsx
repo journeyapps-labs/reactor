@@ -9,12 +9,15 @@ import { ButtonComponentSelection, ReactorComponentType } from '../../stores/gui
 import { themed } from '../../stores/themes/reactor-theme-fragment';
 import { COMBOBOX_ITEM_H_PADDING } from '../../layout';
 import * as _ from 'lodash';
+import { Dimensions, useDimensionObserver } from '../../hooks/useDimensionObserver';
 
 export interface ComboBoxItemWidgetProps {
   item: ComboBoxItem;
   selected: boolean;
-  selectedEvent: (event: MouseEvent) => any;
   forwardRef: React.RefObject<any>;
+  onMouseClick: (event: MouseEvent) => any;
+  onMouseOver?: (event: MouseEvent) => any;
+  gotDimensions?: (dimensions: Dimensions) => any;
 }
 
 namespace S {
@@ -30,11 +33,8 @@ namespace S {
 
   const shared = css`
     font-size: 13px;
-    padding: 8px ${COMBOBOX_ITEM_H_PADDING}px;
+    padding: 4px ${COMBOBOX_ITEM_H_PADDING}px;
     cursor: pointer;
-    transition:
-      background-color 0.2s,
-      color 0.2s;
     display: flex;
     align-items: center;
   `;
@@ -78,121 +78,162 @@ namespace S {
     justify-content: flex-end;
     align-items: center;
     display: flex;
+    column-gap: 8px;
     padding-left: 20px;
+  `;
+
+  export const ChildIndicator = themed.div`
+    opacity: 0.65;
+    display: flex;
+    align-items: center;
   `;
 }
 
-export class ComboBoxItemWidget extends React.Component<React.PropsWithChildren<ComboBoxItemWidgetProps>> {
-  ref: React.RefObject<HTMLDivElement>;
-  scrolled?: boolean;
+interface ItemContentProps {
+  item: ComboBoxItem;
+  selected: boolean;
+  children?: React.ReactNode;
+}
 
-  constructor(props) {
-    super(props);
-    this.ref = React.createRef();
-  }
-
-  getIcon() {
-    if (this.props.item.icon) {
-      return (
-        <S.Icon selected={this.props.selected} color={this.props.item.color}>
-          <S.IconInner icon={this.props.item.icon} />
+const ItemContent: React.FC<ItemContentProps> = (props) => {
+  return (
+    <>
+      {props.children}
+      {props.item.icon ? (
+        <S.Icon selected={props.selected} color={props.item.color}>
+          <S.IconInner icon={props.item.icon} />
         </S.Icon>
-      );
-    }
-    return null;
-  }
-
-  getContent() {
-    return (
-      <>
-        {this.props.children}
-        {this.getIcon()}
-        <S.Label disabled={this.props.item.disabled}>{this.props.item.title}</S.Label>
-        {this.getBadge()}
-      </>
-    );
-  }
-
-  getRef() {
-    return this.props.forwardRef || this.ref;
-  }
-
-  getBadge() {
-    if (this.props.item.badge) {
-      return (
+      ) : null}
+      <S.Label disabled={props.item.disabled}>{props.item.title}</S.Label>
+      {props.item.badge ? (
         <S.Badge
-          color={this.props.item.badge.foreground}
-          background={this.props.item.badge.background}
+          color={props.item.badge.foreground}
+          background={props.item.badge.background}
           onClick={(event) => {
-            if (this.props.item.badge.action) {
+            if (props.item.badge.action) {
               event.stopPropagation();
-              this.props.item.badge.action(event);
+              props.item.badge.action(event);
             }
           }}
         >
-          {this.props.item.badge.label}
+          {props.item.badge.label}
         </S.Badge>
-      );
-    }
+      ) : null}
+    </>
+  );
+};
+
+const RightContent: React.FC<{ item: ComboBoxItem }> = (props) => {
+  const hasCustomRight = !!props.item.right;
+  const hasChildren = !!props.item.children?.length;
+
+  if (!hasCustomRight && !hasChildren) {
     return null;
   }
 
-  getItem(selected: boolean) {
-    if (this.props.item.download) {
-      return (
-        <S.Link
-          attention={selected}
-          onClick={(event) => {
-            event.persist();
-            event.stopPropagation();
-            this.props.selectedEvent(event);
-          }}
-          download={this.props.item.download.name}
-          href={this.props.item.download.url}
-          {...this.props}
-          ref={this.getRef()}
-          selected={this.props.selected}
-        >
-          {this.getContent()}
-        </S.Link>
-      );
-    }
+  return (
+    <S.Right>
+      {hasCustomRight ? props.item.right : null}
+      {hasChildren ? (
+        <S.ChildIndicator>
+          <IconWidget icon="angle-right" />
+        </S.ChildIndicator>
+      ) : null}
+    </S.Right>
+  );
+};
+
+interface RowProps {
+  item: ComboBoxItem;
+  selected: boolean;
+  attention: boolean;
+  rowRef: React.RefObject<any>;
+  onMouseClick: (event: MouseEvent) => any;
+  onMouseOver?: (event: MouseEvent) => any;
+  children?: React.ReactNode;
+}
+
+const ComboBoxItemRow: React.FC<RowProps> = (props) => {
+  const onClick = (event: MouseEvent) => {
+    event.persist();
+    event.stopPropagation();
+    props.onMouseClick(event);
+  };
+
+  if (props.item.download) {
     return (
-      <S.Item
-        attention={selected}
-        onClick={(event) => {
-          event.persist();
-          event.stopPropagation();
-          this.props.selectedEvent(event);
-        }}
-        {...this.props}
-        ref={this.getRef()}
-        selected={this.props.selected}
+      <S.Link
+        attention={props.attention}
+        onClick={onClick}
+        onMouseOver={props.onMouseOver}
+        download={props.item.download.name}
+        href={props.item.download.url}
+        ref={props.rowRef}
+        selected={props.selected}
       >
-        {this.getContent()}
-        {this.props.item.right ? <S.Right>{this.props.item.right}</S.Right> : null}
-      </S.Item>
+        <ItemContent item={props.item} selected={props.selected}>
+          {props.children}
+        </ItemContent>
+      </S.Link>
     );
   }
 
-  render() {
-    return (
-      <AttentionWrapperWidget<ButtonComponentSelection>
-        selection={{
-          label: this.props.item.title
-        }}
-        forwardRef={this.getRef()}
-        type={ReactorComponentType.COMBO_BOX_ITEM}
-        activated={(selected) => {
-          if (!this.scrolled && !!selected) {
-            _.defer(() => {
-              this.getRef()?.current?.scrollIntoView();
-            });
-            this.scrolled = true;
-          }
-          return this.getItem(!!selected);
-        }}
-      />
-    );
-  }
-}
+  return (
+    <S.Item
+      attention={props.attention}
+      onClick={onClick}
+      onMouseOver={props.onMouseOver}
+      ref={props.rowRef}
+      selected={props.selected}
+    >
+      <ItemContent item={props.item} selected={props.selected}>
+        {props.children}
+      </ItemContent>
+      <RightContent item={props.item} />
+    </S.Item>
+  );
+};
+
+export const ComboBoxItemWidget: React.FC<React.PropsWithChildren<ComboBoxItemWidgetProps>> = (props) => {
+  const localRef = React.useRef<HTMLDivElement>(null);
+  const scrolledRef = React.useRef(false);
+  const rowRef = props.forwardRef || localRef;
+
+  useDimensionObserver({
+    element: rowRef,
+    changed: (dimensions) => {
+      props.gotDimensions?.(dimensions);
+    }
+  });
+
+  return (
+    <AttentionWrapperWidget<ButtonComponentSelection>
+      selection={{
+        label: props.item.title
+      }}
+      forwardRef={rowRef}
+      type={ReactorComponentType.COMBO_BOX_ITEM}
+      activated={(attention) => {
+        if (!scrolledRef.current && !!attention) {
+          _.defer(() => {
+            rowRef?.current?.scrollIntoView();
+          });
+          scrolledRef.current = true;
+        }
+
+        return (
+          <ComboBoxItemRow
+            item={props.item}
+            selected={props.selected}
+            attention={!!attention}
+            rowRef={rowRef}
+            onMouseClick={props.onMouseClick}
+            onMouseOver={props.onMouseOver}
+          >
+            {props.children}
+          </ComboBoxItemRow>
+        );
+      }}
+    />
+  );
+};
