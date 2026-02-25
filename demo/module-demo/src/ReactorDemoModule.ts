@@ -37,11 +37,12 @@ export class ReactorDemoModule extends AbstractReactorModule {
 
     system.registerDefinition(new TodoDefinition());
 
-    ioc.get(ActionStore).registerAction(new CreateTodoAction());
-    ioc.get(ActionStore).registerAction(new DeleteTodoAction());
-    ioc.get(ActionStore).registerAction(new SetCurrentTodoItemAction());
-    ioc.get(ActionStore).registerAction(new AddSubTodoAction());
-    ioc.get(ActionStore).registerAction(new ShowDemoFormAction());
+    const actionStore =  ioc.get(ActionStore);
+    actionStore.registerAction(new CreateTodoAction());
+    actionStore.registerAction(new DeleteTodoAction());
+    actionStore.registerAction(new SetCurrentTodoItemAction());
+    actionStore.registerAction(new AddSubTodoAction());
+    actionStore.registerAction(new ShowDemoFormAction());
     workspaceStore.registerFactory(new DemoFormsDialogsPanelFactory());
     workspaceStore.registerFactory(new DemoEditorsPanelFactory());
 
