@@ -1,6 +1,5 @@
 import { beforeEach, expect, it, vi } from 'vitest';
-import { System } from '../../src/core/System';
-import { ioc } from '../../src/inversify.config';
+import { System, ioc } from '../../src';
 import {
   AbstractEntityTreePresenterContext,
   DescendantLoadingEntityProviderComponent,
