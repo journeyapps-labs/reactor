@@ -11,7 +11,6 @@ export interface SearchableCoreTreeWidgetProps extends Omit<CoreTreeWidgetProps,
   search?: string;
   matchLeaf?(event: SearchEvent & { tree: TreeEntity }): SearchEventMatch;
   matchNode?(event: SearchEvent & { tree: TreeNode }): SearchEventMatch;
-  onSearchResultChanged?: (event: { matched: TreeEntity[] }) => any;
 }
 
 const useSearchMatcher = (search: string) => {

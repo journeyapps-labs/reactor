@@ -1,9 +1,6 @@
 import * as React from 'react';
 import { describe, expect, it, vi } from 'vitest';
-import { ReactorTreeLeaf } from '../../src/widgets/core-tree/reactor-tree/ReactorTreeLeaf';
-import { ReactorTreeNode } from '../../src/widgets/core-tree/reactor-tree/ReactorTreeNode';
-import { SearchableCoreTreeWidget } from '../../src/widgets/core-tree/SearchableCoreTreeWidget';
-import { SearchableTreeSearchScope } from '../../src/widgets/core-tree/SearchableTreeSearchScope';
+import { ReactorTreeLeaf, ReactorTreeNode, SearchableCoreTreeWidget, SearchableTreeSearchScope } from '../../src/';
 import { renderWithReactorTestRig } from '../rig/reactor-test-rig';
 
 const createLeaf = (key: string) => {
@@ -29,22 +26,15 @@ describe('SearchableCoreTreeWidget search scope', () => {
     const nestedAce = createLeaf('Ace');
     const nestedGroup = createNode('group', [nestedAce]);
     const root = createNode('root', [nestedGroup]);
-    const onSearchResultChanged = vi.fn();
 
     const rig = await renderWithReactorTestRig(
-      <SearchableCoreTreeWidget
-        tree={root}
-        search="ace"
-        searchScope={SearchableTreeSearchScope.FULL_TREE}
-        onSearchResultChanged={onSearchResultChanged}
-      />
+      <SearchableCoreTreeWidget tree={root} search="ace" searchScope={SearchableTreeSearchScope.FULL_TREE} />
     );
 
     await rig.flush(20);
 
     expect(root.collapsed).toBe(false);
     expect(nestedGroup.collapsed).toBe(false);
-    expect(onSearchResultChanged).toHaveBeenCalled();
 
     await rig.unmount();
   });
@@ -55,26 +45,14 @@ describe('SearchableCoreTreeWidget search scope', () => {
     const nestedGroup = createNode('group', [nestedAce]);
     const root = createNode('root', [visibleAce, nestedGroup]);
     root.open({ reveal: false });
-    const onSearchResultChanged = vi.fn();
 
     const rig = await renderWithReactorTestRig(
-      <SearchableCoreTreeWidget
-        tree={root}
-        search="ace"
-        searchScope={SearchableTreeSearchScope.VISIBLE_ONLY}
-        onSearchResultChanged={onSearchResultChanged}
-      />
+      <SearchableCoreTreeWidget tree={root} search="ace" searchScope={SearchableTreeSearchScope.VISIBLE_ONLY} />
     );
 
     await rig.flush(20);
 
     expect(nestedGroup.collapsed).toBe(true);
-
-    const calls = onSearchResultChanged.mock.calls;
-    const latest = calls[calls.length - 1]?.[0]?.matched ?? [];
-    expect(latest).toContain(visibleAce);
-    expect(latest).not.toContain(nestedAce);
-
     await rig.unmount();
   });
 });
