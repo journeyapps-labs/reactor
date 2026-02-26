@@ -4,7 +4,7 @@ import { CoreTreeWidget, CoreTreeWidgetProps } from './CoreTreeWidget';
 import { TreeEntity, TreeNode } from '@journeyapps-labs/common-tree';
 import { createSearchEventMatcher, SearchEvent, SearchEventMatch } from '@journeyapps-labs/lib-reactor-search';
 import { observer } from 'mobx-react';
-import { UniversalNodeWidget } from './reactor-tree/ReactorTreeNode';
+import { UniversalNodeWidget } from './reactor-tree/widgets/UniversalNodeWidget';
 import * as _ from 'lodash';
 
 export interface SearchableCoreTreeWidgetProps extends Omit<CoreTreeWidgetProps, 'search'> {

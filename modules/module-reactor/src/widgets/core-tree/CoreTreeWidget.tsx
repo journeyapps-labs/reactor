@@ -2,7 +2,7 @@ import * as React from 'react';
 import { TreeEntity, TreeEntityInterface, TreeNode } from '@journeyapps-labs/common-tree';
 import { TreeWidgetProps } from '../tree/TreeWidget';
 import { observer } from 'mobx-react';
-import { UniversalNodeWidget } from './reactor-tree/ReactorTreeNode';
+import { UniversalNodeWidget } from './reactor-tree/widgets/UniversalNodeWidget';
 import { SearchEvent } from '@journeyapps-labs/lib-reactor-search';
 import { SearchableTreeSearchScope } from './SearchableTreeSearchScope';
 
@@ -25,7 +25,6 @@ export interface CoreTreeWidgetProps {
   renderTreeNode?: (event: CoreRenderTreeNodeEvent) => React.JSX.Element;
   renderTreeLeaf?: (event: CoreRenderTreeLeafEvent) => React.JSX.Element;
   hasMatchedChildren?: (matched: boolean) => any;
-  trimEmptyNodes?: boolean;
   search?: SearchEvent;
   searchScope?: SearchableTreeSearchScope;
   events?: {
