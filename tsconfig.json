@@ -23,7 +23,10 @@
       "path": "./modules/module-editor"
     },
     {
-      "path": "./demo/module-demo"
+      "path": "./demo/module-todos"
+    },
+    {
+      "path": "./demo/module-playground"
     },
     {
       "path": "./demo/module-custom-layout"

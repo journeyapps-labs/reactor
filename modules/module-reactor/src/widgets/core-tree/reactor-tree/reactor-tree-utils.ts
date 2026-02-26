@@ -1,4 +1,4 @@
-import { ReactorTreeNode } from './ReactorTreeNode';
+import { ReactorTreeNode, ReactorTreeNodeDefaultOpenPolicy } from './ReactorTreeNode';
 import { ReactorTreeLeaf } from './ReactorTreeLeaf';
 import { IBaseReactorTree, ReactorTreeProps } from './PatchTree';
 import { TreeEntityInterface } from '@journeyapps-labs/common-tree';
@@ -14,6 +14,7 @@ export interface ReactorTreeOptions {
   key?: string;
   getTreeProps?: (event: Partial<ReactorTreeProps>) => Partial<ReactorTreeProps>;
   match?: (event: SearchEvent) => SearchEventMatch;
+  defaultOpenPolicy?: ReactorTreeNodeDefaultOpenPolicy;
 }
 
 export const setupReactorTree = (node: IBaseReactorTree & TreeEntityInterface, options: ReactorTreeOptions) => {

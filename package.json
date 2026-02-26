@@ -11,6 +11,8 @@
     "build:ts": "./node_modules/.bin/tsc --build",
     "clean": "pnpm -r clean && tsc --build --clean && rm -rf modules/*/dist && rm -rf libs/*/dist && rm -rf modules/*/dist-module",
     "format": "prettier --write \"**/*.{ts,tsx,js,jsx}\"",
+    "demo:start": "node ./scripts/run-demo.js start",
+    "demo:watch": "node ./scripts/run-demo.js watch",
     "ncu": "ncu -u && pnpm recursive exec -- ncu -u && ./scripts/update-overrides.js",
     "preinstall": "npx only-allow pnpm",
     "release": "pnpm build:prod && pnpm changeset publish",
@@ -19,11 +21,17 @@
     "watch:modules": "pnpm -r --parallel watch:module",
     "watch:ts": "pnpm build:ts --watch"
   },
+  "pnpm": {
+    "overrides": {
+      "@journeyapps-labs/common-tree": "0.0.0-dev-20260225233915"
+    }
+  },
   "devDependencies": {
     "@changesets/cli": "^2.29.8",
     "concurrently": "9.2.1",
     "env-cmd": "^11.0.0",
     "glob": "^13.0.6",
+    "inquirer": "^12.10.0",
     "js-yaml": "^4.1.1",
     "npm-check-updates": "^19.5.0",
     "prettier": "3.8.1",

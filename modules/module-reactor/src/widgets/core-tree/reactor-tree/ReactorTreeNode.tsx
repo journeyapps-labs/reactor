@@ -8,13 +8,16 @@ import {
 import { TreeWidget } from '../../tree/TreeWidget';
 import * as _ from 'lodash';
 import * as React from 'react';
-import { useEffect } from 'react';
-import { CoreTreeWidget, CoreTreeWidgetProps } from '../CoreTreeWidget';
+import { useEffect, useLayoutEffect, useState } from 'react';
+import { CoreTreeWidgetProps } from '../CoreTreeWidget';
 import { useForceUpdate } from '../../../hooks/useForceUpdate';
 import { observer } from 'mobx-react';
 import { PatchTree, ReactorTreeListener } from './PatchTree';
-import { isBaseReactorTree, ReactorTreeOptions, setupReactorTree } from './reactor-tree-utils';
+import { isBaseReactorTree, ReactorTreeEntity, ReactorTreeOptions, setupReactorTree } from './reactor-tree-utils';
 import { SearchEvent, SearchEventMatch } from '@journeyapps-labs/lib-reactor-search';
+import { ReactorTreeLeaf } from './ReactorTreeLeaf';
+import styled from '@emotion/styled';
+import { SearchableTreeSearchScope } from '../SearchableTreeSearchScope';
 
 export enum ReactorTreeNodeDefaultOpenPolicy {
   NEVER = 'never',
@@ -22,46 +25,17 @@ export enum ReactorTreeNodeDefaultOpenPolicy {
   ALWAYS = 'always'
 }
 
-const ReactorTreeNodeWidget: React.FC<{
-  tree: ReactorTreeNode;
-  event: CoreTreeWidgetProps;
-}> = observer(({ event, tree }) => {
+export const useTreeEntity = (options: { tree: ReactorTreeEntity }) => {
+  const { tree } = options;
   const forceUpdate = useForceUpdate();
   useEffect(() => {
-    const disposer = tree.registerListener({
+    return tree.registerListener({
       propGeneratorsChanged: () => {
-        forceUpdate({
-          defer: true
-        });
-      },
-      childAdded: () => {
-        forceUpdate({
-          defer: true
-        });
-      },
-      childRemoved: () => {
-        forceUpdate({
-          defer: true
-        });
-      },
-      collapsedChanged: () => {
-        forceUpdate({
-          defer: true
-        });
-        event.events?.updated?.();
-      },
-      sortChanged: () => {
         forceUpdate({
           defer: true
         });
       }
     });
-    // Ensure we render once after listener registration so stale props
-    // (for example old search matches) are not kept until the next hover/update.
-    forceUpdate({
-      defer: true
-    });
-    return disposer;
   }, [tree]);
   useEffect(() => {
     tree.setVisible(true);
@@ -75,36 +49,178 @@ const ReactorTreeNodeWidget: React.FC<{
       }
     };
   }, [tree]);
+};
+
+const useTreeNode = (tree: TreeNode, updated: () => any) => {
+  const forceUpdate = useForceUpdate();
+  useEffect(() => {
+    const disposer = tree.registerListener({
+      collapsedChanged: () => {
+        forceUpdate({
+          defer: true
+        });
+        updated?.();
+      }
+    });
+    forceUpdate();
+    return disposer;
+  }, [tree, updated]);
+};
+
+const useChildren = (options: { tree: TreeNode; event: CoreTreeWidgetProps }) => {
+  const { tree, event } = options;
+  const forceUpdate = useForceUpdate();
+  const [childrenHasMatches, setChildrenHasMatches] = useState(false);
+  useLayoutEffect(() => {
+    const disposer = tree.registerListener({
+      childAdded: () => {
+        forceUpdate({
+          defer: true
+        });
+      },
+      childRemoved: () => {
+        forceUpdate({
+          defer: true
+        });
+      }
+    });
+    forceUpdate();
+    return disposer;
+  }, [tree]);
+
+  useEffect(() => {
+    if (event.search && event.searchScope === SearchableTreeSearchScope.FULL_TREE) {
+      tree.open();
+    } else {
+      setChildrenHasMatches(false);
+    }
+  }, [event.search, event.searchScope]);
+
+  return {
+    childrenHasMatches: event.search ? childrenHasMatches : true,
+    childrenFunc: (depth) => {
+      if (event.searchScope === SearchableTreeSearchScope.VISIBLE_ONLY && tree.collapsed) {
+        return null;
+      }
+
+      return (
+        <>
+          {_.map(tree.children, (element) => {
+            return (
+              <UniversalNodeWidget
+                key={element.getPathAsString()}
+                tree={element}
+                event={{
+                  ...event,
+                  hasMatchedChildren: (match) => {
+                    if (match) {
+                      setChildrenHasMatches(true);
+                      event.hasMatchedChildren?.(true);
+                    }
+                  },
+                  depth
+                }}
+              />
+            );
+          })}
+        </>
+      );
+    }
+  };
+};
+
+const BaseTreeNodeWidget: React.FC<{
+  tree: TreeNode;
+  event: CoreTreeWidgetProps;
+}> = observer((props) => {
+  const { event, tree } = props;
+  useTreeNode(tree, event.events?.updated);
+  const { childrenFunc, childrenHasMatches } = useChildren({ tree, event });
+
+  if (childrenHasMatches) {
+    return event.renderTreeNode({
+      depth: event.depth,
+      children: () => childrenFunc(event.depth + 1),
+      entity: tree,
+      props: null
+    });
+  }
+  return <>{childrenFunc(event.depth + 1)}</>;
+});
+
+const ReactorTreeNodeWidget: React.FC<{
+  tree: ReactorTreeNode;
+  event: CoreTreeWidgetProps;
+}> = observer(({ event, tree }) => {
+  const forceUpdate = useForceUpdate();
+
+  useTreeNode(tree, event.events?.updated);
+  useTreeEntity({ tree });
+
+  const { childrenFunc, childrenHasMatches } = useChildren({ tree, event });
+  const [renderThis, setRenderThis] = useState(true);
+
+  useEffect(() => {
+    return tree.registerListener({
+      sortChanged: () => {
+        forceUpdate({
+          defer: true
+        });
+      }
+    });
+  }, [tree]);
+
+  useLayoutEffect(() => {
+    let res = tree.setSearch(event.search);
+    if (event.search) {
+      setRenderThis(res);
+      event.hasMatchedChildren?.(res);
+    } else {
+      setRenderThis(true);
+    }
+  }, [event.search]);
 
   const treeProps = tree.getProps(event);
-  return (
-    <TreeWidget
-      {...treeProps}
-      forwardRef={event.forwardRef}
-      depth={event.depth}
-      collapsed={tree.collapsed}
-      onCollapsedChanged={(collapsed, deep) => {
-        treeProps.onCollapsedChanged?.(collapsed, deep);
-        tree.setCollapsed(collapsed);
-        if (deep) {
-          tree.openChildren(!collapsed);
-        }
-      }}
-    >
-      {(depth) => {
-        return _.map(tree.children, (element) => {
-          return (
-            <CoreTreeWidget
-              key={element.getPathAsString()}
-              {..._.omit(event, 'forwardRef')}
-              depth={depth}
-              tree={element}
-            />
-          );
-        });
-      }}
-    </TreeWidget>
-  );
+
+  if (childrenHasMatches || renderThis) {
+    return (
+      <TreeWidget
+        {...treeProps}
+        forwardRef={event.forwardRef}
+        depth={event.depth}
+        collapsed={tree.collapsed}
+        onCollapsedChanged={(collapsed, deep) => {
+          treeProps.onCollapsedChanged?.(collapsed, deep);
+          tree.setCollapsed(collapsed);
+          if (deep) {
+            tree.openChildren(!collapsed);
+          }
+        }}
+      >
+        {childrenFunc}
+      </TreeWidget>
+    );
+  }
+  return <>{childrenFunc(event.depth + 1)}</>;
+});
+
+export const UniversalNodeWidget: React.FC<{
+  tree: ReactorTreeNode | ReactorTreeLeaf | TreeEntity;
+  event: CoreTreeWidgetProps;
+}> = observer((props) => {
+  if (props.tree instanceof ReactorTreeNode) {
+    return <ReactorTreeNodeWidget event={props.event} tree={props.tree} />;
+  }
+  if (props.tree instanceof TreeNode) {
+    return <BaseTreeNodeWidget event={props.event} tree={props.tree} />;
+  }
+  if (props.tree instanceof ReactorTreeLeaf) {
+    return props.tree.renderWidget(props.event);
+  }
+  return props.event.renderTreeLeaf({
+    entity: props.tree,
+    depth: props.event.depth
+  });
 });
 
 export interface ReactorTreeNodeListener extends ReactorTreeListener, TreeNodeListener {
@@ -114,24 +230,14 @@ export interface ReactorTreeNodeListener extends ReactorTreeListener, TreeNodeLi
 export class ReactorTreeNode<T extends ReactorTreeNodeListener = ReactorTreeNodeListener> extends PatchTree(
   TreeNode
 )<T> {
-  private defaultOpenPolicy: ReactorTreeNodeDefaultOpenPolicy;
   private hasHydratedTreeState: boolean;
   private hasPersistedTreeState: boolean;
 
   constructor(public options: ReactorTreeOptions) {
     super(options.key || null);
-    this.defaultOpenPolicy = ReactorTreeNodeDefaultOpenPolicy.NEVER;
     this.hasHydratedTreeState = false;
     this.hasPersistedTreeState = false;
     setupReactorTree(this, options);
-  }
-
-  setDefaultOpenPolicy(policy: ReactorTreeNodeDefaultOpenPolicy = ReactorTreeNodeDefaultOpenPolicy.NEVER) {
-    this.defaultOpenPolicy = policy;
-  }
-
-  getDefaultOpenPolicy() {
-    return this.defaultOpenPolicy;
   }
 
   private getRootNode(): ReactorTreeNode {
@@ -146,6 +252,10 @@ export class ReactorTreeNode<T extends ReactorTreeNodeListener = ReactorTreeNode
 
     // V1 payload stores entries keyed by path.
     return Object.keys(payload || {}).length > 0;
+  }
+
+  get defaultOpenPolicy() {
+    return this.options.defaultOpenPolicy || ReactorTreeNodeDefaultOpenPolicy.NEVER;
   }
 
   private shouldApplyDefaultOpenPolicy() {
@@ -175,7 +285,6 @@ export class ReactorTreeNode<T extends ReactorTreeNodeListener = ReactorTreeNode
 
   deserialize(payload: TreeSerialized | TreeSerializedV2) {
     super.deserialize(payload);
-
     const root = this.getRootNode();
     root.hasHydratedTreeState = true;
     root.hasPersistedTreeState = ReactorTreeNode.didPersistTreeState(payload);
@@ -230,4 +339,10 @@ export class ReactorTreeNode<T extends ReactorTreeNodeListener = ReactorTreeNode
       return c.getKey();
     });
   }
+}
+
+namespace S {
+  export const Hidden = styled.div`
+    display: none;
+  `;
 }
