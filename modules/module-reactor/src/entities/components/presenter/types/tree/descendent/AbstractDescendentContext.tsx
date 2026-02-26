@@ -4,6 +4,7 @@ import { ReactorTreeEntity } from '../../../../../../widgets/core-tree/reactor-t
 import { AbstractEntityTreePresenterContext } from '../presenter-contexts/AbstractEntityTreePresenterContext';
 import { EntityTreePresenterComponent } from '../EntityTreePresenterComponent';
 import { DescendantEntityProviderComponent } from '../../../../exposer/DescendantEntityProviderComponent';
+import * as _ from 'lodash';
 
 export interface AbstractDescendentContextOptions<E> {
   presenter: EntityTreePresenterComponent<E>;

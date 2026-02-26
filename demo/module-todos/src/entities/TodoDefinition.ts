@@ -179,7 +179,7 @@ export class TodoDefinition extends EntityDefinition<TodoModel> {
               label: 'Notes'
             },
             refreshDescendants: () => {
-              return null;
+              return todo.loadNotes();
             }
           };
         }

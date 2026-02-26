@@ -27,7 +27,7 @@ export interface IBaseReactorTree extends TreeEntityInterface {
   addPropGenerator(transformer: ReactorTreePropsTransformer): () => any;
   renderWidget(event: CoreTreeWidgetProps): React.JSX.Element;
   match(event: SearchEvent): SearchEventMatch;
-  setSearch(event: SearchEvent, options?: { revealMatch?: boolean }): boolean;
+  setSearch(event: SearchEvent): boolean;
   setSortKey(key: string): void;
 
   /**
@@ -47,6 +47,10 @@ export interface IBaseReactorTree extends TreeEntityInterface {
    * The entity itself is visible
    */
   visible: boolean;
+  /**
+   * The current search value
+   */
+  currentSearch?: SearchEvent;
 }
 
 export function PatchTree<T extends GConstructor<TreeEntity<ReactorTreeListener>>>(
@@ -58,6 +62,7 @@ export function PatchTree<T extends GConstructor<TreeEntity<ReactorTreeListener>
     attached: boolean;
     visible: boolean;
     mouseOver: boolean;
+    currentSearch?: SearchEvent;
 
     protected searchGeneratorDisposer: () => any;
 
@@ -68,6 +73,7 @@ export function PatchTree<T extends GConstructor<TreeEntity<ReactorTreeListener>
       this.sortKey = null;
       this.mouseOver = false;
       this.propGenerator = new Set();
+      this.currentSearch = null;
     }
 
     setVisible(visible: boolean): any {
@@ -127,7 +133,8 @@ export function PatchTree<T extends GConstructor<TreeEntity<ReactorTreeListener>
       return null;
     }
 
-    setSearch(event: SearchEvent, options?: { revealMatch?: boolean }) {
+    setSearch(event: SearchEvent) {
+      this.currentSearch = event;
       this.searchGeneratorDisposer?.();
       this.searchGeneratorDisposer = null;
       if (!event) {

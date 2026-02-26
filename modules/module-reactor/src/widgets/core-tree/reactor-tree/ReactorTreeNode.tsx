@@ -28,11 +28,13 @@ export class ReactorTreeNode<T extends ReactorTreeNodeListener = ReactorTreeNode
 )<T> {
   private hasHydratedTreeState: boolean;
   private hasPersistedTreeState: boolean;
+  private serializedBeforeSearch: TreeSerializedV2;
 
   constructor(public options: ReactorTreeOptions) {
     super(options.key || null);
     this.hasHydratedTreeState = false;
     this.hasPersistedTreeState = false;
+    this.serializedBeforeSearch = null;
     setupReactorTree(this, options);
   }
 
@@ -77,6 +79,10 @@ export class ReactorTreeNode<T extends ReactorTreeNodeListener = ReactorTreeNode
   }
 
   deserialize(payload: TreeSerialized | TreeSerializedV2) {
+    // when searching, dont deserialize
+    if (this.currentSearch) {
+      return;
+    }
     super.deserialize(payload);
     const root = this.getRootNode();
     root.hasHydratedTreeState = true;

@@ -8,7 +8,7 @@ import {
 export interface DescendantLoadingEntityGeneratedOptions<
   Descendant
 > extends DescendantEntityGeneratedOptions<Descendant> {
-  refreshDescendants?: (event: { node?: ReactorTreeNode }) => any;
+  refreshDescendants?: (event: { node?: ReactorTreeNode }) => Promise<any>;
   loading?: () => boolean;
 }
 
@@ -41,18 +41,33 @@ export class DescendantLoadingEntityProviderComponent<Parent, Descendant> extend
   }
 
   installNode(node: ReactorTreeNode, descendantOptions: DescendantLoadingEntityGeneratedOptions<Descendant>) {
-    const check = () => {
+    let loading = false;
+    const check = async () => {
+      // we only want to run 1 at a time
+      if (loading) {
+        return;
+      }
       if (!node.collapsed && node.visible && node.attached) {
-        descendantOptions.refreshDescendants?.({
-          node
-        });
+        let gen: () => any;
+        try {
+          loading = true;
+          // show loading while refreshing descendents
+          gen = node.addPropGenerator(() => {
+            return {
+              loading: true
+            };
+          });
+          await descendantOptions.refreshDescendants?.({
+            node
+          });
+        } finally {
+          loading = false;
+          gen();
+        }
       }
     };
     return node.registerListener({
       collapsedChanged: () => {
-        check();
-      },
-      attachedChanged: () => {
         check();
       },
       visibilityChanged: () => {
