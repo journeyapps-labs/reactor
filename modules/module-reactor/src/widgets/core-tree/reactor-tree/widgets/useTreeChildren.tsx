@@ -46,7 +46,7 @@ export const useTreeChildren = (options: {
     } else {
       setChildrenHasMatches(false);
     }
-  }, [event.search, event.searchScope]);
+  }, [tree, event.search, event.searchScope]);
 
   return {
     childrenHasMatches: event.search ? childrenHasMatches : true,

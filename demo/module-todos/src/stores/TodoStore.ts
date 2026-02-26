@@ -9,9 +9,13 @@ export class TodoStore {
   @observable
   accessor activeTodo: TodoModel;
 
+  @observable
+  accessor simulateLoadNotesError: boolean;
+
   constructor() {
     this._rootTodos = new Set<TodoModel>();
     this.activeTodo = null;
+    this.simulateLoadNotesError = false;
   }
 
   protected bindTodo(todo: TodoModel) {

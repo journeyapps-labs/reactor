@@ -77,6 +77,10 @@ export class ReactorTreeNode<T extends ReactorTreeNodeListener = ReactorTreeNode
   }
 
   deserialize(payload: TreeSerialized | TreeSerializedV2) {
+    // when searching, dont deserialize
+    if (this.currentSearch) {
+      return;
+    }
     super.deserialize(payload);
     const root = this.getRootNode();
     root.hasHydratedTreeState = true;

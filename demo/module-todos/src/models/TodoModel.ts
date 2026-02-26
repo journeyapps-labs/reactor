@@ -99,4 +99,16 @@ export class TodoModel extends BaseObserver<TodoModelListener> {
   get notes() {
     return Array.from(this._notes.values());
   }
+
+  async loadNotes(simulateError: boolean = false): Promise<TodoNoteModel[]> {
+    await new Promise<void>((resolve) => {
+      setTimeout(() => resolve(), 1000);
+    });
+    if (simulateError) {
+      throw new Error('There was a (simulated) server error trying to load notes.');
+    }
+    // Simulate a DB refresh by replacing the backing collection with fresh instances.
+    this._notes = new Set(this.notes);
+    return this.notes;
+  }
 }

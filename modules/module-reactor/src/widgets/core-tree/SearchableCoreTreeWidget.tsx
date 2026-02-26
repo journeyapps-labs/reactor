@@ -1,16 +1,13 @@
 import * as React from 'react';
-import { useLayoutEffect, useMemo, useState } from 'react';
+import { useEffect, useLayoutEffect, useMemo, useState } from 'react';
 import { CoreTreeWidget, CoreTreeWidgetProps } from './CoreTreeWidget';
-import { TreeEntity, TreeNode } from '@journeyapps-labs/common-tree';
-import { createSearchEventMatcher, SearchEvent, SearchEventMatch } from '@journeyapps-labs/lib-reactor-search';
-import { observer } from 'mobx-react';
+import { TreeNode } from '@journeyapps-labs/common-tree';
+import { createSearchEventMatcher, SearchEvent } from '@journeyapps-labs/lib-reactor-search';
 import { UniversalNodeWidget } from './reactor-tree/widgets/UniversalNodeWidget';
 import * as _ from 'lodash';
 
 export interface SearchableCoreTreeWidgetProps extends Omit<CoreTreeWidgetProps, 'search'> {
   search?: string;
-  matchLeaf?(event: SearchEvent & { tree: TreeEntity }): SearchEventMatch;
-  matchNode?(event: SearchEvent & { tree: TreeNode }): SearchEventMatch;
 }
 
 const useSearchMatcher = (search: string) => {
@@ -25,23 +22,8 @@ const useSearchMatcher = (search: string) => {
   }, [search]);
 };
 
-const FilteredCoreTreeWidget: React.FC<
-  SearchableCoreTreeWidgetProps & {
-    matcher: SearchEvent;
-    revealMatch: boolean;
-  }
-> = observer((props) => {
-  const { matcher, revealMatch: _renderTreeEntity, ...rest } = props;
-
-  return <CoreTreeWidget {...rest} search={props.matcher} />;
-});
-
-const SearchableCoreTreeWidgetFullMode: React.FC<SearchableCoreTreeWidgetProps> = observer((props) => {
-  const matcher = useSearchMatcher(props.search);
-  return <FilteredCoreTreeWidget {...props} matcher={matcher} revealMatch={true} />;
-});
-
 export const SearchableCoreTreeWidgetInner: React.FC<SearchableCoreTreeWidgetProps> = (props) => {
+  const matcher = useSearchMatcher(props.search);
   const [initialState] = useState(() => {
     if (props.tree instanceof TreeNode) {
       return props.tree.serialize();
@@ -49,7 +31,7 @@ export const SearchableCoreTreeWidgetInner: React.FC<SearchableCoreTreeWidgetPro
     return null;
   });
 
-  useLayoutEffect(() => {
+  useEffect(() => {
     return () => {
       if (props.tree instanceof TreeNode) {
         props.tree.deserialize(initialState);
@@ -57,7 +39,7 @@ export const SearchableCoreTreeWidgetInner: React.FC<SearchableCoreTreeWidgetPro
     };
   }, []);
 
-  return <SearchableCoreTreeWidgetFullMode {...props} />;
+  return <CoreTreeWidget {...props} search={matcher} />;
 };
 
 export const SearchableCoreTreeWidget: React.FC<SearchableCoreTreeWidgetProps> = (props) => {

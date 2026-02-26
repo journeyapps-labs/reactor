@@ -21,7 +21,14 @@ export const BaseTreeNodeWidget: React.FC<BaseTreeNodeWidgetProps> = observer((p
       depth: event.depth,
       children: () => renderChildren(event.depth + 1),
       entity: tree,
-      props: null
+      props: {
+        emptyMessage: 'Empty',
+        empty: tree.children.length === 0,
+        collapsed: tree.collapsed,
+        onCollapsedChanged: () => {
+          props.event.events.updated?.();
+        }
+      }
     });
   }
 
