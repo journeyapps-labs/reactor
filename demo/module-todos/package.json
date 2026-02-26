@@ -1,0 +1,20 @@
+{
+  "name": "@journeyapps-labs/reactor-mod-todos",
+  "main": "./dist/index.js",
+  "typings": "./dist/@types/index",
+  "private": true,
+  "scripts": {
+    "build:module": "reactor build .",
+    "watch:module": "pnpm build:module --watch"
+  },
+  "dependencies": {
+    "@journeyapps-labs/common-utils": "^1.0.1",
+    "@journeyapps-labs/reactor-mod": "workspace:^",
+    "mobx": "^6.15.0",
+    "uuid": "^13.0.0"
+  },
+  "devDependencies": {
+    "@journeyapps-labs/lib-reactor-builder": "workspace:^",
+    "@types/uuid": "^11.0.0"
+  }
+}

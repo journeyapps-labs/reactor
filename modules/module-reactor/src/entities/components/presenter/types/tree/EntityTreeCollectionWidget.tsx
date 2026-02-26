@@ -7,7 +7,7 @@ import { ReactorTreeNode } from '../../../../../widgets/core-tree/reactor-tree/R
 import { PanelPlaceholderWidget } from '../../../../../widgets/panel/panel/PanelPlaceholderWidget';
 import { RenderCollectionOptions } from '../../AbstractPresenterContext';
 import { AbstractEntityTreePresenterContext } from './presenter-contexts/AbstractEntityTreePresenterContext';
-import { SearchableEntityTreeWidget } from './SearchableEntityTreeWidget';
+import { SearchableCoreTreeWidget } from '../../../../../widgets/index';
 
 export interface EntityTreeCollectionWidgetProps<T extends any> {
   event: RenderCollectionOptions<T>;
@@ -84,13 +84,16 @@ export const EntityTreeCollectionWidget = observer(function <T>(props: EntityTre
   }
 
   if (event.searchEvent?.search) {
-    return (
-      <SearchableEntityTreeWidget
-        nodes={nodes}
-        search={event.searchEvent.search}
-        searchScope={presenterContext.presenter.searchScope}
-      />
-    );
+    return nodes.map((tree) => {
+      return (
+        <SearchableCoreTreeWidget
+          key={tree.options.key}
+          tree={tree}
+          search={event.searchEvent.search}
+          searchScope={presenterContext.presenter.searchScope}
+        />
+      );
+    });
   }
 
   const jsxElements = nodes.map((tree) => {

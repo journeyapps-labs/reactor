@@ -14,7 +14,8 @@ const server = http.createServer(app);
 
 let path = require.resolve('@journeyapps-labs/lib-reactor-server');
 
-const modules = loadModules({
+const PORT = parseInt(process.env.PORT || '9527');
+const MODULES = loadModules({
   env: {
     MODULES: process.env.MODULES.split(',')
   }
@@ -33,7 +34,7 @@ const serveIndex = () => {
       };
     },
     domTransform: ($) => {
-      createModuleLoaderContentTransformer($, modules);
+      createModuleLoaderContentTransformer($, MODULES);
     },
     templateVars: {
       LOADER_BACKGROUND_COLOR: '#1d1d1d'
@@ -47,13 +48,13 @@ const serveIndex = () => {
 
   // !====================== Frontend routes for serving reactor ide webapp ================
   serveModules({
-    modules: modules,
+    modules: MODULES,
     app: app
   });
   app.get('/', serveIndexMiddleware as any);
 
-  server.listen(parseInt(process.env.PORT), () => {
-    console.info(`server listening on port ${process.env.PORT}`);
+  server.listen(PORT, () => {
+    console.info(`server listening on port ${PORT}`);
   });
 })().catch((err) => {
   console.error('something went wrong booting system', err);
