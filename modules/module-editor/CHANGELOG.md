@@ -1,5 +1,12 @@
 # @journeyapps-labs/reactor-mod-editor
 
+## 2.0.2
+
+### Patch Changes
+
+- Updated dependencies [70533b4]
+  - @journeyapps-labs/reactor-mod@5.0.2
+
 ## 2.0.1
 
 ### Patch Changes
