@@ -104,10 +104,10 @@ async function run() {
   const orderedSelected = modules
     .filter((m) => selectedWithDeps.includes(m.dir))
     .sort((a, b) => {
-      if (a.dir === 'module-todos' && b.dir === 'module-playground') {
+      if (a.dir === 'module-todos' && b.dir !== 'module-todos') {
         return -1;
       }
-      if (a.dir === 'module-playground' && b.dir === 'module-todos') {
+      if (b.dir === 'module-todos' && a.dir !== 'module-todos') {
         return 1;
       }
       return a.dir.localeCompare(b.dir);
