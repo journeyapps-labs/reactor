@@ -1,5 +1,12 @@
 # @journeyapps-labs/reactor-mod
 
+## 5.0.1
+
+### Patch Changes
+
+- 17f54d8: Refine tree rendering and search behavior, and expand demo coverage.
+  - Update core tree/search internals in `reactor-mod` with the latest tree-system refactors and presenter integration adjustments.
+
 ## 5.0.0
 
 ### Major Changes
