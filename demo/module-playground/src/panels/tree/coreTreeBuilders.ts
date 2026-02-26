@@ -8,21 +8,31 @@ type CoreTreeVariant = {
   searchScope: SearchableTreeSearchScope;
 };
 
-const createLeaf = (key: string, label: string = key) => {
+const createLeaf = (key: string, label: string = key, icon: string = 'circle', iconColor: string = 'currentColor') => {
   return new ReactorTreeLeaf({
     key,
     getTreeProps: () => ({
-      label
+      label,
+      icon: icon as any,
+      iconColor
     }),
     match: (event) => event.matches(label)
   });
 };
 
-const createNode = (key: string, label: string = key, children: Array<ReactorTreeNode | ReactorTreeLeaf> = []) => {
+const createNode = (
+  key: string,
+  label: string = key,
+  children: Array<ReactorTreeNode | ReactorTreeLeaf> = [],
+  icon: string = 'folder',
+  iconColor: string = 'currentColor'
+) => {
   const node = new ReactorTreeNode({
     key,
     getTreeProps: () => ({
-      label
+      label,
+      icon: icon as any,
+      iconColor
     }),
     match: (event) => event.matches(label)
   });
@@ -33,19 +43,31 @@ const createNode = (key: string, label: string = key, children: Array<ReactorTre
 };
 
 const buildStaticCoreTree = (prefix: string) => {
-  const drinks = createNode(`${prefix}-drinks`, 'Drinks', [
-    createLeaf(`${prefix}-coffee`, 'Coffee beans'),
-    createLeaf(`${prefix}-tea`, 'Tea leaves'),
-    createLeaf(`${prefix}-water`, 'Sparkling water')
-  ]);
+  const drinks = createNode(
+    `${prefix}-drinks`,
+    'Drinks',
+    [
+      createLeaf(`${prefix}-coffee`, 'Coffee beans', 'mug-hot'),
+      createLeaf(`${prefix}-tea`, 'Tea leaves', 'leaf', '#5a8f4f'),
+      createLeaf(`${prefix}-water`, 'Sparkling water', 'tint', '#3b82f6')
+    ],
+    'glass-water',
+    '#0ea5a4'
+  );
 
-  const groceries = createNode(`${prefix}-groceries`, 'Groceries', [
-    createLeaf(`${prefix}-eggs`, 'Eggs'),
-    createLeaf(`${prefix}-bread`, 'Bread'),
-    createLeaf(`${prefix}-butter`, 'Butter')
-  ]);
+  const groceries = createNode(
+    `${prefix}-groceries`,
+    'Groceries',
+    [
+      createLeaf(`${prefix}-eggs`, 'Eggs', 'egg', '#b08968'),
+      createLeaf(`${prefix}-bread`, 'Bread', 'bread-slice', '#b45309'),
+      createLeaf(`${prefix}-butter`, 'Butter', 'cube', '#ca8a04')
+    ],
+    'shopping-basket',
+    '#6b7280'
+  );
 
-  const root = createNode(`${prefix}-root`, 'Shopping list', [drinks, groceries]);
+  const root = createNode(`${prefix}-root`, 'Shopping list', [drinks, groceries], 'list-check', '#2563eb');
   root.open({ reveal: false });
   return root;
 };
@@ -72,25 +94,25 @@ const buildLazyCoreTree = (prefix: string) => {
     });
   };
 
-  const drinks = createNode(`${prefix}-drinks`, 'Drinks');
+  const drinks = createNode(`${prefix}-drinks`, 'Drinks', [], 'glass-water', '#0ea5a4');
   installLazyChildren(drinks, () => {
     return [
-      createLeaf(`${prefix}-coffee`, 'Coffee beans'),
-      createLeaf(`${prefix}-tea`, 'Tea leaves'),
-      createLeaf(`${prefix}-water`, 'Sparkling water')
+      createLeaf(`${prefix}-coffee`, 'Coffee beans', 'mug-hot'),
+      createLeaf(`${prefix}-tea`, 'Tea leaves', 'leaf', '#5a8f4f'),
+      createLeaf(`${prefix}-water`, 'Sparkling water', 'tint', '#3b82f6')
     ];
   });
 
-  const groceries = createNode(`${prefix}-groceries`, 'Groceries');
+  const groceries = createNode(`${prefix}-groceries`, 'Groceries', [], 'shopping-basket', '#6b7280');
   installLazyChildren(groceries, () => {
     return [
-      createLeaf(`${prefix}-eggs`, 'Eggs'),
-      createLeaf(`${prefix}-bread`, 'Bread'),
-      createLeaf(`${prefix}-butter`, 'Butter')
+      createLeaf(`${prefix}-eggs`, 'Eggs', 'egg', '#b08968'),
+      createLeaf(`${prefix}-bread`, 'Bread', 'bread-slice', '#b45309'),
+      createLeaf(`${prefix}-butter`, 'Butter', 'cube', '#ca8a04')
     ];
   });
 
-  const root = createNode(`${prefix}-root`, 'Shopping list', [drinks, groceries]);
+  const root = createNode(`${prefix}-root`, 'Shopping list', [drinks, groceries], 'list-check', '#2563eb');
   root.open({ reveal: false });
   return root;
 };

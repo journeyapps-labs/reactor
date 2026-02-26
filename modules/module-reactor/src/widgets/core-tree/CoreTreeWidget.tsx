@@ -13,7 +13,7 @@ export interface CoreRenderTreeEvent<T extends TreeEntityInterface = TreeEntityI
 
 export interface CoreRenderTreeNodeEvent<T extends TreeNode = TreeNode> extends CoreRenderTreeEvent<T> {
   children: () => any;
-  props: Pick<TreeWidgetProps, 'onCollapsedChanged' | 'collapsed'>;
+  props: Pick<TreeWidgetProps, 'onCollapsedChanged' | 'collapsed' | 'empty' | 'emptyMessage'>;
 }
 
 export interface CoreRenderTreeLeafEvent<T extends TreeEntity = TreeEntity> extends CoreRenderTreeEvent<T> {}

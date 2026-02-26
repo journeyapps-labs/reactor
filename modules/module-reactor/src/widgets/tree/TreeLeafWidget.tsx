@@ -63,7 +63,7 @@ namespace S {
     background: ${(p) => (p.selected ? p.theme.trees.selectedBackground : 'transparent')};
     border-radius: 5px;
     margin-bottom: 1px;
-    color: ${(p) => (p.selected ? p.theme.trees.labelColor : getTransparentColor(p.theme.trees.labelColor, 0.5))};
+    color: ${(p) => (p.selected ? p.theme.trees.labelColor : getTransparentColor(p.theme.trees.labelColor, 0.76))};
     opacity: ${(p) => (p.deactivated ? 0.3 : 1)};
 
     ${(p) => (p.attention ? `border-color: ${p.theme.guide.accent};` : ``)};
@@ -86,8 +86,8 @@ namespace S {
     ${(p) => (p.color ? `color: ${p.color}` : '')};
   `;
 
-  export const Label2 = styled.div`
-    opacity: 0.5;
+  export const Label2 = themed.div`
+    color: ${(p) => getTransparentColor(p.theme.trees.labelColor, 0.58)};
     margin-left: 5px;
     white-space: nowrap;
   `;
@@ -106,7 +106,7 @@ namespace S {
     text-align: center;
     align-items: center;
     display: flex;
-    opacity: ${(p) => (p.deactivated == null ? 1 : p.deactivated ? 0.1 : 0.2)};
+    opacity: ${(p) => (p.deactivated == null ? 1 : p.deactivated ? 0.2 : 0.62)};
   `;
 
   export const NestedIcon = styled(IconWidget)`

@@ -64,6 +64,7 @@ export class DescendantLoadingEntityProviderComponent<Parent, Descendant> extend
     const showErrorBadge = (error: unknown) => {
       dismissErrorBadge();
       errorMessage = error instanceof Error ? error.message : `${error || 'Unknown error'}`;
+      const nodeLabel = descendantOptions.category?.label || node.getKey();
       clearErrorBadge = node.addPropGenerator(() => {
         const currentTheme = this.themeStore.getCurrentTheme();
         return {
@@ -75,7 +76,7 @@ export class DescendantLoadingEntityProviderComponent<Parent, Descendant> extend
               tooltip="Refresh failed. Click to view error."
               action={() => {
                 this.notificationStore.showNotification({
-                  title: 'Failed to refresh descendants',
+                  title: `Failed to load ${nodeLabel}`,
                   description: errorMessage,
                   type: NotificationType.ERROR
                 });

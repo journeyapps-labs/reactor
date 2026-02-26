@@ -28,13 +28,11 @@ export class ReactorTreeNode<T extends ReactorTreeNodeListener = ReactorTreeNode
 )<T> {
   private hasHydratedTreeState: boolean;
   private hasPersistedTreeState: boolean;
-  private serializedBeforeSearch: TreeSerializedV2;
 
   constructor(public options: ReactorTreeOptions) {
     super(options.key || null);
     this.hasHydratedTreeState = false;
     this.hasPersistedTreeState = false;
-    this.serializedBeforeSearch = null;
     setupReactorTree(this, options);
   }
 

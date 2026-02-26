@@ -41,6 +41,8 @@ export const ReactorTreeNodeWidget: React.FC<ReactorTreeNodeWidgetProps> = obser
         {...treeProps}
         forwardRef={event.forwardRef}
         depth={event.depth}
+        empty={tree.children.length === 0}
+        emptyMessage="Empty"
         collapsed={tree.collapsed}
         onCollapsedChanged={(collapsed, deep) => {
           treeProps.onCollapsedChanged?.(collapsed, deep);

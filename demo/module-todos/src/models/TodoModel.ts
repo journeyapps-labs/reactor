@@ -105,7 +105,7 @@ export class TodoModel extends BaseObserver<TodoModelListener> {
       setTimeout(() => resolve(), 1000);
     });
     if (simulateError) {
-      throw new Error('Failed to load notes');
+      throw new Error('There was a (simulated) server error trying to load notes.');
     }
     // Simulate a DB refresh by replacing the backing collection with fresh instances.
     this._notes = new Set(this.notes);
