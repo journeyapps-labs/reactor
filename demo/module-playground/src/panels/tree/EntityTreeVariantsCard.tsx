@@ -3,6 +3,7 @@ import { observer } from 'mobx-react';
 import { createSearchEventMatcher, SearchEvent } from '@journeyapps-labs/lib-reactor-search';
 import {
   CardWidget,
+  CheckboxLabelWidget,
   ControlledSearchWidget,
   EntityPresenterComponentRenderType,
   styled
@@ -67,11 +68,20 @@ export const EntityTreeVariantsCard: React.FC<EntityTreeVariantsCardProps> = obs
             return (
               <S.SearchRow>
                 <S.SearchLabel>Entity search</S.SearchLabel>
-                <S.Search
-                  historyContext="playground-tree-search-entity"
-                  searchChanged={setSearch}
-                  initialValue={search}
-                />
+                <S.SearchControls>
+                  <S.Search
+                    historyContext="playground-tree-search-entity"
+                    searchChanged={setSearch}
+                    initialValue={search}
+                  />
+                  <CheckboxLabelWidget
+                    checked={todoStore.simulateLoadNotesError}
+                    label="Simulate notes load error"
+                    onChange={(value) => {
+                      todoStore.simulateLoadNotesError = value;
+                    }}
+                  />
+                </S.SearchControls>
               </S.SearchRow>
             );
           }
@@ -141,6 +151,12 @@ namespace S {
 
   export const Search = styled(ControlledSearchWidget)`
     flex-grow: 1;
+  `;
+
+  export const SearchControls = styled.div`
+    display: flex;
+    align-items: center;
+    column-gap: 12px;
   `;
 
   export const SearchLabel = styled.div`
