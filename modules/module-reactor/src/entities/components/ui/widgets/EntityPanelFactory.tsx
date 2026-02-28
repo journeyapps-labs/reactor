@@ -24,6 +24,7 @@ import * as _ from 'lodash';
 import { AbstractPresenterContext } from '../../presenter/AbstractPresenterContext';
 import { ActionStore } from '../../../../stores/actions/ActionStore';
 import { EntityDefinitionError } from '../../../EntityDefinitionError';
+import { EntityTreePresenterSetting } from '../../presenter/types/tree/EntityTreePresenterComponent';
 
 export interface EntityPanelModelListener<T extends any = any> extends WorkspaceModelListener, SelectEntityListener<T> {
   contextGenerated: (context: AbstractPresenterContext<T>) => any;
@@ -250,8 +251,10 @@ export class EntityPanelFactory<T> extends ReactorPanelFactory<EntityPanelModel<
   getSettingButtons(event: WorkspaceModelFactoryEvent<EntityPanelModel>): PanelToolbarButton[] {
     return event.model.presenterContext.getSettings().map((setting) => {
       const btn = event.model.presenterContext.settings.get(setting.key).control.representAsBtn();
+      const isGroupBySetting = setting.key === EntityTreePresenterSetting.GROUP_BY;
       return {
         ...btn,
+        label: isGroupBySetting ? 'Group by' : btn.label,
         enabled: false,
         tooltip: setting.label,
         icon: btn.icon || setting.icon

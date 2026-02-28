@@ -1,6 +1,12 @@
 import * as React from 'react';
 import { observer } from 'mobx-react';
-import { CardWidget, ControlledSearchWidget, SearchableCoreTreeWidget, styled } from '@journeyapps-labs/reactor-mod';
+import {
+  CardWidget,
+  ControlledSearchWidget,
+  SearchableCoreTreeWidget,
+  getScrollableCSS,
+  styled
+} from '@journeyapps-labs/reactor-mod';
 import { buildCoreTreeVariants } from './coreTreeBuilders';
 
 export type CoreTreeVariantsCardProps = object;
@@ -84,6 +90,7 @@ namespace S {
     border: solid 1px ${(p) => p.theme.panels.divider};
     border-radius: 6px;
     overflow: auto;
+    ${(p) => getScrollableCSS(p.theme)};
   `;
 
   export const SearchRow = styled.div`

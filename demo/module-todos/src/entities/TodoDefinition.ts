@@ -59,6 +59,7 @@ export class TodoDefinition extends EntityDefinition<TodoModel> {
             complexName:
               `${entity.children.length} child todo${entity.children.length === 1 ? '' : 's'} · ` +
               `${entity.notes.length} note${entity.notes.length === 1 ? '' : 's'}`,
+            tags: entity.tags,
             labels: [
               {
                 label: 'Depth',
@@ -134,6 +135,10 @@ export class TodoDefinition extends EntityDefinition<TodoModel> {
         label: 'lazy cached',
         loadChildrenAsNodesAreOpened: true,
         cacheTreeEntities: true,
+        allowedGroupingSettings: {
+          tags: true,
+          label2: true
+        },
         augmentTreeNodeProps: () => {
           return {
             openOnSingleClick: false

@@ -6,6 +6,7 @@ import { ReactorIcon } from '../../../widgets/icons/IconWidget';
 import { AbstractValueControl } from '../../../controls/AbstractValueControl';
 import { ButtonControl } from '../../../controls/ButtonControl';
 import { BaseObserver, BaseObserverInterface } from '@journeyapps-labs/common-utils';
+import { SetControl } from '../../../controls/SetControl';
 
 export interface RenderCollectionOptions<T> {
   entities: T[];
@@ -34,6 +35,9 @@ export interface ExposedPresenterSetting extends PresenterSetting {
   component: EntityPresenterComponent;
   context: AbstractPresenterContext;
 }
+
+export type GroupingOptionValue = 'none' | 'label2' | 'tags';
+export type ActualGroupingOptionValue = Exclude<GroupingOptionValue, 'none'>;
 
 export abstract class AbstractPresenterContext<
   T = any,
@@ -100,6 +104,91 @@ export abstract class AbstractPresenterContext<
 
   addSetting(setting: PresenterSetting) {
     this.settings.set(setting.key, setting);
+  }
+
+  protected registerGroupBySetting(options: {
+    key: string;
+    allowedGroupingSettings?: {
+      label2?: boolean;
+      tags?: boolean;
+    };
+    defaultGroupingSetting?: GroupingOptionValue;
+    label?: string;
+    icon?: ReactorIcon;
+  }) {
+    this.removeSetting(options.key);
+
+    const allowed = options.allowedGroupingSettings || {};
+    const groupByOptions = [{ key: 'none', icon: 'layer-group' as any, label: 'No grouping' }];
+    if (allowed.label2) {
+      groupByOptions.push({
+        key: 'label2',
+        icon: 'grip-lines' as any,
+        label: 'Secondary label'
+      });
+    }
+    if (allowed.tags) {
+      groupByOptions.push({
+        key: 'tags',
+        icon: 'tags' as any,
+        label: 'Tags'
+      });
+    }
+
+    if (groupByOptions.length <= 1) {
+      return;
+    }
+
+    const allowedOptionKeys = new Set(groupByOptions.map((option) => option.key));
+    const defaultGrouping = allowedOptionKeys.has(options.defaultGroupingSetting || 'none')
+      ? options.defaultGroupingSetting || 'none'
+      : 'none';
+
+    this.addSetting({
+      icon: options.icon || ('layer-group' as any),
+      label: options.label || 'Group by',
+      key: options.key,
+      control: new SetControl<GroupingOptionValue>({
+        initialValue: defaultGrouping,
+        options: groupByOptions as any
+      })
+    });
+  }
+
+  protected getGroupingSetting(key: string): GroupingOptionValue {
+    const controlValues = this.getControlValues() as Record<string, GroupingOptionValue>;
+    return controlValues[key] || 'none';
+  }
+
+  protected getSelectedGroupingSetting(key: string): GroupingOptionValue {
+    return this.getGroupingSetting(key);
+  }
+
+  protected groupBySelectedSetting<Item extends { label2?: string; tags?: string[] }>(
+    items: Item[],
+    selectedGrouping: ActualGroupingOptionValue,
+    fallback: string
+  ): Map<string, Item[]> {
+    if (selectedGrouping === 'label2') {
+      const grouped = _.groupBy(items, (item) => item.label2 || fallback);
+      return new Map(Object.entries(grouped));
+    }
+
+    const taggedEntries = _.flatMap(items, (item) => {
+      const tags = (item.tags || []).filter((tag) => !!tag);
+      const selectedTags = tags.length > 0 ? tags : [fallback];
+      return selectedTags.map((tag) => ({
+        key: tag,
+        item
+      }));
+    });
+
+    const grouped = _.groupBy(taggedEntries, (entry) => entry.key);
+    return new Map(
+      Object.entries(grouped).map(([key, groupedEntries]) => {
+        return [key, groupedEntries.map((entry) => entry.item)];
+      })
+    );
   }
 
   addToolbarButton(btn: ButtonControl) {

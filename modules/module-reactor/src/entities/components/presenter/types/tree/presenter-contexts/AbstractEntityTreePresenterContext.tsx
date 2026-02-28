@@ -2,14 +2,19 @@ import React from 'react';
 import _ from 'lodash';
 import { CoreTreeWidget } from '../../../../../../widgets/core-tree/CoreTreeWidget';
 import { ReactorTreeEntity } from '../../../../../../widgets/core-tree/reactor-tree/reactor-tree-utils';
-import { ReactorTreeNode } from '../../../../../../widgets/core-tree/reactor-tree/ReactorTreeNode';
+import {
+  ReactorTreeNode,
+  ReactorTreeNodeDefaultOpenPolicy
+} from '../../../../../../widgets/core-tree/reactor-tree/ReactorTreeNode';
 import {
   AbstractPresenterContext,
+  ActualGroupingOptionValue,
   PresenterContextListener,
   RenderCollectionOptions
 } from '../../../AbstractPresenterContext';
 import { EntityTreeCollectionWidget } from '../EntityTreeCollectionWidget';
 import {
+  EntityTreeGroupingSetting,
   EntityTreePresenterComponent,
   EntityTreePresenterSetting,
   EntityTreePresenterSettings,
@@ -82,6 +87,14 @@ export abstract class AbstractEntityTreePresenterContext<
         ]
       })
     });
+
+    this.registerGroupBySetting({
+      key: EntityTreePresenterSetting.GROUP_BY,
+      allowedGroupingSettings: this.presenter.options2.allowedGroupingSettings,
+      defaultGroupingSetting: this.presenter.options2.defaultGroupingSetting as any,
+      label: 'Group by',
+      icon: 'layer-group'
+    });
   }
 
   generateDescendentContext(options: AbstractDescendentContextOptions<T>) {
@@ -133,14 +146,53 @@ export abstract class AbstractEntityTreePresenterContext<
     return this.rootContext || this;
   }
 
+  private buildGroupedTreeNodes(
+    entities: T[],
+    nodes: ReactorTreeEntity[],
+    groupSetting: EntityTreeGroupingSetting
+  ): ReactorTreeEntity[] {
+    const nodeWithEntity = entities.map((entity, index) => ({
+      label2: this.definition.describeEntity(entity).complexName,
+      tags: this.definition.describeEntity(entity).tags,
+      node: nodes[index]
+    }));
+    const actualGrouping =
+      groupSetting === EntityTreeGroupingSetting.LABEL2 ? 'label2' : ('tags' as ActualGroupingOptionValue);
+    const groups = this.groupBySelectedSetting(nodeWithEntity, actualGrouping, 'Ungrouped');
+
+    return Array.from(groups.entries()).map(([group, groupedNodes]) => {
+      const groupNode = new ReactorTreeNode({
+        key: `group-${group}`,
+        getTreeProps: () => ({
+          label: group,
+          icon: 'layer-group'
+        }),
+        match: (searchEvent) => searchEvent.matches(group),
+        defaultOpenPolicy: ReactorTreeNodeDefaultOpenPolicy.FIRST_RENDER
+      });
+      groupedNodes.forEach((entry) => {
+        groupNode.addChild(entry.node);
+      });
+      return groupNode;
+    });
+  }
+
   getTreeNodes(event: RenderCollectionOptions<T>): ReactorTreeEntity[] {
-    let entities = this.getSortedEntities(event.entities);
+    const entities = this.getSortedEntities(event.entities);
 
     // convert entities into nodes
-    const nodes = this.doGetTreeNodes({
+    const renderedNodes = this.doGetTreeNodes({
       ...event,
       entities: entities
     });
+
+    let nodes = renderedNodes;
+    const groupSetting = this.getSelectedGroupingSetting(
+      EntityTreePresenterSetting.GROUP_BY
+    ) as EntityTreeGroupingSetting;
+    if (groupSetting !== EntityTreeGroupingSetting.NONE) {
+      nodes = this.buildGroupedTreeNodes(entities, renderedNodes, groupSetting);
+    }
 
     nodes.forEach((n) => {
       if (n instanceof ReactorTreeNode) {
@@ -164,6 +216,11 @@ export abstract class AbstractEntityTreePresenterContext<
     return nodes;
   }
 
+  private shouldRenderSecondaryLabel() {
+    const selectedGrouping = this.getRootContext().getSelectedGroupingSetting(EntityTreePresenterSetting.GROUP_BY);
+    return selectedGrouping !== EntityTreeGroupingSetting.LABEL2;
+  }
+
   protected abstract doGetTreeNodes(event: RenderCollectionOptions<T>): ReactorTreeEntity[];
 
   protected abstract doGenerateTreeNode(entity: T, options?: GenerateTreeOptions<T>): ReactorTreeEntity;
@@ -178,7 +235,7 @@ export abstract class AbstractEntityTreePresenterContext<
         icon2: described.icon2,
         icon2Color: described.icon2Color,
         label: described.simpleName,
-        label2: described.complexName
+        label2: this.shouldRenderSecondaryLabel() ? described.complexName : null
       };
     });
     this.patchTreeInteractions(node, entity);

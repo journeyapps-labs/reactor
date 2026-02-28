@@ -127,7 +127,7 @@ export const Bunny = theme.addThemeValues({
     },
     text: {
       primary: 'rgba(244,236,255,0.9)',
-      secondary: 'rgba(219,202,245,0.72)'
+      secondary: 'rgba(208,188,238,0.58)'
     },
     forms: {
       ...DarkTheme.forms,

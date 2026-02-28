@@ -50,6 +50,7 @@ export class ArrayInput<T> extends FormInput<ArrayInputGenerics<T>> {
       return;
     }
     this.loading = loading;
+    this.iterateListeners((cb) => cb.loadingChanged?.());
   }
 
   setValue(values: ArrayInputGenerics<T>['VALUE']) {

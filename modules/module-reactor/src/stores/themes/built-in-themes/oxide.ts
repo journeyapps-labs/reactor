@@ -79,7 +79,7 @@ theme.addThemeValues({
     },
     text: {
       primary: 'white',
-      secondary: 'rgba(174, 174, 178, 1)'
+      secondary: 'rgba(174, 174, 178, 0.72)'
     },
     button: {
       background: 'rgb(28,28,30)',

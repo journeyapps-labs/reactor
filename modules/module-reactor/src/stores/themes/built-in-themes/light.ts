@@ -149,7 +149,7 @@ theme.addThemeValues({
     },
     text: {
       primary: '#1f2936',
-      secondary: 'rgba(63,74,89,0.88)'
+      secondary: 'rgba(63,74,89,0.72)'
     },
     forms: {
       ...DarkTheme.forms,
