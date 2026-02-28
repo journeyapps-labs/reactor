@@ -9,6 +9,8 @@ import { WorkspaceStore } from '../../stores/workspace/WorkspaceStore';
 import { SimpleEntitySearchEngineComponent } from '../../entities/components/search/SimpleEntitySearchEngineComponent';
 import { AddPanelWorkspaceAction } from '../../actions/builtin-actions/workspace/AddPanelWorkspaceAction';
 import { EntityActionHandlerComponent } from '../../entities/components/handler/EntityActionHandlerComponent';
+import { PassiveActionValidationState } from '../../actions/validators/ActionValidator';
+import { EntityTreeGroupingSetting } from '../../entities/components/presenter/types/tree/EntityTreePresenterComponent';
 
 export class PanelEntityDefinition extends EntityDefinition<ReactorPanelFactory> {
   @inject(WorkspaceStore)
@@ -30,7 +32,7 @@ export class PanelEntityDefinition extends EntityDefinition<ReactorPanelFactory>
             icon: entity.options.icon,
             iconColor: entity.options.color,
             simpleName: entity.options.name,
-            complexName: entity.options.category
+            tags: [entity.options.category]
           };
         }
       })
@@ -46,9 +48,23 @@ export class PanelEntityDefinition extends EntityDefinition<ReactorPanelFactory>
     this.registerComponent(new EntityActionHandlerComponent(AddPanelWorkspaceAction.ID));
     this.registerComponent(
       new InlineTreePresenterComponent<ReactorPanelFactory>({
+        allowedGroupingSettings: {
+          tags: true
+        },
+        defaultGroupingSetting: EntityTreeGroupingSetting.TAGS,
         augmentTreeProps: (entity) => {
+          const hasBlockingValidation = (entity.options.validators || []).some((validator) => {
+            const validation = validator.validate();
+            return (
+              validation.type === PassiveActionValidationState.DISABLED ||
+              validation.type === PassiveActionValidationState.DISALLOWED
+            );
+          });
+          const selectable = entity.options.allowManualCreation !== false && !hasBlockingValidation;
+
           return {
-            deactivated: !entity.options.allowManualCreation
+            deactivated: !selectable,
+            label2: !selectable ? 'unavailable' : null
           };
         }
       })

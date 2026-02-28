@@ -85,20 +85,56 @@ export class ReactorTodosModule extends AbstractReactorModule {
     const todoStore = ioc.get(TodoStore);
     uxStore.primaryLogo = require('../media/logo.png');
 
-    const coffee = new TodoModel('Make some coffee');
+    const coffee = new TodoModel({
+      name: 'Make some coffee',
+      tags: ['home', 'morning', 'kitchen']
+    });
     coffee.addNote(new TodoNoteModel('Try medium roast next time'));
     coffee.addNote(new TodoNoteModel('Use filtered water for better taste'));
-    coffee.addChild(new TodoModel('Boil water'));
-    coffee.addChild(new TodoModel('Grind beans'));
-    coffee.addChild(new TodoModel('Brew and serve'));
+    coffee.addChild(
+      new TodoModel({
+        name: 'Boil water',
+        tags: ['prep', 'kitchen']
+      })
+    );
+    coffee.addChild(
+      new TodoModel({
+        name: 'Grind beans',
+        tags: ['prep']
+      })
+    );
+    coffee.addChild(
+      new TodoModel({
+        name: 'Brew and serve',
+        tags: ['serve']
+      })
+    );
 
-    const eggs = new TodoModel('Fry some eggs');
+    const eggs = new TodoModel({
+      name: 'Fry some eggs',
+      tags: ['home', 'breakfast', 'kitchen']
+    });
     eggs.addNote(new TodoNoteModel('Use butter instead of oil'));
-    eggs.addChild(new TodoModel('Heat pan'));
-    eggs.addChild(new TodoModel('Crack eggs'));
+    eggs.addChild(
+      new TodoModel({
+        name: 'Heat pan',
+        tags: ['prep']
+      })
+    );
+    eggs.addChild(
+      new TodoModel({
+        name: 'Crack eggs',
+        tags: ['prep']
+      })
+    );
 
     todoStore.addTodo(coffee);
     todoStore.addTodo(eggs);
-    todoStore.addTodo(new TodoModel('Check the oil in the car'));
+    todoStore.addTodo(
+      new TodoModel({
+        name: 'Check the oil in the car',
+        tags: ['errands', 'maintenance']
+      })
+    );
   }
 }

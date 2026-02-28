@@ -49,7 +49,10 @@ export class ActionTreePresenterContext extends EntityTreePresenterContext<Actio
 export class ActionTreePresenter extends EntityTreePresenterComponent<Action> {
   constructor() {
     super({
-      label: 'Advanced Tree'
+      label: 'Advanced Tree',
+      allowedGroupingSettings: {
+        complexName: true
+      }
     });
   }
 

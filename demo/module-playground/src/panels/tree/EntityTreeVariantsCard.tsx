@@ -6,6 +6,7 @@ import {
   CheckboxLabelWidget,
   ControlledSearchWidget,
   EntityPresenterComponentRenderType,
+  getScrollableCSS,
   styled
 } from '@journeyapps-labs/reactor-mod';
 import { TodoModel, TodoStore } from '@journeyapps-labs/reactor-mod-todos';
@@ -140,6 +141,7 @@ namespace S {
     border: solid 1px ${(p) => p.theme.panels.divider};
     border-radius: 6px;
     overflow: auto;
+    ${(p) => getScrollableCSS(p.theme)};
   `;
 
   export const SearchRow = styled.div`
