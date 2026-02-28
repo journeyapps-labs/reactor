@@ -1,5 +1,5 @@
 ---
-'@journeyapps-labs/reactor-mod': patch
+'@journeyapps-labs/reactor-mod': minor
 ---
 
 Improve entity tree presenter grouping and panel/list UX behavior.
