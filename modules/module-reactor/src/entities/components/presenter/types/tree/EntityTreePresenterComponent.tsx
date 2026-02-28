@@ -21,12 +21,12 @@ export enum SortDirection {
 
 export enum EntityTreeGroupingSetting {
   NONE = 'none',
-  LABEL2 = 'label2',
+  COMPLEX_NAME = 'complexName',
   TAGS = 'tags'
 }
 
 export interface EntityTreeAllowedGroupingSettings {
-  label2?: boolean;
+  complexName?: boolean;
   tags?: boolean;
 }
 

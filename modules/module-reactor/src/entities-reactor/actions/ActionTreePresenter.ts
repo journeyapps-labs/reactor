@@ -51,7 +51,7 @@ export class ActionTreePresenter extends EntityTreePresenterComponent<Action> {
     super({
       label: 'Advanced Tree',
       allowedGroupingSettings: {
-        label2: true
+        complexName: true
       }
     });
   }

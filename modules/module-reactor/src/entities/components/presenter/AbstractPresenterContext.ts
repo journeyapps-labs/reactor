@@ -6,7 +6,7 @@ import { ReactorIcon } from '../../../widgets/icons/IconWidget';
 import { AbstractValueControl } from '../../../controls/AbstractValueControl';
 import { ButtonControl } from '../../../controls/ButtonControl';
 import { BaseObserver, BaseObserverInterface } from '@journeyapps-labs/common-utils';
-import { SetControl } from '../../../controls/SetControl';
+import { SetControl, SetControlOption } from '../../../controls/SetControl';
 
 export interface RenderCollectionOptions<T> {
   entities: T[];
@@ -36,8 +36,29 @@ export interface ExposedPresenterSetting extends PresenterSetting {
   context: AbstractPresenterContext;
 }
 
-export type GroupingOptionValue = 'none' | 'label2' | 'tags';
-export type ActualGroupingOptionValue = Exclude<GroupingOptionValue, 'none'>;
+export enum GroupingOptionValue {
+  NONE = 'none',
+  COMPLEX_NAME = 'complexName',
+  TAGS = 'tags'
+}
+
+export type ActualGroupingOptionValue = GroupingOptionValue.COMPLEX_NAME | GroupingOptionValue.TAGS;
+
+export interface GroupBySettingOptions {
+  allowedGroupingSettings?: {
+    complexName?: boolean;
+    tags?: boolean;
+  };
+  defaultGroupingSetting?: GroupingOptionValue;
+}
+
+export interface GroupByEntityOptions<T> {
+  entities: T[];
+  describe?: (entity: T) => {
+    complexName?: string;
+    tags?: string[];
+  };
+}
 
 export abstract class AbstractPresenterContext<
   T = any,
@@ -45,6 +66,7 @@ export abstract class AbstractPresenterContext<
   Settings extends {} = {},
   Listener extends PresenterContextListener = PresenterContextListener
 > extends BaseObserver<Listener> {
+  static GROUP_BY_SETTING_KEY = 'groupBy';
   public state: State;
 
   @observable
@@ -52,11 +74,19 @@ export abstract class AbstractPresenterContext<
   @observable
   accessor toolbarButtons: Set<ButtonControl>;
 
-  constructor(public presenter: EntityPresenterComponent) {
+  constructor(
+    public presenter: EntityPresenterComponent,
+    options: {
+      groupBySetting?: GroupBySettingOptions;
+    } = {}
+  ) {
     super();
     this.state = null;
     this.settings = new Map();
     this.toolbarButtons = new Set();
+    if (options.groupBySetting) {
+      this.registerGroupBySetting(options.groupBySetting);
+    }
   }
 
   dispose() {
@@ -106,31 +136,24 @@ export abstract class AbstractPresenterContext<
     this.settings.set(setting.key, setting);
   }
 
-  protected registerGroupBySetting(options: {
-    key: string;
-    allowedGroupingSettings?: {
-      label2?: boolean;
-      tags?: boolean;
-    };
-    defaultGroupingSetting?: GroupingOptionValue;
-    label?: string;
-    icon?: ReactorIcon;
-  }) {
-    this.removeSetting(options.key);
-
+  protected registerGroupBySetting(options: GroupBySettingOptions) {
     const allowed = options.allowedGroupingSettings || {};
-    const groupByOptions = [{ key: 'none', icon: 'layer-group' as any, label: 'No grouping' }];
-    if (allowed.label2) {
+    const groupByOptions: SetControlOption<GroupingOptionValue>[] = [
+      { key: GroupingOptionValue.NONE, icon: 'layer-group', label: 'No grouping' }
+    ];
+
+    if (allowed.complexName) {
       groupByOptions.push({
-        key: 'label2',
-        icon: 'grip-lines' as any,
+        key: GroupingOptionValue.COMPLEX_NAME,
+        icon: 'grip-lines',
         label: 'Secondary label'
       });
     }
+
     if (allowed.tags) {
       groupByOptions.push({
-        key: 'tags',
-        icon: 'tags' as any,
+        key: GroupingOptionValue.TAGS,
+        icon: 'tags',
         label: 'Tags'
       });
     }
@@ -139,39 +162,24 @@ export abstract class AbstractPresenterContext<
       return;
     }
 
-    const allowedOptionKeys = new Set(groupByOptions.map((option) => option.key));
-    const defaultGrouping = allowedOptionKeys.has(options.defaultGroupingSetting || 'none')
-      ? options.defaultGroupingSetting || 'none'
-      : 'none';
-
     this.addSetting({
-      icon: options.icon || ('layer-group' as any),
-      label: options.label || 'Group by',
-      key: options.key,
+      icon: 'layer-group',
+      label: 'Group by',
+      key: AbstractPresenterContext.GROUP_BY_SETTING_KEY,
       control: new SetControl<GroupingOptionValue>({
-        initialValue: defaultGrouping,
-        options: groupByOptions as any
+        initialValue: options.defaultGroupingSetting || GroupingOptionValue.NONE,
+        options: groupByOptions
       })
     });
   }
 
-  protected getGroupingSetting(key: string): GroupingOptionValue {
-    const controlValues = this.getControlValues() as Record<string, GroupingOptionValue>;
-    return controlValues[key] || 'none';
-  }
-
-  protected getSelectedGroupingSetting(key: string): GroupingOptionValue {
-    return this.getGroupingSetting(key);
-  }
-
-  protected groupBySelectedSetting<Item extends { label2?: string; tags?: string[] }>(
+  protected groupBySelectedSetting<Item extends { complexName?: string; tags?: string[] }>(
     items: Item[],
     selectedGrouping: ActualGroupingOptionValue,
     fallback: string
-  ): Map<string, Item[]> {
-    if (selectedGrouping === 'label2') {
-      const grouped = _.groupBy(items, (item) => item.label2 || fallback);
-      return new Map(Object.entries(grouped));
+  ): Record<string, Item[]> {
+    if (selectedGrouping === GroupingOptionValue.COMPLEX_NAME) {
+      return _.groupBy(items, (item) => item.complexName || fallback);
     }
 
     const taggedEntries = _.flatMap(items, (item) => {
@@ -184,11 +192,36 @@ export abstract class AbstractPresenterContext<
     });
 
     const grouped = _.groupBy(taggedEntries, (entry) => entry.key);
-    return new Map(
-      Object.entries(grouped).map(([key, groupedEntries]) => {
-        return [key, groupedEntries.map((entry) => entry.item)];
-      })
+    return _.mapValues(grouped, (groupedEntries) => groupedEntries.map((entry) => entry.item));
+  }
+
+  isGroupingEnabled(): boolean {
+    const controlValues = this.getControlValues() as Record<string, GroupingOptionValue>;
+    const selectedGrouping = controlValues[AbstractPresenterContext.GROUP_BY_SETTING_KEY] || GroupingOptionValue.NONE;
+    return selectedGrouping !== GroupingOptionValue.NONE;
+  }
+
+  groupEntitiesBySelectedSetting<T>(options: GroupByEntityOptions<T>): Record<string, T[]> {
+    const controlValues = this.getControlValues() as Record<string, GroupingOptionValue>;
+    const selectedGrouping = controlValues[AbstractPresenterContext.GROUP_BY_SETTING_KEY] || GroupingOptionValue.NONE;
+    const describe =
+      options.describe ||
+      ((entity: T) => {
+        return (this.presenter.definition as any).describeEntity(entity);
+      });
+
+    const grouped = this.groupBySelectedSetting(
+      options.entities.map((entity) => {
+        return {
+          entity,
+          ...describe(entity)
+        };
+      }),
+      selectedGrouping as ActualGroupingOptionValue,
+      'Ungrouped'
     );
+
+    return _.mapValues(grouped, (groupedEntities) => groupedEntities.map((entry) => entry.entity));
   }
 
   addToolbarButton(btn: ButtonControl) {

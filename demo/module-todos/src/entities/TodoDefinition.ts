@@ -137,7 +137,7 @@ export class TodoDefinition extends EntityDefinition<TodoModel> {
         cacheTreeEntities: true,
         allowedGroupingSettings: {
           tags: true,
-          label2: true
+          complexName: true
         },
         augmentTreeNodeProps: () => {
           return {

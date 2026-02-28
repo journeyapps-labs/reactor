@@ -8,7 +8,7 @@ import {
 } from '../../../../../../widgets/core-tree/reactor-tree/ReactorTreeNode';
 import {
   AbstractPresenterContext,
-  ActualGroupingOptionValue,
+  GroupBySettingOptions,
   PresenterContextListener,
   RenderCollectionOptions
 } from '../../../AbstractPresenterContext';
@@ -63,7 +63,13 @@ export abstract class AbstractEntityTreePresenterContext<
   rootContext: AbstractEntityTreePresenterContext;
 
   constructor(public presenter: EntityTreePresenterComponent<T>) {
-    super(presenter);
+    const groupBySetting: GroupBySettingOptions = {
+      allowedGroupingSettings: presenter.options2.allowedGroupingSettings,
+      defaultGroupingSetting: presenter.options2.defaultGroupingSetting as any
+    };
+    super(presenter, {
+      groupBySetting
+    });
     this.state = { trees: {} };
     this.rootContext = null;
     this.nodeCache = new Set();
@@ -86,14 +92,6 @@ export abstract class AbstractEntityTreePresenterContext<
           }
         ]
       })
-    });
-
-    this.registerGroupBySetting({
-      key: EntityTreePresenterSetting.GROUP_BY,
-      allowedGroupingSettings: this.presenter.options2.allowedGroupingSettings,
-      defaultGroupingSetting: this.presenter.options2.defaultGroupingSetting as any,
-      label: 'Group by',
-      icon: 'layer-group'
     });
   }
 
@@ -146,21 +144,14 @@ export abstract class AbstractEntityTreePresenterContext<
     return this.rootContext || this;
   }
 
-  private buildGroupedTreeNodes(
-    entities: T[],
-    nodes: ReactorTreeEntity[],
-    groupSetting: EntityTreeGroupingSetting
-  ): ReactorTreeEntity[] {
-    const nodeWithEntity = entities.map((entity, index) => ({
-      label2: this.definition.describeEntity(entity).complexName,
-      tags: this.definition.describeEntity(entity).tags,
-      node: nodes[index]
-    }));
-    const actualGrouping =
-      groupSetting === EntityTreeGroupingSetting.LABEL2 ? 'label2' : ('tags' as ActualGroupingOptionValue);
-    const groups = this.groupBySelectedSetting(nodeWithEntity, actualGrouping, 'Ungrouped');
+  private buildGroupedTreeNodes(entities: T[], nodes: ReactorTreeEntity[]): ReactorTreeEntity[] {
+    const groupedEntities = this.groupEntitiesBySelectedSetting({
+      entities
+    });
 
-    return Array.from(groups.entries()).map(([group, groupedNodes]) => {
+    const nodesByEntity = new Map<T, ReactorTreeEntity>(entities.map((entity, index) => [entity, nodes[index]]));
+
+    return _.map(groupedEntities, (grouped, group) => {
       const groupNode = new ReactorTreeNode({
         key: `group-${group}`,
         getTreeProps: () => ({
@@ -170,8 +161,11 @@ export abstract class AbstractEntityTreePresenterContext<
         match: (searchEvent) => searchEvent.matches(group),
         defaultOpenPolicy: ReactorTreeNodeDefaultOpenPolicy.FIRST_RENDER
       });
-      groupedNodes.forEach((entry) => {
-        groupNode.addChild(entry.node);
+      grouped.forEach((entity) => {
+        const node = nodesByEntity.get(entity);
+        if (node) {
+          groupNode.addChild(node);
+        }
       });
       return groupNode;
     });
@@ -187,11 +181,8 @@ export abstract class AbstractEntityTreePresenterContext<
     });
 
     let nodes = renderedNodes;
-    const groupSetting = this.getSelectedGroupingSetting(
-      EntityTreePresenterSetting.GROUP_BY
-    ) as EntityTreeGroupingSetting;
-    if (groupSetting !== EntityTreeGroupingSetting.NONE) {
-      nodes = this.buildGroupedTreeNodes(entities, renderedNodes, groupSetting);
+    if (this.isGroupingEnabled()) {
+      nodes = this.buildGroupedTreeNodes(entities, renderedNodes);
     }
 
     nodes.forEach((n) => {
@@ -217,8 +208,11 @@ export abstract class AbstractEntityTreePresenterContext<
   }
 
   private shouldRenderSecondaryLabel() {
-    const selectedGrouping = this.getRootContext().getSelectedGroupingSetting(EntityTreePresenterSetting.GROUP_BY);
-    return selectedGrouping !== EntityTreeGroupingSetting.LABEL2;
+    if (!this.getRootContext().isGroupingEnabled()) {
+      return true;
+    }
+    const controlValues = this.getRootContext().getControlValues() as EntityTreePresenterSettings;
+    return controlValues[EntityTreePresenterSetting.GROUP_BY] !== EntityTreeGroupingSetting.COMPLEX_NAME;
   }
 
   protected abstract doGetTreeNodes(event: RenderCollectionOptions<T>): ReactorTreeEntity[];

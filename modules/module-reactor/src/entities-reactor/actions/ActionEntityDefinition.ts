@@ -113,7 +113,7 @@ export class ActionEntityDefinition extends EntityDefinition<Action> {
     this.registerComponent(
       new InlineTreePresenterComponent<Action>({
         allowedGroupingSettings: {
-          label2: true
+          complexName: true
         }
       })
     );
