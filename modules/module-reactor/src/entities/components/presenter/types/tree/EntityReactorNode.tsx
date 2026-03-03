@@ -11,6 +11,7 @@ import { System } from '../../../../../core/System';
 import { inject } from '../../../../../inversify.config';
 import { BaseObserverInterface } from '@journeyapps-labs/common-utils';
 import { AbstractDescendentContext } from './descendent/AbstractDescendentContext';
+import { RenderTreeChild } from '../../../../../widgets/core-tree/reactor-tree/widgets/useTreeChildren';
 
 export interface EntityReactorNodeOptions<E extends any = any> {
   definition: EntityDefinition;
@@ -88,16 +89,19 @@ export class EntityReactorNode<E extends any = any> extends ReactorTreeNode {
     return this.options2.entity;
   }
 
-  renderWidget(event: CoreTreeWidgetProps): React.JSX.Element {
+  renderWidget(event: CoreTreeWidgetProps, renderChild: RenderTreeChild): React.JSX.Element {
     return (
       <ReactorEntityDnDWrapper definition={this.options2.definition} node={this} entity={this.options2.entity}>
         {(ref) => {
           return (
             <ReactorEntityWrapperWidget forwardRef={ref} node={this} options={this.options2}>
-              {super.renderWidget({
-                ...event,
-                forwardRef: ref
-              })}
+              {super.renderWidget(
+                {
+                  ...event,
+                  forwardRef: ref
+                },
+                renderChild
+              )}
             </ReactorEntityWrapperWidget>
           );
         }}

@@ -11,7 +11,8 @@ import { CoreTreeWidgetProps } from '../CoreTreeWidget';
 import { PatchTree, ReactorTreeListener } from './PatchTree';
 import { isBaseReactorTree, ReactorTreeOptions, setupReactorTree } from './reactor-tree-utils';
 import { SearchEvent, SearchEventMatch } from '@journeyapps-labs/lib-reactor-search';
-import { UniversalNodeWidget } from './widgets/UniversalNodeWidget';
+import { ReactorTreeNodeWidget } from './widgets/ReactorTreeNodeWidget';
+import { RenderTreeChild } from './widgets/useTreeChildren';
 
 export enum ReactorTreeNodeDefaultOpenPolicy {
   NEVER = 'never',
@@ -88,8 +89,8 @@ export class ReactorTreeNode<T extends ReactorTreeNodeListener = ReactorTreeNode
     root.applyDefaultOpenPolicyToSubtree();
   }
 
-  renderWidget(event: CoreTreeWidgetProps): React.JSX.Element {
-    return <UniversalNodeWidget tree={this} event={event} />;
+  renderWidget(event: CoreTreeWidgetProps, renderChild: RenderTreeChild): React.JSX.Element {
+    return <ReactorTreeNodeWidget event={event} tree={this} renderChild={renderChild} />;
   }
 
   match(event: SearchEvent): SearchEventMatch {
