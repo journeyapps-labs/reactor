@@ -25,7 +25,6 @@ export type ReactorTreePropsTransformer = (
 
 export interface IBaseReactorTree extends TreeEntityInterface {
   addPropGenerator(transformer: ReactorTreePropsTransformer): () => any;
-  renderWidget(event: CoreTreeWidgetProps): React.JSX.Element;
   match(event: SearchEvent): SearchEventMatch;
   setSearch(event: SearchEvent): boolean;
   setSortKey(key: string): void;
@@ -127,10 +126,6 @@ export function PatchTree<T extends GConstructor<TreeEntity<ReactorTreeListener>
         label: this.getKey(),
         ...props
       };
-    }
-
-    renderWidget(options: CoreTreeWidgetProps): React.JSX.Element {
-      return null;
     }
 
     setSearch(event: SearchEvent) {

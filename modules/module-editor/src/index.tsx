@@ -41,5 +41,6 @@ export * from './EditorModule';
 export * from './theme-reactor/editor-theme-fragment';
 export * from './utils/paths';
 export * from './utils/useEditorStickyHeader';
+export * from './utils/monacoSuggestRendererPatches';
 
 export default EditorModule;

@@ -17,7 +17,7 @@ export interface SmartCommandPalletCategorywidgetProps {
 }
 
 @observer
-export class SmartCommandPalletCategorywidget extends React.Component<SmartCommandPalletCategorywidgetProps> {
+export class SmartCommandPalletCategorywidget extends React.PureComponent<SmartCommandPalletCategorywidgetProps> {
   componentDidUpdate(
     prevProps: Readonly<SmartCommandPalletCategorywidgetProps>,
     prevState: Readonly<{}>,
@@ -61,12 +61,8 @@ export class SmartCommandPalletCategorywidget extends React.Component<SmartComma
               scrollIntoViewEnabled={this.props.scrollIntoViewEnabled}
               key={res.key}
               res={res}
-              onClicked={(event) => {
-                this.props.selected(res, event);
-              }}
-              onEntered={() => {
-                this.props.entered(res);
-              }}
+              onClicked={this.props.selected}
+              onEntered={this.props.entered}
               selected={this.props.highlighted === res.key}
             />
           );
@@ -79,12 +75,12 @@ export class SmartCommandPalletCategorywidget extends React.Component<SmartComma
 export interface EntryWrapperProps {
   res: CommandPalletSearchResultEntry;
   selected: boolean;
-  onClicked: (event: MouseEvent) => any;
-  onEntered: () => any;
+  onClicked: (entry: CommandPalletSearchResultEntry, event: MouseEvent) => any;
+  onEntered: (entry: CommandPalletSearchResultEntry) => any;
   scrollIntoViewEnabled: boolean;
 }
 
-export const EntryWrapper: React.FC<EntryWrapperProps> = (props) => {
+export const EntryWrapper: React.FC<EntryWrapperProps> = React.memo((props) => {
   const ref = useRef<HTMLDivElement>(null);
   useEffect(() => {
     if (props.selected && ref.current && props.scrollIntoViewEnabled) {
@@ -101,12 +97,12 @@ export const EntryWrapper: React.FC<EntryWrapperProps> = (props) => {
         ref,
         selected: props.selected,
         mouseClicked: (event: MouseEvent) => {
-          props.onClicked(event);
+          props.onClicked(props.res, event);
         },
         mouseEntered: () => {
-          props.onEntered();
+          props.onEntered(props.res);
         }
       })}
     </>
   );
-};
+});

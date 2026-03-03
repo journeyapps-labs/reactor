@@ -2,15 +2,16 @@ import { TreeEntity, TreeNode } from '@journeyapps-labs/common-tree';
 import * as React from 'react';
 import { observer } from 'mobx-react';
 import { CoreTreeWidgetProps } from '../../CoreTreeWidget';
-import { isBaseReactorTree, ReactorTreeEntity } from '../reactor-tree-utils';
+import { isBaseReactorTree } from '../reactor-tree-utils';
 import { BaseTreeNodeWidget } from './BaseTreeNodeWidget';
-import { ReactorTreeNodeWidget } from './ReactorTreeNodeWidget';
 import { RenderTreeChildOptions } from './useTreeChildren';
+import { ReactorTreeLeaf } from '../ReactorTreeLeaf';
+import { ReactorTreeNode } from '../ReactorTreeNode';
 
-const isReactorTreeNode = (tree: TreeEntity): tree is TreeNode & ReactorTreeEntity =>
+const isReactorTreeNode = (tree: TreeEntity): tree is ReactorTreeNode =>
   tree instanceof TreeNode && isBaseReactorTree(tree as any);
 
-const isReactorTreeLeaf = (tree: TreeEntity): tree is ReactorTreeEntity =>
+const isReactorTreeLeaf = (tree: TreeEntity): tree is ReactorTreeLeaf =>
   !(tree instanceof TreeNode) && isBaseReactorTree(tree as any);
 
 export const UniversalNodeWidget: React.FC<{
@@ -34,7 +35,7 @@ export const UniversalNodeWidget: React.FC<{
   };
 
   if (isReactorTreeNode(props.tree)) {
-    return <ReactorTreeNodeWidget event={props.event} tree={props.tree} renderChild={renderChild} />;
+    return props.tree.renderWidget(props.event, renderChild);
   }
 
   if (props.tree instanceof TreeNode) {
