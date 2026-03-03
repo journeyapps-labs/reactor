@@ -15,7 +15,6 @@ import { DialogLayer } from '../../layers/dialog/DialogLayer';
 import { WorkspaceStore } from '../../stores/workspace/WorkspaceStore';
 import { Btn } from '../../definitions/common';
 import { KeyCommandDialogLayer } from '../../layers/keys-dialog/KeyCommandDialogLayer';
-import { NotificationsLayerWidget } from '../notifications/NotificationsLayerWidget';
 import { GuideLayer } from '../../layers/guide/GuideLayer';
 import { LayerDirective } from '../../stores/layer/LayerDirective';
 import { LayersWidget } from '../../stores/layer/LayersWidget';

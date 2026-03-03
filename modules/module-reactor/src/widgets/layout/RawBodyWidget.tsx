@@ -7,7 +7,6 @@ import { ThemeStore } from '../../stores/themes/ThemeStore';
 import { toJS } from 'mobx';
 import { observer } from 'mobx-react';
 import { LayersWidget } from '../../stores/layer/LayersWidget';
-import { NotificationsLayerWidget } from '../notifications/NotificationsLayerWidget';
 import { ComboBoxLayer } from '../../layers/combo/ComboBoxLayer';
 import { ComboBox2Layer } from '../../layers/combo2/ComboBox2Layer';
 import { CMDPalletLayer } from '../../layers/command-pallet/CMDPalletLayer';
@@ -15,6 +14,7 @@ import { DialogLayer } from '../../layers/dialog/DialogLayer';
 import { DialogLayer2 } from '../../layers/dialog2/DialogLayer2';
 import { KeyCommandDialogLayer } from '../../layers/keys-dialog/KeyCommandDialogLayer';
 import { GuideLayer } from '../../layers/guide/GuideLayer';
+import { NotificationLayer } from '../../layers/notifications/NotificationLayer';
 import { Fonts } from '../../fonts';
 
 export interface RawBodyWidgetProps {
@@ -30,7 +30,8 @@ export const RawBodyWidget: React.FC<React.PropsWithChildren<RawBodyWidgetProps>
       new DialogLayer(),
       new DialogLayer2(),
       new KeyCommandDialogLayer(),
-      new GuideLayer()
+      new GuideLayer(),
+      new NotificationLayer()
     ].forEach((l) => l.install());
   }, []);
 
@@ -48,7 +49,6 @@ export const RawBodyWidget: React.FC<React.PropsWithChildren<RawBodyWidgetProps>
       <ThemeProvider theme={toJS(themeStore.getCurrentTheme())}>
         {props.children}
         <LayersWidget />
-        <NotificationsLayerWidget />
       </ThemeProvider>
     </>
   );
