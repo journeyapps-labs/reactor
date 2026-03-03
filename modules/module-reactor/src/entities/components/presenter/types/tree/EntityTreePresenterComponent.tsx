@@ -8,11 +8,10 @@ import { inject } from '../../../../../inversify.config';
 import { BatchStore } from '../../../../../stores/batch/BatchStore';
 import { AbstractEntityTreePresenterContext } from './presenter-contexts/AbstractEntityTreePresenterContext';
 import { SearchableTreeSearchScope } from '../../../../../widgets/core-tree/SearchableTreeSearchScope';
-import { GroupBySettingOptions, GroupingOptionValue } from '../../AbstractPresenterContext';
+import { AbstractPresenterContextSettings, GroupBySettingOptions } from '../../AbstractPresenterContext';
 
 export enum EntityTreePresenterSetting {
-  SORT = 'sort',
-  GROUP_BY = 'groupBy'
+  SORT = 'sort'
 }
 
 export enum SortDirection {
@@ -20,9 +19,8 @@ export enum SortDirection {
   DESC = 'desc'
 }
 
-export interface EntityTreePresenterSettings {
+export interface EntityTreePresenterSettings extends AbstractPresenterContextSettings {
   [EntityTreePresenterSetting.SORT]: SortDirection;
-  [EntityTreePresenterSetting.GROUP_BY]?: GroupingOptionValue;
 }
 
 export interface EntityTreePresenterState {

@@ -8,6 +8,7 @@ import {
 } from '../../../../../../widgets/core-tree/reactor-tree/ReactorTreeNode';
 import {
   AbstractPresenterContext,
+  AbstractPresenterContextSetting,
   GroupingOptionValue,
   PresenterContextListener,
   RenderCollectionOptions
@@ -204,8 +205,8 @@ export abstract class AbstractEntityTreePresenterContext<
     if (!this.getRootContext().isGroupingEnabled()) {
       return true;
     }
-    const controlValues = this.getRootContext().getControlValues() as EntityTreePresenterSettings;
-    return controlValues[EntityTreePresenterSetting.GROUP_BY] !== GroupingOptionValue.COMPLEX_NAME;
+    const controlValues = this.getRootContext().getControlValues();
+    return controlValues[AbstractPresenterContextSetting.GROUP_BY] !== GroupingOptionValue.COMPLEX_NAME;
   }
 
   protected abstract doGetTreeNodes(event: RenderCollectionOptions<T>): ReactorTreeEntity[];

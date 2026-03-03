@@ -58,13 +58,20 @@ export interface GroupByEntityOptions<T> {
   };
 }
 
+export enum AbstractPresenterContextSetting {
+  GROUP_BY = 'groupBy'
+}
+
+export interface AbstractPresenterContextSettings {
+  [AbstractPresenterContextSetting.GROUP_BY]: GroupingOptionValue;
+}
+
 export abstract class AbstractPresenterContext<
   T = any,
   State extends {} = {},
-  Settings extends {} = {},
+  Settings extends AbstractPresenterContextSettings = AbstractPresenterContextSettings,
   Listener extends PresenterContextListener = PresenterContextListener
 > extends BaseObserver<Listener> {
-  static GROUP_BY_SETTING_KEY = 'groupBy';
   public state: State;
 
   @observable
@@ -158,7 +165,7 @@ export abstract class AbstractPresenterContext<
     this.addSetting({
       icon: 'layer-group',
       label: 'Group by',
-      key: AbstractPresenterContext.GROUP_BY_SETTING_KEY,
+      key: AbstractPresenterContextSetting.GROUP_BY,
       control: new SetControl<GroupingOptionValue>({
         initialValue: options.defaultGroupingSetting || GroupingOptionValue.NONE,
         options: groupByOptions
@@ -189,14 +196,14 @@ export abstract class AbstractPresenterContext<
   }
 
   isGroupingEnabled(): boolean {
-    const controlValues = this.getControlValues() as Record<string, GroupingOptionValue>;
-    const selectedGrouping = controlValues[AbstractPresenterContext.GROUP_BY_SETTING_KEY] || GroupingOptionValue.NONE;
+    const controlValues = this.getControlValues();
+    const selectedGrouping = controlValues[AbstractPresenterContextSetting.GROUP_BY] || GroupingOptionValue.NONE;
     return selectedGrouping !== GroupingOptionValue.NONE;
   }
 
   groupEntitiesBySelectedSetting<T>(options: GroupByEntityOptions<T>): Record<string, T[]> {
-    const controlValues = this.getControlValues() as Record<string, GroupingOptionValue>;
-    const selectedGrouping = controlValues[AbstractPresenterContext.GROUP_BY_SETTING_KEY] || GroupingOptionValue.NONE;
+    const controlValues = this.getControlValues();
+    const selectedGrouping = controlValues[AbstractPresenterContextSetting.GROUP_BY] || GroupingOptionValue.NONE;
     const describe =
       options.describe ||
       ((entity: T) => {
@@ -210,7 +217,7 @@ export abstract class AbstractPresenterContext<
           ...describe(entity)
         };
       }),
-      selectedGrouping as GroupingOptionValue,
+      selectedGrouping,
       'Ungrouped'
     );
 
