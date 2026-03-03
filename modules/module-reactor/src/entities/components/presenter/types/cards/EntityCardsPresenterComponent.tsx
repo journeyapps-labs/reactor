@@ -1,5 +1,10 @@
 import React from 'react';
-import { AbstractPresenterContext, GroupingOptionValue, RenderCollectionOptions } from '../../AbstractPresenterContext';
+import {
+  AbstractPresenterContext,
+  AbstractPresenterContextSettings,
+  GroupingOptionValue,
+  RenderCollectionOptions
+} from '../../AbstractPresenterContext';
 import { EntityPresenterComponent, EntityPresenterComponentRenderType } from '../../EntityPresenterComponent';
 import { BatchStore } from '../../../../../stores/batch/BatchStore';
 import { inject } from '../../../../../inversify.config';
@@ -21,13 +26,11 @@ export interface EntityCardsPresenterComponentOptions {
 }
 
 export enum EntityCardsPresenterSetting {
-  SHOW_NESTED = 'show-nested',
-  GROUP_BY = 'groupBy'
+  SHOW_NESTED = 'show-nested'
 }
 
-export interface EntityCardsPresenterSettings {
+export interface EntityCardsPresenterSettings extends AbstractPresenterContextSettings {
   [EntityCardsPresenterSetting.SHOW_NESTED]: boolean;
-  [EntityCardsPresenterSetting.GROUP_BY]?: GroupingOptionValue;
 }
 
 export interface NestedTreeRenderOption {
