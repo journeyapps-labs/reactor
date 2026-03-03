@@ -8,6 +8,7 @@ import { inject } from '../../../../../inversify.config';
 import { BatchStore } from '../../../../../stores/batch/BatchStore';
 import { AbstractEntityTreePresenterContext } from './presenter-contexts/AbstractEntityTreePresenterContext';
 import { SearchableTreeSearchScope } from '../../../../../widgets/core-tree/SearchableTreeSearchScope';
+import { GroupBySettingOptions, GroupingOptionValue } from '../../AbstractPresenterContext';
 
 export enum EntityTreePresenterSetting {
   SORT = 'sort',
@@ -19,32 +20,20 @@ export enum SortDirection {
   DESC = 'desc'
 }
 
-export enum EntityTreeGroupingSetting {
-  NONE = 'none',
-  COMPLEX_NAME = 'complexName',
-  TAGS = 'tags'
-}
-
-export interface EntityTreeAllowedGroupingSettings {
-  complexName?: boolean;
-  tags?: boolean;
-}
-
 export interface EntityTreePresenterSettings {
   [EntityTreePresenterSetting.SORT]: SortDirection;
-  [EntityTreePresenterSetting.GROUP_BY]?: EntityTreeGroupingSetting;
+  [EntityTreePresenterSetting.GROUP_BY]?: GroupingOptionValue;
 }
 
 export interface EntityTreePresenterState {
   trees: TreeSerialized | TreeSerializedV2;
 }
 
-export interface EntityTreePresenterComponentOptions<T = any> extends Omit<EntityPresenterComponentOptions, 'label'> {
+export interface EntityTreePresenterComponentOptions<T = any>
+  extends Omit<EntityPresenterComponentOptions, 'label'>, GroupBySettingOptions {
   loadChildrenAsNodesAreOpened?: boolean;
   searchScope?: SearchableTreeSearchScope;
   label?: string;
-  allowedGroupingSettings?: EntityTreeAllowedGroupingSettings;
-  defaultGroupingSetting?: EntityTreeGroupingSetting;
 }
 
 export abstract class EntityTreePresenterComponent<T> extends EntityPresenterComponent<

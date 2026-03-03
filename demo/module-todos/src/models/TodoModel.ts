@@ -101,13 +101,14 @@ export class TodoModel extends BaseObserver<TodoModelListener> {
   }
 
   removeTag(tag: string) {
-    if (!this._tags.has(tag)) {
+    const normalized = tag.trim();
+    if (!normalized || !this._tags.has(normalized)) {
       return;
     }
-    this._tags.delete(tag);
+    this._tags.delete(normalized);
     this.iterateListeners((cb) =>
       cb.tagRemoved?.({
-        tag
+        tag: normalized
       })
     );
   }

@@ -1,12 +1,12 @@
 import { EntityDefinitionComponent } from '../../EntityDefinitionComponent';
-import { AbstractPresenterContext } from './AbstractPresenterContext';
+import { AbstractPresenterContext, GroupBySettingOptions } from './AbstractPresenterContext';
 
 export enum EntityPresenterComponentRenderType {
   TREE = 'tree',
   CARDS = 'cards'
 }
 
-export interface EntityPresenterComponentOptions {
+export interface EntityPresenterComponentOptions extends GroupBySettingOptions {
   label: string;
 }
 
@@ -26,7 +26,7 @@ export abstract class EntityPresenterComponent<
 
   constructor(
     public renderType: EntityPresenterComponentRenderType,
-    protected options: EntityPresenterComponentOptions
+    public options: EntityPresenterComponentOptions
   ) {
     super(EntityPresenterComponent.TYPE);
   }
