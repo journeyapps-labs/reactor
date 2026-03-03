@@ -1,4 +1,4 @@
-import { ioc, inject } from '../../../inversify.config';
+import { inject, ioc } from '../../../inversify.config';
 import { WorkspaceStore } from '../../../stores/workspace/WorkspaceStore';
 import { EntityAction, EntityActionEvent } from '../../parameterized/EntityAction';
 import { ReactorPanelFactory } from '../../../stores/workspace/react-workspaces/ReactorPanelFactory';
@@ -6,6 +6,7 @@ import { ReactorEntities } from '../../../entities-reactor/ReactorEntities';
 import { EntityActionParams } from '../../parameterized/ParameterizedAction';
 import { ProviderActionParameter } from '../../parameterized/params/ProviderActionParameter';
 import { ActionStore } from '../../../stores/actions/ActionStore';
+import { PassiveActionValidationState } from '../../validators/ActionValidator';
 
 export class AddPanelWorkspaceAction extends EntityAction<ReactorPanelFactory> {
   static ID = 'ADD_WORKSPACE_PANEL';
@@ -34,6 +35,14 @@ export class AddPanelWorkspaceAction extends EntityAction<ReactorPanelFactory> {
   }
 
   async fireEvent(event: EntityActionEvent<ReactorPanelFactory>): Promise<any> {
+    if (!event.targetEntity.options.allowManualCreation) {
+      return false;
+    }
+    if (
+      event.targetEntity.options.validators?.some((v) => v.validate()?.type !== PassiveActionValidationState.ALLOWED)
+    ) {
+      return false;
+    }
     this.workspaceStore.addModel(event.targetEntity.generateModel());
   }
 }

@@ -87,7 +87,7 @@ namespace S {
   `;
 
   export const Label2 = themed.div`
-    color: ${(p) => getTransparentColor(p.theme.trees.labelColor, 0.58)};
+    color: ${(p) => p.theme.text.secondary};
     margin-left: 5px;
     white-space: nowrap;
   `;

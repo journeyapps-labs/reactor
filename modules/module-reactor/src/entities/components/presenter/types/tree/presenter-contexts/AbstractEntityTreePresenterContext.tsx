@@ -2,9 +2,14 @@ import React from 'react';
 import _ from 'lodash';
 import { CoreTreeWidget } from '../../../../../../widgets/core-tree/CoreTreeWidget';
 import { ReactorTreeEntity } from '../../../../../../widgets/core-tree/reactor-tree/reactor-tree-utils';
-import { ReactorTreeNode } from '../../../../../../widgets/core-tree/reactor-tree/ReactorTreeNode';
+import {
+  ReactorTreeNode,
+  ReactorTreeNodeDefaultOpenPolicy
+} from '../../../../../../widgets/core-tree/reactor-tree/ReactorTreeNode';
 import {
   AbstractPresenterContext,
+  AbstractPresenterContextSetting,
+  GroupingOptionValue,
   PresenterContextListener,
   RenderCollectionOptions
 } from '../../../AbstractPresenterContext';
@@ -133,14 +138,46 @@ export abstract class AbstractEntityTreePresenterContext<
     return this.rootContext || this;
   }
 
+  private buildGroupedTreeNodes(entities: T[], nodes: ReactorTreeEntity[]): ReactorTreeEntity[] {
+    const groupedEntities = this.groupEntitiesBySelectedSetting({
+      entities
+    });
+
+    const nodesByEntity = new Map<T, ReactorTreeEntity>(entities.map((entity, index) => [entity, nodes[index]]));
+
+    return _.map(groupedEntities, (grouped, group) => {
+      const groupNode = new ReactorTreeNode({
+        key: `group-${group}`,
+        getTreeProps: () => ({
+          label: group,
+          icon: 'layer-group'
+        }),
+        match: (searchEvent) => searchEvent.matches(group),
+        defaultOpenPolicy: ReactorTreeNodeDefaultOpenPolicy.FIRST_RENDER
+      });
+      grouped.forEach((entity) => {
+        const node = nodesByEntity.get(entity);
+        if (node) {
+          groupNode.addChild(node);
+        }
+      });
+      return groupNode;
+    });
+  }
+
   getTreeNodes(event: RenderCollectionOptions<T>): ReactorTreeEntity[] {
-    let entities = this.getSortedEntities(event.entities);
+    const entities = this.getSortedEntities(event.entities);
 
     // convert entities into nodes
-    const nodes = this.doGetTreeNodes({
+    const renderedNodes = this.doGetTreeNodes({
       ...event,
       entities: entities
     });
+
+    let nodes = renderedNodes;
+    if (this.isGroupingEnabled()) {
+      nodes = this.buildGroupedTreeNodes(entities, renderedNodes);
+    }
 
     nodes.forEach((n) => {
       if (n instanceof ReactorTreeNode) {
@@ -164,6 +201,14 @@ export abstract class AbstractEntityTreePresenterContext<
     return nodes;
   }
 
+  private shouldRenderSecondaryLabel() {
+    if (!this.getRootContext().isGroupingEnabled()) {
+      return true;
+    }
+    const controlValues = this.getRootContext().getControlValues();
+    return controlValues[AbstractPresenterContextSetting.GROUP_BY] !== GroupingOptionValue.COMPLEX_NAME;
+  }
+
   protected abstract doGetTreeNodes(event: RenderCollectionOptions<T>): ReactorTreeEntity[];
 
   protected abstract doGenerateTreeNode(entity: T, options?: GenerateTreeOptions<T>): ReactorTreeEntity;
@@ -178,7 +223,7 @@ export abstract class AbstractEntityTreePresenterContext<
         icon2: described.icon2,
         icon2Color: described.icon2Color,
         label: described.simpleName,
-        label2: described.complexName
+        label2: this.shouldRenderSecondaryLabel() ? described.complexName : null
       };
     });
     this.patchTreeInteractions(node, entity);

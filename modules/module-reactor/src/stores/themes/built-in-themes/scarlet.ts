@@ -111,7 +111,7 @@ export const Scarlet = theme.addThemeValues({
     },
     text: {
       primary: 'rgba(255,255,255,0.8)',
-      secondary: 'rgba(255,255,255,0.5)'
+      secondary: 'rgba(255,255,255,0.38)'
     },
     forms: {
       ...DarkTheme.forms,

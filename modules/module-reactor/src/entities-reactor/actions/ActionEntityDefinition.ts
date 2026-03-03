@@ -110,7 +110,13 @@ export class ActionEntityDefinition extends EntityDefinition<Action> {
     );
     this.registerComponent(new ActionEntityHandler());
     this.registerComponent(new ActionEntityEncoder());
-    this.registerComponent(new InlineTreePresenterComponent<Action>());
+    this.registerComponent(
+      new InlineTreePresenterComponent<Action>({
+        allowedGroupingSettings: {
+          complexName: true
+        }
+      })
+    );
     this.registerComponent(new EntityCardsPresenterComponent<Action>());
     this.registerComponent(new ActionTreePresenter());
     this.registerComponent(

@@ -26,7 +26,7 @@ export class CreateTodoAction extends Action {
       return false;
     }
 
-    this.todoStore.addTodo(new TodoModel(result));
+    this.todoStore.addTodo(new TodoModel({ name: result }));
   }
 
   static get() {

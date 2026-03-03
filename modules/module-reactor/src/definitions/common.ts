@@ -10,13 +10,6 @@ export interface Panel {
   icon?: IconName;
 }
 
-export const PanelCategory = {
-  IDE: 'IDE',
-  MEDIA: 'Media'
-} as const;
-
-export type PanelCategory = typeof PanelCategory;
-
 export type ButtonActionLegacy = (event: MousePosition, loading?: (loading: boolean) => any) => any;
 export type ButtonActionNew = (event: MousePosition) => Promise<any>;
 export type ButtonAction = ButtonActionNew | ButtonActionLegacy;

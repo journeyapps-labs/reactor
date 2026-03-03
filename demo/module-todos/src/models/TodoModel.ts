@@ -8,8 +8,15 @@ export interface TodoModelListener {
   becameActive: () => any;
   childAdded: (event: { child: TodoModel }) => any;
   childRemoved: (event: { child: TodoModel }) => any;
+  tagAdded: (event: { tag: string }) => any;
+  tagRemoved: (event: { tag: string }) => any;
   noteAdded: (event: { note: TodoNoteModel }) => any;
   noteRemoved: (event: { note: TodoNoteModel }) => any;
+}
+
+export interface TodoModelOptions {
+  name?: string;
+  tags?: string[];
 }
 
 export class TodoModel extends BaseObserver<TodoModelListener> {
@@ -20,17 +27,20 @@ export class TodoModel extends BaseObserver<TodoModelListener> {
   protected accessor _children: Set<TodoModel>;
   @observable
   protected accessor _notes: Set<TodoNoteModel>;
+  @observable
+  protected accessor _tags: Set<string>;
 
   @observable
   accessor name: string;
 
-  constructor(name: string = '') {
+  constructor(options: TodoModelOptions = {}) {
     super();
-    this.name = name;
+    this.name = options.name || '';
     this.id = v4();
     this.parent = null;
     this._children = new Set<TodoModel>();
     this._notes = new Set<TodoNoteModel>();
+    this._tags = new Set(options.tags || []);
   }
 
   delete() {
@@ -77,6 +87,32 @@ export class TodoModel extends BaseObserver<TodoModelListener> {
     );
   }
 
+  addTag(tag: string) {
+    const normalized = tag.trim();
+    if (!normalized || this._tags.has(normalized)) {
+      return;
+    }
+    this._tags.add(normalized);
+    this.iterateListeners((cb) =>
+      cb.tagAdded?.({
+        tag: normalized
+      })
+    );
+  }
+
+  removeTag(tag: string) {
+    const normalized = tag.trim();
+    if (!normalized || !this._tags.has(normalized)) {
+      return;
+    }
+    this._tags.delete(normalized);
+    this.iterateListeners((cb) =>
+      cb.tagRemoved?.({
+        tag: normalized
+      })
+    );
+  }
+
   removeNote(note: TodoNoteModel) {
     if (!this._notes.has(note)) {
       return;
@@ -98,6 +134,11 @@ export class TodoModel extends BaseObserver<TodoModelListener> {
   @computed
   get notes() {
     return Array.from(this._notes.values());
+  }
+
+  @computed
+  get tags() {
+    return Array.from(this._tags.values());
   }
 
   async loadNotes(simulateError: boolean = false): Promise<TodoNoteModel[]> {

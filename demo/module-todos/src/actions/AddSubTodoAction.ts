@@ -32,6 +32,6 @@ export class AddSubTodoAction extends EntityAction<TodoModel> {
       return false;
     }
 
-    this.todoStore.addSubTodo(event.targetEntity, new TodoModel(result));
+    this.todoStore.addSubTodo(event.targetEntity, new TodoModel({ name: result }));
   }
 }

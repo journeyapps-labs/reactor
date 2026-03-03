@@ -1,5 +1,10 @@
 import React from 'react';
-import { RenderCollectionOptions, AbstractPresenterContext } from '../../AbstractPresenterContext';
+import {
+  AbstractPresenterContext,
+  AbstractPresenterContextSettings,
+  GroupingOptionValue,
+  RenderCollectionOptions
+} from '../../AbstractPresenterContext';
 import { EntityPresenterComponent, EntityPresenterComponentRenderType } from '../../EntityPresenterComponent';
 import { BatchStore } from '../../../../../stores/batch/BatchStore';
 import { inject } from '../../../../../inversify.config';
@@ -13,13 +18,18 @@ import { BooleanControl } from '../../../../../controls/BooleanControl';
 
 export interface EntityCardsPresenterComponentOptions {
   label?: string;
+  allowedGroupingSettings?: {
+    complexName?: boolean;
+    tags?: boolean;
+  };
+  defaultGroupingSetting?: GroupingOptionValue;
 }
 
 export enum EntityCardsPresenterSetting {
   SHOW_NESTED = 'show-nested'
 }
 
-export interface EntityCardsPresenterSettings {
+export interface EntityCardsPresenterSettings extends AbstractPresenterContextSettings {
   [EntityCardsPresenterSetting.SHOW_NESTED]: boolean;
 }
 
@@ -33,7 +43,7 @@ export interface NestedTreeRenderOption {
 export class EntityCardsPresenterContext<T> extends AbstractPresenterContext<T, {}, EntityCardsPresenterSettings> {
   @inject(BatchStore)
   accessor batchStore: BatchStore;
-  protected nestedTreeContexts: Map<DescendantEntityProviderComponent<any, any>, AbstractEntityTreePresenterContext>;
+  protected nestedTreeContexts: Map<DescendantEntityProviderComponent, AbstractEntityTreePresenterContext>;
 
   constructor(public presenter: EntityCardsPresenterComponent<T>) {
     super(presenter);
@@ -61,10 +71,7 @@ export class EntityCardsPresenterContext<T> extends AbstractPresenterContext<T, 
 
     return entities.filter((entity) => {
       const described = this.definition.describeEntity(entity);
-      const labelTerms = (described.labels || []).flatMap((label) => [label.label, label.value]);
-      return [described.simpleName, described.complexName, ...labelTerms, ...(described.tags || [])]
-        .filter((v) => v != null && `${v}`.trim() !== '')
-        .some((value) => !!event.searchEvent.matches(String(value), { nullIsTrue: false }));
+      return !!event.searchEvent.matches(described.simpleName, { nullIsTrue: false });
     });
   }
 
@@ -161,7 +168,7 @@ export class EntityCardsPresenterContext<T> extends AbstractPresenterContext<T, 
 export class EntityCardsPresenterComponent<T> extends EntityPresenterComponent<T, EntityCardsPresenterContext<T>> {
   static DEFAULT_LABEL = 'Cards view';
 
-  constructor(protected options2: EntityCardsPresenterComponentOptions = {}) {
+  constructor(public readonly options2: EntityCardsPresenterComponentOptions = {}) {
     super(EntityPresenterComponentRenderType.CARDS, {
       label: options2.label || EntityCardsPresenterComponent.DEFAULT_LABEL
     });

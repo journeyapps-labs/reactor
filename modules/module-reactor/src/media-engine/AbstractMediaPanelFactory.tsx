@@ -10,8 +10,8 @@ import {
   AbstractReactorPanelFactoryOptions,
   ReactorPanelFactory
 } from '../stores/workspace/react-workspaces/ReactorPanelFactory';
-import { PanelCategory } from '../definitions/common';
 import { LoadingPanelWidget } from '../widgets/panel/panel/LoadingPanelWidget';
+import { ReactorEntityCategories } from '../entities-reactor/ReactorEntities';
 
 export class AbstractMediaPanelModel<T extends AbstractMedia = AbstractMedia> extends ReactorPanelModel {
   @observable
@@ -53,7 +53,7 @@ export abstract class AbstractMediaPanelFactory<
     super({
       fullscreen: true,
       isMultiple: true,
-      category: PanelCategory.MEDIA,
+      category: ReactorEntityCategories.CORE,
       allowManualCreation: false,
       ...options
     });

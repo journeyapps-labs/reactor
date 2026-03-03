@@ -94,7 +94,7 @@ theme.addThemeValues({
     },
     text: {
       primary: '#edf4f8',
-      secondary: '#b6c9d2'
+      secondary: 'rgba(182,201,210,0.72)'
     },
     button: {
       background: '#29373f',

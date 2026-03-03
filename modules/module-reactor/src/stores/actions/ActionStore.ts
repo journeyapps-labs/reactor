@@ -85,7 +85,7 @@ export class ActionStore extends BaseObserver<ActionStoreListener> {
   }
 
   getActionByID<T extends Action>(id: string): T {
-    return _.find(this.actions, (a) => a.options.id === id) as T;
+    return (_.find(this.actions, (a) => a.options.id === id) || this.actions[id]) as T;
   }
 
   getAction<T extends Action>(name: string): T {

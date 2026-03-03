@@ -57,7 +57,7 @@ theme.addThemeValues({
     },
     text: {
       primary: 'rgba(214,214,214,0.9)',
-      secondary: 'rgba(176,176,176,0.78)'
+      secondary: 'rgba(176,176,176,0.62)'
     },
     forms: {
       ...DarkTheme.forms,

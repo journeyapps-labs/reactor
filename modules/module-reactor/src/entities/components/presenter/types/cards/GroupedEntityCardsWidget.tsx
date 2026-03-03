@@ -1,0 +1,83 @@
+import React from 'react';
+import { observer } from 'mobx-react';
+import styled from '@emotion/styled';
+import { SearchEvent } from '@journeyapps-labs/lib-reactor-search';
+import { EntityCardsPresenterContext } from './EntityCardsPresenterComponent';
+import { CardWidget } from '../../../../../widgets/cards/CardWidget';
+import { themed } from '../../../../../stores/themes/reactor-theme-fragment';
+import { EntityCardWidget } from './EntityCardWidget';
+
+export interface GroupedEntityCardsWidgetProps<T> {
+  entities: T[];
+  presenterContext: EntityCardsPresenterContext<T>;
+  searchEvent?: SearchEvent;
+}
+
+namespace S {
+  export const GroupGrid = styled.div`
+    display: flex;
+    flex-wrap: wrap;
+    align-items: stretch;
+    gap: 10px;
+  `;
+
+  export const Grid = styled.div`
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+    align-items: stretch;
+    gap: 10px;
+    width: 100%;
+  `;
+
+  export const GroupCard = themed(CardWidget)`
+    overflow: hidden;
+    min-width: 0;
+    flex: 1 1 420px;
+    max-width: 100%;
+  `;
+}
+
+export const GroupedEntityCardsWidget = observer(function <T>(props: GroupedEntityCardsWidgetProps<T>) {
+  const groups = props.presenterContext.groupEntitiesBySelectedSetting({
+    entities: props.entities
+  });
+
+  return (
+    <S.GroupGrid>
+      {Object.entries(groups).map(([group, entities]) => {
+        if (entities.length === 0) {
+          return null;
+        }
+
+        return (
+          <S.GroupCard
+            key={group}
+            title={group}
+            subHeading={`${entities.length} ${entities.length === 1 ? 'item' : 'items'}`}
+            sections={[
+              {
+                key: 'entities',
+                content: () => {
+                  return (
+                    <S.Grid>
+                      {entities.map((entity) => {
+                        return (
+                          <EntityCardWidget
+                            key={`${group}-${props.presenterContext.definition.getEntityUID(entity)}`}
+                            entity={entity}
+                            presenterContext={props.presenterContext}
+                            searchEvent={props.searchEvent}
+                          />
+                        );
+                      })}
+                    </S.Grid>
+                  );
+                }
+              }
+            ]}
+          />
+        );
+      })}
+    </S.GroupGrid>
+  );
+});

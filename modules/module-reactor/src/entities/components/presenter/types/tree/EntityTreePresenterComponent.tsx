@@ -8,6 +8,7 @@ import { inject } from '../../../../../inversify.config';
 import { BatchStore } from '../../../../../stores/batch/BatchStore';
 import { AbstractEntityTreePresenterContext } from './presenter-contexts/AbstractEntityTreePresenterContext';
 import { SearchableTreeSearchScope } from '../../../../../widgets/core-tree/SearchableTreeSearchScope';
+import { AbstractPresenterContextSettings, GroupBySettingOptions } from '../../AbstractPresenterContext';
 
 export enum EntityTreePresenterSetting {
   SORT = 'sort'
@@ -18,7 +19,7 @@ export enum SortDirection {
   DESC = 'desc'
 }
 
-export interface EntityTreePresenterSettings {
+export interface EntityTreePresenterSettings extends AbstractPresenterContextSettings {
   [EntityTreePresenterSetting.SORT]: SortDirection;
 }
 
@@ -26,7 +27,8 @@ export interface EntityTreePresenterState {
   trees: TreeSerialized | TreeSerializedV2;
 }
 
-export interface EntityTreePresenterComponentOptions extends Omit<EntityPresenterComponentOptions, 'label'> {
+export interface EntityTreePresenterComponentOptions<T = any>
+  extends Omit<EntityPresenterComponentOptions, 'label'>, GroupBySettingOptions {
   loadChildrenAsNodesAreOpened?: boolean;
   searchScope?: SearchableTreeSearchScope;
   label?: string;
@@ -41,7 +43,7 @@ export abstract class EntityTreePresenterComponent<T> extends EntityPresenterCom
   @inject(BatchStore)
   accessor batchStore: BatchStore;
 
-  constructor(protected options2: EntityTreePresenterComponentOptions = {}) {
+  constructor(public readonly options2: EntityTreePresenterComponentOptions<T> = {}) {
     super(EntityPresenterComponentRenderType.TREE, {
       ...options2,
       label: options2.label || EntityTreePresenterComponent.DEFAULT_LABEL

@@ -146,7 +146,7 @@ export const DarkTheme = theme.addThemeValues({
     },
     text: {
       primary: 'rgba(236,244,255,0.88)',
-      secondary: 'rgba(199,214,236,0.76)'
+      secondary: 'rgba(199,214,236,0.62)'
     },
     forms: {
       checkbox: '#323841',

@@ -80,19 +80,6 @@ export class SetControl<T extends string = string> extends AbstractValueControl<
   }
 
   representAsBtn(): Btn {
-    if (this.options.options.length <= 2) {
-      const other = this.options.options.find((o) => o.key !== this.value);
-
-      return {
-        icon: other.icon,
-        label: other.label,
-        tooltip: other.label,
-        action: () => {
-          this.value = this.options.options.find((o) => o.key !== this.value).key;
-        }
-      };
-    }
-
     return {
       action: (event) => {
         this.select(event);

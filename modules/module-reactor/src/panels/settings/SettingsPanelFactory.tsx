@@ -1,10 +1,9 @@
 import * as React from 'react';
-
-import { PanelCategory } from '../../definitions/common';
 import { SettingsPanelWidget } from './SettingsPanelWidget';
 import { ReactorPanelFactory } from '../../stores/workspace/react-workspaces/ReactorPanelFactory';
 import { WorkspaceModelFactoryEvent } from '@projectstorm/react-workspaces-core';
 import { SETTINGS_PANEL_TYPE, SettingsPanelModel } from './SettingsPanelModel';
+import { ReactorEntityCategories } from '../../entities-reactor/ReactorEntities';
 
 export class SettingsPanelFactory extends ReactorPanelFactory<SettingsPanelModel> {
   static TYPE = SETTINGS_PANEL_TYPE;
@@ -14,7 +13,7 @@ export class SettingsPanelFactory extends ReactorPanelFactory<SettingsPanelModel
       type: SettingsPanelFactory.TYPE,
       icon: 'cog',
       name: 'IDE settings',
-      category: PanelCategory.IDE,
+      category: ReactorEntityCategories.CORE,
       isMultiple: false
     });
   }

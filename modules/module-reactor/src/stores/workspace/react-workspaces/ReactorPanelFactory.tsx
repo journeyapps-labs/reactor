@@ -9,7 +9,7 @@ import {
   WorkspaceNodePanelRenderer
 } from '@projectstorm/react-workspaces-core';
 import { PanelWidget } from '../../../widgets/panel/panel/PanelWidget';
-import { ActionValidator } from '../../../actions/validators/ActionValidator';
+import { ActionValidator, PassiveActionValidationState } from '../../../actions/validators/ActionValidator';
 import { Btn } from '../../../definitions/common';
 import { TabRenderer, TabRendererEvent } from '@projectstorm/react-workspaces-model-tabs';
 import { TrayModelPanelRenderer, TrayModelPanelRendererEvent } from '@projectstorm/react-workspaces-model-tray';

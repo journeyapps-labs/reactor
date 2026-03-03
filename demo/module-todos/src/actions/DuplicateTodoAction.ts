@@ -22,7 +22,10 @@ export class DuplicateTodoAction extends EntityAction<TodoModel> {
   }
 
   protected cloneTree(todo: TodoModel): TodoModel {
-    const clone = new TodoModel(`${todo.name} (copy)`);
+    const clone = new TodoModel({
+      name: `${todo.name} (copy)`,
+      tags: todo.tags
+    });
     todo.children.forEach((child) => {
       clone.addChild(this.cloneTree(child));
     });

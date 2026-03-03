@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { PanelCategory, ReactorPanelFactory, ReactorIcon, ReactorPanelModel } from '@journeyapps-labs/reactor-mod';
+import { ReactorPanelFactory, ReactorIcon, ReactorPanelModel } from '@journeyapps-labs/reactor-mod';
 import { WorkspaceModelFactoryEvent } from '@projectstorm/react-workspaces-core';
 
 export interface PlaygroundPanelWidgetProps {
@@ -28,7 +28,7 @@ export class PlaygroundPanelFactory extends ReactorPanelFactory<PlaygroundPanelM
       type: panelOptions.type,
       icon: panelOptions.icon,
       name: panelOptions.name,
-      category: PanelCategory.IDE,
+      category: 'Playground',
       isMultiple: true,
       padding: true
     });
