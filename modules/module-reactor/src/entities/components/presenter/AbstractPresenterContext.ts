@@ -42,8 +42,6 @@ export enum GroupingOptionValue {
   TAGS = 'tags'
 }
 
-export type ActualGroupingOptionValue = GroupingOptionValue.COMPLEX_NAME | GroupingOptionValue.TAGS;
-
 export interface GroupBySettingOptions {
   allowedGroupingSettings?: {
     complexName?: boolean;
@@ -74,18 +72,13 @@ export abstract class AbstractPresenterContext<
   @observable
   accessor toolbarButtons: Set<ButtonControl>;
 
-  constructor(
-    public presenter: EntityPresenterComponent,
-    options: {
-      groupBySetting?: GroupBySettingOptions;
-    } = {}
-  ) {
+  constructor(public presenter: EntityPresenterComponent) {
     super();
     this.state = null;
     this.settings = new Map();
     this.toolbarButtons = new Set();
-    if (options.groupBySetting) {
-      this.registerGroupBySetting(options.groupBySetting);
+    if (presenter.options.allowedGroupingSettings) {
+      this.registerGroupBySetting(presenter.options);
     }
   }
 
@@ -175,7 +168,7 @@ export abstract class AbstractPresenterContext<
 
   protected groupBySelectedSetting<Item extends { complexName?: string; tags?: string[] }>(
     items: Item[],
-    selectedGrouping: ActualGroupingOptionValue,
+    selectedGrouping: GroupingOptionValue,
     fallback: string
   ): Record<string, Item[]> {
     if (selectedGrouping === GroupingOptionValue.COMPLEX_NAME) {
@@ -217,7 +210,7 @@ export abstract class AbstractPresenterContext<
           ...describe(entity)
         };
       }),
-      selectedGrouping as ActualGroupingOptionValue,
+      selectedGrouping as GroupingOptionValue,
       'Ungrouped'
     );
 

@@ -10,7 +10,7 @@ import { SimpleEntitySearchEngineComponent } from '../../entities/components/sea
 import { AddPanelWorkspaceAction } from '../../actions/builtin-actions/workspace/AddPanelWorkspaceAction';
 import { EntityActionHandlerComponent } from '../../entities/components/handler/EntityActionHandlerComponent';
 import { PassiveActionValidationState } from '../../actions/validators/ActionValidator';
-import { EntityTreeGroupingSetting } from '../../entities/components/presenter/types/tree/EntityTreePresenterComponent';
+import { GroupingOptionValue } from '../../entities/components/presenter/AbstractPresenterContext';
 
 export class PanelEntityDefinition extends EntityDefinition<ReactorPanelFactory> {
   @inject(WorkspaceStore)
@@ -51,7 +51,7 @@ export class PanelEntityDefinition extends EntityDefinition<ReactorPanelFactory>
         allowedGroupingSettings: {
           tags: true
         },
-        defaultGroupingSetting: EntityTreeGroupingSetting.TAGS,
+        defaultGroupingSetting: GroupingOptionValue.TAGS,
         augmentTreeProps: (entity) => {
           const hasBlockingValidation = (entity.options.validators || []).some((validator) => {
             const validation = validator.validate();

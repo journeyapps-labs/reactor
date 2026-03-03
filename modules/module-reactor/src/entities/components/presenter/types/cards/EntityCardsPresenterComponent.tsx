@@ -1,10 +1,5 @@
 import React from 'react';
-import {
-  GroupingOptionValue,
-  GroupBySettingOptions,
-  RenderCollectionOptions,
-  AbstractPresenterContext
-} from '../../AbstractPresenterContext';
+import { AbstractPresenterContext, GroupingOptionValue, RenderCollectionOptions } from '../../AbstractPresenterContext';
 import { EntityPresenterComponent, EntityPresenterComponentRenderType } from '../../EntityPresenterComponent';
 import { BatchStore } from '../../../../../stores/batch/BatchStore';
 import { inject } from '../../../../../inversify.config';
@@ -45,19 +40,10 @@ export interface NestedTreeRenderOption {
 export class EntityCardsPresenterContext<T> extends AbstractPresenterContext<T, {}, EntityCardsPresenterSettings> {
   @inject(BatchStore)
   accessor batchStore: BatchStore;
-  protected nestedTreeContexts: Map<DescendantEntityProviderComponent<any, any>, AbstractEntityTreePresenterContext>;
+  protected nestedTreeContexts: Map<DescendantEntityProviderComponent, AbstractEntityTreePresenterContext>;
 
   constructor(public presenter: EntityCardsPresenterComponent<T>) {
-    const groupBySetting: GroupBySettingOptions = {
-      allowedGroupingSettings: presenter.options2.allowedGroupingSettings || {
-        complexName: true,
-        tags: true
-      },
-      defaultGroupingSetting: presenter.options2.defaultGroupingSetting
-    };
-    super(presenter, {
-      groupBySetting
-    });
+    super(presenter);
     this.nestedTreeContexts = new Map();
 
     this.addSetting({
