@@ -45,6 +45,28 @@ export class ControlledCommandPalletWidget extends React.Component<
     };
   }
 
+  protected handleCategoryEntryEntered = (res: CommandPalletSearchResultEntry) => {
+    if (this.state.highlighted === res.key && this.state.highlightedCategory === res.engine.id) {
+      return;
+    }
+    this.setState({
+      highlighted: res.key,
+      highlightedCategory: res.engine.id
+    });
+  };
+
+  protected handleCategoryEntrySelected = (res: CommandPalletSearchResultEntry, event: MousePosition) => {
+    this.props.selected(res, event);
+  };
+
+  protected handleCategoryClear = () => {
+    this.selectFirst(this.state.searchResults);
+  };
+
+  protected handleClose = () => {
+    this.props.close();
+  };
+
   static _getHighlighted(state: ControlledCommandPalletWidgetState): CommandPalletSearchResultEntry {
     for (let result of state.searchResults) {
       for (let r of result.results) {
@@ -211,19 +233,12 @@ export class ControlledCommandPalletWidget extends React.Component<
           return (
             <SmartCommandPalletCategorywidget
               scrollIntoViewEnabled={this.state.scrollIntoViewEnabled}
-              close={this.props.close}
-              clear={() => {
-                this.selectFirst(this.state.searchResults);
-              }}
+              close={this.handleClose}
+              clear={this.handleCategoryClear}
               highlighted={this.state.highlightedCategory === result.engine.id ? this.state.highlighted : null}
-              selected={this.props.selected}
+              selected={this.handleCategoryEntrySelected}
               key={result.engine.id}
-              entered={(res) => {
-                this.setState({
-                  highlighted: res.key,
-                  highlightedCategory: res.engine.id
-                });
-              }}
+              entered={this.handleCategoryEntryEntered}
               result={result}
             />
           );
