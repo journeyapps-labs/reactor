@@ -50,6 +50,11 @@ namespace S {
 
 export const EditorWidget: React.FC<EditorWidgetProps> = observer((props) => {
   const monacoStore = ioc.get(MonacoStore);
+  const mergedSuggestOptions = {
+    showInlineDetails: true,
+    ...(props.options?.suggest || {})
+  };
+  const { suggest: _ignoredSuggest, ...restOptions } = props.options || {};
 
   const ref = props.forwardRef || React.useRef<HTMLDivElement>(null);
   const [focusDisposer, setFocusDisposer] = useState(null);
@@ -73,6 +78,7 @@ export const EditorWidget: React.FC<EditorWidgetProps> = observer((props) => {
             minimap: {
               enabled: false
             },
+            suggest: mergedSuggestOptions,
             automaticLayout: true,
             // https://github.com/microsoft/monaco-editor/issues/1993
             // this was default true, which caused the model drift monitor to kick in and report errors (correctly)
@@ -80,7 +86,7 @@ export const EditorWidget: React.FC<EditorWidgetProps> = observer((props) => {
             // autoIndent is required for XML files, not necessarily for others
             autoIndent: 'full',
             fixedOverflowWidgets: true,
-            ...(props.options || {})
+            ...restOptions
           }}
           editorDidMount={(editor: MonacoEditorType) => {
             e.current = editor;

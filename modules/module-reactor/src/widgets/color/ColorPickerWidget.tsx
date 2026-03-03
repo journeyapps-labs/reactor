@@ -2,12 +2,14 @@ import * as React from 'react';
 import styled from '@emotion/styled';
 import { SketchPicker } from 'react-color';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import * as _ from 'lodash';
 import { v4 } from 'uuid';
-import * as Color from 'color';
+import Color from 'color';
 import { SmartPositionWidget } from '../../layers/combo/SmartPositionWidget';
 import { FloatingPanelWidget } from '../floating/FloatingPanelWidget';
 import { themed } from '../../stores/themes/reactor-theme-fragment';
+import { PanelButtonWidget } from '../forms/PanelButtonWidget';
+import { Layer } from '../../stores/layer/LayerManager';
+import { LayerDirectiveWidget } from '../../stores/layer/LayerDirectiveWidget';
 
 export interface ColorPickerWidgetProps {
   color: string;
@@ -16,12 +18,13 @@ export interface ColorPickerWidgetProps {
 
 export interface ColorPickerWidgetState {
   show: boolean;
+  openColor: string;
 }
 
 namespace S {
   export const Container = themed.div<{ selected: boolean }>`
     outline: none;
-    border: solid 1px ${(p) => (p.selected ? p.theme.header.primary : 'transparent')};
+    border: solid 1px ${(p) => (p.selected ? p.theme.header.primary : p.theme.button.border)};
     color: ${(p) => p.theme.text.secondary};
     background: ${(p) => p.theme.panels.trayBackground};
     padding: 3px;
@@ -61,101 +64,111 @@ namespace S {
     .sketch-picker {
       background: transparent !important;
       width: 240px !important;
+      border: none !important;
+      box-shadow: none !important;
+      user-select: none;
+      -webkit-user-select: none;
+
+      > div {
+        background: transparent !important;
+      }
 
       input {
-        background: transparent !important;
-        color: white !important;
-        border: solid 1px transparent !important;
+        background: ${(p) => p.theme.forms.inputBackground} !important;
+        color: ${(p) => p.theme.forms.inputForeground} !important;
+        border: solid 1px ${(p) => p.theme.forms.inputBorder} !important;
         box-shadow: none !important;
-        background: ${(p) => p.theme.panels.trayBackground} !important;
         border-radius: 3px !important;
       }
 
       span{
         color: white !important;
       }
+
+      label {
+        color: ${(p) => p.theme.text.secondary} !important;
+        user-select: none;
+        -webkit-user-select: none;
+        -webkit-user-drag: none;
+      }
+
+      input {
+        user-select: text;
+        -webkit-user-select: text;
+      }
     }
+
+    .sketch-picker > .flexbox-fix:last-of-type {
+      border-top: none !important;
+    }
+  `;
+
+  export const Footer = styled.div`
+    display: flex;
+    justify-content: flex-end;
+    gap: 8px;
+    padding-top: 8px;
   `;
 }
 
 export class ColorPickerWidget extends React.Component<ColorPickerWidgetProps, ColorPickerWidgetState> {
   ref: React.RefObject<HTMLDivElement>;
-  listener: any;
   id: string;
 
   constructor(props: ColorPickerWidgetProps) {
     super(props);
     this.state = {
-      show: false
+      show: false,
+      openColor: props.color
     };
     this.id = v4();
     this.ref = React.createRef();
   }
 
   componentWillUnmount(): void {
-    this.dispose();
+    // no-op
   }
 
-  dispose = () => {
-    if (this.listener) {
-      window.removeEventListener('mousedown', this.listener);
-      this.listener = null;
-    }
-  };
-
-  mouseDown = () => {
+  mouseDown = (event: React.MouseEvent) => {
+    event.stopPropagation();
     if (this.state.show) {
-      this.setState(
-        {
-          show: false
-        },
-        this.dispose
-      );
+      this.closePicker();
       return;
     }
-    this.setState(
-      {
-        show: true
-      },
-      () => {
-        this.listener = (event: MouseEvent) => {
-          _.defer(() => {
-            this.setState(
-              {
-                show: false
-              },
-              this.dispose
-            );
-          });
-        };
+    this.setState({
+      show: true,
+      openColor: this.props.color
+    });
+  };
 
-        window.addEventListener('mousedown', this.listener);
-      }
-    );
+  closePicker = () => {
+    this.setState({
+      show: false
+    });
   };
 
   getFloatingPanel() {
-    if (this.state.show) {
-      const pos = this.ref.current.getBoundingClientRect();
-      return (
-        <S.Floating
-          position={{
-            clientX: pos.x,
-            clientY: pos.y
-          }}
-        >
-          <FloatingPanelWidget center={false}>
-            <SketchPicker
-              color={this.props.color}
-              onChange={(color) => {
-                this.props.colorChanged(color.hex);
-              }}
-            />
-          </FloatingPanelWidget>
-        </S.Floating>
-      );
+    if (!this.state.show || !this.ref.current) {
+      return null;
     }
-    return null;
+    const pos = this.ref.current.getBoundingClientRect();
+    return (
+      <S.Floating
+        position={{
+          clientX: pos.x,
+          clientY: pos.y
+        }}
+      >
+        <FloatingPanelWidget center={false}>
+          <ColorPickerOverlayWidget
+            initialColor={this.props.color}
+            openColor={this.state.openColor}
+            colorChanged={this.props.colorChanged}
+            closePicker={this.closePicker}
+          />
+        </FloatingPanelWidget>
+      </S.Floating>
+    );
   }
 
   isValid() {
@@ -174,7 +187,142 @@ export class ColorPickerWidget extends React.Component<ColorPickerWidgetProps, C
           <S.Square color={this.props.color}>{this.isValid() ? null : <FontAwesomeIcon icon="times" />}</S.Square>
           <S.Icon icon="angle-down" />
         </S.Container>
-        {this.getFloatingPanel()}
+        {this.state.show ? (
+          <LayerDirectiveWidget
+            gotLayer={(layer: Layer) => {
+              const listener = layer.registerListener({
+                dispose: () => {
+                  this.closePicker();
+                  listener();
+                }
+              });
+            }}
+          >
+            {() => {
+              return this.getFloatingPanel();
+            }}
+          </LayerDirectiveWidget>
+        ) : null}
+      </>
+    );
+  }
+}
+
+interface ColorPickerOverlayWidgetProps {
+  initialColor: string;
+  openColor: string;
+  colorChanged: (color: string) => any;
+  closePicker: () => any;
+}
+
+interface ColorPickerOverlayWidgetState {
+  draftColor: string;
+  lastCommittedColor: string;
+}
+
+interface SketchColorChange {
+  hex: string;
+  rgb?: {
+    r: number;
+    g: number;
+    b: number;
+    a?: number;
+  };
+}
+
+const getColorValueFromPickerChange = (color: SketchColorChange): string => {
+  const alpha = color.rgb?.a ?? 1;
+  if (alpha < 1 && color.rgb) {
+    return `rgba(${color.rgb.r}, ${color.rgb.g}, ${color.rgb.b}, ${alpha})`;
+  }
+  return color.hex;
+};
+
+class ColorPickerOverlayWidget extends React.Component<ColorPickerOverlayWidgetProps, ColorPickerOverlayWidgetState> {
+  constructor(props: ColorPickerOverlayWidgetProps) {
+    super(props);
+    this.state = {
+      draftColor: props.initialColor,
+      lastCommittedColor: props.initialColor
+    };
+  }
+
+  componentDidMount(): void {
+    window.addEventListener('mouseup', this.commitDraftColor);
+    window.addEventListener('touchend', this.commitDraftColor);
+  }
+
+  componentWillUnmount(): void {
+    window.removeEventListener('mouseup', this.commitDraftColor);
+    window.removeEventListener('touchend', this.commitDraftColor);
+  }
+
+  commitDraftColor = () => {
+    if (this.state.draftColor === this.state.lastCommittedColor) {
+      return;
+    }
+    this.setState(
+      {
+        lastCommittedColor: this.state.draftColor
+      },
+      () => {
+        this.props.colorChanged(this.state.draftColor);
+      }
+    );
+  };
+
+  resetColor = () => {
+    const resetColor = this.props.openColor || this.props.initialColor;
+    this.setState({
+      draftColor: resetColor,
+      lastCommittedColor: resetColor
+    });
+    this.props.colorChanged(resetColor);
+  };
+
+  render() {
+    return (
+      <>
+        <SketchPicker
+          color={this.state.draftColor}
+          styles={{
+            default: {
+              picker: {
+                background: 'transparent',
+                boxShadow: 'none'
+              },
+              controls: {
+                borderTop: 'none',
+                boxShadow: 'none'
+              },
+              saturation: {
+                boxShadow: 'none'
+              },
+              hue: {
+                boxShadow: 'none'
+              },
+              alpha: {
+                boxShadow: 'none'
+              },
+              color: {
+                boxShadow: 'none'
+              },
+              preset: {
+                borderTop: 'none'
+              }
+            }
+          }}
+          onChange={(color: SketchColorChange) => {
+            const nextColor = getColorValueFromPickerChange(color);
+            this.setState({
+              draftColor: nextColor
+            });
+          }}
+        />
+        <S.Footer>
+          <PanelButtonWidget label="Reset" action={this.resetColor} />
+          <PanelButtonWidget label="Close" action={this.props.closePicker} />
+        </S.Footer>
       </>
     );
   }

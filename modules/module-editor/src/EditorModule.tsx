@@ -23,6 +23,8 @@ import { theme } from './theme-reactor/editor-theme-fragment';
 import { MonacoKeybindingStore } from './stores/keybindings/MonacoKeybindingStore';
 import { EditorThemeEntityDefinition } from './entities/EditorThemeEntityDefinition';
 
+const EDITOR_LAYER_MANAGER_INITIAL_Z_INDEX = 10;
+
 export class EditorModule extends AbstractReactorModule {
   constructor() {
     super({
@@ -37,8 +39,7 @@ export class EditorModule extends AbstractReactorModule {
     const system = ioc.get(System);
     const workspaceStore = ioc.get(WorkspaceStore);
 
-    // Monaco has scrollbars that start at 11 :yuno:
-    workspaceStore.engine.layerManager.setInitialZIndex(12);
+    workspaceStore.engine.layerManager.setInitialZIndex(EDITOR_LAYER_MANAGER_INITIAL_Z_INDEX);
 
     // new instances
     const monacoSystemThemeStore = new MonacoSystemThemeStore();

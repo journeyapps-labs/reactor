@@ -1,7 +1,7 @@
 import * as React from 'react';
 import styled from '@emotion/styled';
 import { ColorPickerWidget } from './ColorPickerWidget';
-import * as Color from 'color';
+import Color from 'color';
 import * as _ from 'lodash';
 import { themed } from '../../stores/themes/reactor-theme-fragment';
 import { Input } from '../forms/inputs';
@@ -21,7 +21,7 @@ namespace S {
       width: 100px;
       margin-right: 2px;
       font-size: 14px;
-      border: solid 1px ${(p: any) => (p.error ? p.theme.status.failed : 'transparent')};
+      border: solid 1px ${(p: any) => (p.error ? p.theme.status.failed : p.theme.forms.inputBorder)};
       border-radius: 3px;
   `;
 
