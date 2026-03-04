@@ -9,6 +9,7 @@ import { PlaygroundCardsPanelWidget } from './panels/PlaygroundCardsPanelWidget'
 import { PlaygroundButtonsPanelWidget } from './panels/PlaygroundButtonsPanelWidget';
 import { PlaygroundEditorsPanelWidget } from './panels/PlaygroundEditorsPanelWidget';
 import { PlaygroundTreeSearchPanelWidget } from './panels/tree/PlaygroundTreeSearchPanelWidget';
+import { PlaygroundDragDropPanelWidget } from './panels/PlaygroundDragDropPanelWidget';
 
 export class ReactorPlaygroundModule extends AbstractReactorModule {
   constructor() {
@@ -66,6 +67,14 @@ export class ReactorPlaygroundModule extends AbstractReactorModule {
         name: 'Editors',
         icon: 'code',
         widget: PlaygroundEditorsPanelWidget
+      })
+    );
+    workspaceStore.registerFactory(
+      new PlaygroundPanelFactory({
+        type: 'playground.drag-drop',
+        name: 'Drag + Drop',
+        icon: 'arrows-alt',
+        widget: PlaygroundDragDropPanelWidget
       })
     );
 

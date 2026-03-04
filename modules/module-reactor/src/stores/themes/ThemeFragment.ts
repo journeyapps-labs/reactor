@@ -1,7 +1,6 @@
 import { CreateStyled } from './emotion';
 import s from '@emotion/styled';
 import * as _ from 'lodash';
-import { EntityDefinition } from '../../entities/EntityDefinition';
 
 const s2 = (comp, options) => {
   return s(comp, {
