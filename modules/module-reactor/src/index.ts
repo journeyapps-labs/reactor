@@ -105,6 +105,7 @@ export * from './stores/CMDPalletStore';
 export * from './stores/DialogStore';
 export * from './stores/dialog-utils';
 export * from './stores/NotificationStore';
+export * from './stores/batch/BatchStore';
 export * from './cmd-pallet/CMDPalletSearchEngine';
 export * from './stores/workspace/WorkspaceStore';
 export * from './stores/workspace/layout-engines/AbstractLayoutEngine';
