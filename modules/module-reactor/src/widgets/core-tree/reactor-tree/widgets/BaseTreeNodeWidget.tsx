@@ -25,7 +25,11 @@ export const BaseTreeNodeWidget: React.FC<BaseTreeNodeWidgetProps> = observer((p
         emptyMessage: 'Empty',
         empty: tree.children.length === 0,
         collapsed: tree.collapsed,
-        onCollapsedChanged: () => {
+        onCollapsedChanged: (collapsed, deep) => {
+          tree.setCollapsed(collapsed);
+          if (deep) {
+            tree.openChildren(!collapsed);
+          }
           props.event.events.updated?.();
         }
       }
