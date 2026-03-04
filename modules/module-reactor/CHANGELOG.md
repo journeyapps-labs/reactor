@@ -1,5 +1,11 @@
 # @journeyapps-labs/reactor-mod
 
+## 5.2.1
+
+### Patch Changes
+
+- 7a189d0: Export missing batch store and also hotfix with tree nodes not collapsing or opening correctly if they are not ReactorTreeNodes
+
 ## 5.2.0
 
 ### Minor Changes
