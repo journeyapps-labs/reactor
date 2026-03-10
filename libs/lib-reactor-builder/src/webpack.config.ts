@@ -17,9 +17,12 @@ export const generateCommonWebpack = (dir: string): Configuration => {
     return fs.existsSync(path.join(dir, 'node_modules', depName, 'reactor.config.json'));
   });
 
-  const external_libraries = [
+  const external_libraries: { lib: string; aliased?: boolean; test?: RegExp }[] = [
     { lib: 'react' },
+    { lib: 'react/jsx-runtime' },
+    { lib: 'react/jsx-dev-runtime' },
     { lib: 'react-dom' },
+    { lib: 'react-dom/client' },
     { lib: '@emotion/react', aliased: true },
     { lib: '@emotion/styled', aliased: true },
     { lib: 'lodash' },
@@ -162,6 +165,7 @@ export const generateCommonWebpack = (dir: string): Configuration => {
         w: prev,
         alias: cur.aliased!!,
         module: cur.lib,
+        test: cur.test,
         dir: dir
       });
     }

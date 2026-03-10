@@ -52,9 +52,9 @@ export const patchImportedLibrary = (options: { w: Configuration; module: string
       {
         [module]: {
           root: sanitizeLibraryName(module),
-          amd: [module],
-          commonjs: [module],
-          commonjs2: [module]
+          amd: module,
+          commonjs: module,
+          commonjs2: module
         }
       }
     ]
