@@ -1,5 +1,11 @@
 # @journeyapps-labs/lib-reactor-builder
 
+## 3.0.0
+
+### Major Changes
+
+- 875fbb2: export react-dom/client
+
 ## 2.0.5
 
 ### Patch Changes
