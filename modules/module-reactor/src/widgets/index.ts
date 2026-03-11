@@ -49,6 +49,7 @@ export * from './meta/ReadOnlyMetadataWidget';
 export * from './table/SearchableTableWidget';
 export * from './table/TableWidget';
 export * from './table/TableButtonWidget';
+export * from './table/TablePillWidget';
 
 export * from './panel/panel/title/PanelTitleToolbarButtonWidget';
 export * from './panel/panel/title/PanelTitleWidget';

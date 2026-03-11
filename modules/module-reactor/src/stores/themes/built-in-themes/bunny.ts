@@ -143,7 +143,11 @@ export const Bunny = theme.addThemeValues({
       description: '#bba9d9'
     },
     table: {
+      border: '#433464',
+      groupBorder: '#53407e',
+      groupBackground: '#171126',
       text: 'rgba(240,231,255,0.86)',
+      even: '#1d1730',
       odd: '#261f3d',
       pills: '#33284c',
       pillsSpecial: '#7f5bcc',

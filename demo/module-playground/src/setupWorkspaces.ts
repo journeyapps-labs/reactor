@@ -17,6 +17,7 @@ export const setupWorkspaces = () => {
         .addModel(new PlaygroundPanelModel('playground.cards'))
         .addModel(new PlaygroundPanelModel('playground.buttons'))
         .addModel(new PlaygroundPanelModel('playground.editors'))
+        .addModel(new PlaygroundPanelModel('playground.tables'))
         .addModel(new PlaygroundPanelModel('playground.drag-drop'))
     );
 

@@ -8,6 +8,7 @@ import { PlaygroundFormsPanelWidget } from './panels/PlaygroundFormsPanelWidget'
 import { PlaygroundCardsPanelWidget } from './panels/PlaygroundCardsPanelWidget';
 import { PlaygroundButtonsPanelWidget } from './panels/PlaygroundButtonsPanelWidget';
 import { PlaygroundEditorsPanelWidget } from './panels/PlaygroundEditorsPanelWidget';
+import { PlaygroundTablesPanelWidget } from './panels/PlaygroundTablesPanelWidget';
 import { PlaygroundTreeSearchPanelWidget } from './panels/tree/PlaygroundTreeSearchPanelWidget';
 import { PlaygroundDragDropPanelWidget } from './panels/PlaygroundDragDropPanelWidget';
 
@@ -67,6 +68,14 @@ export class ReactorPlaygroundModule extends AbstractReactorModule {
         name: 'Editors',
         icon: 'code',
         widget: PlaygroundEditorsPanelWidget
+      })
+    );
+    workspaceStore.registerFactory(
+      new PlaygroundPanelFactory({
+        type: 'playground.tables',
+        name: 'Tables',
+        icon: 'table',
+        widget: PlaygroundTablesPanelWidget
       })
     );
     workspaceStore.registerFactory(
