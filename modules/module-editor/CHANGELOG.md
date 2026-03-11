@@ -1,5 +1,16 @@
 # @journeyapps-labs/reactor-mod-editor
 
+## 2.2.0
+
+### Minor Changes
+
+- 90369e2: Export react-dom/client
+
+### Patch Changes
+
+- Updated dependencies [90369e2]
+  - @journeyapps-labs/reactor-mod@5.3.0
+
 ## 2.1.3
 
 ### Patch Changes
