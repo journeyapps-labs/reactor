@@ -401,9 +401,6 @@ importers:
       '@journeyapps-labs/common-utils':
         specifier: ^1.0.1
         version: 1.0.1
-      '@journeyapps-labs/lib-reactor-builder':
-        specifier: workspace:*
-        version: link:../../libs/lib-reactor-builder
       '@journeyapps-labs/lib-reactor-search':
         specifier: workspace:*
         version: link:../../libs/lib-reactor-search
@@ -459,6 +456,9 @@ importers:
         specifier: ^0.59.0
         version: 0.59.0(monaco-editor@0.55.1)(react-dom@19.2.4(react@19.2.4))(react@19.2.4)
     devDependencies:
+      '@journeyapps-labs/lib-reactor-builder':
+        specifier: workspace:*
+        version: link:../../libs/lib-reactor-builder
       '@types/react':
         specifier: 19.2.14
         version: 19.2.14
