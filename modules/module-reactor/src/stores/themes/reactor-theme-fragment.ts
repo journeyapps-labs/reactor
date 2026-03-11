@@ -223,6 +223,10 @@ export const theme = new ThemeFragment({
     table: {
       label: 'Table data',
       colors: {
+        border: 'Border color around the table',
+        groupBorder: 'Border color around grouped rows',
+        groupBackground: 'Background color around grouped rows',
+        even: 'Background color of even rows',
         odd: 'Background color of odd rows',
         pills: 'Background color of pills inside tables',
         text: 'Text color',

@@ -34,11 +34,16 @@ namespace S {
     color: ${(p) => p.theme.table.text};
     border-spacing: 0;
     width: 100%;
+    border: 1px solid ${(p) => p.theme.table.border};
+    border-collapse: separate;
   `;
 
   export const ColumnsRow = themed.tr`
     background: ${(p) => p.theme.table.columnBackground};
     color: ${(p) => p.theme.table.columnForeground};
+    > th {
+      border-bottom: 1px solid ${(p) => p.theme.table.border};
+    }
   `;
 
   export const NoWrap = themed.div`

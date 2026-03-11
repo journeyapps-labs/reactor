@@ -63,11 +63,9 @@ export const generateCommonWebpack = (dir: string): Configuration => {
       ignored: ['**/*.ts', '**/node_modules/**', '**/dist-module/**']
     },
     resolveLoader: {
-      modules: [path.join(__dirname, '../node_modules'), 'node_modules'],
-      symlinks: true
+      modules: [path.join(__dirname, '../node_modules'), 'node_modules']
     },
     resolve: {
-      symlinks: true,
       extensions: ['.json', '.js', '.jsx'],
       alias: {
         'process/browser': require.resolve('process/browser')

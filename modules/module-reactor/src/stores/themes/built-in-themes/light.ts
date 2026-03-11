@@ -164,11 +164,15 @@ theme.addThemeValues({
       description: '#646f7d'
     },
     table: {
+      border: '#c8d2de',
+      groupBorder: '#b9c6d5',
+      groupBackground: '#e7edf4',
       text: '#2f3a48',
-      odd: '#f3f6fa',
-      pills: '#e2e7ee',
-      pillsSpecial: '#cfd8e4',
-      columnBackground: 'rgba(46,58,72,0.18)',
+      even: '#fbfcfe',
+      odd: '#eef2f7',
+      pills: '#d7dee8',
+      pillsSpecial: '#bcc9d8',
+      columnBackground: '#dde4ec',
       columnForeground: '#2f3a48'
     },
     floating: {

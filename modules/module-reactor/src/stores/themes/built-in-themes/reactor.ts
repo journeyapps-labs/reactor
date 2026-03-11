@@ -161,11 +161,15 @@ export const DarkTheme = theme.addThemeValues({
       description: '#97a8bf'
     },
     table: {
+      border: '#2c3949',
+      groupBorder: '#314153',
+      groupBackground: '#0f1822',
       text: 'rgba(218,231,248,0.84)',
-      odd: '#1b2430',
-      pills: '#3f4d61',
+      even: '#1a222d',
+      odd: '#212b37',
+      pills: '#3d4a5b',
       pillsSpecial: '#006a94',
-      columnBackground: '#15202d',
+      columnBackground: '#18212c',
       columnForeground: '#ecf4ff'
     },
     floating: {

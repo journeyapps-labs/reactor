@@ -73,9 +73,15 @@ theme.addThemeValues({
     },
     table: {
       ...DarkTheme.table,
+      border: '#4e4e50',
+      groupBorder: '#626265',
+      groupBackground: '#232325',
+      even: '#2f2f31',
       odd: '#3A3A3C',
       pills: '#5d5d5d',
-      pillsSpecial: 'rgb(165 92 0)'
+      pillsSpecial: 'rgb(165 92 0)',
+      columnBackground: '#242426',
+      columnForeground: '#f2f2f4'
     },
     text: {
       primary: 'white',

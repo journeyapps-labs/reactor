@@ -11,7 +11,6 @@
       "ES2020",
       "dom"
     ],
-    "preserveSymlinks": true,
     "importHelpers": true,
     "module": "es6",
     "target": "es2017",

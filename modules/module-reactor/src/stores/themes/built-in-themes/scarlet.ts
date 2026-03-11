@@ -123,7 +123,11 @@ export const Scarlet = theme.addThemeValues({
       toggleHandleColor: '#fff'
     },
     table: {
+      border: '#2b3340',
+      groupBorder: '#364152',
+      groupBackground: '#0d1218',
       text: 'rgba(255,255,255,0.7)',
+      even: '#11161d',
       odd: '#1a1e24',
       pills: '#323841',
       pillsSpecial: '#54001f',

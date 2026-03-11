@@ -85,7 +85,11 @@ theme.addThemeValues({
     },
     table: {
       ...DarkTheme.table,
+      border: '#435863',
+      groupBorder: '#546d79',
+      groupBackground: '#253942',
       text: 'rgba(227,238,244,0.84)',
+      even: '#2e434d',
       odd: '#39505a',
       pills: '#58727d',
       pillsSpecial: '#ff7a1a',

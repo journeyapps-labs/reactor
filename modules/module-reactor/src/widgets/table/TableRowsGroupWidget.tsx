@@ -19,12 +19,19 @@ export interface TableRowsGroupWidgetState {
 }
 
 namespace S {
+  export const Row = styled.tr``;
+
+  export const Cell = styled.td`
+    padding: 0;
+  `;
+
   export const Container = styled.div`
     padding: 5px 10px;
     display: flex;
     cursor: pointer;
-    background: ${(p) => p.theme.table.columnBackground};
+    background: ${(p) => p.theme.table.groupBackground || p.theme.table.columnBackground};
     color: ${(p) => p.theme.table.columnForeground};
+    border-top: 1px solid ${(p) => p.theme.table.groupBorder};
   `;
 
   export const Icon = styled(FontAwesomeIcon)`
@@ -50,20 +57,20 @@ export class TableRowsGroupWidget extends React.Component<TableRowsGroupWidgetPr
   render() {
     return (
       <>
-        <tr
+        <S.Row
           onClick={() => {
             this.setState({
               collapsed: !this.state.collapsed
             });
           }}
         >
-          <td colSpan={this.props.cols.length}>
+          <S.Cell colSpan={this.props.cols.length}>
             <S.Container>
               <S.Content>{this.props.children}</S.Content>
               <S.Icon icon={this.state.collapsed ? 'angle-down' : 'angle-up'} />
             </S.Container>
-          </td>
-        </tr>
+          </S.Cell>
+        </S.Row>
         {this.state.collapsed ? null : <TableRowsWidget {...this.props} />}
       </>
     );

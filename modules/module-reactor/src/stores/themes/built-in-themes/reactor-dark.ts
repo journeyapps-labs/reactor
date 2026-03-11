@@ -101,11 +101,15 @@ theme.addThemeValues({
     },
     table: {
       ...DarkTheme.table,
+      border: '#2f2f2f',
+      groupBorder: '#3a3a3a',
+      groupBackground: '#232323',
       text: 'rgba(194,194,194,0.84)',
-      odd: '#131313',
-      pills: '#343434',
+      even: '#141414',
+      odd: '#1a1a1a',
+      pills: '#3b3b3b',
       pillsSpecial: '#0a6f99',
-      columnBackground: '#111111',
+      columnBackground: '#171717',
       columnForeground: '#d5d5d5'
     },
     combobox: {

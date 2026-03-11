@@ -4,7 +4,6 @@ import { TableRow, TableColumn } from './TableWidget';
 import * as _ from 'lodash';
 import { MouseEvent } from 'react';
 import { themed } from '../../stores/themes/reactor-theme-fragment';
-import { getTransparentColor } from '@journeyapps-labs/lib-reactor-utils';
 
 export interface TableRowsWidgetProps {
   rows: TableRow[];
@@ -14,7 +13,7 @@ export interface TableRowsWidgetProps {
 
 namespace S {
   export const Row = themed.tr`
-    background: ${(p) => getTransparentColor(p.theme.table.odd, 0.35)};
+    background: ${(p) => p.theme.table.even};
 
     &:nth-of-type(odd) {
       background: ${(p) => p.theme.table.odd};
