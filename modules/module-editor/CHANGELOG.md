@@ -1,5 +1,16 @@
 # @journeyapps-labs/reactor-mod-editor
 
+## 2.2.1
+
+### Patch Changes
+
+- 843f74d: Remove the custom symlink-preservation config from the TypeScript and webpack builds, and tighten exported typing for composite compilation.
+
+  Improve built-in editor theme selection and active-line colors, add a tables playground demo, and refine table theming/rendering with explicit row, group, border, and pill styling tokens across the built-in Reactor themes.
+
+- Updated dependencies [843f74d]
+  - @journeyapps-labs/reactor-mod@5.3.1
+
 ## 2.2.0
 
 ### Minor Changes
