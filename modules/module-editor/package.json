@@ -21,7 +21,6 @@
   "dependencies": {
     "@journeyapps-labs/common-ioc": "^1.0.1",
     "@journeyapps-labs/common-utils": "^1.0.1",
-    "@journeyapps-labs/lib-reactor-builder": "workspace:*",
     "@journeyapps-labs/lib-reactor-search": "workspace:*",
     "@journeyapps-labs/lib-reactor-utils": "workspace:*",
     "@journeyapps-labs/reactor-mod": "workspace:*",
@@ -42,6 +41,7 @@
     "react-monaco-editor": "^0.59.0"
   },
   "devDependencies": {
+    "@journeyapps-labs/lib-reactor-builder": "workspace:*",
     "@types/react": "19.2.14",
     "json5-loader": "^4.0.1"
   }
