@@ -2,7 +2,7 @@
   "name": "reactor",
   "main": "index.js",
   "private": true,
-  "packageManager": "pnpm@10.30.3",
+  "packageManager": "pnpm@10.32.1",
   "scripts": {
     "build": "pnpm build:builder && pnpm build:ts && pnpm build:modules",
     "build:builder": "pnpm run --filter '@journeyapps-labs/lib-reactor-builder' build",
@@ -24,16 +24,20 @@
   "pnpm": {
     "overrides": {
       "@journeyapps-labs/common-tree": "^3.0.0"
-    }
+    },
+    "onlyBuiltDependencies": [
+      "core-js-pure",
+      "esbuild"
+    ]
   },
   "devDependencies": {
-    "@changesets/cli": "^2.29.8",
+    "@changesets/cli": "^2.30.0",
     "concurrently": "9.2.1",
     "env-cmd": "^11.0.0",
     "glob": "^13.0.6",
-    "inquirer": "^13.3.0",
+    "inquirer": "^13.3.2",
     "js-yaml": "^4.1.1",
-    "npm-check-updates": "^19.5.0",
+    "npm-check-updates": "^19.6.5",
     "prettier": "3.8.1",
     "typescript": "^5.9.3"
   }

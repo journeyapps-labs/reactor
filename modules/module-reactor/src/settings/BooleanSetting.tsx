@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { AbstractInteractiveControlOptions } from './AbstractInteractiveSetting';
-import { autorun, makeObservable, observable } from 'mobx';
+import { observable } from 'mobx';
 import { inject } from '../inversify.config';
 import styled from '@emotion/styled';
 import { ThemeStore } from '../stores/themes/ThemeStore';

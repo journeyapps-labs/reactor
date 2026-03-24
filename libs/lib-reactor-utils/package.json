@@ -34,7 +34,7 @@
     "@types/jsonwebtoken": "^9.0.10",
     "@types/lodash": "^4.17.24",
     "@types/luxon": "^3.7.1",
-    "@types/node": "^25.3.1",
-    "vitest": "^4.0.18"
+    "@types/node": "^25.5.0",
+    "vitest": "^4.1.1"
   }
 }

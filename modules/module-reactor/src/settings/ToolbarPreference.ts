@@ -1,5 +1,5 @@
 import { AbstractSetting } from './AbstractSetting';
-import { action, makeObservable, observable } from 'mobx';
+import { action, observable } from 'mobx';
 import { EncodedEntity } from '../entities/components/encoder/EntityEncoderComponent';
 
 export enum ToolbarPosition {
