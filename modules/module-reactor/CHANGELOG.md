@@ -1,5 +1,18 @@
 # @journeyapps-labs/reactor-mod
 
+## 5.4.0
+
+### Minor Changes
+
+- e7adc06: Export missing settings
+
+### Patch Changes
+
+- e7adc06: Bump deps
+- Updated dependencies [e7adc06]
+  - @journeyapps-labs/lib-reactor-utils@2.0.10
+  - @journeyapps-labs/lib-reactor-search@1.0.11
+
 ## 5.3.1
 
 ### Patch Changes
