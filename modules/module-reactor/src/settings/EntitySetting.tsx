@@ -1,6 +1,5 @@
-import * as React from 'react';
 import { AbstractInteractiveControlOptions } from './AbstractInteractiveSetting';
-import { makeObservable, observable } from 'mobx';
+import { observable } from 'mobx';
 import { ioc } from '../inversify.config';
 import { AbstractUserSetting } from './AbstractUserSetting';
 import { EntityControl } from '../controls/EntityControl';

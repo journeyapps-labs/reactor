@@ -9,7 +9,7 @@
   },
   "dependencies": {
     "@journeyapps-labs/reactor-mod": "workspace:^",
-    "@faker-js/faker": "^10.3.0",
+    "@faker-js/faker": "^10.4.0",
     "lodash": "^4.17.23"
   },
   "devDependencies": {

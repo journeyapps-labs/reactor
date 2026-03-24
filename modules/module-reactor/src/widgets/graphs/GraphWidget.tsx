@@ -59,7 +59,7 @@ export const CustomTooltip: React.FC<TooltipContentProps<number, number | string
       <S.MetaKey>
         <SmartDateDisplayWidget date={dt} />
       </S.MetaKey>
-      <S.MetaValue>{props.props.formatValue(props.payload?.[0]?.value)}</S.MetaValue>
+      <S.MetaValue>{props.props.formatValue(props.payload?.[0]?.value as number)}</S.MetaValue>
     </S.Floating>
   );
 };

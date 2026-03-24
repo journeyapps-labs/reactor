@@ -26,7 +26,9 @@ export * from './definitions/common';
 
 export * from './settings/AbstractInteractiveSetting';
 export * from './settings/AbstractSetting';
+export * from './settings/AbstractUserSetting';
 export * from './settings/BooleanSetting';
+export * from './settings/SetSetting';
 export * from './settings/ToolbarPreference';
 export * from './settings/EntitySetting';
 export * from './settings/VisorMetadataControl';
