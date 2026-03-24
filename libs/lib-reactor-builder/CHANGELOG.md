@@ -1,5 +1,11 @@
 # @journeyapps-labs/lib-reactor-builder
 
+## 3.0.2
+
+### Patch Changes
+
+- e7adc06: Bump deps
+
 ## 3.0.1
 
 ### Patch Changes
