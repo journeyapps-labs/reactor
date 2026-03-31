@@ -170,6 +170,8 @@ theme.addThemeValues({
       text: '#2f3a48',
       even: '#fbfcfe',
       odd: '#eef2f7',
+      selectedEven: 'rgba(31,41,54,0.12)',
+      selectedOdd: 'rgba(31,41,54,0.18)',
       pills: '#d7dee8',
       pillsSpecial: '#bcc9d8',
       columnBackground: '#dde4ec',

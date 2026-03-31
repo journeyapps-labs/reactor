@@ -20,6 +20,7 @@ export interface TableRow {
   cells: { [key: string]: any };
   key: string;
   groupKey?: string;
+  selected?: boolean;
 }
 
 export interface TableWidgetProps<T extends TableRow = TableRow> {

@@ -149,6 +149,8 @@ export const Bunny = theme.addThemeValues({
       text: 'rgba(240,231,255,0.86)',
       even: '#1d1730',
       odd: '#261f3d',
+      selectedEven: 'rgba(184,137,255,0.18)',
+      selectedOdd: 'rgba(184,137,255,0.24)',
       pills: '#33284c',
       pillsSpecial: '#7f5bcc',
       columnBackground: 'rgba(24,18,40,0.62)',

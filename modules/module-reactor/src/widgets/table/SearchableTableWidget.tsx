@@ -14,6 +14,8 @@ export interface SearchableTableWidgetProps<T extends TableRow = TableRow> exten
   columns: SearchableTableColumn[];
   emptyLabel?: string;
   onSearch?: (searchValue: string | null) => any;
+  tableFactory?: React.ComponentType<any>;
+  tableFactoryProps?: Record<string, any>;
 }
 
 export interface SearchableTableWidgetState {
@@ -60,6 +62,7 @@ export class SearchableTableWidget<T extends TableRow = TableRow> extends React.
 
   render() {
     const rows = this.getRows();
+    const TableFactory = this.props.tableFactory || TableWidget;
 
     return (
       <S.Container>
@@ -78,7 +81,13 @@ export class SearchableTableWidget<T extends TableRow = TableRow> extends React.
             }}
           />
         </S.Controls>
-        <TableWidget {...this.props} rows={rows} />
+        <TableFactory
+          {...this.props}
+          {...this.props.tableFactoryProps}
+          tableFactory={undefined}
+          tableFactoryProps={undefined}
+          rows={rows}
+        />
         {rows.length === 0 ? this.getEmptyMessage() : null}
       </S.Container>
     );

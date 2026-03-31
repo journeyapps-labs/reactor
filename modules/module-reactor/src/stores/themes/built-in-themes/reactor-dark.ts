@@ -107,6 +107,8 @@ theme.addThemeValues({
       text: 'rgba(194,194,194,0.84)',
       even: '#141414',
       odd: '#1a1a1a',
+      selectedEven: 'rgba(51,184,222,0.18)',
+      selectedOdd: 'rgba(51,184,222,0.24)',
       pills: '#3b3b3b',
       pillsSpecial: '#0a6f99',
       columnBackground: '#171717',

@@ -80,6 +80,8 @@ theme.addThemeValues({
       groupBackground: '#161719',
       even: '#202123',
       odd: '#29292a',
+      selectedEven: 'rgba(255,143,0,0.18)',
+      selectedOdd: 'rgba(255,143,0,0.24)',
       pills: '#4b4b4d',
       pillsSpecial: 'linear-gradient(155deg, #ff8f00, #ff1744)',
       columnBackground: '#1b1c1e',
