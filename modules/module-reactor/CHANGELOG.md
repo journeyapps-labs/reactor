@@ -1,5 +1,11 @@
 # @journeyapps-labs/reactor-mod
 
+## 5.5.0
+
+### Minor Changes
+
+- dfaf01d: Add multi-select table support with controlled selected row keys, searchable multi-select tables, and theme-based selected row styling.
+
 ## 5.4.0
 
 ### Minor Changes
