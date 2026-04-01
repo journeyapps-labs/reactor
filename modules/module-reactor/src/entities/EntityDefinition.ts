@@ -50,6 +50,10 @@ export interface EntityPickOptions<T extends any = any> {
   autoSelectedIsolatedEntity?: boolean;
 }
 
+export type ShowContextMenuForEntityOptions = Pick<SimpleComboBoxDirectiveOptions, 'hideSearch'> & {
+  additionalItems?: ComboBoxItem[];
+};
+
 export abstract class EntityDefinition<T extends any = any> {
   system: System;
 
@@ -184,11 +188,7 @@ export abstract class EntityDefinition<T extends any = any> {
     };
   }
 
-  showContextMenuForEntity(
-    entity: T,
-    event: MousePosition,
-    options: Pick<SimpleComboBoxDirectiveOptions, 'hideSearch'> = {}
-  ) {
+  showContextMenuForEntity(entity: T, event: MousePosition, options: ShowContextMenuForEntityOptions = {}) {
     const docsItems: ComboBoxItem[] = [];
 
     // docs
@@ -272,7 +272,7 @@ export abstract class EntityDefinition<T extends any = any> {
       new SimpleComboBoxDirective({
         title: described.simpleName,
         subtitle: this.label,
-        items,
+        items: [...items, ...(options?.additionalItems || [])],
         event,
         ...options
       })
