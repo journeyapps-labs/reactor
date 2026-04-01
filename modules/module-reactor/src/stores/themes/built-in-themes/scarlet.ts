@@ -129,6 +129,8 @@ export const Scarlet = theme.addThemeValues({
       text: 'rgba(255,255,255,0.7)',
       even: '#11161d',
       odd: '#1a1e24',
+      selectedEven: 'rgba(255,74,106,0.18)',
+      selectedOdd: 'rgba(255,74,106,0.24)',
       pills: '#323841',
       pillsSpecial: '#54001f',
       columnBackground: 'rgba(0, 0, 0, 0.3)',

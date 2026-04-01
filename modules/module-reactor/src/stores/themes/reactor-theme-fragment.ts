@@ -228,6 +228,8 @@ export const theme = new ThemeFragment({
         groupBackground: 'Background color around grouped rows',
         even: 'Background color of even rows',
         odd: 'Background color of odd rows',
+        selectedEven: 'Background color of selected even rows',
+        selectedOdd: 'Background color of selected odd rows',
         pills: 'Background color of pills inside tables',
         text: 'Text color',
         pillsSpecial: 'Accent color for pills',

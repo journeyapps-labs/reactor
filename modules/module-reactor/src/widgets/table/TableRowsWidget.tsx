@@ -5,18 +5,18 @@ import * as _ from 'lodash';
 import { MouseEvent } from 'react';
 import { themed } from '../../stores/themes/reactor-theme-fragment';
 
-export interface TableRowsWidgetProps {
-  rows: TableRow[];
+export interface TableRowsWidgetProps<T extends TableRow = TableRow> {
+  rows: T[];
   cols: TableColumn[];
-  onContextMenu: (event: MouseEvent, row: TableRow) => any;
+  onContextMenu: (event: MouseEvent, row: T) => any;
 }
 
 namespace S {
-  export const Row = themed.tr`
-    background: ${(p) => p.theme.table.even};
+  export const Row = themed.tr<{ selected: boolean }>`
+    background: ${(p) => (p.selected ? p.theme.table.selectedEven : p.theme.table.even)};
 
     &:nth-of-type(odd) {
-      background: ${(p) => p.theme.table.odd};
+      background: ${(p) => (p.selected ? p.theme.table.selectedOdd : p.theme.table.odd)};
     }
   `;
 
@@ -28,8 +28,8 @@ namespace S {
   export const Max = styled.div``;
 }
 
-export class TableRowsWidget extends React.Component<TableRowsWidgetProps> {
-  getCell(col: TableColumn, row: TableRow) {
+export class TableRowsWidget<T extends TableRow = TableRow> extends React.Component<TableRowsWidgetProps<T>> {
+  getCell(col: TableColumn, row: T) {
     const val = col.accessor(row.cells[col.key], row);
     if (React.isValidElement(val)) {
       return val;
@@ -57,6 +57,7 @@ export class TableRowsWidget extends React.Component<TableRowsWidgetProps> {
                   this.props.onContextMenu(event, row);
                 }
               }}
+              selected={!!row.selected}
               key={row.key}
             >
               {_.map(this.props.cols, (col) => {

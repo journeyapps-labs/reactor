@@ -6,10 +6,10 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { styled } from '../../stores/themes/reactor-theme-fragment';
 import { getTransparentColor } from '@journeyapps-labs/lib-reactor-utils';
 
-export interface TableRowsGroupWidgetProps {
-  rows: TableRow[];
+export interface TableRowsGroupWidgetProps<T extends TableRow = TableRow> {
+  rows: T[];
   cols: TableColumn[];
-  onContextMenu: (event: MouseEvent, row: TableRow) => any;
+  onContextMenu: (event: MouseEvent, row: T) => any;
   defaultCollapsed?: boolean;
   children?: any;
 }
@@ -46,8 +46,11 @@ namespace S {
   `;
 }
 
-export class TableRowsGroupWidget extends React.Component<TableRowsGroupWidgetProps, TableRowsGroupWidgetState> {
-  constructor(props: TableRowsGroupWidgetProps) {
+export class TableRowsGroupWidget<T extends TableRow = TableRow> extends React.Component<
+  TableRowsGroupWidgetProps<T>,
+  TableRowsGroupWidgetState
+> {
+  constructor(props: TableRowsGroupWidgetProps<T>) {
     super(props);
     this.state = {
       collapsed: !!props.defaultCollapsed

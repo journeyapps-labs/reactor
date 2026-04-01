@@ -50,6 +50,8 @@ export * from './table/SearchableTableWidget';
 export * from './table/TableWidget';
 export * from './table/TableButtonWidget';
 export * from './table/TablePillWidget';
+export * from './table/MultiSelectTableWidget';
+export * from './table/MultiSelectSearchableTableWidget';
 
 export * from './panel/panel/title/PanelTitleToolbarButtonWidget';
 export * from './panel/panel/title/PanelTitleWidget';

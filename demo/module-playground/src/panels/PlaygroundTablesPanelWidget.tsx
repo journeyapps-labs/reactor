@@ -1,11 +1,15 @@
 import * as React from 'react';
+import { useState } from 'react';
 import { observer } from 'mobx-react';
 import {
+  CardWidget,
+  MultiSelectChangeEvent,
+  SearchableMultiSelectTableWidget,
   PillWidget,
   ReactorPanelModel,
   SearchableTableWidget,
-  TablePillWidget,
   TableRow,
+  TablePillWidget,
   styled
 } from '@journeyapps-labs/reactor-mod';
 
@@ -39,6 +43,7 @@ const TABLE_ROWS: DemoTableRow[] = [
   {
     key: 'core-builds',
     groupKey: 'Core services',
+    selected: true,
     cells: {
       [TableColumns.NAME]: 'Build queue',
       [TableColumns.STATUS]: { label: 'Stable', color: '#7fd29a', meta: '12 jobs' },
@@ -171,57 +176,103 @@ const TABLE_ROWS: DemoTableRow[] = [
 ];
 
 export const PlaygroundTablesPanelWidget: React.FC<PlaygroundTablesPanelWidgetProps> = observer(() => {
+  const [selectedRows, setSelectedRows] = useState<string[]>(['core-builds', 'ux-editor', 'ops-cache']);
+
+  const columns = [
+    {
+      key: TableColumns.NAME,
+      display: 'Name',
+      accessorSearch: (cell: string) => cell
+    },
+    {
+      key: TableColumns.STATUS,
+      display: 'Status',
+      noWrap: true,
+      accessor: (cell: DemoTableRow['cells'][TableColumns.STATUS]) => (
+        <PillWidget label={cell.label} color={cell.color} meta={cell.meta ? { label: cell.meta } : null} />
+      ),
+      accessorSearch: (cell: DemoTableRow['cells'][TableColumns.STATUS]) => cell.label
+    },
+    {
+      key: TableColumns.OWNER,
+      display: 'Owner',
+      accessorSearch: (cell: string) => cell
+    },
+    {
+      key: TableColumns.TAGS,
+      display: 'Tags',
+      accessor: (cell: string[]) => (
+        <S.Tags>
+          {cell.map((tag, index) => (
+            <TablePillWidget key={`${tag}-${index}`} special={index === 0}>
+              {tag}
+            </TablePillWidget>
+          ))}
+        </S.Tags>
+      ),
+      accessorSearch: (cell: string[]) => cell.join(' ')
+    },
+    {
+      key: TableColumns.LATENCY,
+      display: 'Latency',
+      noWrap: true,
+      shrink: true,
+      accessorSearch: (cell: string) => cell
+    }
+  ];
+
   return (
     <S.Container>
-      <SearchableTableWidget<DemoTableRow>
-        columns={[
+      <CardWidget
+        title="Searchable Table"
+        subHeading="Grouped rows with searchable columns and theme-driven selection styling"
+        sections={[
           {
-            key: TableColumns.NAME,
-            display: 'Name',
-            accessorSearch: (cell) => cell
-          },
-          {
-            key: TableColumns.STATUS,
-            display: 'Status',
-            noWrap: true,
-            accessor: (cell: DemoTableRow['cells'][TableColumns.STATUS]) => (
-              <PillWidget label={cell.label} color={cell.color} meta={cell.meta ? { label: cell.meta } : null} />
-            ),
-            accessorSearch: (cell) => cell.label
-          },
-          {
-            key: TableColumns.OWNER,
-            display: 'Owner',
-            accessorSearch: (cell) => cell
-          },
-          {
-            key: TableColumns.TAGS,
-            display: 'Tags',
-            accessor: (cell: string[]) => (
-              <S.Tags>
-                {cell.map((tag, index) => (
-                  <TablePillWidget key={`${tag}-${index}`} special={index === 0}>
-                    {tag}
-                  </TablePillWidget>
-                ))}
-              </S.Tags>
-            ),
-            accessorSearch: (cell) => cell.join(' ')
-          },
-          {
-            key: TableColumns.LATENCY,
-            display: 'Latency',
-            noWrap: true,
-            shrink: true,
-            accessorSearch: (cell) => cell
+            key: 'searchable-table',
+            content: () => (
+              <SearchableTableWidget<DemoTableRow>
+                columns={columns}
+                rows={TABLE_ROWS}
+                renderGroup={(event) => ({
+                  defaultCollapsed: false,
+                  children: `${event.groupKey} (${event.rows.length})`
+                })}
+                emptyLabel="No demo rows match the current search"
+              />
+            )
           }
         ]}
-        rows={TABLE_ROWS}
-        renderGroup={(event) => ({
-          defaultCollapsed: false,
-          children: `${event.groupKey} (${event.rows.length})`
-        })}
-        emptyLabel="No demo rows match the current search"
+      />
+      <CardWidget
+        title="Multi-Select Table"
+        subHeading="Selection is controlled via selected row keys and applied through row.selected"
+        sections={[
+          {
+            key: 'multi-select-table',
+            content: () => (
+              <S.MultiSelectContent>
+                <SearchableMultiSelectTableWidget<DemoTableRow>
+                  columns={columns}
+                  rows={TABLE_ROWS}
+                  selectedRowKeys={selectedRows}
+                  onSelectionChange={(event: MultiSelectChangeEvent<DemoTableRow>) => {
+                    setSelectedRows(event.rowKeys);
+                  }}
+                  renderGroup={(event) => ({
+                    defaultCollapsed: false,
+                    children: `${event.groupKey} (${event.rows.length})`
+                  })}
+                  emptyLabel="No demo rows match the current search"
+                />
+                <S.SelectedPills>
+                  {selectedRows.map((rowKey) => (
+                    <TablePillWidget key={rowKey}>{rowKey}</TablePillWidget>
+                  ))}
+                </S.SelectedPills>
+              </S.MultiSelectContent>
+            )
+          }
+        ]}
       />
     </S.Container>
   );
@@ -241,5 +292,17 @@ namespace S {
     display: flex;
     gap: 6px;
     flex-wrap: wrap;
+  `;
+
+  export const MultiSelectContent = styled.div`
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  `;
+
+  export const SelectedPills = styled.div`
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
   `;
 }

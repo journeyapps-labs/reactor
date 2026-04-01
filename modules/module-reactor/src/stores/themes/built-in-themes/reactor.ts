@@ -167,6 +167,8 @@ export const DarkTheme = theme.addThemeValues({
       text: 'rgba(218,231,248,0.84)',
       even: '#1a222d',
       odd: '#212b37',
+      selectedEven: 'rgba(0,192,255,0.18)',
+      selectedOdd: 'rgba(0,192,255,0.24)',
       pills: '#3d4a5b',
       pillsSpecial: '#006a94',
       columnBackground: '#18212c',
