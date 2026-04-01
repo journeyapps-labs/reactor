@@ -1,4 +1,5 @@
 import * as React from 'react';
+import { useState } from 'react';
 import { observer } from 'mobx-react';
 import {
   CardWidget,
@@ -175,7 +176,7 @@ const TABLE_ROWS: DemoTableRow[] = [
 ];
 
 export const PlaygroundTablesPanelWidget: React.FC<PlaygroundTablesPanelWidgetProps> = observer(() => {
-  const [selectedRows, setSelectedRows] = React.useState<string[]>(['core-builds', 'ux-editor', 'ops-cache']);
+  const [selectedRows, setSelectedRows] = useState<string[]>(['core-builds', 'ux-editor', 'ops-cache']);
 
   const columns = [
     {
