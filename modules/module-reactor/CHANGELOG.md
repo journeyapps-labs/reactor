@@ -1,5 +1,11 @@
 # @journeyapps-labs/reactor-mod
 
+## 5.6.0
+
+### Minor Changes
+
+- 5088953: Allow adding additional items to `showContextMenuForEntity`
+
 ## 5.5.0
 
 ### Minor Changes
