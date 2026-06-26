@@ -26,6 +26,7 @@ export interface TabSelectionWidgetProps {
   selected: string;
   tabSelected: (key: string) => any;
   tabRightClick?: (event: MouseEvent, tab: TabDirective) => any;
+  selectedBoundsUpdated?: (rect: { left: number; width: number }) => any;
   className?;
   direction?: TabDirection;
   badgeProvider?: (key: string) => TabBadgeDirective;

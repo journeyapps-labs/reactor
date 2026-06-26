@@ -30,7 +30,7 @@ export class ExportWorkspaceAction extends EntityAction<IDEWorkspace> {
       generateUI: (event2) => {
         return (
           <DownloadWorkspaceIcon
-            url={ioc.get(WorkspaceStore).getExportedWorkspaceURL(event.targetEntity.name)}
+            url={ioc.get(WorkspaceStore).getExportedWorkspaceURL(event.targetEntity.key)}
             filename={ExportWorkspaceAction.FILENAME}
           />
         );

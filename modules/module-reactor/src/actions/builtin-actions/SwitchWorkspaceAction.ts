@@ -26,6 +26,6 @@ export class SwitchWorkspaceAction extends EntityAction<IDEWorkspace> {
   }
 
   protected async fireEvent(event: EntityActionEvent<IDEWorkspace>): Promise<any> {
-    await this.workspaceStore.setActiveWorkspace(event.targetEntity.name);
+    await this.workspaceStore.setActiveWorkspace(event.targetEntity.key);
   }
 }

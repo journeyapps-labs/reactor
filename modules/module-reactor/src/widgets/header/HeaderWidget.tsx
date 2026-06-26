@@ -16,6 +16,7 @@ import { styled, themed } from '../../stores/themes/reactor-theme-fragment';
 import { ToolbarPreference } from '../../settings/ToolbarPreference';
 import Avatar from 'react-avatar';
 import { TooltipPosition } from '../info/tooltips';
+import { HeaderWorkspaceSubMenuWidget } from './HeaderWorkspaceSubMenuWidget';
 
 export interface HeaderWidgetProps {
   primaryHeading: Btn;
@@ -46,13 +47,20 @@ const width = 40;
 const widthAvatar = 30;
 
 namespace S {
+  export const HeaderContainer = styled.div`
+    display: flex;
+    flex-direction: column;
+    flex-grow: 0;
+    flex-shrink: 0;
+    margin-bottom: 2px;
+  `;
+
   export const Header = themed.div<{ shadow: boolean }>`
     display: flex;
     min-height: ${width}px;
     flex-grow: 0;
     flex-shrink: 0;
     background: ${(p) => p.theme.header.background};
-    margin-bottom: 2px;
     user-select: none;
     box-shadow: ${(p) => (p.shadow ? '0 0 10px rgba(0,0,0,0.2)' : 'none')};
     z-index: ${(p) => (p.shadow ? 1 : 'inherit')};
@@ -182,12 +190,22 @@ namespace S {
 interface HeaderWidgetState {
   logoClickStarted: boolean;
   primaryHeadingClickStarted: boolean;
+  workspaceMenuOffsetLeft: number;
 }
 
 @observer
 export class HeaderWidget extends React.Component<HeaderWidgetProps, HeaderWidgetState> {
   @inject(CMDPalletStore)
   accessor commandPalletStore: CMDPalletStore;
+
+  constructor(props: HeaderWidgetProps) {
+    super(props);
+    this.state = {
+      logoClickStarted: false,
+      primaryHeadingClickStarted: false,
+      workspaceMenuOffsetLeft: 0
+    };
+  }
 
   getLeftButtons() {
     if (!this.props.leftButtons) {
@@ -209,92 +227,101 @@ export class HeaderWidget extends React.Component<HeaderWidgetProps, HeaderWidge
     return this.props.rightContent;
   }
 
+  updateWorkspaceMenuOffset = (rect: { left: number; width: number }) => {
+    const containerBounds = this.props.forwardRef.current?.getBoundingClientRect();
+    const offsetLeft = rect.left - (containerBounds?.left || 0);
+    if (Math.abs(offsetLeft - this.state.workspaceMenuOffsetLeft) > 1) {
+      this.setState({
+        workspaceMenuOffsetLeft: offsetLeft
+      });
+    }
+  };
+
   render() {
     return (
-      <S.Header
-        className={this.props.className}
-        shadow={!AdvancedWorkspacePreference.enabled()}
-        ref={this.props.forwardRef}
-      >
-        <S.Logo
-          onMouseDown={() => {
-            this.setState({ logoClickStarted: true });
-          }}
-          onMouseUp={(event: React.MouseEvent) => {
-            if (this.state.logoClickStarted) {
-              event.persist();
-              this.props.logoClicked(event);
-            }
-            this.setState({ logoClickStarted: false });
-          }}
-          onMouseLeave={() => {
-            this.setState({ logoClickStarted: false });
-          }}
-        >
-          <S.LogoImg src={this.props.additionalLogo} />
-        </S.Logo>
-        <S.Meta>
-          <S.MetaApp
+      <S.HeaderContainer className={this.props.className} ref={this.props.forwardRef}>
+        <S.Header shadow={!AdvancedWorkspacePreference.enabled()}>
+          <S.Logo
             onMouseDown={() => {
-              this.setState({ primaryHeadingClickStarted: true });
+              this.setState({ logoClickStarted: true });
             }}
-            onMouseUp={(event) => {
-              if (this.state.primaryHeadingClickStarted) {
+            onMouseUp={(event: React.MouseEvent) => {
+              if (this.state.logoClickStarted) {
                 event.persist();
-                this.props.primaryHeading?.action(event);
+                this.props.logoClicked(event);
               }
-              this.setState({ primaryHeadingClickStarted: false });
+              this.setState({ logoClickStarted: false });
             }}
             onMouseLeave={() => {
-              this.setState({ primaryHeadingClickStarted: false });
+              this.setState({ logoClickStarted: false });
             }}
           >
-            <S.MetaLabel>{this.props.primaryHeading?.label || '...'}</S.MetaLabel>
-            {this.props.primaryHeading?.action ? <FontAwesomeIcon className="icon" icon="angle-down" /> : null}
-          </S.MetaApp>
-          <S.MetaOrg
+            <S.LogoImg src={this.props.additionalLogo} />
+          </S.Logo>
+          <S.Meta>
+            <S.MetaApp
+              onMouseDown={() => {
+                this.setState({ primaryHeadingClickStarted: true });
+              }}
+              onMouseUp={(event) => {
+                if (this.state.primaryHeadingClickStarted) {
+                  event.persist();
+                  this.props.primaryHeading?.action(event);
+                }
+                this.setState({ primaryHeadingClickStarted: false });
+              }}
+              onMouseLeave={() => {
+                this.setState({ primaryHeadingClickStarted: false });
+              }}
+            >
+              <S.MetaLabel>{this.props.primaryHeading?.label || '...'}</S.MetaLabel>
+              {this.props.primaryHeading?.action ? <FontAwesomeIcon className="icon" icon="angle-down" /> : null}
+            </S.MetaApp>
+            <S.MetaOrg
+              onClick={(event) => {
+                event.persist();
+                this.props.secondaryHeading?.action(event);
+              }}
+            >
+              <S.MetaLabel>{this.props.secondaryHeading?.label || '...'}</S.MetaLabel>
+              {this.props.secondaryHeading?.action ? <FontAwesomeIcon className="icon" icon="angle-down" /> : null}
+            </S.MetaOrg>
+          </S.Meta>
+          <HeaderWorkspaceMenuWidget selectedBoundsUpdated={this.updateWorkspaceMenuOffset} />
+          {this.getLeftButtons()}
+
+          {AdvancedWorkspacePreference.enabled() ? (
+            <S.HeaderButtonsZone vertical={false} size={40} preference={this.props.toolbar} />
+          ) : (
+            <S.Spacer />
+          )}
+
+          <MetaButton
+            btn={{
+              icon: 'search',
+              tooltipPos: TooltipPosition.BOTTOM,
+              tooltip: 'Search',
+              action: () => {
+                this.commandPalletStore.showPallet(true);
+              }
+            }}
+          />
+
+          {_.map(this.props.metaButtons, (btn) => {
+            return <MetaButton key={btn.tooltip || btn.label} btn={btn} />;
+          })}
+          {this.getRightContent()}
+          <S.User
             onClick={(event) => {
               event.persist();
-              this.props.secondaryHeading?.action(event);
+              this.props.accountButton.action(event);
             }}
           >
-            <S.MetaLabel>{this.props.secondaryHeading?.label || '...'}</S.MetaLabel>
-            {this.props.secondaryHeading?.action ? <FontAwesomeIcon className="icon" icon="angle-down" /> : null}
-          </S.MetaOrg>
-        </S.Meta>
-        <HeaderWorkspaceMenuWidget />
-        {this.getLeftButtons()}
-
-        {AdvancedWorkspacePreference.enabled() ? (
-          <S.HeaderButtonsZone vertical={false} size={40} preference={this.props.toolbar} />
-        ) : (
-          <S.Spacer />
-        )}
-
-        <MetaButton
-          btn={{
-            icon: 'search',
-            tooltipPos: TooltipPosition.BOTTOM,
-            tooltip: 'Search',
-            action: () => {
-              this.commandPalletStore.showPallet(true);
-            }
-          }}
-        />
-
-        {_.map(this.props.metaButtons, (btn) => {
-          return <MetaButton key={btn.tooltip || btn.label} btn={btn} />;
-        })}
-        {this.getRightContent()}
-        <S.User
-          onClick={(event) => {
-            event.persist();
-            this.props.accountButton.action(event);
-          }}
-        >
-          <S.AvatarCircle email={this.props.email || ''} name={this.props.name} maxInitials={2} />
-        </S.User>
-      </S.Header>
+            <S.AvatarCircle email={this.props.email || ''} name={this.props.name} maxInitials={2} />
+          </S.User>
+        </S.Header>
+        <HeaderWorkspaceSubMenuWidget offsetLeft={this.state.workspaceMenuOffsetLeft} />
+      </S.HeaderContainer>
     );
   }
 }

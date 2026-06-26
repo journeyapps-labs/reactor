@@ -36,6 +36,14 @@ theme.addThemeValues({
       backgroundLogoHover: 'rgba(255,255,255,0.15)',
       background: 'rgb(25,25,26)'
     },
+    workspaceSubMenu: {
+      background: 'rgb(30,30,32)',
+      foreground: 'rgba(220,220,222,0.7)',
+      backgroundActive: 'linear-gradient(155deg, rgba(255, 143, 0, 0.18), rgba(255, 23, 68,0.18))',
+      foregroundActive: '#ffffff',
+      backgroundHover: 'rgba(255,255,255,0.08)',
+      foregroundHover: '#ffffff'
+    },
     guide: {
       accent: '#ff8f00',
       tooltipBackground: 'hsl(41deg 35% 22%)',

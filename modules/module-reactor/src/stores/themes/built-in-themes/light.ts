@@ -101,6 +101,14 @@ theme.addThemeValues({
       backgroundLogoHover: '#c8d3e3',
       foreground: '#1f2936'
     },
+    workspaceSubMenu: {
+      background: '#dfe5ee',
+      foreground: 'rgba(38,50,67,0.68)',
+      backgroundActive: '#eef4fb',
+      foregroundActive: '#111926',
+      backgroundHover: '#edf2f8',
+      foregroundHover: '#182333'
+    },
     changelog: {
       codeForeground: 'rgb(132,221,255)',
       codeBackground: 'rgb(4,33,40)'

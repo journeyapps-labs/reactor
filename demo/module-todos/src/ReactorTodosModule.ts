@@ -5,6 +5,7 @@ import {
   System,
   UXStore,
   VisorStore,
+  WorkspaceModel,
   WorkspaceStore
 } from '@journeyapps-labs/reactor-mod';
 import { TodoStore } from './stores/TodoStore';
@@ -64,18 +65,18 @@ export class ReactorTodosModule extends AbstractReactorModule {
 
     workspaceStore.registerWorkspaceGenerator({
       generateAdvancedWorkspace: async () => {
-        return {
+        return new WorkspaceModel({
           name: 'todos',
           priority: 1,
           model: generateTodosWorkspace()
-        };
+        });
       },
       generateSimpleWorkspace: async () => {
-        return {
+        return new WorkspaceModel({
           name: 'todos',
           priority: 1,
           model: generateTodosWorkspace()
-        };
+        });
       }
     });
   }

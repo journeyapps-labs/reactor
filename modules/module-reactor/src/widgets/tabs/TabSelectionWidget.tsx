@@ -59,6 +59,7 @@ export interface TabWidgetWrapperProps {
   tabSelected: () => any;
   tabRightClick: (event: MouseEvent) => any;
   sizeUpdated: (rect: { left: number; width: number }) => any;
+  selectedBoundsUpdated?: (rect: { left: number; width: number }) => any;
 }
 
 export const TabWidgetWrapper: React.FC<TabWidgetWrapperProps> = ({
@@ -67,18 +68,26 @@ export const TabWidgetWrapper: React.FC<TabWidgetWrapperProps> = ({
   selected,
   tabSelected,
   tabRightClick,
-  sizeUpdated
+  sizeUpdated,
+  selectedBoundsUpdated
 }) => {
   const update = useCallback(() => {
     if (!forwardRef.current) {
       return;
     }
     const bounds = forwardRef.current.getBoundingClientRect();
-    sizeUpdated({
+    const rect = {
       width: bounds.width,
       left: (forwardRef.current.offsetParent as HTMLDivElement).offsetLeft
-    });
-  }, [forwardRef]);
+    };
+    sizeUpdated(rect);
+    if (selected) {
+      selectedBoundsUpdated?.({
+        width: bounds.width,
+        left: bounds.left
+      });
+    }
+  }, [forwardRef, selected, selectedBoundsUpdated]);
 
   useEffect(() => {
     const observer1 = new ResizeObserver(() => {
@@ -91,6 +100,10 @@ export const TabWidgetWrapper: React.FC<TabWidgetWrapperProps> = ({
       observer1.disconnect();
     };
   }, []);
+
+  useEffect(() => {
+    update();
+  }, [selected, update]);
 
   return (
     <TabWidget
@@ -128,6 +141,7 @@ export const TabSelectionWidget: React.FC<TabSelectionWidgetProps & { animate?: 
             tabRightClick={(event) => {
               props.tabRightClick?.(event, tab);
             }}
+            selectedBoundsUpdated={props.selectedBoundsUpdated}
             sizeUpdated={(rect) => {
               sizes.current = {
                 ...sizes.current,

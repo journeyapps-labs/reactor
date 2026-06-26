@@ -1,9 +1,10 @@
 import * as _ from 'lodash';
+import { v4 } from 'uuid';
 import {
   Alignment,
   overConstrainRecomputeBehavior,
   WorkspaceCollectionModel,
-  WorkspaceModel,
+  WorkspaceModel as StormWorkspaceModel,
   WorkspaceNodeModel
 } from '@projectstorm/react-workspaces-core';
 import { action, autorun, IReactionDisposer, observable } from 'mobx';
@@ -27,33 +28,23 @@ import { SimpleLayoutEngine } from './layout-engines/SimpleLayoutEngine';
 import { ReactorTrayModel } from './react-workspaces/ReactorTrayFactory';
 import { WorkspaceTrayMode } from '@projectstorm/react-workspaces-model-tray';
 import { LocalStorageSerializer } from '../serializers/LocalStorageSerializer';
+import { WorkspaceModel } from './models/WorkspaceModel';
+import { WorkspaceGroup } from './models/WorkspaceGroup';
+import {
+  ExportedWorkspace,
+  isSerializedWorkspaceGroup,
+  SerializedWorkspaceEntry,
+  WorkspacePrefsSerialized
+} from './models/serialization';
 
-export interface WorkspacePrefsSerialized {
-  type: 'workspaces';
-  version?: 1 | 2;
-  models: {
-    name: string;
-    model: any;
-  }[];
-  current: string;
-}
-
-export interface ExportedWorkspace extends WorkspacePrefsSerialized {
-  replace: boolean;
-}
-
-export interface IDEWorkspace {
-  name: string;
-  model: ReactorRootWorkspaceModel;
-}
-
-export interface GeneratedIDEWorkspace extends IDEWorkspace {
-  priority?: number;
-}
+export type IDEWorkspace = WorkspaceModel;
+export type WorkspaceEntry = WorkspaceModel | WorkspaceGroup;
+export type GeneratedIDEWorkspace = WorkspaceModel;
+export type GeneratedWorkspaceEntry = WorkspaceEntry;
 
 export interface WorkspaceStoreListener extends AbstractStoreListener {
   workspaceActivated: (workspace: IDEWorkspace) => any;
-  workspaceGenerated: (model: GeneratedIDEWorkspace) => any;
+  workspaceGenerated: (model: GeneratedWorkspaceEntry) => any;
   reset?: () => any;
 }
 
@@ -63,16 +54,19 @@ interface GetPanelFactoryOptions {
 }
 
 export interface WorkspaceGenerator {
-  generateAdvancedWorkspace: () => Promise<GeneratedIDEWorkspace>;
-  generateSimpleWorkspace: () => Promise<GeneratedIDEWorkspace>;
+  generateAdvancedWorkspace: () => Promise<GeneratedWorkspaceEntry>;
+  generateSimpleWorkspace: () => Promise<GeneratedWorkspaceEntry>;
 }
 
 export class WorkspaceStore extends AbstractStore<WorkspacePrefsSerialized, WorkspaceStoreListener> {
   @observable
-  accessor workspaces: IDEWorkspace[];
+  accessor workspaces: WorkspaceEntry[];
 
   @observable
   accessor currentModel: string;
+
+  @observable
+  accessor currentTopWorkspace: string;
 
   @observable
   accessor fullscreenModel: WorkspaceNodeModel;
@@ -108,6 +102,7 @@ export class WorkspaceStore extends AbstractStore<WorkspacePrefsSerialized, Work
       }
     });
     this.currentModel = null;
+    this.currentTopWorkspace = null;
     this.activatedModel = null;
     this.fullscreenModel = null;
     this.workspaceGenerators = new Set();
@@ -144,7 +139,7 @@ export class WorkspaceStore extends AbstractStore<WorkspacePrefsSerialized, Work
     this.save();
   }, 1000);
 
-  generateFullscreenButton(model: WorkspaceModel): Btn {
+  generateFullscreenButton(model: StormWorkspaceModel): Btn {
     const isFullscreen = this.fullscreenModel;
     return {
       icon: isFullscreen ? 'compress' : 'expand',
@@ -155,7 +150,7 @@ export class WorkspaceStore extends AbstractStore<WorkspacePrefsSerialized, Work
     };
   }
 
-  setFullscreenModel(model: WorkspaceModel | null) {
+  setFullscreenModel(model: StormWorkspaceModel | null) {
     if (model !== null) {
       const root = this.generateRootModel();
       const cloned = this.engine.getFactory(model.type).generateModel();
@@ -168,25 +163,57 @@ export class WorkspaceStore extends AbstractStore<WorkspacePrefsSerialized, Work
     this.engine.fireRepaintListeners();
   }
 
-  protected activateWorkspace(name: string) {
-    // safety check
-    if (!this.workspaces.find((w) => w.name === name)) {
-      throw new Error(`Failed to activate workspace ${name}`);
+  getAllWorkspaces(): IDEWorkspace[] {
+    return this.workspaces.flatMap((workspace) => workspace.getAllWorkspaces());
+  }
+
+  getTopLevelWorkspaces(): WorkspaceEntry[] {
+    return this.workspaces;
+  }
+
+  getActiveTopWorkspace(): WorkspaceEntry {
+    return this.getTopLevelWorkspace(this.currentTopWorkspace) || this.getWorkspace(this.currentModel);
+  }
+
+  getTopLevelWorkspace(key: string): WorkspaceEntry {
+    if (!key) {
+      return null;
+    }
+    return this.workspaces.find((workspace) => workspace.key === key || workspace.name === key);
+  }
+
+  getWorkspaceEntry(key: string): WorkspaceEntry {
+    if (!key) {
+      return null;
+    }
+    return this.workspaces.find((workspace) => {
+      return (
+        workspace.key === key || workspace.name === key || workspace.getChildren().some((child) => child.key === key)
+      );
+    });
+  }
+
+  protected activateWorkspace(key: string) {
+    const topWorkspace = this.getWorkspaceEntry(key);
+    if (!topWorkspace) {
+      throw new Error(`Failed to activate workspace ${key}`);
     }
 
-    this.currentModel = name;
+    const activation = topWorkspace.activate(key);
+    this.currentTopWorkspace = activation.topWorkspace.key;
+    this.currentModel = activation.workspace.key;
     this.iterateListeners((l) => {
       if (l.workspaceActivated) {
-        l.workspaceActivated(this.getWorkspace(this.currentModel));
+        l.workspaceActivated(activation.workspace);
       }
     });
   }
 
-  async setActiveWorkspace(name: string) {
+  async setActiveWorkspace(key: string) {
     if (this.fullscreenModel) {
       this.setFullscreenModel(null);
     }
-    this.activateWorkspace(name);
+    this.activateWorkspace(key);
     await this.save();
   }
 
@@ -196,7 +223,7 @@ export class WorkspaceStore extends AbstractStore<WorkspacePrefsSerialized, Work
   }
 
   getIDEWorkspace(id: string): IDEWorkspace {
-    for (let workspace of this.workspaces) {
+    for (let workspace of this.getAllWorkspaces()) {
       if (workspace.model.id === id) {
         return workspace;
       }
@@ -204,10 +231,17 @@ export class WorkspaceStore extends AbstractStore<WorkspacePrefsSerialized, Work
     return null;
   }
 
-  registerWorkspaces(model: IDEWorkspace) {
+  registerWorkspaces(model: WorkspaceModel) {
     this.workspaces.push(model);
     if (!this.currentModel) {
-      this.setActiveWorkspace(model.name);
+      this.setActiveWorkspace(model.key);
+    }
+  }
+
+  registerWorkspaceGroup(group: WorkspaceGroup) {
+    this.workspaces.push(group);
+    if (!this.currentModel) {
+      this.setActiveWorkspace(group.id);
     }
   }
 
@@ -215,7 +249,7 @@ export class WorkspaceStore extends AbstractStore<WorkspacePrefsSerialized, Work
     this.engine.addReactorPanelFactory(factory);
   }
 
-  walk(root: WorkspaceModel, cb: (model: WorkspaceModel) => any) {
+  walk(root: StormWorkspaceModel, cb: (model: StormWorkspaceModel) => any) {
     cb(root);
     if (root instanceof WorkspaceCollectionModel) {
       for (let model of root.children) {
@@ -224,7 +258,7 @@ export class WorkspaceStore extends AbstractStore<WorkspacePrefsSerialized, Work
     }
   }
 
-  flatten(root: WorkspaceNodeModel): WorkspaceModel[] {
+  flatten(root: WorkspaceNodeModel): StormWorkspaceModel[] {
     let models = [];
     this.walk(root, (model) => {
       models.push(model);
@@ -268,12 +302,12 @@ export class WorkspaceStore extends AbstractStore<WorkspacePrefsSerialized, Work
     }) as ReactorPanelFactory[];
   }
 
-  findModel(root: WorkspaceNodeModel, id: string): WorkspaceModel {
+  findModel(root: WorkspaceNodeModel, id: string): StormWorkspaceModel {
     return _.find(this.flatten(root), { id: id });
   }
 
   getRoot(): ReactorRootWorkspaceModel {
-    const model = _.find(this.workspaces, { name: this.currentModel });
+    const model = this.getWorkspace(this.currentModel);
     if (!model) {
       return null;
     }
@@ -286,15 +320,15 @@ export class WorkspaceStore extends AbstractStore<WorkspacePrefsSerialized, Work
     });
   }
 
-  addModels<T extends WorkspaceModel[]>(input: T, options: AddModelsOptions = {}): T {
+  addModels<T extends StormWorkspaceModel[]>(input: T, options: AddModelsOptions = {}): T {
     return this.layoutEngine.addModels(input, options);
   }
 
-  addModel<T extends WorkspaceModel>(input: T): T {
+  addModel<T extends StormWorkspaceModel>(input: T): T {
     return this.layoutEngine.addModels([input])[0];
   }
 
-  addModelInWindow(input: WorkspaceModel, options: { position?: Alignment; width: number; height: number }) {
+  addModelInWindow(input: StormWorkspaceModel, options: { position?: Alignment; width: number; height: number }) {
     const m = this.engine.generateStandaloneWindowModel();
 
     const PADDING = 20;
@@ -332,10 +366,11 @@ export class WorkspaceStore extends AbstractStore<WorkspacePrefsSerialized, Work
     const currentModel = this.currentModel;
     this.workspaces = [];
     this.currentModel = null;
+    this.currentTopWorkspace = null;
 
     const generated = await Promise.all(
       Array.from(this.workspaceGenerators.values()).map(async (generator) => {
-        let model: GeneratedIDEWorkspace = null;
+        let model: GeneratedWorkspaceEntry = null;
         if (AdvancedWorkspacePreference.enabled()) {
           model = await generator.generateAdvancedWorkspace();
         } else {
@@ -356,7 +391,7 @@ export class WorkspaceStore extends AbstractStore<WorkspacePrefsSerialized, Work
       });
 
     for (let w of sorted) {
-      this.registerWorkspaces(w);
+      this.registerWorkspaceEntry(w);
     }
 
     // Safety net: generators can be disabled/misconfigured and return no workspaces.
@@ -367,23 +402,34 @@ export class WorkspaceStore extends AbstractStore<WorkspacePrefsSerialized, Work
       if (emptyPanel) {
         model.addModel(emptyPanel);
       }
-      this.registerWorkspaces({
-        name: 'Default',
-        model
-      });
+      this.registerWorkspaces(
+        new WorkspaceModel({
+          id: v4(),
+          name: 'Default',
+          model
+        })
+      );
     }
 
     this.iterateListeners((listener) => {
       listener.reset?.();
     });
 
-    const existing = this.workspaces.find((w) => w.name === currentModel);
+    const existing = this.getWorkspace(currentModel);
 
     // reset back to current model if it exists, else reset
-    await this.setActiveWorkspace(!!existing ? currentModel : this.workspaces[0].name);
+    await this.setActiveWorkspace(!!existing ? currentModel : this.workspaces[0].key);
     setTimeout(() => {
       this.engine.fireRepaintListeners();
     }, 500);
+  }
+
+  registerWorkspaceEntry(workspace: GeneratedWorkspaceEntry) {
+    if (workspace instanceof WorkspaceGroup) {
+      this.registerWorkspaceGroup(workspace);
+      return;
+    }
+    this.registerWorkspaces(workspace);
   }
 
   getActivePanelHash() {
@@ -418,6 +464,7 @@ export class WorkspaceStore extends AbstractStore<WorkspacePrefsSerialized, Work
 
   async init(): Promise<boolean> {
     this.currentModel = null;
+    this.currentTopWorkspace = null;
     const success = await super.init();
     if (!success) {
       await this.reset();
@@ -430,27 +477,24 @@ export class WorkspaceStore extends AbstractStore<WorkspacePrefsSerialized, Work
   protected serialize(): WorkspacePrefsSerialized {
     return {
       type: 'workspaces',
-      models: _.map(this.workspaces, (model) => {
-        return {
-          ...model,
-          model: model.model.toArray()
-        };
-      }),
-      version: 2,
-      current: this.currentModel
+      models: _.map(this.workspaces, (model) => model.serialize()),
+      version: 3,
+      current: this.currentModel,
+      currentTop: this.currentTopWorkspace
     };
   }
 
   protected async deserialize(data: WorkspacePrefsSerialized) {
     try {
       this.workspaces = this.convertSerializedToModels(data);
+      this.currentTopWorkspace = data.currentTop;
       await this.setActiveWorkspace(data.current);
     } catch (ex) {
       this.reset();
     }
   }
 
-  protected convertSerializedToModels(data: WorkspacePrefsSerialized): IDEWorkspace[] {
+  protected convertSerializedToModels(data: WorkspacePrefsSerialized): WorkspaceEntry[] {
     // legacy
     if (!data.version) {
       data.version = 1;
@@ -463,17 +507,9 @@ export class WorkspaceStore extends AbstractStore<WorkspacePrefsSerialized, Work
 
     try {
       return _.map(data.models, (pref) => {
-        const m = this.generateRootModel();
-        m.fromArray(pref.model, this.engine);
-        m.flatten().forEach((m) => {
-          if (m instanceof WorkspaceCollectionModel) {
-            m.normalize();
-          }
-        });
-        return {
-          name: pref.name,
-          model: m
-        };
+        return isSerializedWorkspaceGroup(pref)
+          ? WorkspaceGroup.deserialize(pref, this.engine, () => this.generateRootModel())
+          : WorkspaceModel.deserialize(pref, this.engine, () => this.generateRootModel());
       });
     } catch (ex) {
       console.error('could not reload workspace', ex);
@@ -498,6 +534,9 @@ export class WorkspaceStore extends AbstractStore<WorkspacePrefsSerialized, Work
     };
 
     data.models = data.models.map((model) => {
+      if (isSerializedWorkspaceGroup(model)) {
+        return model;
+      }
       return {
         ...model,
         ...patchCollection(model.model)
@@ -507,14 +546,33 @@ export class WorkspaceStore extends AbstractStore<WorkspacePrefsSerialized, Work
     return data;
   }
 
-  @action deleteWorkspace(name: string) {
-    if (this.workspaces.length === 1) {
+  @action deleteWorkspace(key: string) {
+    if (this.getAllWorkspaces().length === 1) {
       return;
     }
-    const index = _.findIndex(this.workspaces, { name: name });
+    const index = this.workspaces.findIndex((workspace) => workspace.key === key || workspace.name === key);
     if (index !== -1) {
+      const workspace = this.workspaces[index];
+      if (workspace instanceof WorkspaceGroup && this.getAllWorkspaces().length === workspace.children.length) {
+        return;
+      }
       this.workspaces.splice(index, 1);
-      this.currentModel = _.last(this.workspaces).name;
+      this.setActiveWorkspace(_.last(this.workspaces).key);
+      this.save();
+      return;
+    }
+
+    const parent = this.getWorkspaceEntry(key);
+    if (parent) {
+      const group = parent as WorkspaceGroup;
+      const childIndex = group.children.findIndex((child) => child.contains(key));
+      group.children.splice(childIndex, 1);
+      if (group.children.length === 0) {
+        this.deleteWorkspace(group.key);
+        return;
+      }
+      group.lastActiveChildId = group.children[Math.max(0, childIndex - 1)].key;
+      this.setActiveWorkspace(group.lastActiveChildId);
       this.save();
     }
   }
@@ -541,16 +599,43 @@ export class WorkspaceStore extends AbstractStore<WorkspacePrefsSerialized, Work
       const finalModels = this.convertSerializedToModels(decoded);
       if (decoded.replace) {
         this.workspaces = finalModels;
-        this.currentModel = _.first(decoded.models).name;
+        const current = decoded.current || _.first(finalModels).key;
+        await this.setActiveWorkspace(current);
       } else {
         this.workspaces = this.workspaces.concat(
           finalModels.map((model) => {
-            return {
-              ...model,
-
-              // ensure there are no duplicates
-              name: this.getSafeWorkspaceName(model.name)
-            };
+            if (model instanceof WorkspaceGroup) {
+              const groupId = v4();
+              const groupName = this.getSafeWorkspaceName(model.name);
+              const importedChildren: { key: string; name: string }[] = [];
+              const children = model.children.map((child) => {
+                const name = this.getSafeWorkspaceNameFromSiblings(child.name, importedChildren);
+                const id = v4();
+                importedChildren.push({ key: id, name });
+                const cloned = child.clone({
+                  id,
+                  name,
+                  engine: this.engine,
+                  generateRootModel: () => this.generateRootModel()
+                });
+                return { originalId: child.key, workspace: cloned };
+              });
+              return new WorkspaceGroup({
+                id: groupId,
+                name: groupName,
+                lastActiveChildId:
+                  children.find((child) => child.originalId === model.lastActiveChildId)?.workspace.key ||
+                  children[0]?.workspace.key,
+                children: children.map((child) => child.workspace)
+              });
+            }
+            const workspaceName = this.getSafeWorkspaceName(model.name);
+            return model.clone({
+              id: v4(),
+              name: workspaceName,
+              engine: this.engine,
+              generateRootModel: () => this.generateRootModel()
+            });
           })
         );
       }
@@ -566,20 +651,18 @@ export class WorkspaceStore extends AbstractStore<WorkspacePrefsSerialized, Work
     }
   }
 
-  getExportedWorkspaceURL(name: string) {
-    const workspace = this.getWorkspace(name);
+  getExportedWorkspaceURL(key: string) {
+    const workspace = this.getTopLevelWorkspace(key) || this.getWorkspace(key);
+    const models: SerializedWorkspaceEntry[] = [workspace.serialize()];
     return URL.createObjectURL(
       new Blob([
         JSON.stringify({
           type: 'workspaces',
           replace: false,
-          current: name,
-          models: [
-            {
-              model: workspace.model.toArray(),
-              name: name
-            }
-          ]
+          version: 3,
+          current: workspace instanceof WorkspaceGroup ? workspace.lastActiveChildId : workspace.key,
+          currentTop: workspace.key,
+          models
         } as ExportedWorkspace)
       ])
     ).toString();
@@ -591,13 +674,10 @@ export class WorkspaceStore extends AbstractStore<WorkspacePrefsSerialized, Work
         JSON.stringify({
           type: 'workspaces',
           replace: true,
-          current: _.first(this.workspaces).name,
-          models: this.workspaces.map((w) => {
-            return {
-              model: w.model.toArray(),
-              name: w.name
-            };
-          })
+          version: 3,
+          current: this.currentModel,
+          currentTop: this.currentTopWorkspace,
+          models: this.serialize().models
         } as ExportedWorkspace)
       ])
     ).toString();
@@ -609,54 +689,170 @@ export class WorkspaceStore extends AbstractStore<WorkspacePrefsSerialized, Work
     });
   }
 
-  getWorkspace(name: string): IDEWorkspace {
-    return _.find(this.workspaces, { name: name });
+  getWorkspace(key: string): IDEWorkspace {
+    return this.getAllWorkspaces().find((workspace) => {
+      return workspace.key === key;
+    });
   }
 
-  getSafeWorkspaceName(name: string): string {
+  protected getSafeWorkspaceNameFromSiblings(
+    name: string,
+    siblings: { key: string; name: string }[],
+    excludeKey?: string
+  ): string {
     let index = 1;
-    let workspace = null;
     let newName = `${name}`;
     do {
-      workspace = this.getWorkspace(newName);
+      const workspace = siblings.find((sibling) => sibling.key !== excludeKey && sibling.name === newName);
       if (!workspace) {
         return newName;
       }
       index++;
       newName = `${name} ${index}`;
-    } while (workspace);
+    } while (true);
+  }
+
+  getSafeWorkspaceName(name: string, excludeKey?: string): string {
+    return this.getSafeWorkspaceNameFromSiblings(name, this.workspaces, excludeKey);
+  }
+
+  getSafeWorkspaceNameInGroup(group: WorkspaceGroup, name: string, excludeKey?: string): string {
+    return this.getSafeWorkspaceNameFromSiblings(name, group.children, excludeKey);
   }
 
   @action cloneWorkspace(name: string, key: string) {
+    const entry = this.getTopLevelWorkspace(key);
+    if (entry instanceof WorkspaceGroup) {
+      name = this.getSafeWorkspaceName(name);
+      const group = entry.clone({
+        id: v4(),
+        name,
+        engine: this.engine,
+        generateRootModel: () => this.generateRootModel()
+      });
+      this.workspaces.push(group);
+      this.setActiveWorkspace(group.id);
+      this.save();
+      return;
+    }
+    const sourceWorkspace = this.getWorkspace(key);
+    const parent = sourceWorkspace?.parentId ? this.getTopLevelWorkspace(sourceWorkspace.parentId) : null;
+    if (parent instanceof WorkspaceGroup) {
+      name = this.getSafeWorkspaceNameInGroup(parent, name);
+      const workspace = sourceWorkspace.clone({
+        id: v4(),
+        name,
+        engine: this.engine,
+        generateRootModel: () => this.generateRootModel()
+      });
+      parent.addWorkspace(workspace);
+      this.setActiveWorkspace(workspace.key);
+      this.save();
+      return;
+    }
+
     name = this.getSafeWorkspaceName(name);
-    const model = this.generateRootModel();
-    model.fromArray(this.getWorkspace(key).model.toArray(), this.engine);
-    this.workspaces.push({
-      name: name,
-      model: model
+    const workspace = sourceWorkspace.clone({
+      id: v4(),
+      name,
+      engine: this.engine,
+      generateRootModel: () => this.generateRootModel()
     });
-    this.currentModel = name;
+    this.workspaces.push(workspace);
+    this.setActiveWorkspace(workspace.key);
     this.save();
   }
 
   @action renameWorkspace(name: string, key: string) {
-    name = this.getSafeWorkspaceName(name);
-    const workspace = this.getWorkspace(key);
+    const workspace = this.getTopLevelWorkspace(key) || this.getWorkspace(key);
+    const parent = workspace.parentId ? this.getTopLevelWorkspace(workspace.parentId) : null;
+    name =
+      parent instanceof WorkspaceGroup
+        ? this.getSafeWorkspaceNameInGroup(parent, name, workspace.key)
+        : this.getSafeWorkspaceName(name, workspace.key);
     workspace.name = name;
-    this.currentModel = name;
+    if (!workspace.id) {
+      workspace.id = name;
+    }
     this.save();
+  }
+
+  @action
+  async newWorkspaceInGroup(groupKey: string, name: string) {
+    const group = this.getTopLevelWorkspace(groupKey);
+    if (!(group instanceof WorkspaceGroup)) {
+      return;
+    }
+
+    name = this.getSafeWorkspaceNameInGroup(group, name);
+    const model = this.generateRootModel();
+    model.addModel(new StormWorkspaceModel('empty'));
+    const workspace = new WorkspaceModel({
+      id: v4(),
+      name,
+      model
+    });
+    group.addWorkspace(workspace);
+    await this.setActiveWorkspace(workspace.key);
+    await this.save();
+  }
+
+  @action
+  async convertWorkspaceToGroup(key: string) {
+    const index = this.workspaces.findIndex((workspace) => workspace.key === key || workspace.name === key);
+    const workspace = this.workspaces[index];
+    if (!workspace || workspace instanceof WorkspaceGroup) {
+      return;
+    }
+
+    const groupKey = workspace.key;
+    const groupName = workspace.name;
+    const defaultChildName = 'Default';
+    workspace.id = v4();
+    workspace.name = defaultChildName;
+    const group = new WorkspaceGroup({
+      id: groupKey,
+      name: groupName,
+      priority: workspace.priority,
+      children: [workspace],
+      lastActiveChildId: workspace.key
+    });
+    this.workspaces.splice(index, 1, group);
+    await this.setActiveWorkspace(workspace.key);
+    await this.save();
+  }
+
+  @action
+  async collapseWorkspaceGroup(key: string) {
+    const index = this.workspaces.findIndex((workspace) => workspace.key === key || workspace.name === key);
+    const group = this.workspaces[index];
+    if (!(group instanceof WorkspaceGroup) || group.children.length !== 1) {
+      return;
+    }
+
+    const workspace = group.children[0];
+    workspace.id = group.key;
+    workspace.name = group.name;
+    workspace.parentId = null;
+    workspace.priority = group.priority;
+    this.workspaces.splice(index, 1, workspace);
+    await this.setActiveWorkspace(workspace.key);
+    await this.save();
   }
 
   @action
   async newWorkspace(name: string) {
     name = this.getSafeWorkspaceName(name);
     const model = this.generateRootModel();
-    model.addModel(new WorkspaceModel('empty'));
-    this.workspaces.push({
-      name: name,
-      model: model
-    });
-    await this.setActiveWorkspace(name);
+    model.addModel(new StormWorkspaceModel('empty'));
+    this.workspaces.push(
+      new WorkspaceModel({
+        id: v4(),
+        name: name,
+        model: model
+      })
+    );
+    await this.setActiveWorkspace(_.last(this.workspaces).key);
     await this.save();
   }
 }

@@ -59,6 +59,14 @@ export const Scarlet = theme.addThemeValues({
       backgroundLogo: '#000000',
       backgroundLogoHover: '#2f1a1a'
     },
+    workspaceSubMenu: {
+      background: '#151820',
+      foreground: 'rgba(225,218,222,0.68)',
+      backgroundActive: 'rgba(255,0,89,0.16)',
+      foregroundActive: '#ffffff',
+      backgroundHover: 'rgba(255,74,166,0.12)',
+      foregroundHover: '#ffffff'
+    },
     changelog: {
       codeForeground: 'rgb(132,221,255)',
       codeBackground: 'rgb(4,33,40)'

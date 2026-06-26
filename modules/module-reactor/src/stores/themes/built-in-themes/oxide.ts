@@ -34,6 +34,14 @@ theme.addThemeValues({
       backgroundLogoHover: 'rgba(255,255,255,0.15)',
       background: 'rgba(44, 44, 46, 1)'
     },
+    workspaceSubMenu: {
+      background: 'rgb(38,38,40)',
+      foreground: 'rgba(206,206,210,0.72)',
+      backgroundActive: 'rgba(255,255,255,0.13)',
+      foregroundActive: '#ffffff',
+      backgroundHover: 'rgba(255,255,255,0.08)',
+      foregroundHover: '#ffffff'
+    },
     trees: {
       ...DarkTheme.trees,
       selectedBackground: 'rgba(255, 255, 255, 0.08)'

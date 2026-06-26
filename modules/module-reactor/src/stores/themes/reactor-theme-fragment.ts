@@ -188,6 +188,17 @@ export const theme = new ThemeFragment({
         foreground: 'Text color'
       }
     },
+    workspaceSubMenu: {
+      label: 'Workspace submenu',
+      colors: {
+        background: 'Secondary workspace menu background',
+        foreground: 'Workspace pill text color',
+        backgroundActive: 'Active workspace pill background',
+        foregroundActive: 'Active workspace pill text color',
+        backgroundHover: 'Workspace pill hover background',
+        foregroundHover: 'Workspace pill hover text color'
+      }
+    },
     visor: {
       label: 'Visor',
       colors: {

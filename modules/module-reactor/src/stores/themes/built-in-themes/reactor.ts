@@ -98,6 +98,14 @@ export const DarkTheme = theme.addThemeValues({
       backgroundLogoHover: '#000000',
       foreground: '#fff'
     },
+    workspaceSubMenu: {
+      background: '#121922',
+      foreground: 'rgba(222,232,246,0.72)',
+      backgroundActive: 'rgba(0,192,255,0.16)',
+      foregroundActive: '#f4f9ff',
+      backgroundHover: 'rgba(120,148,184,0.16)',
+      foregroundHover: '#ffffff'
+    },
     changelog: {
       codeForeground: 'rgb(132,221,255)',
       codeBackground: 'rgb(4,33,40)'

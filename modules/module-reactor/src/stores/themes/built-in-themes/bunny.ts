@@ -83,6 +83,14 @@ export const Bunny = theme.addThemeValues({
       backgroundLogoHover: '#1d1530',
       foreground: '#f6eeff'
     },
+    workspaceSubMenu: {
+      background: '#1d1731',
+      foreground: 'rgba(233,222,255,0.7)',
+      backgroundActive: 'rgba(185,143,255,0.18)',
+      foregroundActive: '#ffffff',
+      backgroundHover: 'rgba(201,140,255,0.14)',
+      foregroundHover: '#ffffff'
+    },
     footer: {
       background: '#171328'
     },

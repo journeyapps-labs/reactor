@@ -40,6 +40,7 @@ export * from './entities/EditorThemeEntityDefinition';
 export * from './EditorModule';
 export * from './theme-reactor/editor-theme-fragment';
 export * from './utils/paths';
+export * from './utils/json/monacoJsonPath';
 export * from './utils/useEditorStickyHeader';
 export * from './utils/monacoSuggestRendererPatches';
 

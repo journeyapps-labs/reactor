@@ -1,43 +1,50 @@
-import { WorkspaceStore } from '@journeyapps-labs/reactor-mod';
+import { WorkspaceGroup, WorkspaceModel, WorkspaceStore } from '@journeyapps-labs/reactor-mod';
 import { ioc } from '@journeyapps-labs/reactor-mod';
 import { PlaygroundPanelModel } from './panels/PlaygroundPanelFactory';
 
 export const setupWorkspaces = () => {
   const workspaceStore = ioc.get(WorkspaceStore);
 
-  const generatePlaygroundWorkspace = () => {
+  const generatePlaygroundWorkspace = (type: string) => {
     const model = workspaceStore.generateRootModel();
 
-    model.addModel(
-      workspaceStore.engine
-        .generateReactorTabModel()
-        .addModel(new PlaygroundPanelModel('playground.dialogs-comboboxes'))
-        .addModel(new PlaygroundPanelModel('playground.tree-search'))
-        .addModel(new PlaygroundPanelModel('playground.forms'))
-        .addModel(new PlaygroundPanelModel('playground.cards'))
-        .addModel(new PlaygroundPanelModel('playground.buttons'))
-        .addModel(new PlaygroundPanelModel('playground.editors'))
-        .addModel(new PlaygroundPanelModel('playground.tables'))
-        .addModel(new PlaygroundPanelModel('playground.drag-drop'))
-    );
+    model.addModel(new PlaygroundPanelModel(type));
 
     return model;
   };
 
+  const generatePlaygroundWorkspaceGroup = () => {
+    const playgroundWorkspaces = [
+      ['playground.dialogs-comboboxes', 'Dialogs'],
+      ['playground.tree-search', 'Tree search'],
+      ['playground.forms', 'Forms'],
+      ['playground.cards', 'Cards'],
+      ['playground.buttons', 'Buttons'],
+      ['playground.editors', 'Editors'],
+      ['playground.tables', 'Tables'],
+      ['playground.drag-drop', 'Drag drop']
+    ];
+
+    return new WorkspaceGroup({
+      id: 'playground',
+      name: 'playground',
+      priority: 1,
+      children: playgroundWorkspaces.map(([type, name]) => {
+        return new WorkspaceModel({
+          id: type,
+          name,
+          model: generatePlaygroundWorkspace(type)
+        });
+      })
+    });
+  };
+
   workspaceStore.registerWorkspaceGenerator({
     generateAdvancedWorkspace: async () => {
-      return {
-        name: 'playground',
-        priority: 1,
-        model: generatePlaygroundWorkspace()
-      };
+      return generatePlaygroundWorkspaceGroup();
     },
     generateSimpleWorkspace: async () => {
-      return {
-        name: 'playground',
-        priority: 1,
-        model: generatePlaygroundWorkspace()
-      };
+      return generatePlaygroundWorkspaceGroup();
     }
   });
 };
