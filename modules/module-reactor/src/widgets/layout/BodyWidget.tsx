@@ -24,6 +24,8 @@ import { BatchIconWidget } from '../../stores/batch/BatchIconWidget';
 import { ComboBox2Layer } from '../../layers/combo2/ComboBox2Layer';
 import { DialogLayer2 } from '../../layers/dialog2/DialogLayer2';
 import { RawBodyWidget } from './RawBodyWidget';
+import { ReactorViewportMode, useReactorViewportMode } from '../../hooks/useReactorViewportMode';
+import { MobileReactorShell } from '../mobile/MobileReactorShell';
 
 namespace S {
   export const fadein = keyframes`
@@ -97,6 +99,54 @@ export interface BodyWidgetProps {
   logo: string;
 }
 
+interface BodyContentProps {
+  additionalLeftHeaderButtons?: Btn[];
+  additionalRightHeaderContent?: React.JSX.Element;
+  email: string;
+  footerRef: React.RefObject<HTMLDivElement>;
+  getFooter: () => React.JSX.Element;
+  getToolbars: (alignment: Alignment) => React.JSX.Element[];
+  headerRef: React.RefObject<HTMLDivElement>;
+  locked: boolean;
+  logoClicked: (event: React.MouseEvent) => any;
+  name: string;
+  workspaceRef: React.RefObject<HTMLDivElement>;
+}
+
+const BodyContent: React.FC<BodyContentProps> = (props) => {
+  const viewportMode = useReactorViewportMode();
+
+  if (viewportMode === ReactorViewportMode.MOBILE) {
+    return (
+      <MobileReactorShell locked={props.locked} logoClicked={props.logoClicked} workspaceRef={props.workspaceRef} />
+    );
+  }
+
+  return (
+    <>
+      <S.HeaderWrapped
+        locked={props.locked}
+        email={props.email}
+        name={props.name}
+        additionalLeftButtons={props.additionalLeftHeaderButtons}
+        forwardRef={props.headerRef}
+        logoClicked={props.logoClicked}
+        rightContent={props.additionalRightHeaderContent}
+      />
+      <S.Content locked={props.locked}>
+        {props.getToolbars(Alignment.LEFT)}
+        <S.ChildrenInner>
+          <SmartWorkspaceWidget forwardRef={props.workspaceRef} />
+        </S.ChildrenInner>
+        {props.getToolbars(Alignment.RIGHT)}
+      </S.Content>
+      <S.FooterWrapped locked={props.locked} ref={props.footerRef}>
+        {props.getFooter()}
+      </S.FooterWrapped>
+    </>
+  );
+};
+
 @observer
 export class BodyWidget extends React.Component<BodyWidgetProps> {
   @inject(System)
@@ -160,25 +210,19 @@ export class BodyWidget extends React.Component<BodyWidgetProps> {
       <RawBodyWidget logo={this.props.logo}>
         <BatchIconWidget />
         <S.Body>
-          <S.HeaderWrapped
-            locked={this.isLocked()}
+          <BodyContent
+            additionalLeftHeaderButtons={this.props.additionalLeftHeaderButtons}
+            additionalRightHeaderContent={this.props.additionalRightHeaderContent}
             email={this.uxStore.account?.email}
-            name={this.uxStore.account?.name}
-            additionalLeftButtons={this.props.additionalLeftHeaderButtons}
-            forwardRef={this.headerRef}
+            footerRef={this.footerRef}
+            getFooter={() => this.getFooter()}
+            getToolbars={(alignment) => this.getToolbars(alignment)}
+            headerRef={this.headerRef}
+            locked={this.isLocked()}
             logoClicked={this.props.logoClicked}
-            rightContent={this.props.additionalRightHeaderContent}
+            name={this.uxStore.account?.name}
+            workspaceRef={this.workspaceRef}
           />
-          <S.Content locked={this.isLocked()}>
-            {this.getToolbars(Alignment.LEFT)}
-            <S.ChildrenInner>
-              <SmartWorkspaceWidget forwardRef={this.workspaceRef} />
-            </S.ChildrenInner>
-            {this.getToolbars(Alignment.RIGHT)}
-          </S.Content>
-          <S.FooterWrapped locked={this.isLocked()} ref={this.footerRef}>
-            {this.getFooter()}
-          </S.FooterWrapped>
         </S.Body>
       </RawBodyWidget>
     );

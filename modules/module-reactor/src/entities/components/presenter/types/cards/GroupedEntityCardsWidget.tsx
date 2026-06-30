@@ -6,6 +6,7 @@ import { EntityCardsPresenterContext } from './EntityCardsPresenterComponent';
 import { CardWidget } from '../../../../../widgets/cards/CardWidget';
 import { themed } from '../../../../../stores/themes/reactor-theme-fragment';
 import { EntityCardWidget } from './EntityCardWidget';
+import { REACTOR_MOBILE_MEDIA_QUERY } from '../../../../../hooks/useReactorViewportMode';
 
 export interface GroupedEntityCardsWidgetProps<T> {
   entities: T[];
@@ -19,6 +20,11 @@ namespace S {
     flex-wrap: wrap;
     align-items: stretch;
     gap: 10px;
+
+    ${REACTOR_MOBILE_MEDIA_QUERY} {
+      flex-direction: column;
+      flex-wrap: nowrap;
+    }
   `;
 
   export const Grid = styled.div`
@@ -27,6 +33,11 @@ namespace S {
     align-items: stretch;
     gap: 10px;
     width: 100%;
+
+    ${REACTOR_MOBILE_MEDIA_QUERY} {
+      display: flex;
+      flex-direction: column;
+    }
   `;
 
   export const GroupCard = themed(CardWidget)`

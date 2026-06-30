@@ -36,6 +36,7 @@ import {
   SerializedWorkspaceEntry,
   WorkspacePrefsSerialized
 } from './models/serialization';
+import { getReactorViewportMode, ReactorViewportMode } from '../../hooks/useReactorViewportMode';
 
 export type IDEWorkspace = WorkspaceModel;
 export type WorkspaceEntry = WorkspaceModel | WorkspaceGroup;
@@ -329,6 +330,14 @@ export class WorkspaceStore extends AbstractStore<WorkspacePrefsSerialized, Work
   }
 
   addModelInWindow(input: StormWorkspaceModel, options: { position?: Alignment; width: number; height: number }) {
+    if (getReactorViewportMode() === ReactorViewportMode.MOBILE) {
+      const root = this.generateRootModel();
+      root.addModel(input);
+      this.fullscreenModel = root;
+      this.engine.fireRepaintListeners();
+      return;
+    }
+
     const m = this.engine.generateStandaloneWindowModel();
 
     const PADDING = 20;

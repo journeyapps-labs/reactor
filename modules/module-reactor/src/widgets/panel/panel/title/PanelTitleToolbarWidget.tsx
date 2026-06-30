@@ -5,6 +5,7 @@ import { Btn } from '../../../../definitions/common';
 import { PanelTitleToolbarButtonWidget } from './PanelTitleToolbarButtonWidget';
 import { isArray } from 'lodash';
 import { styled } from '../../../../stores/themes/reactor-theme-fragment';
+import { REACTOR_MOBILE_MEDIA_QUERY } from '../../../../hooks/useReactorViewportMode';
 
 export interface PanelToolbarButton extends Btn {
   enabled?: boolean;
@@ -36,6 +37,12 @@ namespace S {
     column-gap: 2px;
     row-gap: 2px;
     padding: 2px;
+
+    ${REACTOR_MOBILE_MEDIA_QUERY} {
+      min-height: 40px;
+      padding: 4px;
+      column-gap: 8px;
+    }
   `;
 
   export const Context = styled.div<{ tracking: boolean }>`
@@ -44,22 +51,41 @@ namespace S {
     padding-right: 5px;
     align-items: center;
     color: ${(p) => (p.tracking ? p.theme.tabs.selectedAccentSingle : p.theme.panels.tabForeground)};
+
+    ${REACTOR_MOBILE_MEDIA_QUERY} {
+      min-height: 32px;
+      padding-left: 8px;
+      padding-right: 8px;
+    }
   `;
 
   export const ContextLabel = styled.div`
     font-size: 12px;
     white-space: nowrap;
+
+    ${REACTOR_MOBILE_MEDIA_QUERY} {
+      font-size: 15px;
+    }
   `;
 
   export const Icon = styled(FontAwesomeIcon)`
     margin-left: 5px;
     font-size: 12px;
+
+    ${REACTOR_MOBILE_MEDIA_QUERY} {
+      margin-left: 8px;
+      font-size: 15px;
+    }
   `;
 
   export const Buttons = styled.div`
     display: flex;
     flex-grow: 1;
     justify-content: flex-end;
+
+    ${REACTOR_MOBILE_MEDIA_QUERY} {
+      column-gap: 4px;
+    }
   `;
 }
 

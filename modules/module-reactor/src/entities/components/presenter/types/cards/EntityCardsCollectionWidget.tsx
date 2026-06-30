@@ -6,6 +6,7 @@ import { EntityCardsPresenterContext } from './EntityCardsPresenterComponent';
 import { PanelPlaceholderWidget } from '../../../../../widgets/panel/panel/PanelPlaceholderWidget';
 import { EntityCardWidget } from './EntityCardWidget';
 import { GroupedEntityCardsWidget } from './GroupedEntityCardsWidget';
+import { REACTOR_MOBILE_MEDIA_QUERY } from '../../../../../hooks/useReactorViewportMode';
 
 export interface EntityCardsCollectionWidgetProps<T> {
   event: RenderCollectionOptions<T>;
@@ -19,6 +20,11 @@ namespace S {
     align-items: stretch;
     gap: 10px;
     width: 100%;
+
+    ${REACTOR_MOBILE_MEDIA_QUERY} {
+      display: flex;
+      flex-direction: column;
+    }
   `;
 
   export const Empty = styled(PanelPlaceholderWidget)`

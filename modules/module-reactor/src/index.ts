@@ -68,6 +68,7 @@ export * from './hooks/useValidator';
 export * from './hooks/useCopyButton';
 export * from './hooks/useDisplayDateOptions';
 export * from './hooks/useDimensionObserver';
+export * from './hooks/useReactorViewportMode';
 
 export * from './search/SearchEngine';
 

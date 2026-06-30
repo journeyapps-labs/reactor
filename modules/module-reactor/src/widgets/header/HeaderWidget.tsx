@@ -20,7 +20,7 @@ import { HeaderWorkspaceSubMenuWidget } from './HeaderWorkspaceSubMenuWidget';
 
 export interface HeaderWidgetProps {
   primaryHeading: Btn;
-  secondaryHeading: Btn;
+  secondaryHeading?: Btn;
   additionalLogo: string;
   toolbar: ToolbarPreference;
   logoClicked: (event: React.MouseEvent) => any;
@@ -277,15 +277,17 @@ export class HeaderWidget extends React.Component<HeaderWidgetProps, HeaderWidge
               <S.MetaLabel>{this.props.primaryHeading?.label || '...'}</S.MetaLabel>
               {this.props.primaryHeading?.action ? <FontAwesomeIcon className="icon" icon="angle-down" /> : null}
             </S.MetaApp>
-            <S.MetaOrg
-              onClick={(event) => {
-                event.persist();
-                this.props.secondaryHeading?.action(event);
-              }}
-            >
-              <S.MetaLabel>{this.props.secondaryHeading?.label || '...'}</S.MetaLabel>
-              {this.props.secondaryHeading?.action ? <FontAwesomeIcon className="icon" icon="angle-down" /> : null}
-            </S.MetaOrg>
+            {this.props.secondaryHeading ? (
+              <S.MetaOrg
+                onClick={(event) => {
+                  event.persist();
+                  this.props.secondaryHeading.action?.(event);
+                }}
+              >
+                <S.MetaLabel>{this.props.secondaryHeading.label}</S.MetaLabel>
+                {this.props.secondaryHeading.action ? <FontAwesomeIcon className="icon" icon="angle-down" /> : null}
+              </S.MetaOrg>
+            ) : null}
           </S.Meta>
           <HeaderWorkspaceMenuWidget selectedBoundsUpdated={this.updateWorkspaceMenuOffset} />
           {this.getLeftButtons()}

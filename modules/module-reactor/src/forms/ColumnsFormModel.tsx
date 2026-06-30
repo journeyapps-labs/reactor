@@ -3,6 +3,11 @@ import { FormModel } from './FormModel';
 import { FormInput, FormInputWidget } from './FormInput';
 import * as _ from 'lodash';
 import styled from '@emotion/styled';
+import {
+  REACTOR_MOBILE_MEDIA_QUERY,
+  ReactorViewportMode,
+  useReactorViewportMode
+} from '../hooks/useReactorViewportMode';
 
 export enum ColumnsFormModelRenderMode {
   TABLE = 'table',
@@ -38,7 +43,7 @@ export class ColumnsFormModel<T = {}> extends FormModel<T> {
     return super.addInput(input);
   }
 
-  render(): React.JSX.Element {
+  renderWithMode(mode: ColumnsFormModelRenderMode): React.JSX.Element {
     const totalColumns = Math.max(...Array.from(this.columns.values()));
 
     const groups = _.groupBy(this.inputs, (i) => {
@@ -47,7 +52,7 @@ export class ColumnsFormModel<T = {}> extends FormModel<T> {
 
     const totalRows = Math.max(..._.map(groups, (g) => g.length));
 
-    if (this.options.mode === ColumnsFormModelRenderMode.DIVISIONS) {
+    if (mode === ColumnsFormModelRenderMode.DIVISIONS) {
       return (
         <S.Columns spacing={this.options.columnSpacing}>
           {_.range(0, totalColumns + 1).map((col) => {
@@ -106,6 +111,10 @@ export class ColumnsFormModel<T = {}> extends FormModel<T> {
       </table>
     );
   }
+
+  render(): React.JSX.Element {
+    return <ColumnsFormModelWidget form={this} />;
+  }
 }
 
 namespace S {
@@ -120,13 +129,36 @@ namespace S {
     display: flex;
     row-gap: ${(p) => p.spacing}px;
     column-gap: ${(p) => p.spacing}px;
+
+    ${REACTOR_MOBILE_MEDIA_QUERY} {
+      flex-direction: column;
+    }
   `;
 
-  export const ColumnDiv = styled.div<{ width: number }>`
-    min-width: ${(p) => p.width}px;
-    max-width: ${(p) => p.width}px;
+  export const ColumnDiv = styled.div<{ width?: number }>`
+    ${(p) =>
+      p.width == null
+        ? ''
+        : `
+            min-width: ${p.width}px;
+            max-width: ${p.width}px;
+          `}
     display: flex;
     flex-direction: column;
     row-gap: 5px;
+
+    ${REACTOR_MOBILE_MEDIA_QUERY} {
+      min-width: 0;
+      max-width: none;
+      width: 100%;
+    }
   `;
 }
+
+const ColumnsFormModelWidget = <T,>(props: { form: ColumnsFormModel<T> }) => {
+  const viewportMode = useReactorViewportMode();
+  const mode =
+    viewportMode === ReactorViewportMode.MOBILE ? ColumnsFormModelRenderMode.DIVISIONS : props.form.getMode();
+
+  return props.form.renderWithMode(mode);
+};

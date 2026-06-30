@@ -1,6 +1,7 @@
 import { css } from '@emotion/react';
 import * as React from 'react';
 import { themed } from '../../stores/themes/reactor-theme-fragment';
+import { REACTOR_MOBILE_MEDIA_QUERY } from '../../hooks/useReactorViewportMode';
 
 export interface FloatingPanelWidgetProps {
   center: boolean;
@@ -26,6 +27,12 @@ namespace S {
     ${(p) => p.center && center};
 
     ${(p) => (p.highlight ? `border: solid 2px ${p.theme.guide.accent}` : ``)};
+
+    ${REACTOR_MOBILE_MEDIA_QUERY} {
+      max-width: calc(100vw - 24px);
+      max-height: calc(100vh - 24px);
+      overflow: hidden;
+    }
 
     *::-webkit-scrollbar {
       width: 10px;

@@ -3,6 +3,7 @@ import { IconWidget, ReactorIcon } from '../icons/IconWidget';
 import { ButtonAction } from '../../definitions/common';
 import styled from '@emotion/styled';
 import { getDarkenedColor } from '@journeyapps-labs/lib-reactor-utils';
+import { REACTOR_MOBILE_MEDIA_QUERY } from '../../hooks/useReactorViewportMode';
 
 namespace S {
   export const Symbol = styled.div<{ color?: string; foreground: string }>`
@@ -23,6 +24,16 @@ namespace S {
 
     svg {
       font-size: 10px;
+    }
+
+    ${REACTOR_MOBILE_MEDIA_QUERY} {
+      width: 19px;
+      height: 19px;
+      font-size: 12px;
+
+      svg {
+        font-size: 12px;
+      }
     }
   `;
 }

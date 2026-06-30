@@ -4,6 +4,7 @@ import styled from '@emotion/styled';
 import { themed } from '../../stores/themes/reactor-theme-fragment';
 import { IconWidget, ReactorIcon } from '../../widgets/icons/IconWidget';
 import { getTransparentColor } from '@journeyapps-labs/lib-reactor-utils';
+import { REACTOR_MOBILE_MEDIA_QUERY } from '../../hooks/useReactorViewportMode';
 
 namespace S {
   export const Container = themed.div<{ selected: boolean; disabled: boolean }>`
@@ -14,6 +15,11 @@ namespace S {
     background: ${(p) => (p.selected ? p.theme.combobox.backgroundSelected : 'transparent')};
     ${(p) => (p.selected ? p.theme.combobox.backgroundSelected : 'transparent')};
     user-select: none;
+
+    ${REACTOR_MOBILE_MEDIA_QUERY} {
+      min-height: 42px;
+      height: auto;
+    }
   `;
   export const IconContainer = styled.div<{ color: string; background: string }>`
     width: 30px;
@@ -24,10 +30,18 @@ namespace S {
     justify-content: center;
     background: ${(p) => p.background};
     flex-shrink: 0;
+
+    ${REACTOR_MOBILE_MEDIA_QUERY} {
+      width: 48px;
+    }
   `;
 
   export const Icon = styled(IconWidget)`
     max-height: 20px;
+
+    ${REACTOR_MOBILE_MEDIA_QUERY} {
+      max-height: 26px;
+    }
   `;
 
   export const Primary = themed.div<{ selected: boolean; disabled: boolean }>`
@@ -37,6 +51,12 @@ namespace S {
     font-size: 14px;
     white-space: nowrap;
     opacity: ${(p) => (p.disabled ? 0.3 : 1)};
+
+    ${REACTOR_MOBILE_MEDIA_QUERY} {
+      margin-left: 12px;
+      font-size: 18px;
+      line-height: 1.2;
+    }
   `;
   export const Secondary = themed.div<{ selected: boolean }>`
     margin-left: 10px;
@@ -45,12 +65,26 @@ namespace S {
     opacity: 0.2;
     font-size: 14px;
     white-space: nowrap;
+
+    ${REACTOR_MOBILE_MEDIA_QUERY} {
+      font-size: 18px;
+    }
   `;
 
   export const Label = styled.div`
     flex-grow: 1;
     display: flex;
     align-items: center;
+    min-width: 0;
+  `;
+
+  export const Children = styled.div`
+    display: flex;
+    align-items: center;
+
+    ${REACTOR_MOBILE_MEDIA_QUERY} {
+      display: none;
+    }
   `;
 }
 
@@ -105,7 +139,7 @@ export const CommandPalletEntryWidget: React.FC<React.PropsWithChildren<CommandP
       selected={props.selected}
     >
       <RawEntry {...props} />
-      {props.children}
+      {props.children ? <S.Children>{props.children}</S.Children> : null}
     </S.Container>
   );
 };

@@ -92,6 +92,9 @@ export class ReactorPlaygroundModule extends AbstractReactorModule {
 
   async init(ioc: Container): Promise<any> {
     const uxStore = ioc.get<UXStore>(UXStore);
+    uxStore.primaryHeader = {
+      label: 'Reactor Demo'
+    };
     uxStore.setRootComponent(DemoBodyWidget);
   }
 }

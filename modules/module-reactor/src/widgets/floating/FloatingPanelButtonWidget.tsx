@@ -7,6 +7,7 @@ import styled from '@emotion/styled';
 import { getTransparentColor } from '@journeyapps-labs/lib-reactor-utils';
 import { useButton } from '../../hooks/useButton';
 import { setupTooltipProps, TooltipPosition } from '../info/tooltips';
+import { REACTOR_MOBILE_MEDIA_QUERY } from '../../hooks/useReactorViewportMode';
 
 export interface FloatingPanelButtonWidgetProps {
   btn: Btn;
@@ -36,6 +37,12 @@ namespace S {
 
     &:hover {
       border-color: ${(p) => p.theme.combobox.text};
+    }
+
+    ${REACTOR_MOBILE_MEDIA_QUERY} {
+      min-height: 40px;
+      padding: 8px 12px;
+      font-size: 16px;
     }
   `;
 

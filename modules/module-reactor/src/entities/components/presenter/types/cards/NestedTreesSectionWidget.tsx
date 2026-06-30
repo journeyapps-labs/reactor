@@ -11,7 +11,7 @@ namespace S {
   export const NestedSection = styled.div`
     display: flex;
     flex-direction: column;
-    gap: 6px;
+    gap: 2px;
   `;
 
   export const NestedHeader = themed.div`

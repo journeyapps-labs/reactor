@@ -1,7 +1,6 @@
 import { ReactorModuleConfig } from './ReactorConfig';
 import * as fs from 'fs';
 import * as path from 'path';
-import * as _ from 'lodash';
 
 export interface ReactorModuleOptions {
   directory: string;
@@ -43,16 +42,7 @@ export class ReactorModule {
   get config(): ReactorModuleConfig {
     return {
       ...this.conf,
-      env: this.conf.env ?? [],
-      pwa: this.conf.pwa
-        ? {
-            manifest: path.join(this.options.directory, this.conf.pwa.manifest),
-            serviceWorker: path.join(this.options.directory, this.conf.pwa.serviceWorker),
-            other: _.mapValues(this.conf.pwa.other || {}, (val, key) => {
-              return path.join(this.options.directory, val);
-            })
-          }
-        : undefined
+      env: this.conf.env ?? []
     };
   }
 

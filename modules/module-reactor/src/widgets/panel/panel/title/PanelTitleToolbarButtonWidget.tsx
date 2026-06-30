@@ -10,6 +10,7 @@ import { observer } from 'mobx-react';
 import { ThemeStore } from '../../../../stores/themes/ThemeStore';
 import { ioc } from '../../../../inversify.config';
 import { ValidationResult } from '../../../../actions/validators/ActionValidator';
+import { REACTOR_MOBILE_MEDIA_QUERY } from '../../../../hooks/useReactorViewportMode';
 
 export interface PanelTitleToolbarButtonProps extends Btn {
   enabled?: boolean;
@@ -30,6 +31,10 @@ namespace S {
     white-space: nowrap;
     border: solid 1px transparent;
     height: ${BUTTON_HEIGHT}px;
+
+    ${REACTOR_MOBILE_MEDIA_QUERY} {
+      height: 32px;
+    }
   `;
 
   export const Button = styled.div<{ enabled: boolean; border: string }>`
@@ -44,6 +49,10 @@ namespace S {
     &:hover {
       color: ${(p) => p.theme.panels.titleForeground};
     }
+
+    ${REACTOR_MOBILE_MEDIA_QUERY} {
+      width: 32px;
+    }
   `;
 
   export const ButtonWithLabel = styled.div<{ attention: boolean; border: string; validation: ValidationResult }>`
@@ -57,15 +66,29 @@ namespace S {
     &:hover {
       color: ${(p) => p.theme.panels.titleForeground};
     }
+
+    ${REACTOR_MOBILE_MEDIA_QUERY} {
+      padding-left: 9px;
+      padding-right: 5px;
+    }
   `;
 
   export const ButtonIcon = styled(IconWidget)`
     font-size: ${BUTTON_HEIGHT - 7}px;
+
+    ${REACTOR_MOBILE_MEDIA_QUERY} {
+      font-size: 18px;
+    }
   `;
 
   export const Label = styled.div`
     font-size: ${BUTTON_HEIGHT - 7}px;
     margin-right: 2px;
+
+    ${REACTOR_MOBILE_MEDIA_QUERY} {
+      font-size: 15px;
+      margin-right: 5px;
+    }
   `;
 }
 
