@@ -47,7 +47,13 @@ export * from './meta/MetadataWidget';
 export * from './meta/ReadOnlyMetadataWidget';
 
 export * from './mobile/MobileReactorShell';
+export * from './mobile/MobileHeaderWidget';
+export * from './mobile/MobileWorkspaceDrawerWidget';
 export * from './mobile/MobileWorkspaceWidget';
+export * from './mobile/MobileNavPillWidget';
+export * from './mobile/MobilePanelScreenWidget';
+export * from './mobile/MobileTabScreenWidget';
+export * from './mobile/MobileWorkspaceTypes';
 
 export * from './table/SearchableTableWidget';
 export * from './table/TableWidget';

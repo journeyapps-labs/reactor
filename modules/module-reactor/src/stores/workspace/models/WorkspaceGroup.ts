@@ -7,8 +7,8 @@ import {
   SerializedWorkspaceModel,
   WorkspaceActivation,
   WorkspaceContextActionContext,
-  WorkspaceContextActionKey,
   WorkspaceModel,
+  WorkspaceModelCloneOptions,
   WorkspaceModelOptions
 } from './WorkspaceModel';
 
@@ -25,11 +25,6 @@ export interface WorkspaceGroupOptions {
   children: (WorkspaceModel | WorkspaceModelOptions)[];
   lastActiveChildId?: string;
   priority?: number;
-}
-
-enum WorkspaceGroupContextActionKey {
-  NEW_CHILD = 'new-child-workspace',
-  COLLAPSE = 'collapse-group'
 }
 
 export class WorkspaceGroup extends WorkspaceModel {
@@ -90,9 +85,9 @@ export class WorkspaceGroup extends WorkspaceModel {
 
   getContextMenuItems(context: WorkspaceContextActionContext): ComboBoxItem[] {
     const items: ComboBoxItem[] = [
-      ...super.getContextMenuItems(context).filter((item) => item.key !== WorkspaceContextActionKey.CONVERT_GROUP),
+      ...super.getContextMenuItems(context).filter((item) => item.key !== 'convert-group'),
       {
-        key: WorkspaceGroupContextActionKey.NEW_CHILD,
+        key: 'new-child-workspace',
         icon: 'plus',
         title: 'New nested workspace',
         group: 'workspace',
@@ -110,7 +105,7 @@ export class WorkspaceGroup extends WorkspaceModel {
 
     if (this.children.length === 1) {
       items.push({
-        key: WorkspaceGroupContextActionKey.COLLAPSE,
+        key: 'collapse-group',
         icon: 'compress',
         title: 'Collapse group',
         group: 'workspace',
@@ -159,6 +154,37 @@ export class WorkspaceGroup extends WorkspaceModel {
     });
   }
 
+  cloneForImport(
+    options: WorkspaceModelCloneOptions & {
+      getSafeChildName: (name: string, siblings: { key: string; name: string }[]) => string;
+    }
+  ) {
+    const importedChildren: { key: string; name: string }[] = [];
+    const children = this.children.map((child) => {
+      const name = options.getSafeChildName(child.name, importedChildren);
+      const id = v4();
+      importedChildren.push({ key: id, name });
+      return {
+        originalId: child.key,
+        workspace: child.cloneForImport({
+          id,
+          name,
+          engine: options.engine,
+          generateRootModel: options.generateRootModel
+        })
+      };
+    });
+
+    return new WorkspaceGroup({
+      id: options.id,
+      name: options.name,
+      lastActiveChildId:
+        children.find((child) => child.originalId === this.lastActiveChildId)?.workspace.key ||
+        children[0]?.workspace.key,
+      children: children.map((child) => child.workspace)
+    });
+  }
+
   static deserialize(
     pref: SerializedWorkspaceGroup,
     engine: ReactorWorkspaceEngine,
@@ -171,5 +197,38 @@ export class WorkspaceGroup extends WorkspaceModel {
       lastActiveChildId: pref.lastActiveChildId,
       children: pref.children.map((child) => WorkspaceModel.deserialize(child, engine, generateRootModel, id))
     });
+  }
+
+  static fromWorkspace(
+    workspace: WorkspaceModel,
+    options: {
+      childId: string;
+      childName: string;
+    }
+  ) {
+    const groupId = workspace.key;
+    const groupName = workspace.name;
+    workspace.id = options.childId;
+    workspace.name = options.childName;
+    return new WorkspaceGroup({
+      id: groupId,
+      name: groupName,
+      priority: workspace.priority,
+      children: [workspace],
+      lastActiveChildId: workspace.key
+    });
+  }
+
+  collapseToWorkspace() {
+    if (this.children.length !== 1) {
+      return null;
+    }
+
+    const workspace = this.children[0];
+    workspace.id = this.key;
+    workspace.name = this.name;
+    workspace.parentId = null;
+    workspace.priority = this.priority;
+    return workspace;
   }
 }

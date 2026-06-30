@@ -1,6 +1,7 @@
 import * as monaco from 'monaco-editor';
 import { json as monacoJson } from 'monaco-editor/esm/vs/editor/editor.main.js';
 import type { json as MonacoJson } from 'monaco-editor/esm/vs/editor/editor.main.js';
+import * as _ from 'lodash';
 
 export type MonacoJsonPathSegment = string | number;
 export type MonacoJsonPathInput = string | MonacoJsonPathSegment[];
@@ -9,6 +10,17 @@ export type MonacoJsonPathLocationTarget = 'node' | 'key' | 'value' | 'property'
 
 export interface MonacoJsonPathLocationOptions {
   target?: MonacoJsonPathLocationTarget;
+}
+
+export interface MonacoJsonPathLocationFromDocumentOptions extends MonacoJsonPathLocationOptions {
+  document: MonacoJson.JSONDocument | null;
+  model: monaco.editor.ITextModel;
+  path: MonacoJsonPathInput;
+}
+
+export interface MonacoJsonPathLocationRequest extends MonacoJsonPathLocationOptions {
+  model: monaco.editor.ITextModel;
+  path: MonacoJsonPathInput;
 }
 
 export interface MonacoJsonPathLocation {
@@ -74,14 +86,16 @@ const parseJsonPathPart = (path: string): MonacoJsonPathSegment[] => {
   return segments;
 };
 
+const parseJsonPathPartMemoized = _.memoize(parseJsonPathPart);
+
 export const parseMonacoJsonPath = (path: MonacoJsonPathInput): MonacoJsonPathSegment[] => {
   if (Array.isArray(path)) {
     return path.flatMap((segment) => {
-      return typeof segment === 'string' ? parseJsonPathPart(segment) : [segment];
+      return typeof segment === 'string' ? parseJsonPathPartMemoized(segment) : [segment];
     });
   }
 
-  return parseJsonPathPart(path);
+  return parseJsonPathPartMemoized(path).slice();
 };
 
 const findObjectProperty = (node: MonacoJson.ObjectASTNode, key: string) => {
@@ -146,11 +160,9 @@ const getTargetNode = (result: MonacoJsonPathResult, target: MonacoJsonPathLocat
 };
 
 export const getMonacoJsonPathLocationFromDocument = (
-  document: MonacoJson.JSONDocument | null,
-  model: monaco.editor.ITextModel,
-  path: MonacoJsonPathInput,
-  options: MonacoJsonPathLocationOptions = {}
+  options: MonacoJsonPathLocationFromDocumentOptions
 ): MonacoJsonPathLocation | null => {
+  const { document, model, path } = options;
   const result = findMonacoJsonPathNode(document?.root, path);
   if (!result) {
     return null;
@@ -168,12 +180,20 @@ export const getMonacoJsonPathLocationFromDocument = (
 };
 
 export const getMonacoJsonPathLocation = async (
-  model: monaco.editor.ITextModel,
-  path: MonacoJsonPathInput,
-  options?: MonacoJsonPathLocationOptions
+  options: MonacoJsonPathLocationRequest
 ): Promise<MonacoJsonPathLocation | null> => {
+  const { model, path } = options;
   const workerAccessor = await monacoJson.getWorker();
   const worker = await workerAccessor(model.uri);
   const document = await worker.parseJSONDocument(model.uri.toString());
-  return getMonacoJsonPathLocationFromDocument(document, model, path, options);
+  return getMonacoJsonPathLocationFromDocument({
+    ...options,
+    document,
+    model,
+    path
+  });
+};
+
+export const clearMonacoJsonPathCache = () => {
+  parseJsonPathPartMemoized.cache.clear?.();
 };

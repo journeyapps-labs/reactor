@@ -97,7 +97,11 @@ describe('monacoJsonPath', () => {
     const worker = createJsonWorker(model);
     const document = await worker.parseJSONDocument(model.uri.toString());
 
-    const location = getMonacoJsonPathLocationFromDocument(document, model, 'flags[1]');
+    const location = getMonacoJsonPathLocationFromDocument({
+      document,
+      model,
+      path: 'flags[1]'
+    });
     const offsetStart = json.indexOf('"invalid"');
     const position = model.getPositionAt(offsetStart);
 
@@ -115,10 +119,16 @@ describe('monacoJsonPath', () => {
     const worker = createJsonWorker(model);
     const document = await worker.parseJSONDocument(model.uri.toString());
 
-    const keyLocation = getMonacoJsonPathLocationFromDocument(document, model, 'thing.something[1].other', {
+    const keyLocation = getMonacoJsonPathLocationFromDocument({
+      document,
+      model,
+      path: 'thing.something[1].other',
       target: 'key'
     });
-    const propertyLocation = getMonacoJsonPathLocationFromDocument(document, model, 'thing.something[1].other', {
+    const propertyLocation = getMonacoJsonPathLocationFromDocument({
+      document,
+      model,
+      path: 'thing.something[1].other',
       target: 'property'
     });
 
@@ -136,7 +146,10 @@ describe('monacoJsonPath', () => {
     const worker = createJsonWorker(model);
     vi.spyOn(monaco.languages.json, 'getWorker').mockResolvedValue(async () => worker);
 
-    const location = await getMonacoJsonPathLocation(model, 'thing.something[1].other');
+    const location = await getMonacoJsonPathLocation({
+      model,
+      path: 'thing.something[1].other'
+    });
     const offsetStart = json.indexOf('"second"');
 
     expect(location?.offsetStart).toBe(offsetStart);

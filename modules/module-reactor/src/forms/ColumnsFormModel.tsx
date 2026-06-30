@@ -136,13 +136,8 @@ namespace S {
   `;
 
   export const ColumnDiv = styled.div<{ width?: number }>`
-    ${(p) =>
-      p.width == null
-        ? ''
-        : `
-            min-width: ${p.width}px;
-            max-width: ${p.width}px;
-          `}
+    min-width: ${(p) => (p.width == null ? 0 : `${p.width}px`)};
+    max-width: ${(p) => (p.width == null ? 'none' : `${p.width}px`)};
     display: flex;
     flex-direction: column;
     row-gap: 5px;

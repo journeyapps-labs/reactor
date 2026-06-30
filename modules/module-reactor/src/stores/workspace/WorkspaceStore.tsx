@@ -625,34 +625,17 @@ export class WorkspaceStore extends AbstractStore<WorkspacePrefsSerialized, Work
         this.workspaces = this.workspaces.concat(
           finalModels.map((model) => {
             if (model instanceof WorkspaceGroup) {
-              const groupId = v4();
-              const groupName = this.getSafeWorkspaceName(model.name);
-              const importedChildren: { key: string; name: string }[] = [];
-              const children = model.children.map((child) => {
-                const name = this.getSafeWorkspaceNameFromSiblings(child.name, importedChildren);
-                const id = v4();
-                importedChildren.push({ key: id, name });
-                const cloned = child.clone({
-                  id,
-                  name,
-                  engine: this.engine,
-                  generateRootModel: () => this.generateRootModel()
-                });
-                return { originalId: child.key, workspace: cloned };
-              });
-              return new WorkspaceGroup({
-                id: groupId,
-                name: groupName,
-                lastActiveChildId:
-                  children.find((child) => child.originalId === model.lastActiveChildId)?.workspace.key ||
-                  children[0]?.workspace.key,
-                children: children.map((child) => child.workspace)
+              return model.cloneForImport({
+                id: v4(),
+                name: this.getSafeWorkspaceName(model.name),
+                engine: this.engine,
+                generateRootModel: () => this.generateRootModel(),
+                getSafeChildName: (name, siblings) => this.getSafeWorkspaceNameFromSiblings(name, siblings)
               });
             }
-            const workspaceName = this.getSafeWorkspaceName(model.name);
-            return model.clone({
+            return model.cloneForImport({
               id: v4(),
-              name: workspaceName,
+              name: this.getSafeWorkspaceName(model.name),
               engine: this.engine,
               generateRootModel: () => this.generateRootModel()
             });
@@ -825,17 +808,9 @@ export class WorkspaceStore extends AbstractStore<WorkspacePrefsSerialized, Work
       return;
     }
 
-    const groupKey = workspace.key;
-    const groupName = workspace.name;
-    const defaultChildName = 'Default';
-    workspace.id = v4();
-    workspace.name = defaultChildName;
-    const group = new WorkspaceGroup({
-      id: groupKey,
-      name: groupName,
-      priority: workspace.priority,
-      children: [workspace],
-      lastActiveChildId: workspace.key
+    const group = WorkspaceGroup.fromWorkspace(workspace, {
+      childId: v4(),
+      childName: 'Default'
     });
     this.workspaces.splice(index, 1, group);
     await this.setActiveWorkspace(workspace.key);
@@ -850,11 +825,10 @@ export class WorkspaceStore extends AbstractStore<WorkspacePrefsSerialized, Work
       return;
     }
 
-    const workspace = group.children[0];
-    workspace.id = group.key;
-    workspace.name = group.name;
-    workspace.parentId = null;
-    workspace.priority = group.priority;
+    const workspace = group.collapseToWorkspace();
+    if (!workspace) {
+      return;
+    }
     this.workspaces.splice(index, 1, workspace);
     await this.setActiveWorkspace(workspace.key);
     await this.save();

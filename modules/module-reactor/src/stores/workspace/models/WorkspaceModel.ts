@@ -27,12 +27,11 @@ export interface WorkspaceActivation {
   workspace: WorkspaceModel;
 }
 
-export enum WorkspaceContextActionKey {
-  DELETE = 'delete',
-  CLONE = 'clone',
-  RENAME = 'rename',
-  CONVERT_GROUP = 'convert-group',
-  EXPORT = 'export'
+export interface WorkspaceModelCloneOptions {
+  id: string;
+  name: string;
+  engine: ReactorWorkspaceEngine;
+  generateRootModel: () => ReactorRootWorkspaceModel;
 }
 
 export interface WorkspaceContextActionContext {
@@ -91,7 +90,7 @@ export class WorkspaceModel {
     const isTopLevel = workspaceStore.getTopLevelWorkspace(this.key) === this;
     const items: ComboBoxItem[] = [
       {
-        key: WorkspaceContextActionKey.DELETE,
+        key: 'delete',
         icon: 'trash',
         title: 'Delete workspace',
         group: 'workspace',
@@ -100,7 +99,7 @@ export class WorkspaceModel {
         }
       },
       {
-        key: WorkspaceContextActionKey.CLONE,
+        key: 'clone',
         icon: 'clone',
         title: 'Clone workspace',
         group: 'workspace',
@@ -115,7 +114,7 @@ export class WorkspaceModel {
         }
       },
       {
-        key: WorkspaceContextActionKey.RENAME,
+        key: 'rename',
         icon: 'i-cursor',
         title: 'Rename workspace',
         group: 'workspace',
@@ -133,7 +132,7 @@ export class WorkspaceModel {
 
     if (isTopLevel) {
       items.push({
-        key: WorkspaceContextActionKey.CONVERT_GROUP,
+        key: 'convert-group',
         icon: 'layer-group',
         title: 'Convert to group',
         group: 'workspace',
@@ -144,7 +143,7 @@ export class WorkspaceModel {
     }
 
     items.push({
-      key: WorkspaceContextActionKey.EXPORT,
+      key: 'export',
       icon: 'upload',
       title: 'Export workspace',
       group: 'actions',
@@ -166,12 +165,7 @@ export class WorkspaceModel {
     };
   }
 
-  clone(options: {
-    id: string;
-    name: string;
-    engine: ReactorWorkspaceEngine;
-    generateRootModel: () => ReactorRootWorkspaceModel;
-  }) {
+  clone(options: WorkspaceModelCloneOptions) {
     const model = options.generateRootModel();
     model.fromArray(this.model.toArray(), options.engine);
     return new WorkspaceModel({
@@ -180,6 +174,10 @@ export class WorkspaceModel {
       parentId: this.parentId,
       model
     });
+  }
+
+  cloneForImport(options: WorkspaceModelCloneOptions) {
+    return this.clone(options);
   }
 
   static deserialize(
