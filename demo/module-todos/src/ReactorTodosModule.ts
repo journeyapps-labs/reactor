@@ -64,14 +64,7 @@ export class ReactorTodosModule extends AbstractReactorModule {
     };
 
     workspaceStore.registerWorkspaceGenerator({
-      generateAdvancedWorkspace: async () => {
-        return new WorkspaceModel({
-          name: 'todos',
-          priority: 1,
-          model: generateTodosWorkspace()
-        });
-      },
-      generateSimpleWorkspace: async () => {
+      generateWorkspace: async () => {
         return new WorkspaceModel({
           name: 'todos',
           priority: 1,

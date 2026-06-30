@@ -54,10 +54,16 @@ interface GetPanelFactoryOptions {
   validateFactories?: boolean;
 }
 
-export interface WorkspaceGenerator {
-  generateAdvancedWorkspace: () => Promise<GeneratedWorkspaceEntry>;
-  generateSimpleWorkspace: () => Promise<GeneratedWorkspaceEntry>;
-}
+type WorkspaceGeneratorCallback = () => Promise<GeneratedWorkspaceEntry>;
+
+export type WorkspaceGenerator =
+  | {
+      generateWorkspace: WorkspaceGeneratorCallback;
+    }
+  | {
+      generateAdvancedWorkspace: WorkspaceGeneratorCallback;
+      generateSimpleWorkspace: WorkspaceGeneratorCallback;
+    };
 
 export class WorkspaceStore extends AbstractStore<WorkspacePrefsSerialized, WorkspaceStoreListener> {
   @observable
@@ -370,6 +376,16 @@ export class WorkspaceStore extends AbstractStore<WorkspacePrefsSerialized, Work
     this.workspaceGenerators.add(generator);
   }
 
+  generateWorkspace(generator: WorkspaceGenerator): Promise<GeneratedWorkspaceEntry> {
+    if ('generateWorkspace' in generator) {
+      return generator.generateWorkspace();
+    }
+    if (AdvancedWorkspacePreference.enabled()) {
+      return generator.generateAdvancedWorkspace();
+    }
+    return generator.generateSimpleWorkspace();
+  }
+
   @action
   async reset() {
     const currentModel = this.currentModel;
@@ -379,12 +395,7 @@ export class WorkspaceStore extends AbstractStore<WorkspacePrefsSerialized, Work
 
     const generated = await Promise.all(
       Array.from(this.workspaceGenerators.values()).map(async (generator) => {
-        let model: GeneratedWorkspaceEntry = null;
-        if (AdvancedWorkspacePreference.enabled()) {
-          model = await generator.generateAdvancedWorkspace();
-        } else {
-          model = await generator.generateSimpleWorkspace();
-        }
+        const model = await this.generateWorkspace(generator);
         if (model) {
           this.iterateListeners((cb) => cb.workspaceGenerated?.(model));
         }

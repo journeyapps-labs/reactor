@@ -40,10 +40,7 @@ export const setupWorkspaces = () => {
   };
 
   workspaceStore.registerWorkspaceGenerator({
-    generateAdvancedWorkspace: async () => {
-      return generatePlaygroundWorkspaceGroup();
-    },
-    generateSimpleWorkspace: async () => {
+    generateWorkspace: async () => {
       return generatePlaygroundWorkspaceGroup();
     }
   });
