@@ -39,8 +39,7 @@ theme.addThemeValues({
     },
     tabs: {
       selectedAccentSingle: '#ff8c2b',
-      selectedBackground: 'rgba(255,100,0,0.14)',
-      selectedAccent: '#ff8c2b'
+      selectedBackground: 'rgba(255,140,43,0.18)'
     },
     guide: {
       accent: 'rgb(184 107 255)',
@@ -64,11 +63,7 @@ theme.addThemeValues({
     },
     workspaceSubMenu: {
       background: '#202d34',
-      foreground: 'rgba(214,226,233,0.72)',
-      backgroundActive: 'rgba(255,140,43,0.18)',
-      foregroundActive: '#fff3e8',
-      backgroundHover: 'rgba(255,255,255,0.09)',
-      foregroundHover: '#ffffff'
+      foreground: 'rgba(214,226,233,0.72)'
     },
     changelog: {
       codeForeground: 'white',

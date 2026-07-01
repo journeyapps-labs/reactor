@@ -103,9 +103,8 @@ namespace S {
     padding: 0 8px;
     margin-bottom: 1px;
     text-align: left;
-    color: ${(p) => (p.selected ? p.theme.workspaceSubMenu.foregroundActive : p.theme.workspaceSubMenu.foreground)};
-    background: ${(p) =>
-      p.selected ? p.theme.workspaceSubMenu.backgroundActive : p.theme.workspaceSubMenu.background};
+    color: ${(p) => (p.selected ? p.theme.combobox.text : p.theme.workspaceSubMenu.foreground)};
+    background: ${(p) => (p.selected ? p.theme.tabs.selectedBackground : p.theme.workspaceSubMenu.background)};
     font-family: ${Fonts.PRIMARY};
     font-size: 15px;
     font-weight: ${(p) => (p.selected ? 600 : 500)};

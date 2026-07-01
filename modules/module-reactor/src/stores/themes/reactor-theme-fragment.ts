@@ -117,7 +117,6 @@ export const theme = new ThemeFragment({
       label: 'Tabs',
       colors: {
         selectedAccentSingle: '',
-        selectedAccent: '',
         selectedBackground: ''
       }
     },
@@ -192,11 +191,7 @@ export const theme = new ThemeFragment({
       label: 'Workspace submenu',
       colors: {
         background: 'Secondary workspace menu background',
-        foreground: 'Workspace pill text color',
-        backgroundActive: 'Active workspace pill background',
-        foregroundActive: 'Active workspace pill text color',
-        backgroundHover: 'Workspace pill hover background',
-        foregroundHover: 'Workspace pill hover text color'
+        foreground: 'Workspace text color'
       }
     },
     visor: {

@@ -100,11 +100,7 @@ export const DarkTheme = theme.addThemeValues({
     },
     workspaceSubMenu: {
       background: '#121922',
-      foreground: 'rgba(222,232,246,0.72)',
-      backgroundActive: 'rgba(0,192,255,0.16)',
-      foregroundActive: '#f4f9ff',
-      backgroundHover: 'rgba(120,148,184,0.16)',
-      foregroundHover: '#ffffff'
+      foreground: 'rgba(222,232,246,0.72)'
     },
     changelog: {
       codeForeground: 'rgb(132,221,255)',
@@ -125,8 +121,7 @@ export const DarkTheme = theme.addThemeValues({
     },
     tabs: {
       selectedAccentSingle: '#00c0ff',
-      selectedAccent: '#00c0ff',
-      selectedBackground: '#171b23'
+      selectedBackground: 'rgba(0, 192, 255, 0.16)'
     },
     visor: {
       background: 'rgba(0, 0, 0, 0.2)'

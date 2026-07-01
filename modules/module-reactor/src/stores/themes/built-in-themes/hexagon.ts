@@ -38,11 +38,7 @@ theme.addThemeValues({
     },
     workspaceSubMenu: {
       background: 'rgb(30,30,32)',
-      foreground: 'rgba(220,220,222,0.7)',
-      backgroundActive: 'linear-gradient(155deg, rgba(255, 143, 0, 0.18), rgba(255, 23, 68,0.18))',
-      foregroundActive: '#ffffff',
-      backgroundHover: 'rgba(255,255,255,0.08)',
-      foregroundHover: '#ffffff'
+      foreground: 'rgba(220,220,222,0.7)'
     },
     guide: {
       accent: '#ff8f00',
@@ -56,7 +52,6 @@ theme.addThemeValues({
     },
     tabs: {
       selectedAccentSingle: '#ff8f00',
-      selectedAccent: 'linear-gradient(155deg, #ff8f00, #ff1744)',
       selectedBackground: 'linear-gradient(155deg, rgba(255, 143, 0, 0.2), rgba(255, 23, 68,0.2))'
     },
     changelog: {

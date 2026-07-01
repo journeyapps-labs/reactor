@@ -1,7 +1,7 @@
 import * as React from 'react';
 import * as _ from 'lodash';
 import { TabSelectionWidget } from './TabSelectionWidget';
-import { TabSelectionWidgetProps } from './GenericTabSelectionWidget';
+import { TabSelectionWidgetProps } from './TabListWidget';
 import * as uuid from 'uuid';
 import { UXStore } from '../../stores/UXStore';
 import { inject } from '../../inversify.config';

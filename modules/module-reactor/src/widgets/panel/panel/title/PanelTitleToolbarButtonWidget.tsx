@@ -41,7 +41,7 @@ namespace S {
     ${Common};
     width: ${BUTTON_HEIGHT}px;
     background: ${(p) =>
-      p.enabled ? getTransparentColor(p.theme.tabs.selectedAccent, 0.2) : p.theme.panels.titleBackground};
+      p.enabled ? getTransparentColor(p.theme.tabs.selectedAccentSingle, 0.2) : p.theme.panels.titleBackground};
     color: ${(p) =>
       p.enabled ? p.theme.panels.titleForeground : getTransparentColor(p.theme.panels.titleForeground, 0.4)};
     border-color: ${(p) => p.border};

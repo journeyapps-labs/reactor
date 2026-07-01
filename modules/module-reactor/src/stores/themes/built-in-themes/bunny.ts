@@ -85,11 +85,7 @@ export const Bunny = theme.addThemeValues({
     },
     workspaceSubMenu: {
       background: '#1d1731',
-      foreground: 'rgba(233,222,255,0.7)',
-      backgroundActive: 'rgba(185,143,255,0.18)',
-      foregroundActive: '#ffffff',
-      backgroundHover: 'rgba(201,140,255,0.14)',
-      foregroundHover: '#ffffff'
+      foreground: 'rgba(233,222,255,0.7)'
     },
     footer: {
       background: '#171328'
@@ -106,8 +102,7 @@ export const Bunny = theme.addThemeValues({
     },
     tabs: {
       selectedAccentSingle: '#b98fff',
-      selectedAccent: 'linear-gradient(145deg, #8c5dff, #e07cff)',
-      selectedBackground: 'rgba(141,96,255,0.2)'
+      selectedBackground: 'rgba(185,143,255,0.2)'
     },
     visor: {
       background: 'rgba(0, 0, 0, 0.28)'

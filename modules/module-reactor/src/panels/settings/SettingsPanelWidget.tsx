@@ -3,7 +3,7 @@ import styled from '@emotion/styled';
 import { observer } from 'mobx-react';
 import { PrefsStore } from '../../stores/PrefsStore';
 import { inject } from '../../inversify.config';
-import { TabDirective } from '../../widgets/tabs/GenericTabSelectionWidget';
+import { TabDirective } from '../../widgets/tabs/TabListWidget';
 import { TabSelectionWidget } from '../../widgets/tabs/TabSelectionWidget';
 import * as _ from 'lodash';
 import { SettingsPanelModel } from './SettingsPanelModel';
@@ -21,7 +21,7 @@ namespace S {
     height: 100%;
   `;
 
-  export const Tabs = styled.div`
+  export const Tabs = styled(TabSelectionWidget)`
     flex-shrink: 0;
   `;
 }
@@ -66,15 +66,13 @@ export class SettingsPanelWidget extends React.Component<SettingsPanelWidgetProp
   render() {
     return (
       <S.Container>
-        <S.Tabs>
-          <TabSelectionWidget
-            tabSelected={(tab) => {
-              this.props.model.selectedTab = tab;
-            }}
-            tabs={this.getTabs()}
-            selected={this.props.model.selectedTab}
-          />
-        </S.Tabs>
+        <S.Tabs
+          tabSelected={(tab) => {
+            this.props.model.selectedTab = tab;
+          }}
+          tabs={this.getTabs()}
+          selected={this.props.model.selectedTab}
+        />
         <S.Content>{this.getContent()}</S.Content>
       </S.Container>
     );

@@ -61,11 +61,7 @@ export const Scarlet = theme.addThemeValues({
     },
     workspaceSubMenu: {
       background: '#151820',
-      foreground: 'rgba(225,218,222,0.68)',
-      backgroundActive: 'rgba(255,0,89,0.16)',
-      foregroundActive: '#ffffff',
-      backgroundHover: 'rgba(255,74,166,0.12)',
-      foregroundHover: '#ffffff'
+      foreground: 'rgba(225,218,222,0.68)'
     },
     changelog: {
       codeForeground: 'rgb(132,221,255)',
@@ -86,8 +82,7 @@ export const Scarlet = theme.addThemeValues({
     },
     tabs: {
       selectedAccentSingle: '#ff0059',
-      selectedAccent: '#ff0059',
-      selectedBackground: '#2d1e21'
+      selectedBackground: 'rgba(255,0,89,0.18)'
     },
     visor: {
       background: 'rgba(0, 0, 0, 0.2)'

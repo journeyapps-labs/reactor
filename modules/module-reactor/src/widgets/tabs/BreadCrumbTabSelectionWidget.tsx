@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { BreadCrumbWidget } from './BreadCrumbWidget';
 import { ioc } from '../../inversify.config';
-import { GenericTabSelectionWidget, TabDirective, TabSelectionWidgetProps } from './GenericTabSelectionWidget';
+import { TabDirective, TabListWidget, TabSelectionWidgetProps } from './TabListWidget';
 import { ThemeStore } from '../../stores/themes/ThemeStore';
 import { theme } from '../../stores/themes/reactor-theme-fragment';
 
@@ -11,7 +11,7 @@ export interface BreadCrumbTabSelectionWidgetProps extends TabSelectionWidgetPro
 
 export const BreadCrumbTabSelectionWidget: React.FC<BreadCrumbTabSelectionWidgetProps> = (props) => {
   return (
-    <GenericTabSelectionWidget
+    <TabListWidget
       {...props}
       tabItemGenerator={(tab: TabDirective, ref: React.RefObject<HTMLDivElement>) => {
         const selected = tab.key === props.selected;
@@ -36,7 +36,6 @@ export const BreadCrumbTabSelectionWidget: React.FC<BreadCrumbTabSelectionWidget
           />
         );
       }}
-      tabSelectionIndicatorGenerator={() => null}
     />
   );
 };

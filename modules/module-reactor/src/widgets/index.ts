@@ -90,7 +90,7 @@ export * from './search/SearchWidget';
 export * from './search/SearchablePanelPlaceholderWidget';
 export * from './search/MatchesWidget';
 
-export * from './tabs/GenericTabSelectionWidget';
+export * from './tabs/TabListWidget';
 export * from './tabs/BreadCrumbTabSelectionWidget';
 export * from './tabs/BreadCrumbWidget';
 export * from './tabs/TabSelectionWidget';

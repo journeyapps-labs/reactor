@@ -7,7 +7,6 @@ import { WorkspaceStore } from '../../stores/workspace/WorkspaceStore';
 import { ComboBoxStore } from '../../stores/combo/ComboBoxStore';
 import { ComboBoxItem } from '../../stores/combo/ComboBoxDirectives';
 import { styled, themed } from '../../stores/themes/reactor-theme-fragment';
-import { Fonts } from '../../fonts';
 import { AdvancedWorkspacePreference } from '../../preferences/AdvancedWorkspacePreference';
 import { DialogStore } from '../../stores/DialogStore';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
@@ -15,6 +14,8 @@ import { ResetWorkspacesAction } from '../../actions/builtin-actions/workspace/R
 import { ImportWorkspaceAction } from '../../actions/builtin-actions/workspace/ImportWorkspaceAction';
 import { ExportWorkspacesAction } from '../../actions/builtin-actions/workspace/ExportWorkspacesAction';
 import { ActionSource } from '../../actions/Action';
+import { TabDirective } from '../tabs/TabListWidget';
+import { TabSelectionWidget } from '../tabs/TabSelectionWidget';
 
 export interface HeaderWorkspaceSubMenuWidgetProps {
   offsetLeft: number;
@@ -25,7 +26,7 @@ namespace S {
   export const Bar = themed.div`
     display: flex;
     align-items: center;
-    min-height: 42px;
+    min-height: 30px;
     flex-grow: 0;
     flex-shrink: 0;
     background: ${(p) => p.theme.workspaceSubMenu.background};
@@ -40,29 +41,14 @@ namespace S {
   export const Items = styled.div<{ offsetLeft: number }>`
     display: flex;
     align-items: center;
-    gap: 4px;
     padding-left: ${(p) => Math.max(0, p.offsetLeft)}px;
     padding-right: 20px;
+
+    transition: padding-left 0.2s ease-out;
   `;
 
-  export const Pill = themed.div<{ selected: boolean }>`
+  export const Tabs = styled(TabSelectionWidget)`
     flex-shrink: 0;
-    border-radius: 999px;
-    padding: 4px 10px;
-    color: ${(p) => (p.selected ? p.theme.workspaceSubMenu.foregroundActive : p.theme.workspaceSubMenu.foreground)};
-    cursor: pointer;
-    background: ${(p) =>
-      p.selected ? p.theme.workspaceSubMenu.backgroundActive : p.theme.workspaceSubMenu.background};
-    font-family: ${Fonts.PRIMARY};
-    font-size: 13px;
-    line-height: 16px;
-    white-space: nowrap;
-
-    &:hover {
-      color: ${(p) => p.theme.workspaceSubMenu.foregroundHover};
-      background: ${(p) =>
-        p.selected ? p.theme.workspaceSubMenu.backgroundActive : p.theme.workspaceSubMenu.backgroundHover};
-    }
   `;
 
   export const AddButton = themed.button`
@@ -80,8 +66,8 @@ namespace S {
     cursor: pointer;
 
     &:hover {
-      color: ${(p) => p.theme.workspaceSubMenu.foregroundHover};
-      background: ${(p) => p.theme.workspaceSubMenu.backgroundHover};
+      color: ${(p) => p.theme.combobox.text};
+      background: ${(p) => p.theme.tabs.selectedBackground};
     }
   `;
 }
@@ -169,32 +155,23 @@ export class HeaderWorkspaceSubMenuWidget extends React.Component<HeaderWorkspac
     if (workspaces.length === 0) {
       return null;
     }
+    const tabs: TabDirective[] = workspaces.map((workspace) => ({
+      key: workspace.key,
+      name: workspace.name
+    }));
 
     return (
       <S.Bar>
         <S.Items offsetLeft={this.props.offsetLeft}>
-          {workspaces.map((workspace) => {
-            const tab = {
-              key: workspace.key,
-              name: workspace.name
-            };
-            return (
-              <S.Pill
-                key={workspace.key}
-                selected={workspace.key === this.workspaceStore.currentModel}
-                onClick={() => {
-                  this.workspaceStore.setActiveWorkspace(workspace.key);
-                }}
-                onContextMenu={(event) => {
-                  event.persist();
-                  event.preventDefault();
-                  this.getWorkspaceContextMenu(event, tab);
-                }}
-              >
-                {workspace.name}
-              </S.Pill>
-            );
-          })}
+          <S.Tabs
+            compact
+            tabs={tabs}
+            selected={this.workspaceStore.currentModel}
+            tabSelected={(key) => {
+              this.workspaceStore.setActiveWorkspace(key);
+            }}
+            tabRightClick={this.getWorkspaceContextMenu}
+          />
           {AdvancedWorkspacePreference.enabled() ? (
             <S.AddButton onClick={this.addWorkspace} title="Create nested workspace">
               <FontAwesomeIcon icon="plus" />

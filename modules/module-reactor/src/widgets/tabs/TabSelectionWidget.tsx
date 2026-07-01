@@ -1,56 +1,27 @@
 import * as React from 'react';
-import * as _ from 'lodash';
-import { MouseEvent, useCallback, useEffect, useRef } from 'react';
+import { MouseEvent } from 'react';
 import { TabWidget } from './TabWidget';
-import {
-  GenericTabSelectionWidget,
-  TabDirection,
-  TabDirective,
-  TabSelectionWidgetProps
-} from './GenericTabSelectionWidget';
+import { TabBounds, TabDirective, TabListWidget, TabSelectionWidgetProps } from './TabListWidget';
 import { themed } from '../../stores/themes/reactor-theme-fragment';
-import { useForceUpdate } from '../../hooks/useForceUpdate';
 
 namespace S {
-  export const SelectedBlock = themed.div<{ width?: number; left?: number; animate_enabled?: boolean }>`
-    height: 3px;
-    width: ${(p) => p.width || 0}px;
-    left: ${(p) => p.left || 0}px;
-    background: ${(p) => p.theme.tabs.selectedAccent};
+  export const SelectedBackground = themed.div<{ bounds?: TabBounds }>`
     position: absolute;
-    ${(p) =>
-      p.animate_enabled
-        ? 'transition: left 0.2s cubic-bezier(0.25, 0.46, 0.45, 0.94), width 0.1s cubic-bezier(0.25, 0.46, 0.45, 0.94)'
-        : ''};
+    top: 0;
+    left: 0;
+    width: ${(p) => p.bounds?.width ?? 0}px;
+    height: ${(p) => p.bounds?.height ?? 0}px;
+    border-radius: 5px;
+    background: ${(p) => p.theme.tabs.selectedBackground};
+    opacity: ${(p) => (p.bounds ? 1 : 0)};
+    transform: translate3d(${(p) => p.bounds?.left ?? 0}px, ${(p) => p.bounds?.top ?? 0}px, 0);
+    transition:
+      transform 0.2s cubic-bezier(0.25, 0.46, 0.45, 0.94),
+      width 0.1s cubic-bezier(0.25, 0.46, 0.45, 0.94),
+      height 0.1s cubic-bezier(0.25, 0.46, 0.45, 0.94),
+      opacity 0.1s ease-out;
   `;
 }
-
-const TabSelectionIndicator: React.FC<{
-  selectedTabBounds: {
-    left: number;
-    width: number;
-  };
-  animate?: boolean;
-  direction: TabDirection;
-}> = (props) => {
-  // Only show for when it's  a row layout
-  if (props.direction == TabDirection.COLUMN) {
-    return null;
-  }
-
-  const { selectedTabBounds } = props;
-  if (!selectedTabBounds) {
-    return null;
-  }
-
-  return (
-    <S.SelectedBlock
-      animate_enabled={props.animate ?? true}
-      width={selectedTabBounds.width}
-      left={selectedTabBounds.left}
-    />
-  );
-};
 
 export interface TabWidgetWrapperProps {
   tab: TabDirective;
@@ -58,8 +29,7 @@ export interface TabWidgetWrapperProps {
   selected: boolean;
   tabSelected: () => any;
   tabRightClick: (event: MouseEvent) => any;
-  sizeUpdated: (rect: { left: number; width: number }) => any;
-  selectedBoundsUpdated?: (rect: { left: number; width: number }) => any;
+  compact?: boolean;
 }
 
 export const TabWidgetWrapper: React.FC<TabWidgetWrapperProps> = ({
@@ -68,43 +38,8 @@ export const TabWidgetWrapper: React.FC<TabWidgetWrapperProps> = ({
   selected,
   tabSelected,
   tabRightClick,
-  sizeUpdated,
-  selectedBoundsUpdated
+  compact
 }) => {
-  const update = useCallback(() => {
-    if (!forwardRef.current) {
-      return;
-    }
-    const bounds = forwardRef.current.getBoundingClientRect();
-    const rect = {
-      width: bounds.width,
-      left: (forwardRef.current.offsetParent as HTMLDivElement).offsetLeft
-    };
-    sizeUpdated(rect);
-    if (selected) {
-      selectedBoundsUpdated?.({
-        width: bounds.width,
-        left: bounds.left
-      });
-    }
-  }, [forwardRef, selected, selectedBoundsUpdated]);
-
-  useEffect(() => {
-    const observer1 = new ResizeObserver(() => {
-      update();
-    });
-
-    observer1.observe(forwardRef.current);
-    update();
-    return () => {
-      observer1.disconnect();
-    };
-  }, []);
-
-  useEffect(() => {
-    update();
-  }, [selected, update]);
-
   return (
     <TabWidget
       forwardRef={forwardRef}
@@ -112,22 +47,20 @@ export const TabWidgetWrapper: React.FC<TabWidgetWrapperProps> = ({
       selected={selected}
       tabSelected={() => {
         tabSelected();
-        _.defer(() => {
-          update();
-        });
       }}
       tabRightClick={tabRightClick}
       customContent={tab.tabContent?.()}
+      disabled={tab.disabled}
+      compact={compact}
     />
   );
 };
 
-export const TabSelectionWidget: React.FC<TabSelectionWidgetProps & { animate?: boolean }> = (props) => {
-  const update = useForceUpdate();
-  const sizes = useRef<{ [key: string]: { left: number; width: number } }>({});
+export const TabSelectionWidget: React.FC<TabSelectionWidgetProps> = (props) => {
   return (
-    <GenericTabSelectionWidget
+    <TabListWidget
       {...props}
+      selectedBackgroundGenerator={(bounds) => <S.SelectedBackground bounds={bounds} />}
       tabItemGenerator={(tab: TabDirective, ref: React.RefObject<HTMLDivElement>) => {
         return (
           <TabWidgetWrapper
@@ -141,24 +74,10 @@ export const TabSelectionWidget: React.FC<TabSelectionWidgetProps & { animate?: 
             tabRightClick={(event) => {
               props.tabRightClick?.(event, tab);
             }}
-            selectedBoundsUpdated={props.selectedBoundsUpdated}
-            sizeUpdated={(rect) => {
-              sizes.current = {
-                ...sizes.current,
-                [tab.key]: rect
-              };
-              update();
-            }}
+            compact={props.compact}
           />
         );
       }}
-      tabSelectionIndicatorGenerator={(selectedTabRef, containerRef) => (
-        <TabSelectionIndicator
-          animate={props.animate}
-          selectedTabBounds={sizes.current[props.selected]}
-          direction={props.direction}
-        />
-      )}
     />
   );
 };

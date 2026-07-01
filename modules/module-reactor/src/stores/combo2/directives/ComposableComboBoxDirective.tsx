@@ -4,7 +4,7 @@ import * as React from 'react';
 import styled from '@emotion/styled';
 import { makeObservable, observable } from 'mobx';
 import { observer } from 'mobx-react';
-import { TabDirective } from '../../../widgets/tabs/GenericTabSelectionWidget';
+import { TabDirective } from '../../../widgets/tabs/TabListWidget';
 import { TabSelectionWidget } from '../../../widgets/tabs/TabSelectionWidget';
 import { ComboBoxItem } from '../../combo/ComboBoxDirectives';
 

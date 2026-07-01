@@ -4,7 +4,7 @@ import { CommandPalletWidget } from './CommandPalletWidget';
 import { CMDPalletSearchEngineResult, CommandPalletSearchResultEntry } from '../../cmd-pallet/CMDPalletSearchEngine';
 import { ioc } from '../../inversify.config';
 import { MousePosition } from '../combo/SmartPositionWidget';
-import { TabDirective } from '../../widgets/tabs/GenericTabSelectionWidget';
+import { TabDirective } from '../../widgets/tabs/TabListWidget';
 import { SmartCommandPalletCategorywidget } from './SmartCommandPalletCategorywidget';
 import { autorun, IReactionDisposer } from 'mobx';
 import { CommonKeys, KeyboardContext, KeyboardStore } from '../../stores/KeyboardStore';

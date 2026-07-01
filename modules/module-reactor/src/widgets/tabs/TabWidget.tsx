@@ -2,29 +2,31 @@ import * as React from 'react';
 import { useAttention } from '../guide/AttentionWrapperWidget';
 import { styled } from '../../stores/themes/reactor-theme-fragment';
 import { ButtonComponentSelection, ReactorComponentType } from '../../stores/guide/selections/common';
-import { GenericTabWidgetProps } from './GenericTabSelectionWidget';
+import { TabItemWidgetProps } from './TabListWidget';
 import { Fonts } from '../../fonts';
 
 namespace S {
-  export const Tab = styled.div<{ selected: boolean; attention: boolean; disabled?: boolean }>`
-    padding: 8px 13px;
+  export const Tab = styled.div<{ selected: boolean; attention: boolean; disabled?: boolean; compact?: boolean }>`
+    padding: ${(p) => (p.compact ? '4px 10px' : '4px 13px')};
     color: ${(p) => p.theme.combobox.text};
     cursor: ${(p) => (p.disabled ? 'auto' : 'pointer')};
     opacity: ${(p) => (p.attention || p.selected ? 1 : 0.5)};
-    background: ${(p) => (p.selected ? p.theme.tabs.selectedBackground : 'transparent')};
-    //prevents a weird ghosting border with transparent borders
-    background-origin: border-box;
+    background: transparent;
     font-family: ${Fonts.PRIMARY};
-    font-size: 15px;
+    font-size: ${(p) => (p.compact ? '13px' : '15px')};
+    line-height: ${(p) => (p.compact ? '11px' : 'normal')};
     white-space: nowrap;
-    border: ${(p) => (p.attention ? p.theme.guide.accent : `transparent`)} solid 1px;
+    border: 0;
+    border-radius: 5px;
+    outline: ${(p) => (p.attention ? p.theme.guide.accent : `transparent`)} solid 1px;
+    outline-offset: -1px;
     &:hover {
       opacity: 1;
     }
   `;
 }
 
-export const TabWidget: React.FC<GenericTabWidgetProps> = (props) => {
+export const TabWidget: React.FC<TabItemWidgetProps> = (props) => {
   const selected = useAttention<ButtonComponentSelection>({
     type: ReactorComponentType.TAB,
     forwardRef: props.forwardRef,
@@ -51,6 +53,7 @@ export const TabWidget: React.FC<GenericTabWidgetProps> = (props) => {
         }
       }}
       ref={props.forwardRef}
+      compact={props.compact}
     >
       {props.customContent || props.label}
     </S.Tab>

@@ -103,11 +103,7 @@ theme.addThemeValues({
     },
     workspaceSubMenu: {
       background: '#dfe5ee',
-      foreground: 'rgba(38,50,67,0.68)',
-      backgroundActive: '#eef4fb',
-      foregroundActive: '#111926',
-      backgroundHover: '#edf2f8',
-      foregroundHover: '#182333'
+      foreground: 'rgba(38,50,67,0.68)'
     },
     changelog: {
       codeForeground: 'rgb(132,221,255)',
@@ -128,8 +124,7 @@ theme.addThemeValues({
     },
     tabs: {
       selectedAccentSingle: '#2f5f8f',
-      selectedAccent: '#2f5f8f',
-      selectedBackground: '#f1f6fc'
+      selectedBackground: '#dbe7f4'
     },
     visor: {
       background: 'rgba(0,0,0,0.2)'

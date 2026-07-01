@@ -36,11 +36,7 @@ theme.addThemeValues({
     },
     workspaceSubMenu: {
       background: 'rgb(38,38,40)',
-      foreground: 'rgba(206,206,210,0.72)',
-      backgroundActive: 'rgba(255,255,255,0.13)',
-      foregroundActive: '#ffffff',
-      backgroundHover: 'rgba(255,255,255,0.08)',
-      foregroundHover: '#ffffff'
+      foreground: 'rgba(206,206,210,0.72)'
     },
     trees: {
       ...DarkTheme.trees,
@@ -58,8 +54,7 @@ theme.addThemeValues({
     },
     tabs: {
       selectedAccentSingle: '#fff',
-      selectedAccent: '#fff',
-      selectedBackground: 'rgba(0,0,0,0)'
+      selectedBackground: 'rgba(255,255,255,0.13)'
     },
     changelog: {
       codeForeground: 'white',

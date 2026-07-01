@@ -18,9 +18,8 @@ namespace S {
     font-family: ${Fonts.PRIMARY};
     font-size: 13px;
     line-height: 16px;
-    color: ${(p) => (p.selected ? p.theme.workspaceSubMenu.foregroundActive : p.theme.workspaceSubMenu.foreground)};
-    background: ${(p) =>
-      p.selected ? p.theme.workspaceSubMenu.backgroundActive : p.theme.workspaceSubMenu.background};
+    color: ${(p) => (p.selected ? p.theme.combobox.text : p.theme.workspaceSubMenu.foreground)};
+    background: ${(p) => (p.selected ? p.theme.tabs.selectedBackground : p.theme.workspaceSubMenu.background)};
   `;
 }
 

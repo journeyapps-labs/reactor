@@ -4,7 +4,7 @@ import { ControlledSearchWidget } from '../../widgets/search/ControlledSearchWid
 import { TabSelectionKeyboardWidget } from '../../widgets/tabs/TabSelectionKeyboardWidget';
 import { TabKeyboardHelpWidget } from '../../widgets/tabs/TabKeyboardHelpWidget';
 import { FloatingPanelWidget } from '../../widgets/floating/FloatingPanelWidget';
-import { TabDirective } from '../../widgets/tabs/GenericTabSelectionWidget';
+import { TabDirective } from '../../widgets/tabs/TabListWidget';
 import { LargerCMDPalletSetting } from '../../preferences/LargerCMDPalletSetting';
 import { observer } from 'mobx-react';
 import * as _ from 'lodash';

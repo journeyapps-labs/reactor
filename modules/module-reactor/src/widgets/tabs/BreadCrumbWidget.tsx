@@ -1,13 +1,13 @@
 import React from 'react';
 import { styled, theme } from '../../stores/themes/reactor-theme-fragment';
-import { GenericTabWidgetProps } from './GenericTabSelectionWidget';
+import { TabItemWidgetProps } from './TabListWidget';
 import { useAttention } from '../guide/AttentionWrapperWidget';
 import { ButtonComponentSelection, ReactorComponentType } from '../../stores/guide/selections/common';
 import { ioc } from '../../inversify.config';
 import { css } from '@emotion/react';
 import { ThemeStore } from '../../stores/themes/ThemeStore';
 
-export interface BreadCrumbWidgetProps extends GenericTabWidgetProps {
+export interface BreadCrumbWidgetProps extends TabItemWidgetProps {
   backgroundColor: string;
 }
 

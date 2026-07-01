@@ -44,19 +44,14 @@ theme.addThemeValues({
     },
     workspaceSubMenu: {
       background: '#111111',
-      foreground: 'rgba(205,205,205,0.68)',
-      backgroundActive: 'rgba(51,184,222,0.16)',
-      foregroundActive: '#eeeeee',
-      backgroundHover: 'rgba(255,255,255,0.08)',
-      foregroundHover: '#f2f2f2'
+      foreground: 'rgba(205,205,205,0.68)'
     },
     footer: {
       background: '#0d0d0d'
     },
     tabs: {
       selectedAccentSingle: '#33b8de',
-      selectedAccent: '#33b8de',
-      selectedBackground: '#101010'
+      selectedBackground: 'rgba(255,255,255,0.08)'
     },
     trees: {
       ...DarkTheme.trees,
