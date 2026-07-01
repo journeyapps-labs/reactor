@@ -14,6 +14,7 @@ import { VisorMetadataControl } from '../settings/VisorMetadataControl';
 import { DateFormatPreference } from '../preferences/DateFormatPreference';
 import { DateLocalSetting } from '../preferences/DateLocalSetting';
 import { DateShowZoneSetting } from '../preferences/DateShowZoneSetting';
+import { WorkspaceSubMenuPinnedPreference } from '../preferences/WorkspaceSubMenuPinnedPreference';
 
 export enum CorePreferences {
   LEFT_TOOLBAR = '/toolbars/left',
@@ -116,6 +117,7 @@ export const setupPrefs = () => {
   );
 
   prefsStore.registerPreference(new AdvancedWorkspacePreference());
+  prefsStore.registerPreference(new WorkspaceSubMenuPinnedPreference());
   prefsStore.registerPreference(new DateFormatPreference());
   prefsStore.registerPreference(new DateLocalSetting());
   prefsStore.registerPreference(new DateShowZoneSetting());

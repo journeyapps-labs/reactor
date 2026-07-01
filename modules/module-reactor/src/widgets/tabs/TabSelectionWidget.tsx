@@ -30,6 +30,8 @@ export interface TabWidgetWrapperProps {
   tabSelected: () => any;
   tabRightClick: (event: MouseEvent) => any;
   compact?: boolean;
+  tabMouseEnter?: (event: MouseEvent) => any;
+  tabMouseLeave?: (event: MouseEvent) => any;
 }
 
 export const TabWidgetWrapper: React.FC<TabWidgetWrapperProps> = ({
@@ -38,7 +40,9 @@ export const TabWidgetWrapper: React.FC<TabWidgetWrapperProps> = ({
   selected,
   tabSelected,
   tabRightClick,
-  compact
+  compact,
+  tabMouseEnter,
+  tabMouseLeave
 }) => {
   return (
     <TabWidget
@@ -52,6 +56,8 @@ export const TabWidgetWrapper: React.FC<TabWidgetWrapperProps> = ({
       customContent={tab.tabContent?.()}
       disabled={tab.disabled}
       compact={compact}
+      onMouseEnter={tabMouseEnter}
+      onMouseLeave={tabMouseLeave}
     />
   );
 };
@@ -73,6 +79,12 @@ export const TabSelectionWidget: React.FC<TabSelectionWidgetProps> = (props) => 
             }}
             tabRightClick={(event) => {
               props.tabRightClick?.(event, tab);
+            }}
+            tabMouseEnter={(event) => {
+              tab.tabMouseEnter?.(event, tab);
+            }}
+            tabMouseLeave={(event) => {
+              tab.tabMouseLeave?.(event, tab);
             }}
             compact={props.compact}
           />

@@ -52,6 +52,8 @@ export const TabWidget: React.FC<TabItemWidgetProps> = (props) => {
           props.tabRightClick(event);
         }
       }}
+      onMouseEnter={props.onMouseEnter}
+      onMouseLeave={props.onMouseLeave}
       ref={props.forwardRef}
       compact={props.compact}
     >

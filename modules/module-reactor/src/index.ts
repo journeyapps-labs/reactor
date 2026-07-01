@@ -74,6 +74,7 @@ export * from './search/SearchEngine';
 
 export * from './preferences/AdvancedWorkspacePreference';
 export * from './preferences/ShowChangelogSetting';
+export * from './preferences/WorkspaceSubMenuPinnedPreference';
 
 export * from './panels/settings/keys/KeyboardShortcutPillsWidget';
 export * from './panels/settings/SettingsPanelFactory';

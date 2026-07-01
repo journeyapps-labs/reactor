@@ -17,6 +17,7 @@ import { ToolbarPreference } from '../../settings/ToolbarPreference';
 import Avatar from 'react-avatar';
 import { TooltipPosition } from '../info/tooltips';
 import { HeaderWorkspaceSubMenuWidget } from './HeaderWorkspaceSubMenuWidget';
+import { WorkspaceSubMenuPinnedPreference } from '../../preferences/WorkspaceSubMenuPinnedPreference';
 
 export interface HeaderWidgetProps {
   primaryHeading: Btn;
@@ -53,6 +54,7 @@ namespace S {
     flex-grow: 0;
     flex-shrink: 0;
     margin-bottom: 2px;
+    position: relative;
   `;
 
   export const Header = themed.div<{ shadow: boolean }>`
@@ -191,6 +193,7 @@ interface HeaderWidgetState {
   logoClickStarted: boolean;
   primaryHeadingClickStarted: boolean;
   workspaceMenuOffsetLeft: number;
+  hoveredWorkspaceGroupKey: string | null;
 }
 
 @observer
@@ -203,7 +206,8 @@ export class HeaderWidget extends React.Component<HeaderWidgetProps, HeaderWidge
     this.state = {
       logoClickStarted: false,
       primaryHeadingClickStarted: false,
-      workspaceMenuOffsetLeft: 0
+      workspaceMenuOffsetLeft: 0,
+      hoveredWorkspaceGroupKey: null
     };
   }
 
@@ -237,9 +241,22 @@ export class HeaderWidget extends React.Component<HeaderWidgetProps, HeaderWidge
     }
   };
 
+  clearHoveredWorkspaceGroup = () => {
+    if (this.state.hoveredWorkspaceGroupKey) {
+      this.setState({ hoveredWorkspaceGroupKey: null });
+    }
+  };
+
   render() {
+    const pinnedSubMenu = WorkspaceSubMenuPinnedPreference.pinned();
+    const subMenuWorkspaceKey = pinnedSubMenu ? undefined : this.state.hoveredWorkspaceGroupKey || undefined;
+
     return (
-      <S.HeaderContainer className={this.props.className} ref={this.props.forwardRef}>
+      <S.HeaderContainer
+        className={this.props.className}
+        ref={this.props.forwardRef}
+        onMouseLeave={this.clearHoveredWorkspaceGroup}
+      >
         <S.Header shadow={!AdvancedWorkspacePreference.enabled()}>
           <S.Logo
             onMouseDown={() => {
@@ -289,7 +306,13 @@ export class HeaderWidget extends React.Component<HeaderWidgetProps, HeaderWidge
               </S.MetaOrg>
             ) : null}
           </S.Meta>
-          <HeaderWorkspaceMenuWidget selectedBoundsUpdated={this.updateWorkspaceMenuOffset} />
+          <HeaderWorkspaceMenuWidget
+            selectedBoundsUpdated={this.updateWorkspaceMenuOffset}
+            pinnedSubMenu={pinnedSubMenu}
+            workspaceGroupHovered={(key) => {
+              this.setState({ hoveredWorkspaceGroupKey: key });
+            }}
+          />
           {this.getLeftButtons()}
 
           {AdvancedWorkspacePreference.enabled() ? (
@@ -322,7 +345,15 @@ export class HeaderWidget extends React.Component<HeaderWidgetProps, HeaderWidge
             <S.AvatarCircle email={this.props.email || ''} name={this.props.name} maxInitials={2} />
           </S.User>
         </S.Header>
-        <HeaderWorkspaceSubMenuWidget offsetLeft={this.state.workspaceMenuOffsetLeft} />
+        <HeaderWorkspaceSubMenuWidget
+          offsetLeft={this.state.workspaceMenuOffsetLeft}
+          workspaceKey={subMenuWorkspaceKey}
+          pinned={pinnedSubMenu}
+          togglePinned={() => {
+            WorkspaceSubMenuPinnedPreference.get().toggle();
+          }}
+          hoverInactive={this.clearHoveredWorkspaceGroup}
+        />
       </S.HeaderContainer>
     );
   }

@@ -9,6 +9,8 @@ export interface TabDirective {
   name: string;
   tabContent?: () => React.JSX.Element;
   disabled?: boolean;
+  tabMouseEnter?: (event: MouseEvent, tab: TabDirective) => any;
+  tabMouseLeave?: (event: MouseEvent, tab: TabDirective) => any;
 }
 
 export interface TabBadgeDirective {
@@ -48,6 +50,8 @@ export interface TabItemWidgetProps {
   customContent?: React.JSX.Element;
   disabled?: boolean;
   compact?: boolean;
+  onMouseEnter?: (event: MouseEvent) => any;
+  onMouseLeave?: (event: MouseEvent) => any;
 }
 
 export type TabSelectionRefMap = { [key: string]: React.RefObject<HTMLDivElement> };

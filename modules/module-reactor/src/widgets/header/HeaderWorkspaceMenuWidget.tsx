@@ -40,6 +40,8 @@ namespace S {
 export interface HeaderWorkspaceMenuWidgetProps {
   selectedBoundsUpdated?: (rect: { left: number; width: number }) => any;
   tabRightClick?: (event, tab) => any;
+  pinnedSubMenu: boolean;
+  workspaceGroupHovered?: (key: string | null) => any;
 }
 
 @observer
@@ -111,6 +113,19 @@ export class HeaderWorkspaceMenuWidget extends React.Component<HeaderWorkspaceMe
     }
   };
 
+  getWorkspaceTabLabel = (workspace) => {
+    if (this.props.pinnedSubMenu || workspace.key !== this.workspaceStore.currentTopWorkspace) {
+      return workspace.name;
+    }
+
+    const activeSubWorkspace = this.workspaceStore.getWorkspace(this.workspaceStore.currentModel);
+    if (!activeSubWorkspace || activeSubWorkspace.key === workspace.key) {
+      return workspace.name;
+    }
+
+    return `${workspace.name}: ${activeSubWorkspace.name}`;
+  };
+
   render() {
     return (
       <S.Container>
@@ -123,12 +138,15 @@ export class HeaderWorkspaceMenuWidget extends React.Component<HeaderWorkspaceMe
             const hasChildren = workspace.getChildren().length > 0;
             return {
               key: workspace.key,
-              name: workspace.name,
+              name: this.getWorkspaceTabLabel(workspace),
+              tabMouseEnter: () => {
+                this.props.workspaceGroupHovered?.(hasChildren ? workspace.key : null);
+              },
               tabContent: hasChildren
                 ? () => {
                     return (
                       <S.WorkspaceTabContent>
-                        <span>{workspace.name}</span>
+                        <span>{this.getWorkspaceTabLabel(workspace)}</span>
                         <FontAwesomeIcon className="icon" icon="layer-group" />
                       </S.WorkspaceTabContent>
                     );
