@@ -34,7 +34,7 @@ namespace S {
     gap: 6px;
     overflow-x: auto;
     padding: 8px;
-    background: ${(p) => p.theme.workspaceSubMenu.background};
+    background: ${(p) => p.theme.mobileNavigation.background};
 
     ::-webkit-scrollbar {
       display: none;
@@ -52,7 +52,7 @@ namespace S {
     height: 100%;
     align-items: center;
     justify-content: center;
-    color: ${(p) => p.theme.workspaceSubMenu.foreground};
+    color: ${(p) => p.theme.mobileNavigation.foreground};
     font-family: ${Fonts.PRIMARY};
   `;
 }

@@ -15,10 +15,10 @@
     "@journeyapps-labs/reactor-mod-editor": "workspace:^",
     "@journeyapps-labs/reactor-mod-todos": "workspace:^",
     "@projectstorm/react-workspaces-core": "^4.2.3",
-    "mobx": "^6.15.0",
+    "mobx": "^6.16.1",
     "monaco-editor": "^0.55.1",
-    "react": "19.2.4",
-    "uuid": "^13.0.0"
+    "react": "19.2.7",
+    "uuid": "^14.0.1"
   },
   "devDependencies": {
     "@journeyapps-labs/lib-reactor-builder": "workspace:^",

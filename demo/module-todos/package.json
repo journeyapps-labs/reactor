@@ -10,8 +10,8 @@
   "dependencies": {
     "@journeyapps-labs/common-utils": "^1.0.1",
     "@journeyapps-labs/reactor-mod": "workspace:^",
-    "mobx": "^6.15.0",
-    "uuid": "^13.0.0"
+    "mobx": "^6.16.1",
+    "uuid": "^14.0.1"
   },
   "devDependencies": {
     "@journeyapps-labs/lib-reactor-builder": "workspace:^",

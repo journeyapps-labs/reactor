@@ -7,6 +7,7 @@ import * as React from 'react';
 import { WorkspaceEngine, WorkspaceModel } from '@projectstorm/react-workspaces-core';
 import { observable } from 'mobx';
 import { styled } from '../../themes/reactor-theme-fragment';
+import { WORKSPACE_PANEL_RADIUS } from '../../../widgets/workspace/workspacePanelChrome';
 
 export class ReactorWindowModel extends FloatingWindowModel {
   @observable
@@ -70,5 +71,7 @@ namespace S {
     display: flex;
     flex-direction: column;
     background: ${(p) => p.theme.workspace.background};
+    border-radius: ${WORKSPACE_PANEL_RADIUS}px;
+    overflow: hidden;
   `;
 }

@@ -17,7 +17,7 @@ theme.addThemeValues({
       grid: '#dde2e8'
     },
     workspace: {
-      background: '#f6f8fb',
+      background: '#d8e0ea',
       overlayBackground: 'rgba(246,248,251,0.45)',
       overlayBorder: '#a8b3c0',
       overlayBackgroundHover: 'rgba(246,248,251,0.85)',
@@ -102,8 +102,16 @@ theme.addThemeValues({
       foreground: '#1f2936'
     },
     workspaceSubMenu: {
-      background: '#dfe5ee',
+      background: '#e7ebf1',
+      backgroundUnPinned: '#dfe5ee',
       foreground: 'rgba(38,50,67,0.68)'
+    },
+    mobileNavigation: {
+      background: '#e7ebf1',
+      foreground: 'rgba(38,50,67,0.68)',
+      border: '#c8d3e2',
+      selectedBackground: '#dbe7f4',
+      selectedForeground: '#17243a'
     },
     changelog: {
       codeForeground: 'rgb(132,221,255)',

@@ -12,7 +12,7 @@ theme.addThemeValues({
     },
     workspace: {
       ...DarkTheme.workspace,
-      background: 'rgb(22 22 22)'
+      background: 'rgb(20 20 22)'
     },
     panels: {
       ...DarkTheme.panels,
@@ -37,8 +37,16 @@ theme.addThemeValues({
       background: 'rgb(25,25,26)'
     },
     workspaceSubMenu: {
-      background: 'rgb(30,30,32)',
+      background: 'rgb(25,25,26)',
+      backgroundUnPinned: 'rgb(30,30,32)',
       foreground: 'rgba(220,220,222,0.7)'
+    },
+    mobileNavigation: {
+      background: 'rgb(25,25,26)',
+      foreground: 'rgba(220,220,222,0.7)',
+      border: 'rgb(51,51,53)',
+      selectedBackground: 'linear-gradient(155deg, rgba(255, 143, 0, 0.2), rgba(255, 23, 68,0.2))',
+      selectedForeground: 'white'
     },
     guide: {
       accent: '#ff8f00',

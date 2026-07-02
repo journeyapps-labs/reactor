@@ -109,10 +109,6 @@ export class EmptyWorkspacePanel extends React.Component<EmptyWorkspacePanelProp
   }
 
   render() {
-    return (
-      <PanelWidget event={this.props.event} factory={this.props.factory}>
-        {AdvancedWorkspacePreference.enabled() ? this.getSelector() : this.getHint()}
-      </PanelWidget>
-    );
+    return <>{AdvancedWorkspacePreference.enabled() ? this.getSelector() : this.getHint()}</>;
   }
 }

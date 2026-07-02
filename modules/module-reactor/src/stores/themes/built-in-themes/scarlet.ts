@@ -10,6 +10,10 @@ export const Scarlet = theme.addThemeValues({
       background: 'rgb(17,18,23)',
       grid: 'rgb(24,26,33)'
     },
+    workspace: {
+      ...DarkTheme.workspace,
+      background: '#0f1117'
+    },
     panels: {
       ...DarkTheme.panels,
       iconBackground: 'rgb(27,29,36)',
@@ -60,8 +64,16 @@ export const Scarlet = theme.addThemeValues({
       backgroundLogoHover: '#2f1a1a'
     },
     workspaceSubMenu: {
-      background: '#151820',
+      background: 'rgb(17,18,23)',
+      backgroundUnPinned: '#151820',
       foreground: 'rgba(225,218,222,0.68)'
+    },
+    mobileNavigation: {
+      background: 'rgb(17,18,23)',
+      foreground: 'rgba(225,218,222,0.68)',
+      border: 'rgba(255,255,255,0.08)',
+      selectedBackground: 'rgba(255,0,89,0.18)',
+      selectedForeground: 'white'
     },
     changelog: {
       codeForeground: 'rgb(132,221,255)',

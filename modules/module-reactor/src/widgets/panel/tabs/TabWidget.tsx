@@ -40,7 +40,7 @@ namespace S {
     margin-right: 1px;
     align-items: center;
     padding: 0 10px;
-    height: ${TAB_BAR_HEIGHT - 4}px;
+    height: ${TAB_BAR_HEIGHT - 2}px;
     overflow: hidden;
     cursor: pointer;
     border-left: solid 3px ${(p) => (p.selected ? p.theme.tabs.selectedAccentSingle : 'transparent')};

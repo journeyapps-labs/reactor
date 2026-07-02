@@ -41,7 +41,7 @@ export interface HeaderWorkspaceMenuWidgetProps {
   selectedBoundsUpdated?: (rect: { left: number; width: number }) => any;
   tabRightClick?: (event, tab) => any;
   pinnedSubMenu: boolean;
-  workspaceGroupHovered?: (key: string | null) => any;
+  workspaceGroupHovered?: (key: string | null, rect?: { left: number; width: number }) => any;
 }
 
 @observer
@@ -139,8 +139,12 @@ export class HeaderWorkspaceMenuWidget extends React.Component<HeaderWorkspaceMe
             return {
               key: workspace.key,
               name: this.getWorkspaceTabLabel(workspace),
-              tabMouseEnter: () => {
-                this.props.workspaceGroupHovered?.(hasChildren ? workspace.key : null);
+              tabMouseEnter: (event) => {
+                const workspaceKey = hasChildren ? workspace.key : null;
+                this.props.workspaceGroupHovered?.(
+                  workspaceKey,
+                  workspaceKey ? event.currentTarget.getBoundingClientRect() : undefined
+                );
               },
               tabContent: hasChildren
                 ? () => {

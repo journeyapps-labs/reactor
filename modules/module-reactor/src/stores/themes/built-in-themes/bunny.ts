@@ -12,7 +12,7 @@ export const Bunny = theme.addThemeValues({
     },
     workspace: {
       ...DarkTheme.workspace,
-      background: '#171328',
+      background: '#110d1f',
       overlayBackground: 'rgba(34, 26, 56, 0.45)',
       overlayBackgroundHover: 'rgba(34, 26, 56, 0.78)',
       overlayBorder: 'rgba(0,0,0,0)',
@@ -84,8 +84,16 @@ export const Bunny = theme.addThemeValues({
       foreground: '#f6eeff'
     },
     workspaceSubMenu: {
-      background: '#1d1731',
+      background: '#171328',
+      backgroundUnPinned: '#1d1731',
       foreground: 'rgba(233,222,255,0.7)'
+    },
+    mobileNavigation: {
+      background: '#171328',
+      foreground: 'rgba(233,222,255,0.7)',
+      border: 'rgba(233,222,255,0.14)',
+      selectedBackground: 'rgba(185,143,255,0.2)',
+      selectedForeground: 'white'
     },
     footer: {
       background: '#171328'

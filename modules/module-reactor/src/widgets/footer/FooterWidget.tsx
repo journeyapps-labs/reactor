@@ -7,6 +7,7 @@ import { Btn } from '../../definitions/common';
 import styled from '@emotion/styled';
 import { FooterButtonWidget } from './FooterButtonWidget';
 import { SmartFooterLoaderWidget } from './SmartFooterLoaderWidget';
+import { WORKSPACE_PANEL_INSET, WORKSPACE_PANEL_RADIUS } from '../workspace/workspacePanelChrome';
 
 namespace S {
   export const Footer = themed.div<{ shadow: boolean }>`
@@ -15,7 +16,9 @@ namespace S {
     background: ${(p) => p.theme.footer.background};
     box-shadow: ${(p) => (p.shadow ? '0 0 10px rgba(0,0,0,0.3)' : 'none')};
     z-index: ${(p) => (p.shadow ? 1 : 'inherit')};
-    margin-top: 2px;
+    margin: 0 ${WORKSPACE_PANEL_INSET}px ${WORKSPACE_PANEL_INSET}px;
+    border-radius: ${WORKSPACE_PANEL_RADIUS}px;
+    overflow: hidden;
   `;
 
   export const Buttons = styled.div`

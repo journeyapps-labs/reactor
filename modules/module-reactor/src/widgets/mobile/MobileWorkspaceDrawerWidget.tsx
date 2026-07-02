@@ -49,8 +49,8 @@ namespace S {
     width: min(300px, 84vw);
     display: flex;
     flex-direction: column;
-    background: ${(p) => p.theme.workspaceSubMenu.background};
-    color: ${(p) => p.theme.workspaceSubMenu.foreground};
+    background: ${(p) => p.theme.mobileNavigation.background};
+    color: ${(p) => p.theme.mobileNavigation.foreground};
     box-shadow: 6px 0 24px rgba(0, 0, 0, 0.35);
     animation: ${slideIn} 0.18s ease-out;
   `;
@@ -61,7 +61,7 @@ namespace S {
     align-items: center;
     gap: 6px;
     padding: 0 6px;
-    border-bottom: solid 1px ${(p) => p.theme.workspace.overlayDividerHover};
+    border-bottom: solid 1px ${(p) => p.theme.mobileNavigation.border};
     font-family: ${Fonts.PRIMARY};
     font-size: 14px;
     font-weight: 600;
@@ -103,8 +103,9 @@ namespace S {
     padding: 0 8px;
     margin-bottom: 1px;
     text-align: left;
-    color: ${(p) => (p.selected ? p.theme.combobox.text : p.theme.workspaceSubMenu.foreground)};
-    background: ${(p) => (p.selected ? p.theme.tabs.selectedBackground : p.theme.workspaceSubMenu.background)};
+    color: ${(p) => (p.selected ? p.theme.mobileNavigation.selectedForeground : p.theme.mobileNavigation.foreground)};
+    background: ${(p) =>
+      p.selected ? p.theme.mobileNavigation.selectedBackground : p.theme.mobileNavigation.background};
     font-family: ${Fonts.PRIMARY};
     font-size: 15px;
     font-weight: ${(p) => (p.selected ? 600 : 500)};
@@ -121,8 +122,8 @@ namespace S {
     padding: 0 8px;
     margin-bottom: 1px;
     text-align: left;
-    color: ${(p) => p.theme.workspaceSubMenu.foreground};
-    background: ${(p) => p.theme.workspaceSubMenu.background};
+    color: ${(p) => p.theme.mobileNavigation.foreground};
+    background: ${(p) => p.theme.mobileNavigation.background};
     font-family: ${Fonts.PRIMARY};
     font-size: 15px;
     font-weight: 600;

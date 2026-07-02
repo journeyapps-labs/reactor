@@ -14,7 +14,7 @@ export const DarkTheme = theme.addThemeValues({
       grid: '#232a34'
     },
     workspace: {
-      background: '#181f27',
+      background: '#111821',
       overlayBackground: 'rgba(33,39,49,0.4)',
       overlayBorder: 'rgba(0,0,0,0)',
       overlayBackgroundHover: 'rgba(33,39,49,0.8)',
@@ -99,8 +99,16 @@ export const DarkTheme = theme.addThemeValues({
       foreground: '#fff'
     },
     workspaceSubMenu: {
-      background: '#121922',
+      background: '#161d26',
+      backgroundUnPinned: '#121922',
       foreground: 'rgba(222,232,246,0.72)'
+    },
+    mobileNavigation: {
+      background: '#161d26',
+      foreground: 'rgba(222,232,246,0.72)',
+      border: '#324053',
+      selectedBackground: 'rgba(0, 192, 255, 0.16)',
+      selectedForeground: 'white'
     },
     changelog: {
       codeForeground: 'rgb(132,221,255)',

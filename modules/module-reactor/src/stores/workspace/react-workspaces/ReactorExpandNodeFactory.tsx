@@ -1,8 +1,10 @@
 import * as React from 'react';
 import {
-  DividerWidget,
   ExpandNodeModel,
   ExpandNodeWidget,
+  useForceUpdate,
+  useResizeObserver,
+  WorkspaceEngine,
   WorkspaceModel,
   WorkspaceModelFactoryEvent,
   WorkspaceNodeFactory
@@ -10,7 +12,9 @@ import {
 import { ReactorPanelModel } from './ReactorPanelModel';
 import { ThemeStore } from '../../themes/ThemeStore';
 import { inject } from '../../../inversify.config';
-import { theme } from '../../themes/reactor-theme-fragment';
+import { styled, theme } from '../../themes/reactor-theme-fragment';
+import { WORKSPACE_PANEL_INSET } from '../../../widgets/workspace/workspacePanelChrome';
+import type { ResizeDimensionContainer } from '@projectstorm/react-workspaces-core/dist/@types/entities/node/ResizeDimensionContainer';
 
 export const serializeChildren = (children: WorkspaceModel[]) => {
   return children
@@ -34,6 +38,41 @@ export class ReactorWorkspaceNodeModel extends ExpandNodeModel {
   }
 }
 
+interface ReactorDividerWidgetProps {
+  dimensionContainer: ResizeDimensionContainer;
+  engine: WorkspaceEngine;
+  hoverColor: string;
+  activeColor: string;
+}
+
+const ReactorDividerWidget: React.FC<ReactorDividerWidgetProps> = (props) => {
+  const ref = React.useRef<HTMLDivElement>(null);
+  const forceUpdate = useForceUpdate();
+
+  React.useEffect(() => {
+    return props.dimensionContainer.registerListener({
+      activeChanged: forceUpdate,
+      hoverChanged: forceUpdate
+    });
+  }, []);
+
+  useResizeObserver({
+    forwardRef: ref,
+    dimension: props.dimensionContainer,
+    engine: props.engine
+  });
+
+  return (
+    <S.Divider
+      ref={ref}
+      $hover={props.dimensionContainer.hover}
+      $active={props.dimensionContainer.active}
+      $hoverColor={props.hoverColor}
+      $activeColor={props.activeColor}
+    />
+  );
+};
+
 export class ReactorExpandNodeFactory extends WorkspaceNodeFactory<ReactorWorkspaceNodeModel> {
   @inject(ThemeStore)
   accessor themeStore: ThemeStore;
@@ -49,10 +88,9 @@ export class ReactorExpandNodeFactory extends WorkspaceNodeFactory<ReactorWorksp
           const currentTheme = this.themeStore.getCurrentTheme(theme);
 
           return (
-            <DividerWidget
+            <ReactorDividerWidget
               engine={event.engine}
               dimensionContainer={container}
-              thickness={4}
               hoverColor={currentTheme.workspace.overlayDividerHover}
               activeColor={currentTheme.workspace.overlayDividerHover}
             />
@@ -64,4 +102,20 @@ export class ReactorExpandNodeFactory extends WorkspaceNodeFactory<ReactorWorksp
       />
     );
   }
+}
+
+namespace S {
+  export const Divider = styled.div<{
+    $hover: boolean;
+    $active: boolean;
+    $hoverColor: string;
+    $activeColor: string;
+  }>`
+    min-width: ${WORKSPACE_PANEL_INSET}px;
+    min-height: ${WORKSPACE_PANEL_INSET}px;
+    transition: background 0.2s;
+    transition-delay: 50ms;
+    ${(p) => (p.$hover ? `background: ${p.$hoverColor}` : '')};
+    ${(p) => (p.$active ? `background: ${p.$activeColor}` : '')};
+  `;
 }

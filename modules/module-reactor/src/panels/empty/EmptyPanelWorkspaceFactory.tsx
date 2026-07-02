@@ -10,7 +10,7 @@ import { EMPTY_REACTOR_PANEL_TYPE, EmptyReactorPanelModel } from './EmptyReactor
 
 namespace S {
   export const Container = themed.div`
-    background: ${(p) => p.theme.panels.trayBackground};
+    background: ${(p) => p.theme.panels.tabBackgroundSelected};
     display: flex;
     margin-right: 2px;
     align-items: center;

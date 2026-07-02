@@ -13,6 +13,8 @@ import { WorkspaceModelFactoryEvent } from '@projectstorm/react-workspaces-core'
 import { Observer } from 'mobx-react';
 import { GetTheme } from '../../../stores/themes/ThemeFragment';
 import { WorkspaceModelContext } from './WorkspaceModelContext';
+import { WORKSPACE_PANEL_RADIUS } from '../../workspace/workspacePanelChrome';
+import { WorkspaceTabModel } from '@projectstorm/react-workspaces-model-tabs';
 
 export interface PanelWidgetProps {
   event: WorkspaceModelFactoryEvent<ReactorPanelModel>;
@@ -69,8 +71,9 @@ export class PanelWidget extends React.Component<React.PropsWithChildren<PanelWi
   }
 
   getContent(selected: boolean) {
+    const rounded = !(this.props.event.model.parent instanceof WorkspaceTabModel);
     return (
-      <S.Container ref={this.ref} attention={selected}>
+      <S.Container ref={this.ref} attention={selected} $rounded={rounded}>
         <Observer render={() => this.props.factory.generateToolbar(this.props.event)} />
         {this.props.padding ? (
           <S.PanelScrolled ref={this.ref}>{this.props.children}</S.PanelScrolled>
@@ -129,19 +132,21 @@ export const getScrollableCSS = (t: GetTheme<typeof theme>) => {
 };
 
 namespace S {
-  export const Container = themed.div<{ attention: boolean }>`
+  export const Container = themed.div<{ attention: boolean; $rounded: boolean }>`
     width: 100%;
     height: 100%;
     min-height: 0;
     display: flex;
     flex-direction: column;
-    overflow-y: hidden;
+    overflow: hidden;
+    border-radius: ${(p) => (p.$rounded ? `0 0 ${WORKSPACE_PANEL_RADIUS}px ${WORKSPACE_PANEL_RADIUS}px` : '0')};
+    background: ${(p) => p.theme.panels.background};
+    box-sizing: border-box;
     ${(p) => (p.attention ? `border: solid 1px ${p.theme.guide.accent}` : ``)};
     ${(p) => (p.attention ? `box-shadow: 0 0 20px 0px inset ${getTransparentColor(p.theme.guide.accent, 0.2)}` : ``)};
   `;
 
   export const PanelNormal = themed.div`
-    background: ${(p) => p.theme.panels.background};
     position: relative;
     flex-grow: 1;
     min-height: 0;
@@ -150,7 +155,6 @@ namespace S {
   `;
 
   export const PanelScrolled = themed.div`
-    background: ${(p) => p.theme.panels.background};
     position: relative;
     flex-grow: 1;
     min-height: 0;

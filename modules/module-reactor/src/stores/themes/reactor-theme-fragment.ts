@@ -190,8 +190,19 @@ export const theme = new ThemeFragment({
     workspaceSubMenu: {
       label: 'Workspace submenu',
       colors: {
-        background: 'Secondary workspace menu background',
+        background: 'Workspace submenu background',
+        backgroundUnPinned: 'Floating workspace submenu background',
         foreground: 'Workspace text color'
+      }
+    },
+    mobileNavigation: {
+      label: 'Mobile navigation sidebar',
+      colors: {
+        background: 'Mobile navigation background',
+        foreground: 'Mobile navigation text color',
+        border: 'Mobile navigation border color',
+        selectedBackground: 'Selected mobile navigation item background',
+        selectedForeground: 'Selected mobile navigation item text color'
       }
     },
     visor: {

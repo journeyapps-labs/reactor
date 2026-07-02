@@ -18,6 +18,8 @@ import Avatar from 'react-avatar';
 import { TooltipPosition } from '../info/tooltips';
 import { HeaderWorkspaceSubMenuWidget } from './HeaderWorkspaceSubMenuWidget';
 import { WorkspaceSubMenuPinnedPreference } from '../../preferences/WorkspaceSubMenuPinnedPreference';
+import { WORKSPACE_PANEL_INSET, WORKSPACE_PANEL_RADIUS } from '../workspace/workspacePanelChrome';
+import { WorkspaceStore } from '../../stores/workspace/WorkspaceStore';
 
 export interface HeaderWidgetProps {
   primaryHeading: Btn;
@@ -53,11 +55,10 @@ namespace S {
     flex-direction: column;
     flex-grow: 0;
     flex-shrink: 0;
-    margin-bottom: 2px;
     position: relative;
   `;
 
-  export const Header = themed.div<{ shadow: boolean }>`
+  export const Header = themed.div<{ shadow: boolean; hasSubbar: boolean }>`
     display: flex;
     min-height: ${width}px;
     flex-grow: 0;
@@ -66,6 +67,15 @@ namespace S {
     user-select: none;
     box-shadow: ${(p) => (p.shadow ? '0 0 10px rgba(0,0,0,0.2)' : 'none')};
     z-index: ${(p) => (p.shadow ? 1 : 'inherit')};
+    margin: ${WORKSPACE_PANEL_INSET}px ${WORKSPACE_PANEL_INSET}px 0;
+    border-top-left-radius: ${WORKSPACE_PANEL_RADIUS}px;
+    border-top-right-radius: ${WORKSPACE_PANEL_RADIUS}px;
+    ${(p) =>
+      !p.hasSubbar
+        ? `border-bottom-left-radius: ${WORKSPACE_PANEL_RADIUS}px;
+            border-bottom-right-radius: ${WORKSPACE_PANEL_RADIUS}px;`
+        : ``}
+    overflow: hidden;
   `;
 
   export const AvatarCircle = styled(Avatar)`
@@ -194,12 +204,18 @@ interface HeaderWidgetState {
   primaryHeadingClickStarted: boolean;
   workspaceMenuOffsetLeft: number;
   hoveredWorkspaceGroupKey: string | null;
+  hoveredWorkspaceMenuOffsetLeft: number | null;
 }
 
 @observer
 export class HeaderWidget extends React.Component<HeaderWidgetProps, HeaderWidgetState> {
+  clearHoverTimeout: number | undefined;
+
   @inject(CMDPalletStore)
   accessor commandPalletStore: CMDPalletStore;
+
+  @inject(WorkspaceStore)
+  accessor workspaceStore: WorkspaceStore;
 
   constructor(props: HeaderWidgetProps) {
     super(props);
@@ -207,8 +223,13 @@ export class HeaderWidget extends React.Component<HeaderWidgetProps, HeaderWidge
       logoClickStarted: false,
       primaryHeadingClickStarted: false,
       workspaceMenuOffsetLeft: 0,
-      hoveredWorkspaceGroupKey: null
+      hoveredWorkspaceGroupKey: null,
+      hoveredWorkspaceMenuOffsetLeft: null
     };
+  }
+
+  componentWillUnmount() {
+    this.cancelClearHoveredWorkspaceGroup();
   }
 
   getLeftButtons() {
@@ -241,23 +262,64 @@ export class HeaderWidget extends React.Component<HeaderWidgetProps, HeaderWidge
     }
   };
 
+  updateHoveredWorkspaceGroup = (key: string | null, rect?: { left: number; width: number }) => {
+    this.cancelClearHoveredWorkspaceGroup();
+    const containerBounds = this.props.forwardRef.current?.getBoundingClientRect();
+    const offsetLeft = rect ? rect.left - (containerBounds?.left || 0) : null;
+    if (
+      key !== this.state.hoveredWorkspaceGroupKey ||
+      Math.abs((offsetLeft ?? -1) - (this.state.hoveredWorkspaceMenuOffsetLeft ?? -1)) > 1
+    ) {
+      this.setState({
+        hoveredWorkspaceGroupKey: key,
+        hoveredWorkspaceMenuOffsetLeft: offsetLeft
+      });
+    }
+  };
+
+  cancelClearHoveredWorkspaceGroup = () => {
+    if (this.clearHoverTimeout !== undefined) {
+      window.clearTimeout(this.clearHoverTimeout);
+      this.clearHoverTimeout = undefined;
+    }
+  };
+
+  scheduleClearHoveredWorkspaceGroup = () => {
+    this.cancelClearHoveredWorkspaceGroup();
+    this.clearHoverTimeout = window.setTimeout(() => {
+      this.clearHoverTimeout = undefined;
+      this.clearHoveredWorkspaceGroup();
+    }, 150);
+  };
+
   clearHoveredWorkspaceGroup = () => {
-    if (this.state.hoveredWorkspaceGroupKey) {
-      this.setState({ hoveredWorkspaceGroupKey: null });
+    this.cancelClearHoveredWorkspaceGroup();
+    if (this.state.hoveredWorkspaceGroupKey || this.state.hoveredWorkspaceMenuOffsetLeft !== null) {
+      this.setState({
+        hoveredWorkspaceGroupKey: null,
+        hoveredWorkspaceMenuOffsetLeft: null
+      });
     }
   };
 
   render() {
     const pinnedSubMenu = WorkspaceSubMenuPinnedPreference.pinned();
     const subMenuWorkspaceKey = pinnedSubMenu ? undefined : this.state.hoveredWorkspaceGroupKey || undefined;
+    const hoveredWorkspaceIsActive = this.state.hoveredWorkspaceGroupKey === this.workspaceStore.currentTopWorkspace;
+    const subMenuOffsetLeft = pinnedSubMenu
+      ? this.state.workspaceMenuOffsetLeft
+      : hoveredWorkspaceIsActive
+        ? this.state.workspaceMenuOffsetLeft
+        : (this.state.hoveredWorkspaceMenuOffsetLeft ?? this.state.workspaceMenuOffsetLeft);
 
     return (
       <S.HeaderContainer
         className={this.props.className}
         ref={this.props.forwardRef}
-        onMouseLeave={this.clearHoveredWorkspaceGroup}
+        onMouseEnter={this.cancelClearHoveredWorkspaceGroup}
+        onMouseLeave={pinnedSubMenu ? undefined : this.scheduleClearHoveredWorkspaceGroup}
       >
-        <S.Header shadow={!AdvancedWorkspacePreference.enabled()}>
+        <S.Header hasSubbar={pinnedSubMenu} shadow={!AdvancedWorkspacePreference.enabled()}>
           <S.Logo
             onMouseDown={() => {
               this.setState({ logoClickStarted: true });
@@ -309,9 +371,7 @@ export class HeaderWidget extends React.Component<HeaderWidgetProps, HeaderWidge
           <HeaderWorkspaceMenuWidget
             selectedBoundsUpdated={this.updateWorkspaceMenuOffset}
             pinnedSubMenu={pinnedSubMenu}
-            workspaceGroupHovered={(key) => {
-              this.setState({ hoveredWorkspaceGroupKey: key });
-            }}
+            workspaceGroupHovered={this.updateHoveredWorkspaceGroup}
           />
           {this.getLeftButtons()}
 
@@ -346,13 +406,14 @@ export class HeaderWidget extends React.Component<HeaderWidgetProps, HeaderWidge
           </S.User>
         </S.Header>
         <HeaderWorkspaceSubMenuWidget
-          offsetLeft={this.state.workspaceMenuOffsetLeft}
+          offsetLeft={subMenuOffsetLeft}
           workspaceKey={subMenuWorkspaceKey}
           pinned={pinnedSubMenu}
           togglePinned={() => {
             WorkspaceSubMenuPinnedPreference.get().toggle();
           }}
-          hoverInactive={this.clearHoveredWorkspaceGroup}
+          hoverActive={this.cancelClearHoveredWorkspaceGroup}
+          hoverInactive={pinnedSubMenu ? undefined : this.scheduleClearHoveredWorkspaceGroup}
         />
       </S.HeaderContainer>
     );

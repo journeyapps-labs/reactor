@@ -21,6 +21,8 @@ import { ActionSource } from '../../../../actions/Action';
 import { ReactorEntities } from '../../../../entities-reactor/ReactorEntities';
 import { useButton } from '../../../../hooks/useButton';
 import { PassiveActionValidationState } from '../../../../actions/validators/ActionValidator';
+import { WorkspaceTabModel } from '@projectstorm/react-workspaces-model-tabs';
+import { WORKSPACE_PANEL_RADIUS } from '../../../workspace/workspacePanelChrome';
 
 export interface PanelTitleWidgetProps {
   name: string;
@@ -73,12 +75,14 @@ namespace S {
     flex-grow: 1;
   `;
 
-  export const Title = styled.div<{ attention: boolean }>`
+  export const Title = styled.div<{ attention: boolean; $rounded: boolean }>`
     width: 100%;
     display: flex;
     min-height: 30px;
     flex-shrink: 0;
     background: ${(p) => (p.attention ? 'black' : p.theme.panels.titleBackground)};
+    border-radius: ${(p) => (p.$rounded ? `${WORKSPACE_PANEL_RADIUS}px ${WORKSPACE_PANEL_RADIUS}px 0 0` : '0')};
+    overflow: hidden;
     ${(p) => (p.attention ? `border: solid 1px ${p.theme.guide.accent}; border-bottom: none` : '')};
     box-sizing: border-box;
   `;
@@ -179,6 +183,8 @@ export class PanelTitleWidget extends React.Component<PanelTitleWidgetProps> {
   }
 
   render() {
+    const rounded = !(this.props.model.parent instanceof WorkspaceTabModel);
+
     return (
       <WorkspaceModelContext.Provider value={this.props.model}>
         <S.Title
@@ -194,6 +200,7 @@ export class PanelTitleWidget extends React.Component<PanelTitleWidgetProps> {
             }
           }}
           attention={this.props.model?.grabAttention}
+          $rounded={rounded}
           onContextMenu={async (event) => {
             if (AdvancedWorkspacePreference.enabled()) {
               event.persist();

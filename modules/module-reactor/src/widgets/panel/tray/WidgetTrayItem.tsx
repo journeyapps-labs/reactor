@@ -6,6 +6,8 @@ export interface WidgetTrayItemProps {
   name: string;
   icon: ReactorIcon;
   selected: boolean;
+  onleft: boolean;
+  collapsed: boolean;
 }
 
 export interface WidgetTrayItemState {
@@ -42,7 +44,7 @@ namespace S {
     visibility: hidden;
   `;
 
-  export const Container = styled.div<{ selected: boolean }>`
+  export const Container = styled.div<{ selected: boolean; onleft?: boolean }>`
     cursor: pointer;
     flex-shrink: 0;
     width: 30px;
@@ -50,6 +52,7 @@ namespace S {
     margin-bottom: 2px;
     user-select: none;
     padding-bottom: 4px;
+    ${(p) => (p.onleft != null ? (p.onleft ? 'margin-right: 2px;' : 'margin-left: 2px;') : '')};
   `;
 }
 
@@ -79,7 +82,7 @@ export class WidgetTrayItem extends React.PureComponent<WidgetTrayItemProps, Wid
       );
     }
     return (
-      <S.Container selected={this.props.selected}>
+      <S.Container selected={this.props.selected} onleft={this.props.collapsed ? null : this.props.onleft}>
         <S.Item height={this.state.width}>
           <S.Rotated height={this.state.width - 30}>
             <S.Icon selected={this.props.selected} icon={this.props.icon} />

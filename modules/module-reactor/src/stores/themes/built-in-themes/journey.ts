@@ -12,7 +12,7 @@ theme.addThemeValues({
     },
     workspace: {
       ...DarkTheme.workspace,
-      background: '#1f2a31',
+      background: '#19242b',
       overlayBackground: 'rgba(32,45,51,0.4)',
       overlayBorder: 'rgba(0,192,255,0)',
       overlayBackgroundHover: 'rgba(32,45,51,0.8)',
@@ -62,8 +62,16 @@ theme.addThemeValues({
       background: '#253238'
     },
     workspaceSubMenu: {
-      background: '#202d34',
+      background: '#253238',
+      backgroundUnPinned: '#202d34',
       foreground: 'rgba(214,226,233,0.72)'
+    },
+    mobileNavigation: {
+      background: '#253238',
+      foreground: 'rgba(214,226,233,0.72)',
+      border: '#3f555f',
+      selectedBackground: 'rgba(255,140,43,0.18)',
+      selectedForeground: 'white'
     },
     changelog: {
       codeForeground: 'white',

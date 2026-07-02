@@ -17,12 +17,15 @@ import { ExportWorkspacesAction } from '../../actions/builtin-actions/workspace/
 import { ActionSource } from '../../actions/Action';
 import { TabDirective } from '../tabs/TabListWidget';
 import { TabSelectionWidget } from '../tabs/TabSelectionWidget';
+import { WORKSPACE_PANEL_INSET, WORKSPACE_PANEL_RADIUS } from '../workspace/workspacePanelChrome';
+import { WorkspaceGroup } from '../../stores/workspace/models/WorkspaceGroup';
 
 export interface HeaderWorkspaceSubMenuWidgetProps {
   offsetLeft: number;
   workspaceKey?: string;
   pinned: boolean;
   togglePinned: () => any;
+  hoverActive?: () => any;
   hoverInactive?: () => any;
   tabRightClick?: (event: MouseEvent, tab: { key: string; name: string }) => any;
 }
@@ -45,20 +48,28 @@ namespace S {
     min-height: 30px;
     flex-grow: 0;
     flex-shrink: 0;
-    background: ${(p) => p.theme.workspaceSubMenu.background};
+    background: ${(p) => (p.pinned ? p.theme.workspaceSubMenu.background : p.theme.workspaceSubMenu.backgroundUnPinned)};
     user-select: none;
     overflow-x: auto;
     ${(p) =>
       p.pinned
-        ? ''
+        ? css`
+            margin-top: 1px;
+            margin-left: ${WORKSPACE_PANEL_INSET}px;
+            margin-right: ${WORKSPACE_PANEL_INSET}px;
+            border-bottom-left-radius: ${WORKSPACE_PANEL_RADIUS}px;
+            border-bottom-right-radius: ${WORKSPACE_PANEL_RADIUS}px;
+            overflow-y: hidden;
+          `
         : css`
             position: absolute;
             top: 100%;
             left: 0;
             right: 0;
             z-index: 5;
-            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+            box-shadow: 0 10px 14px -10px rgba(0, 0, 0, 0.55);
             animation: ${unpinnedBarEnter} 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+            min-height: 34px;
           `}
 
     ::-webkit-scrollbar {
@@ -92,7 +103,7 @@ namespace S {
     border-radius: 999px;
     padding: 0;
     color: ${(p) => (p.$active ? p.theme.combobox.text : p.theme.workspaceSubMenu.foreground)};
-    background: ${(p) => (p.$active ? p.theme.tabs.selectedBackground : p.theme.workspaceSubMenu.background)};
+    background: ${(p) => (p.$active ? p.theme.tabs.selectedBackground : 'transparent')};
     cursor: pointer;
 
     &:hover {
@@ -194,6 +205,18 @@ export class HeaderWorkspaceSubMenuWidget extends React.Component<HeaderWorkspac
     }
   };
 
+  getSelectedWorkspace = (workspace: ReturnType<HeaderWorkspaceSubMenuWidget['getDisplayedWorkspace']>) => {
+    if (this.props.pinned) {
+      return this.workspaceStore.currentModel;
+    }
+
+    if (workspace?.key === this.workspaceStore.currentTopWorkspace) {
+      return this.workspaceStore.currentModel;
+    }
+
+    return workspace instanceof WorkspaceGroup ? workspace.lastActiveChildId : workspace?.getChildren()[0]?.key;
+  };
+
   render() {
     const workspace = this.getDisplayedWorkspace();
     const workspaces = workspace?.getChildren() || [];
@@ -204,14 +227,15 @@ export class HeaderWorkspaceSubMenuWidget extends React.Component<HeaderWorkspac
       key: workspace.key,
       name: workspace.name
     }));
+    const selectedWorkspace = this.getSelectedWorkspace(workspace) || workspaces[0]?.key;
 
     return (
-      <S.Bar pinned={this.props.pinned} onMouseLeave={this.props.hoverInactive}>
+      <S.Bar pinned={this.props.pinned} onMouseEnter={this.props.hoverActive} onMouseLeave={this.props.hoverInactive}>
         <S.Items offsetLeft={this.props.offsetLeft}>
           <S.Tabs
             compact
             tabs={tabs}
-            selected={this.workspaceStore.currentModel}
+            selected={selectedWorkspace}
             tabSelected={(key) => {
               this.workspaceStore.setActiveWorkspace(key);
             }}
