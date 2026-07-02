@@ -49,5 +49,5 @@ jobs:
 
       - name: Publish
         run: |
-          pnpm changeset version --no-git-tag --snapshot dev
+          pnpm changeset version --snapshot dev
           pnpm changeset publish --tag dev
