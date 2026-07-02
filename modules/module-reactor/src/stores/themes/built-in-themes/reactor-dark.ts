@@ -96,9 +96,7 @@ theme.addThemeValues({
       icon: '#33b8de'
     },
     cards: {
-      background: '#121212',
       foreground: '#c7c7c7',
-      border: '#333333',
       tagBackground: '#58595d',
       tagLabelBackground: 'rgba(0, 0, 0, 0.16)',
       tagLabelForeground: 'rgba(240, 240, 240, 0.92)'
@@ -115,7 +113,6 @@ theme.addThemeValues({
     },
     status: {
       ...DarkTheme.status,
-      cardBackground: '#141414',
       failed: '#7d3510',
       loading: '#2fa4c6',
       success: '#5f7e14'

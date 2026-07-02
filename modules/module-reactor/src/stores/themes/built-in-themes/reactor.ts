@@ -27,8 +27,7 @@ export const DarkTheme = theme.addThemeValues({
       hoverColor: 'red'
     },
     tooltips: {
-      background: 'rgb(0,0,0)',
-      foreground: '#fff'
+      background: 'rgb(0,0,0)'
     },
     panels: {
       iconBackground: '#242d39',
@@ -62,9 +61,7 @@ export const DarkTheme = theme.addThemeValues({
     guide: {
       accent: '#ff6a1a',
       tooltipBackground: 'hsl(21deg 58% 16%)',
-      accentText: '#000',
-      startButton: '#2f3a51',
-      startButtonText: '#fff'
+      accentText: '#000'
     },
     graphs: {
       grid: 'rgba(255,255,255,0.05)',
@@ -75,9 +72,7 @@ export const DarkTheme = theme.addThemeValues({
       thresholdLine: '#ff4800'
     },
     cards: {
-      background: '#151c27',
       foreground: '#c6d2e1',
-      border: '#3b4a5f',
       tagBackground: '#5b6a80',
       tagLabelBackground: 'rgba(0, 0, 0, 0.12)',
       tagLabelForeground: 'rgba(236, 244, 255, 0.92)'
@@ -93,12 +88,10 @@ export const DarkTheme = theme.addThemeValues({
       depth3Border: '#2f3d4f'
     },
     status: {
-      cardBackground: '#172130',
       failed: '#862c00',
       failedForeground: 'black',
       loading: '#00b4ff',
-      success: '#658600',
-      successForeground: 'white'
+      success: '#658600'
     },
     header: {
       background: '#161d26',
@@ -140,9 +133,6 @@ export const DarkTheme = theme.addThemeValues({
     tabs: {
       selectedAccentSingle: '#00c0ff',
       selectedBackground: 'rgba(0, 192, 255, 0.16)'
-    },
-    visor: {
-      background: 'rgba(0, 0, 0, 0.2)'
     },
     button: {
       background: '#0d121b',

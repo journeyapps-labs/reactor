@@ -7,7 +7,6 @@ import { FooterLoaderWidget } from '../footer/FooterLoaderWidget';
 import { LoadingDirectiveState } from '../../stores/visor/VisorLoadingDirective';
 import { MetaBarWidget } from '../meta/MetaBarWidget';
 import { ReadOnlyMetadataWidgetProps } from '../meta/ReadOnlyMetadataWidget';
-import { getDarkenedColor } from '@journeyapps-labs/lib-reactor-utils';
 import { themed } from '../../stores/themes/reactor-theme-fragment';
 import { getScrollableCSS } from '../panel/panel/PanelWidget';
 import { SurfaceDepth, SurfaceWidget } from '../surfaces/SurfaceWidget';
@@ -54,7 +53,7 @@ namespace S {
   `;
 
   export const Loading = themed.div`
-    background: ${(p) => getDarkenedColor(p.theme.cards.background, 0.3)};
+    background: ${(p) => p.theme.surfaces.depth1Background};
   `;
 
   export const LoadingMeta = themed(MetaBarWidget)`

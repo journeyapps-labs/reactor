@@ -26,8 +26,7 @@ theme.addThemeValues({
       overlayDividerColor: '#a8b3c0'
     },
     tooltips: {
-      background: 'rgb(87,87,87)',
-      foreground: '#fff'
+      background: 'rgb(87,87,87)'
     },
     dnd: {
       hintColor: 'red',
@@ -65,9 +64,7 @@ theme.addThemeValues({
     guide: {
       accent: '#ff6a1a',
       tooltipBackground: 'hsl(21deg 58% 16%)',
-      accentText: '#000',
-      startButton: '#fff',
-      startButtonText: '#000'
+      accentText: '#000'
     },
     graphs: {
       grid: 'rgb(180,180,180)',
@@ -78,9 +75,7 @@ theme.addThemeValues({
       thresholdLine: '#b92900'
     },
     cards: {
-      background: '#f5f7fa',
       foreground: '#283445',
-      border: '#b2bdcb',
       tagBackground: '#94a1b3',
       tagLabelBackground: 'rgba(0, 0, 0, 0.16)',
       tagLabelForeground: 'rgba(255, 255, 255, 0.95)'
@@ -96,12 +91,10 @@ theme.addThemeValues({
       depth3Border: '#c8d3e2'
     },
     status: {
-      cardBackground: '#edf2f8',
       failed: '#d86a86',
       failedForeground: 'white',
       loading: '#2b6e99',
-      success: '#78a85c',
-      successForeground: 'white'
+      success: '#78a85c'
     },
     header: {
       background: '#e7ebf1',
@@ -143,9 +136,6 @@ theme.addThemeValues({
     tabs: {
       selectedAccentSingle: '#2f5f8f',
       selectedBackground: '#dbe7f4'
-    },
-    visor: {
-      background: 'rgba(0,0,0,0.2)'
     },
     button: {
       background: '#f5f7fa',

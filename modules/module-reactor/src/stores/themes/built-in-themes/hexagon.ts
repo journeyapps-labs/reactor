@@ -51,9 +51,7 @@ theme.addThemeValues({
     guide: {
       accent: '#ff8f00',
       tooltipBackground: 'hsl(41deg 35% 22%)',
-      accentText: '#000',
-      startButton: 'linear-gradient(131deg, rgba(255,143,0,1) 0%, rgba(255,23,68,1) 100%)',
-      startButtonText: '#ffffff'
+      accentText: '#000'
     },
     footer: {
       background: 'rgb(30,30,32)'
@@ -69,17 +67,14 @@ theme.addThemeValues({
     status: {
       ...DarkTheme.status,
       success: 'rgb(145,204,56)',
-      failed: '#ff1744',
-      cardBackground: '#262628'
+      failed: '#ff1744'
     },
     trees: {
       ...DarkTheme.trees,
       selectedBackground: 'linear-gradient(155deg, rgba(255, 143, 0, 0.2), rgba(255, 23, 68,0.2))'
     },
     cards: {
-      background: 'rgba(58, 58, 60, 1)',
       foreground: 'white',
-      border: 'rgb(95 95 95)',
       tagBackground: '#696a6c',
       tagLabelBackground: 'rgba(0, 0, 0, 0.14)',
       tagLabelForeground: 'rgba(255, 255, 255, 0.92)'

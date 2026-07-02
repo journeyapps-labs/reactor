@@ -28,8 +28,7 @@ export const theme = new ThemeFragment({
     tooltips: {
       label: 'Tooltip colors',
       colors: {
-        background: 'Default background color',
-        foreground: 'Default foreground color'
+        background: 'Default background color'
       }
     },
     workspace: {
@@ -97,9 +96,7 @@ export const theme = new ThemeFragment({
       colors: {
         accent: 'Main accent color',
         tooltipBackground: 'Background color for guide tooltips',
-        accentText: 'Main accent text color',
-        startButton: 'Start button background',
-        startButtonText: 'Start button text color'
+        accentText: 'Main accent text color'
       }
     },
     graphs: {
@@ -123,20 +120,16 @@ export const theme = new ThemeFragment({
     status: {
       label: 'Status information',
       colors: {
-        cardBackground: 'Status card background',
         success: 'Success color',
         failed: 'Failed color',
         failedForeground: 'Failed text color',
-        loading: 'Loading color',
-        successForeground: 'Success text color'
+        loading: 'Loading color'
       }
     },
     cards: {
       label: 'Cards',
       colors: {
-        background: 'Background color',
         foreground: 'Text color',
-        border: 'Border color',
         tagBackground: 'Tag pill background color',
         tagLabelBackground: 'Tag label background color',
         tagLabelForeground: 'Tag label text color'
@@ -216,12 +209,6 @@ export const theme = new ThemeFragment({
         border: 'Mobile navigation border color',
         selectedBackground: 'Selected mobile navigation item background',
         selectedForeground: 'Selected mobile navigation item text color'
-      }
-    },
-    visor: {
-      label: 'Visor',
-      colors: {
-        background: 'Background color'
       }
     },
     text: {

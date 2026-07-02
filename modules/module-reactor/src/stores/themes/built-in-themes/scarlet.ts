@@ -35,14 +35,10 @@ export const Scarlet = theme.addThemeValues({
     guide: {
       accent: '#ff4aa6',
       tooltipBackground: 'hsl(21deg 58% 16%)',
-      accentText: '#000',
-      startButton: 'linear-gradient(131deg, rgba(255,143,0,1) 0%, rgba(255,23,68,1) 100%)',
-      startButtonText: '#ffffff'
+      accentText: '#000'
     },
     cards: {
-      background: '#191e25',
       foreground: 'rgb(205,205,205)',
-      border: '#2f3744',
       tagBackground: '#67515a',
       tagLabelBackground: 'rgba(0, 0, 0, 0.14)',
       tagLabelForeground: 'rgba(244, 232, 238, 0.92)'
@@ -58,12 +54,10 @@ export const Scarlet = theme.addThemeValues({
       depth3Border: 'rgba(255,255,255,0.08)'
     },
     status: {
-      cardBackground: '#14181e',
       failed: '#c40f50',
       failedForeground: '#fff',
       loading: '#0084b4',
-      success: '#6ebe00',
-      successForeground: 'black'
+      success: '#6ebe00'
     },
     header: {
       ...DarkTheme.header,
@@ -105,9 +99,6 @@ export const Scarlet = theme.addThemeValues({
     tabs: {
       selectedAccentSingle: '#ff0059',
       selectedBackground: 'rgba(255,0,89,0.18)'
-    },
-    visor: {
-      background: 'rgba(0, 0, 0, 0.2)'
     },
     button: {
       background: '#0a0d14',

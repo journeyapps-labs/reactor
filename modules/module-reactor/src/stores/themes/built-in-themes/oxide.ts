@@ -53,9 +53,7 @@ theme.addThemeValues({
     guide: {
       accent: 'rgb(248,171,4)',
       tooltipBackground: 'hsl(41deg 35% 22%)',
-      accentText: '#000',
-      startButton: '#b0501c',
-      startButtonText: '#fff'
+      accentText: '#000'
     },
     footer: {
       background: 'rgba(44, 44, 46, 1)'
@@ -71,13 +69,10 @@ theme.addThemeValues({
     status: {
       ...DarkTheme.status,
       success: 'rgb(145,189,57)',
-      failed: 'rgb(213,70,91)',
-      cardBackground: '#262628'
+      failed: 'rgb(213,70,91)'
     },
     cards: {
-      background: 'rgba(58, 58, 60, 1)',
       foreground: 'white',
-      border: '#666668',
       tagBackground: '#6f6f71',
       tagLabelBackground: 'rgba(0, 0, 0, 0.14)',
       tagLabelForeground: 'rgba(255, 255, 255, 0.92)'
