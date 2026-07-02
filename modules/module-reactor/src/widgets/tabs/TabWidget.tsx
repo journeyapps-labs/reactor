@@ -6,11 +6,19 @@ import { TabItemWidgetProps } from './TabListWidget';
 import { Fonts } from '../../fonts';
 
 namespace S {
-  export const Tab = styled.div<{ selected: boolean; attention: boolean; disabled?: boolean; compact?: boolean }>`
+  export const Tab = styled.div<{
+    selected: boolean;
+    attention: boolean;
+    disabled?: boolean;
+    compact?: boolean;
+    vertical?: boolean;
+  }>`
+    width: ${(p) => (p.vertical ? '100%' : 'auto')};
+    box-sizing: border-box;
     padding: ${(p) => (p.compact ? '4px 10px' : '4px 13px')};
     color: ${(p) => p.theme.combobox.text};
-    cursor: ${(p) => (p.disabled ? 'auto' : 'pointer')};
-    opacity: ${(p) => (p.attention || p.selected ? 1 : 0.5)};
+    cursor: ${(p) => (p.disabled ? 'not-allowed' : 'pointer')};
+    opacity: ${(p) => (p.disabled ? 0.34 : p.attention || p.selected ? 1 : 0.62)};
     background: transparent;
     font-family: ${Fonts.PRIMARY};
     font-size: ${(p) => (p.compact ? '13px' : '15px')};
@@ -21,7 +29,7 @@ namespace S {
     outline: ${(p) => (p.attention ? p.theme.guide.accent : `transparent`)} solid 1px;
     outline-offset: -1px;
     &:hover {
-      opacity: 1;
+      opacity: ${(p) => (p.disabled ? 0.34 : 1)};
     }
   `;
 }
@@ -55,7 +63,9 @@ export const TabWidget: React.FC<TabItemWidgetProps> = (props) => {
       onMouseEnter={props.onMouseEnter}
       onMouseLeave={props.onMouseLeave}
       ref={props.forwardRef}
+      disabled={props.disabled}
       compact={props.compact}
+      vertical={props.vertical}
     >
       {props.customContent || props.label}
     </S.Tab>

@@ -19,6 +19,7 @@ export const setupWorkspaces = () => {
       ['playground.tree-search', 'Tree search'],
       ['playground.forms', 'Forms'],
       ['playground.cards', 'Cards'],
+      ['playground.tabs', 'Tabs'],
       ['playground.buttons', 'Buttons'],
       ['playground.editors', 'Editors'],
       ['playground.tables', 'Tables'],

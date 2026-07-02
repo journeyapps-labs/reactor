@@ -3,10 +3,14 @@ import * as _ from 'lodash';
 import styled from '@emotion/styled';
 import { MouseEvent } from 'react';
 import { TabBadgeWidget } from './TabBadgeWidget';
+import { ReactorIcon } from '../icons/IconWidget';
 
 export interface TabDirective {
   key: string;
   name: string;
+  icon?: ReactorIcon;
+  badge?: TabBadgeDirective | (() => TabBadgeDirective | null);
+  rightContent?: () => React.ReactNode;
   tabContent?: () => React.JSX.Element;
   disabled?: boolean;
   tabMouseEnter?: (event: MouseEvent, tab: TabDirective) => any;
@@ -26,6 +30,7 @@ export interface TabSelectionWidgetProps {
   selectedBoundsUpdated?: (rect: { left: number; width: number }) => any;
   className?;
   compact?: boolean;
+  vertical?: boolean;
   badgeProvider?: (key: string) => TabBadgeDirective;
 }
 
@@ -50,6 +55,7 @@ export interface TabItemWidgetProps {
   customContent?: React.JSX.Element;
   disabled?: boolean;
   compact?: boolean;
+  vertical?: boolean;
   onMouseEnter?: (event: MouseEvent) => any;
   onMouseLeave?: (event: MouseEvent) => any;
 }
@@ -61,27 +67,29 @@ export interface TabListWidgetState {
 }
 
 namespace S {
-  export const Container = styled.div<{ compact?: boolean }>`
+  export const Container = styled.div<{ compact?: boolean; vertical?: boolean }>`
     display: flex;
     flex-direction: column;
     position: relative;
     box-sizing: border-box;
+    width: ${(p) => (p.vertical ? '100%' : 'auto')};
     padding: ${(p) => (p.compact ? '4px 5px' : '6px 5px')};
     user-select: none;
-    overflow-x: auto;
+    overflow-x: ${(p) => (p.vertical ? 'hidden' : 'auto')};
+    overflow-y: ${(p) => (p.vertical ? 'auto' : 'hidden')};
 
     // below styles for iPad safari
-    overflow-y: hidden;
     overscroll-behavior: none;
     ::-webkit-scrollbar {
       display: none; // Safari and Chrome
     }
   `;
 
-  export const LayerContainer = styled.div`
+  export const LayerContainer = styled.div<{ vertical?: boolean }>`
     position: relative;
     flex-grow: 0;
     flex-shrink: 0;
+    width: ${(p) => (p.vertical ? '100%' : 'auto')};
   `;
 
   export const SelectedBackgroundLayer = styled.div`
@@ -91,17 +99,20 @@ namespace S {
     pointer-events: none;
   `;
 
-  export const TabsContainer = styled.div`
+  export const TabsContainer = styled.div<{ vertical?: boolean }>`
     display: flex;
-    flex-direction: row;
+    flex-direction: ${(p) => (p.vertical ? 'column' : 'row')};
     position: relative;
     z-index: 1;
     flex-grow: 0;
     flex-shrink: 0;
+    width: ${(p) => (p.vertical ? '100%' : 'auto')};
+    align-items: ${(p) => (p.vertical ? 'stretch' : 'center')};
   `;
 
-  export const TabBadgeContainer = styled.div`
+  export const TabBadgeContainer = styled.div<{ vertical?: boolean }>`
     position: relative;
+    width: ${(p) => (p.vertical ? '100%' : 'auto')};
   `;
 }
 
@@ -204,21 +215,22 @@ export class TabListWidget<T extends TabListWidgetProps = TabListWidgetProps> ex
 
   render() {
     return (
-      <S.Container className={this.props.className} compact={this.props.compact}>
-        <S.LayerContainer ref={this.containerRef}>
+      <S.Container className={this.props.className} compact={this.props.compact} vertical={this.props.vertical}>
+        <S.LayerContainer ref={this.containerRef} vertical={this.props.vertical}>
           {this.props.selectedBackgroundGenerator && (
             <S.SelectedBackgroundLayer>
               {this.props.selectedBackgroundGenerator(this.state.selectedBounds)}
             </S.SelectedBackgroundLayer>
           )}
-          <S.TabsContainer>
+          <S.TabsContainer vertical={this.props.vertical}>
             {_.map(this.props.tabs, (tab) => {
               if (!this.tabRefs[tab.key]) {
                 this.tabRefs[tab.key] = React.createRef();
               }
-              const badgeDirective = this.props.badgeProvider?.(tab.key);
+              const badgeDirective =
+                this.props.badgeProvider?.(tab.key) || (typeof tab.badge === 'function' ? tab.badge() : tab.badge);
               return (
-                <S.TabBadgeContainer key={tab.key}>
+                <S.TabBadgeContainer key={tab.key} vertical={this.props.vertical}>
                   {badgeDirective && <TabBadgeWidget directive={badgeDirective} />}
                   {this.props.tabItemGenerator(tab, this.tabRefs[tab.key])}
                 </S.TabBadgeContainer>

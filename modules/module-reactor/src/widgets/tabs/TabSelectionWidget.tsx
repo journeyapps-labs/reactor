@@ -2,7 +2,8 @@ import * as React from 'react';
 import { MouseEvent } from 'react';
 import { TabWidget } from './TabWidget';
 import { TabBounds, TabDirective, TabListWidget, TabSelectionWidgetProps } from './TabListWidget';
-import { themed } from '../../stores/themes/reactor-theme-fragment';
+import { styled, themed } from '../../stores/themes/reactor-theme-fragment';
+import { IconWidget } from '../icons/IconWidget';
 
 namespace S {
   export const SelectedBackground = themed.div<{ bounds?: TabBounds }>`
@@ -21,6 +22,39 @@ namespace S {
       height 0.1s cubic-bezier(0.25, 0.46, 0.45, 0.94),
       opacity 0.1s ease-out;
   `;
+
+  export const Content = styled.span<{ vertical?: boolean }>`
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 8px;
+    min-width: 0;
+    width: ${(p) => (p.vertical ? '100%' : 'auto')};
+  `;
+
+  export const Main = styled.span`
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    min-width: 0;
+  `;
+
+  export const Label = styled.span`
+    min-width: 0;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  `;
+
+  export const Right = styled.span`
+    display: inline-flex;
+    align-items: center;
+    flex-shrink: 0;
+  `;
+
+  export const Icon = styled(IconWidget)`
+    flex-shrink: 0;
+    opacity: 0.85;
+  `;
 }
 
 export interface TabWidgetWrapperProps {
@@ -30,6 +64,7 @@ export interface TabWidgetWrapperProps {
   tabSelected: () => any;
   tabRightClick: (event: MouseEvent) => any;
   compact?: boolean;
+  vertical?: boolean;
   tabMouseEnter?: (event: MouseEvent) => any;
   tabMouseLeave?: (event: MouseEvent) => any;
 }
@@ -41,9 +76,20 @@ export const TabWidgetWrapper: React.FC<TabWidgetWrapperProps> = ({
   tabSelected,
   tabRightClick,
   compact,
+  vertical,
   tabMouseEnter,
   tabMouseLeave
 }) => {
+  const content = tab.tabContent?.() || (
+    <S.Content vertical={vertical}>
+      <S.Main>
+        {tab.icon ? <S.Icon icon={tab.icon} /> : null}
+        <S.Label>{tab.name}</S.Label>
+      </S.Main>
+      {tab.rightContent ? <S.Right>{tab.rightContent()}</S.Right> : null}
+    </S.Content>
+  );
+
   return (
     <TabWidget
       forwardRef={forwardRef}
@@ -53,9 +99,10 @@ export const TabWidgetWrapper: React.FC<TabWidgetWrapperProps> = ({
         tabSelected();
       }}
       tabRightClick={tabRightClick}
-      customContent={tab.tabContent?.()}
+      customContent={content}
       disabled={tab.disabled}
       compact={compact}
+      vertical={vertical}
       onMouseEnter={tabMouseEnter}
       onMouseLeave={tabMouseLeave}
     />
@@ -87,6 +134,7 @@ export const TabSelectionWidget: React.FC<TabSelectionWidgetProps> = (props) => 
               tab.tabMouseLeave?.(event, tab);
             }}
             compact={props.compact}
+            vertical={props.vertical}
           />
         );
       }}
