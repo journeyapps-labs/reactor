@@ -1,18 +1,27 @@
 name: Changesets
 
 on:
+  workflow_dispatch:
   push:
     branches:
       - main
 
 concurrency: ${{ github.workflow }}-${{ github.ref }}
 
+permissions:
+  contents: write
+  id-token: write
+  pull-requests: write
+
 jobs:
   build-and-publish:
     name: Build and Publish
     runs-on: ubuntu-latest
+    environment: npm
     steps:
       - uses: actions/checkout@v4
+        with:
+          fetch-depth: '0'
 
       - name: Setup NodeJS
         uses: actions/setup-node@v4
@@ -41,11 +50,20 @@ jobs:
       - name: Install dependencies
         run: pnpm install
 
+      - name: Build
+        run: pnpm build:prod
+
+      - name: Publish dev snapshot
+        if: ${{ github.event_name == 'workflow_dispatch' }}
+        run: |
+          pnpm changeset version --snapshot dev
+          pnpm changeset publish --tag dev --provenance
+
       - name: Create Release Pull Request or Publish to npm
+        if: ${{ github.event_name != 'workflow_dispatch' && github.ref == 'refs/heads/main' }}
         id: changesets
         uses: changesets/action@v1
         with:
-          publish: pnpm release
+          publish: pnpm changeset publish --provenance
         env:
-          NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
