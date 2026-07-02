@@ -84,6 +84,8 @@ export * from './panel/toolbar/PanelToolbarWidget';
 export * from './status/PillWidget';
 export * from './status/StatusCardWidget';
 
+export * from './surfaces/SurfaceWidget';
+
 export * from './search/ControlledSearchWidget';
 export * from './search/SearchablePanelWidget';
 export * from './search/SearchWidget';

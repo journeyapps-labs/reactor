@@ -6,6 +6,7 @@ import { PlaygroundPanelFactory } from './panels/PlaygroundPanelFactory';
 import { PlaygroundDialogsComboboxesPanelWidget } from './panels/PlaygroundDialogsComboboxesPanelWidget';
 import { PlaygroundFormsPanelWidget } from './panels/PlaygroundFormsPanelWidget';
 import { PlaygroundCardsPanelWidget } from './panels/PlaygroundCardsPanelWidget';
+import { PlaygroundSurfacesPanelWidget } from './panels/PlaygroundSurfacesPanelWidget';
 import { PlaygroundTabsPanelWidget } from './panels/PlaygroundTabsPanelWidget';
 import { PlaygroundButtonsPanelWidget } from './panels/PlaygroundButtonsPanelWidget';
 import { PlaygroundEditorsPanelWidget } from './panels/PlaygroundEditorsPanelWidget';
@@ -53,6 +54,14 @@ export class ReactorPlaygroundModule extends AbstractReactorModule {
         name: 'Layout',
         icon: 'id-card',
         widget: PlaygroundCardsPanelWidget
+      })
+    );
+    workspaceStore.registerFactory(
+      new PlaygroundPanelFactory({
+        type: 'playground.surfaces',
+        name: 'Surfaces',
+        icon: 'layer-group',
+        widget: PlaygroundSurfacesPanelWidget
       })
     );
     workspaceStore.registerFactory(

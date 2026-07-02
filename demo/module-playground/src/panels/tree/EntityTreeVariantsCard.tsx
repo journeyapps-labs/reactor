@@ -6,6 +6,7 @@ import {
   CheckboxLabelWidget,
   ControlledSearchWidget,
   EntityPresenterComponentRenderType,
+  SurfaceWidget,
   getScrollableCSS,
   styled
 } from '@journeyapps-labs/reactor-mod';
@@ -137,10 +138,8 @@ namespace S {
     }
   `;
 
-  export const TreeFrame = styled.div`
+  export const TreeFrame = styled(SurfaceWidget)`
     height: 180px;
-    border: solid 1px ${(p) => p.theme.panels.divider};
-    border-radius: 6px;
     overflow: auto;
     ${(p) => getScrollableCSS(p.theme)};
   `;

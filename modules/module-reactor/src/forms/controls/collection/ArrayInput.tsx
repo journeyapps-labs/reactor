@@ -13,6 +13,7 @@ import { useForceUpdate } from '../../../hooks/useForceUpdate';
 import { LoadingPanelWidget } from '../../../widgets/panel/panel/LoadingPanelWidget';
 import { v4 } from 'uuid';
 import { PanelButtonWidget } from '../../../widgets/forms/PanelButtonWidget';
+import { SurfaceWidget } from '../../../widgets/surfaces/SurfaceWidget';
 
 export interface ArrayInputOptions<T> extends FormInputOptions<T[]> {
   generate: () => FormInput;
@@ -154,10 +155,8 @@ namespace S {
     padding-bottom: 5px;
   `;
 
-  export const Entry = styled.div`
+  export const Entry = styled(SurfaceWidget)`
     padding: 5px;
-    border-radius: 4px;
-    border: solid 1px ${(p) => p.theme.forms.groupBorder};
     margin-bottom: 3px;
     display: flex;
     align-items: center;

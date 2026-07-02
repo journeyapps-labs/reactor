@@ -8,6 +8,7 @@ import {
   ReactorPanelModel,
   StatusCardState,
   StatusCardWidget,
+  SurfaceWidget,
   styled
 } from '@journeyapps-labs/reactor-mod';
 
@@ -249,10 +250,8 @@ namespace S {
     }
   `;
 
-  export const LayoutFrame = styled.div`
+  export const LayoutFrame = styled(SurfaceWidget)`
     height: 180px;
-    border: solid 1px ${(p) => p.theme.panels.divider};
-    border-radius: 6px;
     overflow: hidden;
   `;
 

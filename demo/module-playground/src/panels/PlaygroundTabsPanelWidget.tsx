@@ -1,7 +1,14 @@
 import * as React from 'react';
 import { MouseEvent } from 'react';
 import { observer } from 'mobx-react';
-import { CardWidget, ReactorPanelModel, TabDirective, TabSelectionWidget, styled } from '@journeyapps-labs/reactor-mod';
+import {
+  CardWidget,
+  ReactorPanelModel,
+  SurfaceWidget,
+  TabDirective,
+  TabSelectionWidget,
+  styled
+} from '@journeyapps-labs/reactor-mod';
 
 export interface PlaygroundTabsPanelWidgetProps {
   model: ReactorPanelModel;
@@ -232,11 +239,8 @@ namespace S {
     font-size: 13px;
   `;
 
-  export const Surface = styled.div`
+  export const Surface = styled(SurfaceWidget)`
     display: inline-flex;
-    background: ${(p) => p.theme.panels.searchBackground};
-    border: solid 1px ${(p) => p.theme.panels.divider};
-    border-radius: 6px;
     overflow: hidden;
   `;
 
@@ -272,15 +276,12 @@ namespace S {
     background: ${(p) => p.theme.status.success};
   `;
 
-  export const EventLog = styled.div`
+  export const EventLog = styled(SurfaceWidget)`
     align-self: flex-end;
     min-height: 26px;
     padding: 5px 8px;
-    border-radius: 5px;
     box-sizing: border-box;
     color: ${(p) => p.theme.text.secondary};
-    background: ${(p) => p.theme.panels.searchBackground};
-    border: solid 1px ${(p) => p.theme.panels.divider};
     font-size: 13px;
   `;
 }

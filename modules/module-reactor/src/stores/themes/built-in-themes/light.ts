@@ -85,6 +85,16 @@ theme.addThemeValues({
       tagLabelBackground: 'rgba(0, 0, 0, 0.16)',
       tagLabelForeground: 'rgba(255, 255, 255, 0.95)'
     },
+    surfaces: {
+      depth0Background: '#f5f7fa',
+      depth0Border: '#b2bdcb',
+      depth1Background: '#edf2f8',
+      depth1Border: '#b5c0cd',
+      depth2Background: '#e5eaf1',
+      depth2Border: '#b5c0cd',
+      depth3Background: '#ffffff',
+      depth3Border: '#c8d3e2'
+    },
     status: {
       cardBackground: '#edf2f8',
       failed: '#d86a86',
@@ -191,7 +201,8 @@ theme.addThemeValues({
     floating: {
       background: 'rgba(245,249,253,0.92)',
       backgroundInactive: 'rgba(245,249,253,0.65)',
-      border: 'rgba(157,170,188,0.8)'
+      border: 'rgba(123,140,164,0.92)',
+      shadowColor: 'rgba(43,57,78,0.32)'
     }
   }
 });

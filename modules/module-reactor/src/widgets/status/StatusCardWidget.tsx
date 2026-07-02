@@ -10,7 +10,7 @@ import { TreeContentWidget } from '../tree/TreeContentWidget';
 import { MetadataWidget, MetadataWidgetProps } from '../meta/MetadataWidget';
 import { TreeLeafWidget } from '../tree/TreeLeafWidget';
 import { IconWidget, ReactorIcon } from '../icons/IconWidget';
-import { getTransparentColor } from '@journeyapps-labs/lib-reactor-utils';
+import { SurfaceDepth, SurfaceWidget } from '../surfaces/SurfaceWidget';
 
 export enum StatusCardState {
   LOADING = 'loading',
@@ -27,18 +27,16 @@ export interface StatusCardWidgetProps {
   btns?: Btn[];
   children?: () => React.JSX.Element;
   className?;
+  depth?: SurfaceDepth;
   showStatusIcon?: boolean;
 }
 
 namespace S {
   const PADDING = 5;
 
-  export const Container = themed.div`
-    border-radius: 5px;
+  export const Container = themed(SurfaceWidget)`
     overflow: hidden;
     display: flex;
-    background: ${(p) => p.theme.status.cardBackground};
-    border: solid 1px ${(p) => getTransparentColor(p.theme.cards.border, 0.5)};
     width: 100%;
   `;
 
@@ -157,7 +155,7 @@ export class StatusCardWidget extends React.Component<StatusCardWidgetProps> {
 
   render() {
     return (
-      <S.Container className={this.props.className}>
+      <S.Container className={this.props.className} depth={this.props.depth}>
         {this.getStatus()}
         <S.Content>{this.getChildren()}</S.Content>
       </S.Container>

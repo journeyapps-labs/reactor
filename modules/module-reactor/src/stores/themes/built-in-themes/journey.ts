@@ -90,6 +90,16 @@ theme.addThemeValues({
       tagLabelBackground: 'rgba(0, 0, 0, 0.12)',
       tagLabelForeground: 'rgba(245, 236, 226, 0.92)'
     },
+    surfaces: {
+      depth0Background: '#26343a',
+      depth0Border: '#4a626d',
+      depth1Background: '#29373f',
+      depth1Border: '#41565f',
+      depth2Background: '#2f3f47',
+      depth2Border: '#41565f',
+      depth3Background: '#202d34',
+      depth3Border: '#3f555f'
+    },
     meta: {
       background: 'rgba(204,178,148,0.18)',
       foreground: '#e9dfd2'
@@ -147,7 +157,8 @@ theme.addThemeValues({
     floating: {
       background: 'rgba(41, 55, 63, 0.82)',
       backgroundInactive: 'rgba(41, 55, 63, 0.58)',
-      border: 'rgba(111, 135, 146, 0.42)'
+      border: 'rgba(129, 154, 166, 0.56)',
+      shadowColor: 'rgba(0, 0, 0, 0.54)'
     }
   }
 });

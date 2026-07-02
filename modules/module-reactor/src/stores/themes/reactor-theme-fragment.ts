@@ -142,6 +142,19 @@ export const theme = new ThemeFragment({
         tagLabelForeground: 'Tag label text color'
       }
     },
+    surfaces: {
+      label: 'Surfaces',
+      colors: {
+        depth0Background: 'Depth 0 background',
+        depth0Border: 'Depth 0 border',
+        depth1Background: 'Depth 1 background',
+        depth1Border: 'Depth 1 border',
+        depth2Background: 'Depth 2 background',
+        depth2Border: 'Depth 2 border',
+        depth3Background: 'Depth 3 background',
+        depth3Border: 'Depth 3 border'
+      }
+    },
     combobox: {
       label: 'Combo Box',
       colors: {
@@ -259,7 +272,8 @@ export const theme = new ThemeFragment({
       colors: {
         background: 'Background color',
         backgroundInactive: 'Background color when inactive',
-        border: 'Border color'
+        border: 'Border color',
+        shadowColor: 'Shadow color'
       }
     }
   }

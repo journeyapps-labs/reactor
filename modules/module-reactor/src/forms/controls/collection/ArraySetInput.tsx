@@ -15,6 +15,7 @@ import { useForceUpdate } from '../../../hooks/useForceUpdate';
 import { LoadingPanelWidget } from '../../../widgets/panel/panel/LoadingPanelWidget';
 import { PanelButtonMode, PanelButtonWidget } from '../../../widgets/forms/PanelButtonWidget';
 import { Btn } from '../../../definitions/common';
+import { SurfaceWidget } from '../../../widgets/surfaces/SurfaceWidget';
 
 export interface ArraySetInputOptions<T> extends FormInputOptions<{ [key: string]: T }> {
   generate: (key: string) => FormInput;
@@ -203,9 +204,8 @@ namespace S {
     font-size: 12px;
   `;
 
-  export const Entry = styled.div`
-    border-radius: 4px;
-    border: solid 2px ${(p) => p.theme.forms.groupBorder};
+  export const Entry = styled(SurfaceWidget)`
+    overflow: hidden;
   `;
 
   export const EntryTop = styled.div`

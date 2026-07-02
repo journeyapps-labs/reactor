@@ -82,6 +82,16 @@ theme.addThemeValues({
       tagLabelBackground: 'rgba(0, 0, 0, 0.14)',
       tagLabelForeground: 'rgba(255, 255, 255, 0.92)'
     },
+    surfaces: {
+      depth0Background: 'rgba(58, 58, 60, 1)',
+      depth0Border: '#666668',
+      depth1Background: '#262628',
+      depth1Border: 'rgb(38,38,40)',
+      depth2Background: 'rgba(28, 28, 30, 1)',
+      depth2Border: 'rgb(38,38,40)',
+      depth3Background: 'rgba(24, 24, 26, 1)',
+      depth3Border: 'rgba(255, 255, 255, 0.12)'
+    },
     table: {
       ...DarkTheme.table,
       border: '#4e4e50',
@@ -134,7 +144,8 @@ theme.addThemeValues({
     floating: {
       background: 'rgba(28, 28, 30, 0.8)',
       backgroundInactive: 'rgba(28, 28, 30, 0.5)',
-      border: 'rgba(255,255,255,0.2)'
+      border: 'rgba(255,255,255,0.34)',
+      shadowColor: 'rgba(0, 0, 0, 0.62)'
     }
   }
 });

@@ -55,6 +55,7 @@ export const EntityCardWidget = observer(function <T>(props: EntityCardWidgetPro
   return (
     <S.CardWrapper
       onClick={(event) => {
+        event.stopPropagation();
         presenterContext.handleClick(entity, event as any, ActionSource.CARD);
       }}
       onContextMenu={(event) => {
@@ -72,6 +73,7 @@ export const EntityCardWidget = observer(function <T>(props: EntityCardWidgetPro
           labels.length > 0
             ? {
                 key: 'labels',
+                grow: false,
                 content: () => {
                   return <S.Labels meta={labels} />;
                 }
@@ -80,6 +82,7 @@ export const EntityCardWidget = observer(function <T>(props: EntityCardWidgetPro
           tags.length > 0
             ? {
                 key: 'tags',
+                grow: false,
                 content: () => {
                   return <TagsSectionWidget tags={tags} theme={theme} />;
                 }
@@ -87,6 +90,7 @@ export const EntityCardWidget = observer(function <T>(props: EntityCardWidgetPro
             : null,
           {
             key: 'nested-trees',
+            grow: false,
             content: () => {
               return <NestedTreesSectionWidget nestedTrees={nestedTrees} />;
             }

@@ -34,15 +34,15 @@ theme.addThemeValues({
       ...DarkTheme.header,
       backgroundLogo: 'rgba(255,255,255,0.07)',
       backgroundLogoHover: 'rgba(255,255,255,0.15)',
-      background: 'rgb(25,25,26)'
+      background: 'rgb(30,30,32)'
     },
     workspaceSubMenu: {
-      background: 'rgb(25,25,26)',
-      backgroundUnPinned: 'rgb(30,30,32)',
+      background: 'rgb(30,30,32)',
+      backgroundUnPinned: 'rgb(25,25,27)',
       foreground: 'rgba(220,220,222,0.7)'
     },
     mobileNavigation: {
-      background: 'rgb(25,25,26)',
+      background: 'rgb(30,30,32)',
       foreground: 'rgba(220,220,222,0.7)',
       border: 'rgb(51,51,53)',
       selectedBackground: 'linear-gradient(155deg, rgba(255, 143, 0, 0.2), rgba(255, 23, 68,0.2))',
@@ -56,7 +56,7 @@ theme.addThemeValues({
       startButtonText: '#ffffff'
     },
     footer: {
-      background: 'rgba(44, 44, 46, 1)'
+      background: 'rgb(30,30,32)'
     },
     tabs: {
       selectedAccentSingle: '#ff8f00',
@@ -83,6 +83,16 @@ theme.addThemeValues({
       tagBackground: '#696a6c',
       tagLabelBackground: 'rgba(0, 0, 0, 0.14)',
       tagLabelForeground: 'rgba(255, 255, 255, 0.92)'
+    },
+    surfaces: {
+      depth0Background: 'rgba(34, 34, 36, 1)',
+      depth0Border: 'rgb(78,78,82)',
+      depth1Background: 'rgb(30,30,32)',
+      depth1Border: 'rgb(64,64,68)',
+      depth2Background: 'rgb(25,25,27)',
+      depth2Border: 'rgb(54,54,58)',
+      depth3Background: 'rgb(21,21,23)',
+      depth3Border: 'rgb(45,45,49)'
     },
     table: {
       ...DarkTheme.table,
@@ -138,7 +148,8 @@ theme.addThemeValues({
     floating: {
       background: 'rgba(0, 0, 0, 0.3)',
       backgroundInactive: 'rgba(0, 0, 0, 0.5)',
-      border: 'rgba(255, 143, 0, 0.32)'
+      border: 'rgba(255, 143, 0, 0.45)',
+      shadowColor: 'rgba(0, 0, 0, 0.72)'
     }
   }
 });

@@ -82,6 +82,16 @@ export const DarkTheme = theme.addThemeValues({
       tagLabelBackground: 'rgba(0, 0, 0, 0.12)',
       tagLabelForeground: 'rgba(236, 244, 255, 0.92)'
     },
+    surfaces: {
+      depth0Background: '#151c27',
+      depth0Border: '#3b4a5f',
+      depth1Background: '#172130',
+      depth1Border: '#324053',
+      depth2Background: '#161d28',
+      depth2Border: '#324053',
+      depth3Background: '#0f141d',
+      depth3Border: '#2f3d4f'
+    },
     status: {
       cardBackground: '#172130',
       failed: '#862c00',
@@ -188,7 +198,8 @@ export const DarkTheme = theme.addThemeValues({
     floating: {
       background: 'rgba(20,24,29,0.8)',
       backgroundInactive: 'rgba(25,30,37,0.45)',
-      border: 'rgba(184,204,231,0.22)'
+      border: 'rgba(184,204,231,0.34)',
+      shadowColor: 'rgba(0, 0, 0, 0.62)'
     }
   }
 });

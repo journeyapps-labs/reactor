@@ -15,14 +15,14 @@ namespace S {
   }>`
     width: ${(p) => (p.vertical ? '100%' : 'auto')};
     box-sizing: border-box;
-    padding: ${(p) => (p.compact ? '4px 10px' : '4px 13px')};
+    padding: ${(p) => (p.compact ? '2px 10px' : '4px 13px')};
     color: ${(p) => p.theme.combobox.text};
     cursor: ${(p) => (p.disabled ? 'not-allowed' : 'pointer')};
     opacity: ${(p) => (p.disabled ? 0.34 : p.attention || p.selected ? 1 : 0.62)};
     background: transparent;
     font-family: ${Fonts.PRIMARY};
     font-size: ${(p) => (p.compact ? '13px' : '15px')};
-    line-height: ${(p) => (p.compact ? '11px' : 'normal')};
+    line-height: ${(p) => (p.compact ? '15px' : 'normal')};
     white-space: nowrap;
     border: 0;
     border-radius: 5px;
