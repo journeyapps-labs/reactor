@@ -2,9 +2,12 @@ packages:
   - './libs/*'
   - './modules/*'
   - './demo/*'
+overrides:
+  '@journeyapps-labs/common-tree': ^3.0.0
 allowBuilds:
   core-js-pure: true
   esbuild: true
+shamefullyHoist: true
 minimumReleaseAgeExclude:
   - '@types/node@26.1.0'
   - js-yaml@5.2.1

@@ -92,6 +92,7 @@ export const generateCommonWebpack = (dir: string): Configuration => {
     optimization: {
       minimizer: [
         new TerserPlugin({
+          minify: TerserPlugin.terserMinify,
           parallel: true,
           terserOptions: {
             ecma: 2017,

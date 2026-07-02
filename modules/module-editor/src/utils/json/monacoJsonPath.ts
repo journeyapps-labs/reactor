@@ -1,5 +1,7 @@
 import * as monaco from 'monaco-editor';
-import { json as monacoJson } from 'monaco-editor/esm/vs/editor/editor.main.js';
+// Monaco exposes this at runtime, but the package's .d.ts for this entrypoint is empty.
+// @ts-expect-error missing Monaco contribution export types
+import { getWorker } from 'monaco-editor/esm/vs/language/json/monaco.contribution.js';
 import type { json as MonacoJson } from 'monaco-editor/esm/vs/editor/editor.main.js';
 import * as _ from 'lodash';
 
@@ -183,7 +185,9 @@ export const getMonacoJsonPathLocation = async (
   options: MonacoJsonPathLocationRequest
 ): Promise<MonacoJsonPathLocation | null> => {
   const { model, path } = options;
-  const workerAccessor = await monacoJson.getWorker();
+  const workerAccessor = await (
+    getWorker as () => Promise<(...uris: monaco.Uri[]) => Promise<MonacoJson.IJSONWorker>>
+  )();
   const worker = await workerAccessor(model.uri);
   const document = await worker.parseJSONDocument(model.uri.toString());
   return getMonacoJsonPathLocationFromDocument({

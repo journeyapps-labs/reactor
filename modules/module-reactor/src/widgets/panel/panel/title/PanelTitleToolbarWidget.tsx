@@ -128,8 +128,8 @@ export class PanelTitleToolbarWidget extends React.Component<PanelTitleToolbarWi
         {this.getContextButton()}
         {this.props.btns ? (
           <S.Buttons>
-            {this.props.btns.map((p) => {
-              return <PanelTitleToolbarButtonWidget {...p} key={p.tooltip} />;
+            {this.props.btns.map((p, index) => {
+              return <PanelTitleToolbarButtonWidget {...p} key={p.label || p.tooltip || index} />;
             })}
           </S.Buttons>
         ) : null}

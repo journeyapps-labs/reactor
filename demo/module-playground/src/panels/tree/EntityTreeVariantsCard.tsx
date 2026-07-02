@@ -94,26 +94,27 @@ export const EntityTreeVariantsCard: React.FC<EntityTreeVariantsCardProps> = obs
               <S.Grid>
                 {entityContexts.map((entry) => {
                   return (
-                    <CardWidget
-                      key={entry.label}
-                      title={entry.title}
-                      subHeading={entry.subtitle}
-                      sections={[
-                        {
-                          key: `entity-tree-${entry.label}`,
-                          content: () => {
-                            return (
-                              <S.TreeFrame>
-                                {entry.context.renderCollection({
-                                  entities: todoStore.rootTodos as TodoModel[],
-                                  searchEvent
-                                })}
-                              </S.TreeFrame>
-                            );
+                    <React.Fragment key={entry.label}>
+                      <CardWidget
+                        title={entry.title}
+                        subHeading={entry.subtitle}
+                        sections={[
+                          {
+                            key: `entity-tree-${entry.label}`,
+                            content: () => {
+                              return (
+                                <S.TreeFrame>
+                                  {entry.context.renderCollection({
+                                    entities: todoStore.rootTodos as TodoModel[],
+                                    searchEvent
+                                  })}
+                                </S.TreeFrame>
+                              );
+                            }
                           }
-                        }
-                      ]}
-                    />
+                        ]}
+                      />
+                    </React.Fragment>
                   );
                 })}
               </S.Grid>

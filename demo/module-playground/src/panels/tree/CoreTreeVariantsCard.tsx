@@ -42,27 +42,28 @@ export const CoreTreeVariantsCard: React.FC<CoreTreeVariantsCardProps> = observe
               <S.Grid>
                 {coreTreeVariants.map((variant) => {
                   return (
-                    <CardWidget
-                      key={variant.key}
-                      title={variant.title}
-                      subHeading={variant.subtitle}
-                      sections={[
-                        {
-                          key: `core-tree-${variant.key}`,
-                          content: () => {
-                            return (
-                              <S.TreeFrame>
-                                <SearchableCoreTreeWidget
-                                  tree={variant.tree}
-                                  search={search}
-                                  searchScope={variant.searchScope}
-                                />
-                              </S.TreeFrame>
-                            );
+                    <React.Fragment key={variant.key}>
+                      <CardWidget
+                        title={variant.title}
+                        subHeading={variant.subtitle}
+                        sections={[
+                          {
+                            key: `core-tree-${variant.key}`,
+                            content: () => {
+                              return (
+                                <S.TreeFrame>
+                                  <SearchableCoreTreeWidget
+                                    tree={variant.tree}
+                                    search={search}
+                                    searchScope={variant.searchScope}
+                                  />
+                                </S.TreeFrame>
+                              );
+                            }
                           }
-                        }
-                      ]}
-                    />
+                        ]}
+                      />
+                    </React.Fragment>
                   );
                 })}
               </S.Grid>

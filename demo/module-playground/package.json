@@ -9,6 +9,7 @@
   },
   "dependencies": {
     "@emotion/styled": "^11.14.1",
+    "@journeyapps-labs/common-ioc": "^1.0.1",
     "@journeyapps-labs/common-utils": "^1.0.1",
     "@journeyapps-labs/lib-reactor-search": "workspace:^",
     "@journeyapps-labs/reactor-mod": "workspace:^",
@@ -16,6 +17,7 @@
     "@journeyapps-labs/reactor-mod-todos": "workspace:^",
     "@projectstorm/react-workspaces-core": "^4.2.3",
     "mobx": "^6.16.1",
+    "mobx-react": "^9.2.2",
     "monaco-editor": "^0.55.1",
     "react": "19.2.7",
     "uuid": "^14.0.1"

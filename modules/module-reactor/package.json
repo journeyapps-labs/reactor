@@ -27,9 +27,11 @@
     "@fortawesome/fontawesome-svg-core": "^7.3.0",
     "@fortawesome/free-solid-svg-icons": "^7.3.0",
     "@fortawesome/react-fontawesome": "^3.3.1",
+    "@journeyapps-labs/common-ioc": "^1.0.1",
     "@journeyapps-labs/common-tree": "^3.0.0",
     "@journeyapps-labs/common-utils": "^1.0.1",
     "@journeyapps-labs/common-logger": "^1.0.1",
+    "@journeyapps-labs/lib-reactor-data-layer": "workspace:*",
     "@journeyapps-labs/lib-reactor-search": "workspace:*",
     "@journeyapps-labs/lib-reactor-utils": "workspace:*",
     "@projectstorm/react-workspaces-behavior-divider-dropzone": "2.4.12",
@@ -41,6 +43,7 @@
     "@projectstorm/react-workspaces-model-floating-window": "2.2.14",
     "@projectstorm/react-workspaces-model-tabs": "^2.3.11",
     "@projectstorm/react-workspaces-model-tray": "^2.5.12",
+    "async": "^3.2.6",
     "balloon-css": "^1.2.0",
     "cron": "^4.4.0",
     "cronstrue": "^3.24.0",
@@ -69,6 +72,7 @@
     "rehype-external-links": "^3.0.0",
     "slick-carousel": "^1.8.1",
     "timeago.js": "^4.0.2",
+    "tslib": "^2.8.1",
     "typeface-fira-sans": "^1.1.13",
     "typeface-source-sans-pro": "^1.1.13",
     "uuid": "14.0.1"
@@ -85,7 +89,6 @@
     "@types/resize-observer-browser": "^0.1.11",
     "@types/uuid": "11.0.0",
     "jsdom": "^29.1.1",
-    "tslib": "^2.8.1",
     "vitest": "^4.1.9"
   }
 }

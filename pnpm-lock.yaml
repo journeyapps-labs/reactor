@@ -4,6 +4,9 @@ settings:
   autoInstallPeers: true
   excludeLinksFromLockfile: false
 
+overrides:
+  '@journeyapps-labs/common-tree': ^3.0.0
+
 importers:
 
   .:
@@ -40,7 +43,7 @@ importers:
     dependencies:
       '@emotion/styled':
         specifier: ^11.14.1
-        version: 11.14.1(@emotion/react@11.14.0(@types/react@19.2.17)(react@19.2.7))(@types/react@19.2.17)(react@19.2.7)
+        version: 11.14.1(@emotion/react@11.14.0(react@19.2.7))(@types/react@19.2.17)(react@19.2.7)
       '@journeyapps-labs/common-ioc':
         specifier: ^1.0.1
         version: 1.0.1
@@ -59,7 +62,10 @@ importers:
     dependencies:
       '@emotion/styled':
         specifier: ^11.14.1
-        version: 11.14.1(@emotion/react@11.14.0(@types/react@19.2.17)(react@19.2.7))(@types/react@19.2.17)(react@19.2.7)
+        version: 11.14.1(@emotion/react@11.14.0(react@19.2.7))(@types/react@19.2.17)(react@19.2.7)
+      '@journeyapps-labs/common-ioc':
+        specifier: ^1.0.1
+        version: 1.0.1
       '@journeyapps-labs/common-utils':
         specifier: ^1.0.1
         version: 1.0.1
@@ -81,6 +87,9 @@ importers:
       mobx:
         specifier: ^6.16.1
         version: 6.16.1
+      mobx-react:
+        specifier: ^9.2.2
+        version: 9.2.2(mobx@6.16.1)(react-dom@19.2.7(react@19.2.7))(react@19.2.7)
       monaco-editor:
         specifier: ^0.55.1
         version: 0.55.1
@@ -103,6 +112,9 @@ importers:
       '@faker-js/faker':
         specifier: ^10.5.0
         version: 10.5.0
+      '@journeyapps-labs/common-ioc':
+        specifier: ^1.0.1
+        version: 1.0.1
       '@journeyapps-labs/reactor-mod':
         specifier: workspace:^
         version: link:../../modules/module-reactor
@@ -119,6 +131,9 @@ importers:
 
   demo/module-todos:
     dependencies:
+      '@journeyapps-labs/common-ioc':
+        specifier: ^1.0.1
+        version: 1.0.1
       '@journeyapps-labs/common-utils':
         specifier: ^1.0.1
         version: 1.0.1
@@ -128,6 +143,9 @@ importers:
       mobx:
         specifier: ^6.16.1
         version: 6.16.1
+      tslib:
+        specifier: ^2.8.1
+        version: 2.8.1
       uuid:
         specifier: ^14.0.1
         version: 14.0.1
@@ -135,6 +153,9 @@ importers:
       '@journeyapps-labs/lib-reactor-builder':
         specifier: workspace:^
         version: link:../../libs/lib-reactor-builder
+      '@types/node':
+        specifier: ^26.1.0
+        version: 26.1.0
       '@types/uuid':
         specifier: ^11.0.0
         version: 11.0.0
@@ -172,6 +193,9 @@ importers:
       nodemon:
         specifier: ^3.1.14
         version: 3.1.14
+      tslib:
+        specifier: ^2.8.1
+        version: 2.8.1
 
   libs/lib-reactor-builder:
     dependencies:
@@ -389,6 +413,9 @@ importers:
 
   modules/module-editor:
     dependencies:
+      '@emotion/styled':
+        specifier: ^11.14.1
+        version: 11.14.1(@emotion/react@11.14.0(react@19.2.7))(@types/react@19.2.17)(react@19.2.7)
       '@journeyapps-labs/common-ioc':
         specifier: ^1.0.1
         version: 1.0.1
@@ -413,6 +440,9 @@ importers:
       jszip:
         specifier: ^3.10.1
         version: 3.10.1
+      lodash:
+        specifier: ^4.18.1
+        version: 4.18.1
       lru-cache:
         specifier: ^5.1.1
         version: 5.1.1
@@ -449,13 +479,25 @@ importers:
       react-monaco-editor:
         specifier: ^0.59.0
         version: 0.59.0(monaco-editor@0.55.1)(react-dom@19.2.7(react@19.2.7))(react@19.2.7)
+      tslib:
+        specifier: ^2.8.1
+        version: 2.8.1
+      uuid:
+        specifier: ^14.0.1
+        version: 14.0.1
     devDependencies:
       '@journeyapps-labs/lib-reactor-builder':
         specifier: workspace:*
         version: link:../../libs/lib-reactor-builder
+      '@types/lodash':
+        specifier: ^4.17.24
+        version: 4.17.24
       '@types/react':
         specifier: 19.2.17
         version: 19.2.17
+      '@types/uuid':
+        specifier: ^11.0.0
+        version: 11.0.0
       json5-loader:
         specifier: ^4.0.1
         version: 4.0.1(webpack@5.108.3)
@@ -473,7 +515,7 @@ importers:
         version: 1.3.3
       '@emotion/styled':
         specifier: ^11.14.1
-        version: 11.14.1(@emotion/react@11.14.0(@types/react@19.2.17)(react@19.2.7))(@types/react@19.2.17)(react@19.2.7)
+        version: 11.14.1(@emotion/react@11.14.0(react@19.2.7))(@types/react@19.2.17)(react@19.2.7)
       '@emotion/utils':
         specifier: ^1.4.2
         version: 1.4.2
@@ -486,6 +528,9 @@ importers:
       '@fortawesome/react-fontawesome':
         specifier: ^3.3.1
         version: 3.3.1(@fortawesome/fontawesome-svg-core@7.3.0)(react@19.2.7)
+      '@journeyapps-labs/common-ioc':
+        specifier: ^1.0.1
+        version: 1.0.1
       '@journeyapps-labs/common-logger':
         specifier: ^1.0.1
         version: 1.0.1
@@ -495,6 +540,9 @@ importers:
       '@journeyapps-labs/common-utils':
         specifier: ^1.0.1
         version: 1.0.1
+      '@journeyapps-labs/lib-reactor-data-layer':
+        specifier: workspace:*
+        version: link:../../libs/lib-reactor-data-layer
       '@journeyapps-labs/lib-reactor-search':
         specifier: workspace:*
         version: link:../../libs/lib-reactor-search
@@ -528,6 +576,9 @@ importers:
       '@projectstorm/react-workspaces-model-tray':
         specifier: ^2.5.12
         version: 2.5.12(@emotion/react@11.14.0(@types/react@19.2.17)(react@19.2.7))(@types/react@19.2.17)
+      async:
+        specifier: ^3.2.6
+        version: 3.2.6
       balloon-css:
         specifier: ^1.2.0
         version: 1.2.0
@@ -545,7 +596,7 @@ importers:
         version: 1.0.16
       jimp:
         specifier: ^1.6.1
-        version: 1.6.1
+        version: 1.6.1(supports-color@5.5.0)
       lodash:
         specifier: ^4.18.1
         version: 4.18.1
@@ -612,6 +663,9 @@ importers:
       timeago.js:
         specifier: ^4.0.2
         version: 4.0.2
+      tslib:
+        specifier: ^2.8.1
+        version: 2.8.1
       typeface-fira-sans:
         specifier: ^1.1.13
         version: 1.1.13
@@ -655,9 +709,6 @@ importers:
       jsdom:
         specifier: ^29.1.1
         version: 29.1.1
-      tslib:
-        specifier: ^2.8.1
-        version: 2.8.1
       vitest:
         specifier: ^4.1.9
         version: 4.1.9(@types/node@26.1.0)(jsdom@29.1.1)(vite@7.0.6(@types/node@26.1.0)(terser@5.43.1)(yaml@2.8.0))
@@ -2183,15 +2234,6 @@ packages:
 
   '@types/node@16.9.1':
     resolution: {integrity: sha512-QpLcX9ZSsq3YYUUnD3nFDY8H7wctAhQj/TFKL8Ya8v5fMm3CFXxo8zStsLAl780ltoYoo1WvKUVGBQK+1ifr7g==}
-
-  '@types/node@25.2.3':
-    resolution: {integrity: sha512-m0jEgYlYz+mDJZ2+F4v8D1AyQb+QzsNqRuI7xg1VQX/KlKS0qT9r1Mo16yo5F/MtifXFgaofIFsdFMox2SxIbQ==}
-
-  '@types/node@25.5.0':
-    resolution: {integrity: sha512-jp2P3tQMSxWugkCUKLRPVUpGaL5MVFwF8RDuSRztfwgN1wmqJeMSbKlnEtQqU8UrhTmzEmZdu2I6v2dpp7XIxw==}
-
-  '@types/node@26.0.1':
-    resolution: {integrity: sha512-fc3KiUoBt6kie0N9bIW3E47vZsuaMf0PM2AaUpLCLT0s/LvX1nxAim6Fc049cNxODPpGm6qRAuUOB86SkRuPQw==}
 
   '@types/node@26.1.0':
     resolution: {integrity: sha512-O0A1G3xPGy4w7AgQdAQYUlQ+BKk2Oovw8eRpofyp5KdBZULnbe+WqaOVNrm705SHphCiG4XHsACrSmPu1f+Kgw==}
@@ -4990,12 +5032,6 @@ packages:
   undefsafe@2.0.5:
     resolution: {integrity: sha512-WxONCrssBM8TSPRqN5EmsjVrsv4A8X12J4ArBiiayv3DyyG3ZlIg6yysuuSYdZsVz3TKcTg2fd//Ujd4CHV1iA==}
 
-  undici-types@7.16.0:
-    resolution: {integrity: sha512-Zz+aZWSj8LE6zoxD+xrjh4VfkIG8Ya6LvYkZqtUQGJPZjYl53ypCaUwWqo7eI0x66KBGeRo+mlBEkMSeSZ38Nw==}
-
-  undici-types@7.18.2:
-    resolution: {integrity: sha512-AsuCzffGHJybSaRrmr5eHr81mwJU3kjw6M+uprWvCXiNeN9SOGwQ3Jn8jb8m3Z6izVgknn1R0FTCEAP2QrLY/w==}
-
   undici-types@8.3.0:
     resolution: {integrity: sha512-j375ScV60dom+YkPFIfTLcOiPxkN/buHz5GobjLhixFuANaNs3C9l4GmrWqejgXWJ7BbJcFYpTEUkS1Ge8bpZQ==}
 
@@ -6275,7 +6311,7 @@ snapshots:
 
   '@emotion/sheet@1.4.0': {}
 
-  '@emotion/styled@11.14.1(@emotion/react@11.14.0(@types/react@19.2.17)(react@19.2.7))(@types/react@19.2.17)(react@19.2.7)':
+  '@emotion/styled@11.14.1(@emotion/react@11.14.0(react@19.2.7))(@types/react@19.2.17)(react@19.2.7)':
     dependencies:
       '@babel/runtime': 7.28.2
       '@emotion/babel-plugin': 11.13.5
@@ -6529,14 +6565,14 @@ snapshots:
 
   '@isaacs/cliui@9.0.0': {}
 
-  '@jimp/core@1.6.1':
+  '@jimp/core@1.6.1(supports-color@5.5.0)':
     dependencies:
       '@jimp/file-ops': 1.6.1
       '@jimp/types': 1.6.1
       '@jimp/utils': 1.6.1
       await-to-js: 3.0.0
       exif-parser: 0.1.12
-      file-type: 21.3.4
+      file-type: 21.3.4(supports-color@5.5.0)
       mime: 3.0.0
     transitivePeerDependencies:
       - supports-color
@@ -6554,7 +6590,7 @@ snapshots:
 
   '@jimp/js-bmp@1.6.1':
     dependencies:
-      '@jimp/core': 1.6.1
+      '@jimp/core': 1.6.1(supports-color@5.5.0)
       '@jimp/types': 1.6.1
       '@jimp/utils': 1.6.1
       bmp-ts: 1.0.9
@@ -6563,7 +6599,7 @@ snapshots:
 
   '@jimp/js-gif@1.6.1':
     dependencies:
-      '@jimp/core': 1.6.1
+      '@jimp/core': 1.6.1(supports-color@5.5.0)
       '@jimp/types': 1.6.1
       gifwrap: 0.10.1
       omggif: 1.0.10
@@ -6572,7 +6608,7 @@ snapshots:
 
   '@jimp/js-jpeg@1.6.1':
     dependencies:
-      '@jimp/core': 1.6.1
+      '@jimp/core': 1.6.1(supports-color@5.5.0)
       '@jimp/types': 1.6.1
       jpeg-js: 0.4.4
     transitivePeerDependencies:
@@ -6580,7 +6616,7 @@ snapshots:
 
   '@jimp/js-png@1.6.1':
     dependencies:
-      '@jimp/core': 1.6.1
+      '@jimp/core': 1.6.1(supports-color@5.5.0)
       '@jimp/types': 1.6.1
       pngjs: 7.0.0
     transitivePeerDependencies:
@@ -6588,7 +6624,7 @@ snapshots:
 
   '@jimp/js-tiff@1.6.1':
     dependencies:
-      '@jimp/core': 1.6.1
+      '@jimp/core': 1.6.1(supports-color@5.5.0)
       '@jimp/types': 1.6.1
       utif2: 4.1.0
     transitivePeerDependencies:
@@ -6602,7 +6638,7 @@ snapshots:
 
   '@jimp/plugin-blur@1.6.1':
     dependencies:
-      '@jimp/core': 1.6.1
+      '@jimp/core': 1.6.1(supports-color@5.5.0)
       '@jimp/utils': 1.6.1
     transitivePeerDependencies:
       - supports-color
@@ -6614,7 +6650,7 @@ snapshots:
 
   '@jimp/plugin-color@1.6.1':
     dependencies:
-      '@jimp/core': 1.6.1
+      '@jimp/core': 1.6.1(supports-color@5.5.0)
       '@jimp/types': 1.6.1
       '@jimp/utils': 1.6.1
       tinycolor2: 1.6.0
@@ -6624,7 +6660,7 @@ snapshots:
 
   '@jimp/plugin-contain@1.6.1':
     dependencies:
-      '@jimp/core': 1.6.1
+      '@jimp/core': 1.6.1(supports-color@5.5.0)
       '@jimp/plugin-blit': 1.6.1
       '@jimp/plugin-resize': 1.6.1
       '@jimp/types': 1.6.1
@@ -6635,7 +6671,7 @@ snapshots:
 
   '@jimp/plugin-cover@1.6.1':
     dependencies:
-      '@jimp/core': 1.6.1
+      '@jimp/core': 1.6.1(supports-color@5.5.0)
       '@jimp/plugin-crop': 1.6.1
       '@jimp/plugin-resize': 1.6.1
       '@jimp/types': 1.6.1
@@ -6645,7 +6681,7 @@ snapshots:
 
   '@jimp/plugin-crop@1.6.1':
     dependencies:
-      '@jimp/core': 1.6.1
+      '@jimp/core': 1.6.1(supports-color@5.5.0)
       '@jimp/types': 1.6.1
       '@jimp/utils': 1.6.1
       zod: 3.25.76
@@ -6675,7 +6711,7 @@ snapshots:
 
   '@jimp/plugin-hash@1.6.1':
     dependencies:
-      '@jimp/core': 1.6.1
+      '@jimp/core': 1.6.1(supports-color@5.5.0)
       '@jimp/js-bmp': 1.6.1
       '@jimp/js-jpeg': 1.6.1
       '@jimp/js-png': 1.6.1
@@ -6695,7 +6731,7 @@ snapshots:
 
   '@jimp/plugin-print@1.6.1':
     dependencies:
-      '@jimp/core': 1.6.1
+      '@jimp/core': 1.6.1(supports-color@5.5.0)
       '@jimp/js-jpeg': 1.6.1
       '@jimp/js-png': 1.6.1
       '@jimp/plugin-blit': 1.6.1
@@ -6715,7 +6751,7 @@ snapshots:
 
   '@jimp/plugin-resize@1.6.1':
     dependencies:
-      '@jimp/core': 1.6.1
+      '@jimp/core': 1.6.1(supports-color@5.5.0)
       '@jimp/types': 1.6.1
       zod: 3.25.76
     transitivePeerDependencies:
@@ -6723,7 +6759,7 @@ snapshots:
 
   '@jimp/plugin-rotate@1.6.1':
     dependencies:
-      '@jimp/core': 1.6.1
+      '@jimp/core': 1.6.1(supports-color@5.5.0)
       '@jimp/plugin-crop': 1.6.1
       '@jimp/plugin-resize': 1.6.1
       '@jimp/types': 1.6.1
@@ -6734,7 +6770,7 @@ snapshots:
 
   '@jimp/plugin-threshold@1.6.1':
     dependencies:
-      '@jimp/core': 1.6.1
+      '@jimp/core': 1.6.1(supports-color@5.5.0)
       '@jimp/plugin-color': 1.6.1
       '@jimp/plugin-hash': 1.6.1
       '@jimp/types': 1.6.1
@@ -6815,7 +6851,7 @@ snapshots:
 
   '@projectstorm/react-workspaces-behavior-divider-dropzone@2.4.12(@emotion/react@11.14.0(@types/react@19.2.17)(react@19.2.7))(@types/react@19.2.17)':
     dependencies:
-      '@emotion/styled': 11.14.1(@emotion/react@11.14.0(@types/react@19.2.17)(react@19.2.7))(@types/react@19.2.17)(react@19.2.7)
+      '@emotion/styled': 11.14.1(@emotion/react@11.14.0(react@19.2.7))(@types/react@19.2.17)(react@19.2.7)
       '@projectstorm/react-workspaces-core': 4.2.3(@types/react@19.2.17)
       react: 19.2.7
     transitivePeerDependencies:
@@ -6825,7 +6861,7 @@ snapshots:
 
   '@projectstorm/react-workspaces-behavior-panel-dropzone@2.3.13(@emotion/react@11.14.0(@types/react@19.2.17)(react@19.2.7))(@types/react@19.2.17)':
     dependencies:
-      '@emotion/styled': 11.14.1(@emotion/react@11.14.0(@types/react@19.2.17)(react@19.2.7))(@types/react@19.2.17)(react@19.2.7)
+      '@emotion/styled': 11.14.1(@emotion/react@11.14.0(react@19.2.7))(@types/react@19.2.17)(react@19.2.7)
       '@fortawesome/fontawesome-svg-core': 7.3.0
       '@fortawesome/free-solid-svg-icons': 7.3.0
       '@fortawesome/react-fontawesome': 3.3.1(@fortawesome/fontawesome-svg-core@7.3.0)(react@19.2.7)
@@ -6839,7 +6875,7 @@ snapshots:
 
   '@projectstorm/react-workspaces-behavior-resize@2.3.11(@emotion/react@11.14.0(@types/react@19.2.17)(react@19.2.7))(@types/react@19.2.17)':
     dependencies:
-      '@emotion/styled': 11.14.1(@emotion/react@11.14.0(@types/react@19.2.17)(react@19.2.7))(@types/react@19.2.17)(react@19.2.7)
+      '@emotion/styled': 11.14.1(@emotion/react@11.14.0(react@19.2.7))(@types/react@19.2.17)(react@19.2.7)
       '@projectstorm/react-workspaces-core': 4.2.3(@types/react@19.2.17)
       react: 19.2.7
     transitivePeerDependencies:
@@ -6850,7 +6886,7 @@ snapshots:
   '@projectstorm/react-workspaces-core@4.2.3(@types/react@19.2.17)':
     dependencies:
       '@emotion/react': 11.14.0(@types/react@19.2.17)(react@19.2.7)
-      '@emotion/styled': 11.14.1(@emotion/react@11.14.0(@types/react@19.2.17)(react@19.2.7))(@types/react@19.2.17)(react@19.2.7)
+      '@emotion/styled': 11.14.1(@emotion/react@11.14.0(react@19.2.7))(@types/react@19.2.17)(react@19.2.7)
       color: 5.0.3
       lodash: 4.17.23
       react: 19.2.7
@@ -6888,7 +6924,7 @@ snapshots:
 
   '@projectstorm/react-workspaces-model-floating-window@2.2.14(@emotion/react@11.14.0(@types/react@19.2.17)(react@19.2.7))(@types/react@19.2.17)':
     dependencies:
-      '@emotion/styled': 11.14.1(@emotion/react@11.14.0(@types/react@19.2.17)(react@19.2.7))(@types/react@19.2.17)(react@19.2.7)
+      '@emotion/styled': 11.14.1(@emotion/react@11.14.0(react@19.2.7))(@types/react@19.2.17)(react@19.2.7)
       '@fortawesome/fontawesome-svg-core': 7.3.0
       '@fortawesome/free-solid-svg-icons': 7.3.0
       '@fortawesome/react-fontawesome': 3.3.1(@fortawesome/fontawesome-svg-core@7.3.0)(react@19.2.7)
@@ -6902,7 +6938,7 @@ snapshots:
   '@projectstorm/react-workspaces-model-tabs@2.3.11(@types/react@19.2.17)':
     dependencies:
       '@emotion/react': 11.14.0(@types/react@19.2.17)(react@19.2.7)
-      '@emotion/styled': 11.14.1(@emotion/react@11.14.0(@types/react@19.2.17)(react@19.2.7))(@types/react@19.2.17)(react@19.2.7)
+      '@emotion/styled': 11.14.1(@emotion/react@11.14.0(react@19.2.7))(@types/react@19.2.17)(react@19.2.7)
       '@projectstorm/react-workspaces-core': 4.2.3(@types/react@19.2.17)
       lodash: 4.18.1
       react: 19.2.7
@@ -6912,7 +6948,7 @@ snapshots:
 
   '@projectstorm/react-workspaces-model-tray@2.5.12(@emotion/react@11.14.0(@types/react@19.2.17)(react@19.2.7))(@types/react@19.2.17)':
     dependencies:
-      '@emotion/styled': 11.14.1(@emotion/react@11.14.0(@types/react@19.2.17)(react@19.2.7))(@types/react@19.2.17)(react@19.2.7)
+      '@emotion/styled': 11.14.1(@emotion/react@11.14.0(react@19.2.7))(@types/react@19.2.17)(react@19.2.7)
       '@projectstorm/react-workspaces-core': 4.2.3(@types/react@19.2.17)
       '@projectstorm/react-workspaces-model-floating-window': 2.2.14(@emotion/react@11.14.0(@types/react@19.2.17)(react@19.2.7))(@types/react@19.2.17)
       lodash: 4.18.1
@@ -7017,7 +7053,7 @@ snapshots:
 
   '@standard-schema/utils@0.3.0': {}
 
-  '@tokenizer/inflate@0.4.1':
+  '@tokenizer/inflate@0.4.1(supports-color@5.5.0)':
     dependencies:
       debug: 4.4.3(supports-color@5.5.0)
       token-types: 6.1.2
@@ -7029,7 +7065,7 @@ snapshots:
   '@types/body-parser@1.19.6':
     dependencies:
       '@types/connect': 3.4.38
-      '@types/node': 25.5.0
+      '@types/node': 26.1.0
 
   '@types/chai@5.2.2':
     dependencies:
@@ -7048,11 +7084,11 @@ snapshots:
   '@types/compression@1.8.1':
     dependencies:
       '@types/express': 5.0.6
-      '@types/node': 25.2.3
+      '@types/node': 26.1.0
 
   '@types/connect@3.4.38':
     dependencies:
-      '@types/node': 25.5.0
+      '@types/node': 26.1.0
 
   '@types/d3-array@3.2.1': {}
 
@@ -7092,7 +7128,7 @@ snapshots:
 
   '@types/express-serve-static-core@5.0.7':
     dependencies:
-      '@types/node': 25.5.0
+      '@types/node': 26.1.0
       '@types/qs': 6.14.0
       '@types/range-parser': 1.2.7
       '@types/send': 0.17.5
@@ -7122,7 +7158,7 @@ snapshots:
   '@types/jsonwebtoken@9.0.10':
     dependencies:
       '@types/ms': 2.1.0
-      '@types/node': 26.0.1
+      '@types/node': 26.1.0
 
   '@types/lodash@4.17.24': {}
 
@@ -7141,18 +7177,6 @@ snapshots:
   '@types/node@12.20.55': {}
 
   '@types/node@16.9.1': {}
-
-  '@types/node@25.2.3':
-    dependencies:
-      undici-types: 7.16.0
-
-  '@types/node@25.5.0':
-    dependencies:
-      undici-types: 7.18.2
-
-  '@types/node@26.0.1':
-    dependencies:
-      undici-types: 8.3.0
 
   '@types/node@26.1.0':
     dependencies:
@@ -7177,12 +7201,12 @@ snapshots:
   '@types/send@0.17.5':
     dependencies:
       '@types/mime': 1.3.5
-      '@types/node': 25.5.0
+      '@types/node': 26.1.0
 
   '@types/serve-static@2.2.0':
     dependencies:
       '@types/http-errors': 2.0.5
-      '@types/node': 25.5.0
+      '@types/node': 26.1.0
 
   '@types/trusted-types@2.0.7':
     optional: true
@@ -7199,7 +7223,7 @@ snapshots:
 
   '@types/webpack@5.28.5(postcss@8.5.6)(webpack-cli@7.1.0)':
     dependencies:
-      '@types/node': 26.0.1
+      '@types/node': 26.1.0
       tapable: 2.2.2
       webpack: 5.108.3(postcss@8.5.6)(webpack-cli@7.1.0)
     transitivePeerDependencies:
@@ -7446,7 +7470,7 @@ snapshots:
     dependencies:
       '@babel/runtime': 7.29.2
       cosmiconfig: 7.1.0
-      resolve: 1.22.11
+      resolve: 1.22.12
 
   babel-plugin-polyfill-corejs3@1.0.0(@babel/core@8.0.1):
     dependencies:
@@ -8263,9 +8287,9 @@ snapshots:
     optionalDependencies:
       picomatch: 4.0.3
 
-  file-type@21.3.4:
+  file-type@21.3.4(supports-color@5.5.0):
     dependencies:
-      '@tokenizer/inflate': 0.4.1
+      '@tokenizer/inflate': 0.4.1(supports-color@5.5.0)
       strtok3: 10.3.5
       token-types: 6.1.2
       uint8array-extras: 1.5.0
@@ -8650,13 +8674,13 @@ snapshots:
 
   jest-worker@27.5.1:
     dependencies:
-      '@types/node': 25.5.0
+      '@types/node': 26.1.0
       merge-stream: 2.0.0
       supports-color: 8.1.1
 
-  jimp@1.6.1:
+  jimp@1.6.1(supports-color@5.5.0):
     dependencies:
-      '@jimp/core': 1.6.1
+      '@jimp/core': 1.6.1(supports-color@5.5.0)
       '@jimp/diff': 1.6.1
       '@jimp/js-bmp': 1.6.1
       '@jimp/js-gif': 1.6.1
@@ -10237,10 +10261,6 @@ snapshots:
   uint8array-extras@1.5.0: {}
 
   undefsafe@2.0.5: {}
-
-  undici-types@7.16.0: {}
-
-  undici-types@7.18.2: {}
 
   undici-types@8.3.0: {}
 

@@ -43,7 +43,9 @@ export const setupNode = <T extends SearchResultEntry>(options: SetupNodeOptions
       options.node.addChild(loadMore);
     }
   });
-  const l2 = options.result.registerListener({
+  const l2 = (
+    options.result as SearchResult<T> & { registerListener: (listener: { dispose: () => void }) => () => void }
+  ).registerListener({
     dispose: () => {
       l2();
       l1();

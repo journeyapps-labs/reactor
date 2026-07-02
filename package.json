@@ -21,15 +21,6 @@
     "watch:modules": "pnpm -r --parallel watch:module",
     "watch:ts": "pnpm build:ts --watch"
   },
-  "pnpm": {
-    "overrides": {
-      "@journeyapps-labs/common-tree": "^3.0.0"
-    },
-    "onlyBuiltDependencies": [
-      "core-js-pure",
-      "esbuild"
-    ]
-  },
   "devDependencies": {
     "@changesets/cli": "^2.31.0",
     "concurrently": "10.0.3",
