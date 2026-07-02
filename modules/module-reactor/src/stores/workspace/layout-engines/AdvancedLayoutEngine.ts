@@ -4,7 +4,6 @@ import { WorkspaceModel, WorkspaceNodeModel } from '@projectstorm/react-workspac
 import { WorkspaceTrayMode, WorkspaceTrayModel } from '@projectstorm/react-workspaces-model-tray';
 import { ReactorTabFactoryModel } from '../react-workspaces/ReactorTabFactory';
 import { ReactorWindowModel } from '../react-workspaces/ReactorWindowFactory';
-import { EmptyReactorPanelModel } from '../../../panels/empty/EmptyReactorPanelModel';
 
 interface AdvancedWorkspaceLayout {
   children: WorkspaceModel[];
@@ -33,7 +32,7 @@ export class AdvancedLayoutEngine extends AbstractLayoutEngine {
   }
 
   isEmptyTabGroup(model: ReactorTabFactoryModel) {
-    return model.children.length === 0 || model.children.every((child) => child instanceof EmptyReactorPanelModel);
+    return model.children.length === 0 || model.children.every((child) => child.type === 'empty');
   }
 
   getLayout(model?: WorkspaceModel) {
