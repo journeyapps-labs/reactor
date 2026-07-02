@@ -6,9 +6,12 @@ import { ReactorTabFactoryModel } from '../react-workspaces/ReactorTabFactory';
 import { ReactorWindowModel } from '../react-workspaces/ReactorWindowFactory';
 
 interface AdvancedWorkspaceLayout {
+  children: WorkspaceModel[];
   emptyPanel: WorkspaceModel;
   tabGroups: ReactorTabFactoryModel[];
+  emptyTabGroup?: ReactorTabFactoryModel;
   availableTrays: WorkspaceTrayModel[];
+  similarPanel?: WorkspaceModel;
   tabGroupInsertIndex: number;
   shrinkModelInsertIndex: number;
 }
@@ -24,8 +27,13 @@ export class AdvancedLayoutEngine extends AbstractLayoutEngine {
     return model instanceof WorkspaceTrayModel || !model.expandHorizontal;
   }
 
-  getLayout() {
+  isPanelModel(model: WorkspaceModel) {
+    return !(model instanceof WorkspaceTrayModel) && !(model instanceof ReactorTabFactoryModel);
+  }
+
+  getLayout(model?: WorkspaceModel) {
     const children = this.store.getRoot().children;
+    const models = this.store.flatten(this.store.getRoot());
     const firstContentIndex = children.findIndex((model) => !this.isShrinkModel(model));
     const lastContentIndex = _.findLastIndex(children, (model) => !this.isShrinkModel(model));
     const tabGroups = children.filter((model) => model instanceof ReactorTabFactoryModel) as ReactorTabFactoryModel[];
@@ -33,24 +41,58 @@ export class AdvancedLayoutEngine extends AbstractLayoutEngine {
     const rightShrinkCount = lastContentIndex === -1 ? 0 : children.length - lastContentIndex - 1;
 
     return {
+      children,
       emptyPanel: children.find((model) => model.type === 'empty'),
       tabGroups,
+      emptyTabGroup: tabGroups.find((tab) => tab.isEmpty()),
       availableTrays: _.chain(this.getTrays())
         .filter((tray) => tray.children.length < 2)
         .sortBy((tray) => tray.children.length)
         .value(),
+      similarPanel: model
+        ? models.find((child) => {
+            return child.type === model.type && child !== model && this.isPanelModel(child);
+          })
+        : undefined,
       tabGroupInsertIndex: lastTabGroup ? children.indexOf(lastTabGroup) + 1 : children.length - rightShrinkCount,
-      shrinkModelInsertIndex: firstContentIndex === -1 ? children.length : firstContentIndex > 0 ? firstContentIndex : 0
+      shrinkModelInsertIndex:
+        firstContentIndex === -1 ? children.length : firstContentIndex > 0 ? lastContentIndex + 1 : 0
     } satisfies AdvancedWorkspaceLayout;
+  }
+
+  addModelToSimilarPanel(model: WorkspaceModel, layout: AdvancedWorkspaceLayout) {
+    const existing = layout.similarPanel;
+    if (!existing) {
+      return false;
+    }
+
+    if (existing.parent instanceof ReactorTabFactoryModel) {
+      existing.parent.addModel(model);
+      existing.parent.setSelected(model);
+      return true;
+    }
+
+    if (existing.parent instanceof WorkspaceTrayModel) {
+      existing.parent.addModel(model);
+      if (existing.parent.mode !== 'expand') {
+        existing.parent.setFloatingModel(model);
+      }
+      return true;
+    }
+
+    const group = new ReactorTabFactoryModel();
+    (existing.parent as WorkspaceNodeModel).replaceModel(existing, group);
+    group.addModel(existing);
+    group.addModel(model);
+    return true;
   }
 
   getTabGroupsForModel(model: WorkspaceModel, excludeTabGroups: WorkspaceModel[] = []) {
     const layout = this.getLayout();
 
     // ######## 1. get an empty tab group
-    const empty = layout.tabGroups.filter((t) => t.isEmpty())[0];
-    if (empty) {
-      return empty;
+    if (layout.emptyTabGroup) {
+      return layout.emptyTabGroup;
     }
 
     // ######## 2. find an existing tab group that has this model
@@ -115,7 +157,17 @@ export class AdvancedLayoutEngine extends AbstractLayoutEngine {
     }
 
     // otherwise put it in one of the trays which has the least (but that also has less than 2)
-    const layout = this.getLayout();
+    const layout = this.getLayout(model);
+
+    if (layout.emptyTabGroup) {
+      layout.emptyTabGroup.addModel(model);
+      return true;
+    }
+
+    if (this.addModelToSimilarPanel(model, layout)) {
+      return true;
+    }
+
     const trayWithLeast: WorkspaceTrayModel = _.first(layout.availableTrays);
     if (trayWithLeast) {
       trayWithLeast.addModel(model);
