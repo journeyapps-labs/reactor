@@ -4,12 +4,13 @@ import { WorkspaceModel, WorkspaceNodeModel } from '@projectstorm/react-workspac
 import { WorkspaceTrayMode, WorkspaceTrayModel } from '@projectstorm/react-workspaces-model-tray';
 import { ReactorTabFactoryModel } from '../react-workspaces/ReactorTabFactory';
 import { ReactorWindowModel } from '../react-workspaces/ReactorWindowFactory';
+import { EmptyReactorPanelModel } from '../../../panels/empty/EmptyReactorPanelModel';
 
 interface AdvancedWorkspaceLayout {
   children: WorkspaceModel[];
   emptyPanel: WorkspaceModel;
   tabGroups: ReactorTabFactoryModel[];
-  emptyTabGroup?: ReactorTabFactoryModel;
+  emptyTabGroups: ReactorTabFactoryModel[];
   availableTrays: WorkspaceTrayModel[];
   similarPanel?: WorkspaceModel;
   tabGroupInsertIndex: number;
@@ -31,6 +32,10 @@ export class AdvancedLayoutEngine extends AbstractLayoutEngine {
     return !(model instanceof WorkspaceTrayModel) && !(model instanceof ReactorTabFactoryModel);
   }
 
+  isEmptyTabGroup(model: ReactorTabFactoryModel) {
+    return model.children.length === 0 || model.children.every((child) => child instanceof EmptyReactorPanelModel);
+  }
+
   getLayout(model?: WorkspaceModel) {
     const children = this.store.getRoot().children;
     const models = this.store.flatten(this.store.getRoot());
@@ -44,7 +49,7 @@ export class AdvancedLayoutEngine extends AbstractLayoutEngine {
       children,
       emptyPanel: children.find((model) => model.type === 'empty'),
       tabGroups,
-      emptyTabGroup: tabGroups.find((tab) => tab.isEmpty()),
+      emptyTabGroups: tabGroups.filter((tab) => this.isEmptyTabGroup(tab)),
       availableTrays: _.chain(this.getTrays())
         .filter((tray) => tray.children.length < 2)
         .sortBy((tray) => tray.children.length)
@@ -91,8 +96,8 @@ export class AdvancedLayoutEngine extends AbstractLayoutEngine {
     const layout = this.getLayout();
 
     // ######## 1. get an empty tab group
-    if (layout.emptyTabGroup) {
-      return layout.emptyTabGroup;
+    if (layout.emptyTabGroups.length > 0) {
+      return _.first(layout.emptyTabGroups);
     }
 
     // ######## 2. find an existing tab group that has this model
@@ -159,8 +164,9 @@ export class AdvancedLayoutEngine extends AbstractLayoutEngine {
     // otherwise put it in one of the trays which has the least (but that also has less than 2)
     const layout = this.getLayout(model);
 
-    if (layout.emptyTabGroup) {
-      layout.emptyTabGroup.addModel(model);
+    const emptyTabGroup = _.first(layout.emptyTabGroups);
+    if (emptyTabGroup) {
+      emptyTabGroup.addModel(model);
       return true;
     }
 
@@ -215,7 +221,8 @@ export class AdvancedLayoutEngine extends AbstractLayoutEngine {
   }
 
   ensureTabs(num: number): ReactorTabFactoryModel[] {
-    const tabs = this.getLayout().tabGroups;
+    const layout = this.getLayout();
+    const tabs = _.uniq([...layout.emptyTabGroups, ...layout.tabGroups]);
     const length = tabs.length;
     if (tabs.length < num) {
       for (let i = 0; i < num - length; i++) {
