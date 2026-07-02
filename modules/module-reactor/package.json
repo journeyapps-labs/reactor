@@ -45,6 +45,7 @@
     "@projectstorm/react-workspaces-model-tray": "^2.5.12",
     "async": "^3.2.6",
     "balloon-css": "^1.2.0",
+    "color": "^5.0.3",
     "cron": "^4.4.0",
     "cronstrue": "^3.24.0",
     "emoji-dictionary": "^1.0.12",
@@ -87,7 +88,6 @@
     "@types/react": "19.2.17",
     "@types/react-dom": "19.2.3",
     "@types/resize-observer-browser": "^0.1.11",
-    "@types/uuid": "11.0.0",
     "jsdom": "^29.1.1",
     "vitest": "^4.1.9"
   }

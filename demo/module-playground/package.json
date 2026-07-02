@@ -23,7 +23,6 @@
     "uuid": "^14.0.1"
   },
   "devDependencies": {
-    "@journeyapps-labs/lib-reactor-builder": "workspace:^",
-    "@types/uuid": "^11.0.0"
+    "@journeyapps-labs/lib-reactor-builder": "workspace:^"
   }
 }

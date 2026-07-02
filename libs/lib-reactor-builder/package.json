@@ -31,6 +31,7 @@
     "css-loader": "^7.1.4",
     "expose-loader": "^5.0.1",
     "https-browserify": "^1.0.0",
+    "lodash": "^4.18.1",
     "null-loader": "^4.0.1",
     "os-browserify": "^0.3.0",
     "path-browserify": "^1.0.1",

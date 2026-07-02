@@ -10,7 +10,7 @@
     "build:prod": "NODE_ENV=production pnpm build",
     "build:ts": "./node_modules/.bin/tsc --build",
     "clean": "pnpm -r clean && tsc --build --clean && rm -rf modules/*/dist && rm -rf libs/*/dist && rm -rf modules/*/dist-module",
-    "format": "prettier --write \"**/*.{ts,tsx,js,jsx}\"",
+    "format": "prettier --write \"**/*.{ts,tsx}\"",
     "demo:start": "node ./scripts/run-demo.js start",
     "demo:watch": "node ./scripts/run-demo.js watch",
     "ncu": "ncu -u && pnpm recursive exec -- ncu -u && ./scripts/update-overrides.js",

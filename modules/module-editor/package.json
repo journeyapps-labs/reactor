@@ -48,7 +48,6 @@
     "@journeyapps-labs/lib-reactor-builder": "workspace:*",
     "@types/lodash": "^4.17.24",
     "@types/react": "19.2.17",
-    "@types/uuid": "^11.0.0",
     "json5-loader": "^4.0.1"
   }
 }
