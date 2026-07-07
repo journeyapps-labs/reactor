@@ -84,7 +84,9 @@ export class WorkspaceStore extends AbstractStore<WorkspacePrefsSerialized, Work
   // core engines
   layoutEngine: AbstractLayoutEngine;
   engine: ReactorWorkspaceEngine;
-  activatedModel: ReactorPanelModel;
+
+  @observable
+  accessor activatedModel: ReactorPanelModel;
 
   workspaceGenerators: Set<WorkspaceGenerator>;
 
