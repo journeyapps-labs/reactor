@@ -182,6 +182,10 @@ export class WorkspaceStore extends AbstractStore<WorkspacePrefsSerialized, Work
     return this.getTopLevelWorkspace(this.currentTopWorkspace) || this.getWorkspace(this.currentModel);
   }
 
+  getActiveWorkspace(): IDEWorkspace {
+    return this.getWorkspace(this.currentModel);
+  }
+
   getTopLevelWorkspace(key: string): WorkspaceEntry {
     if (!key) {
       return null;
@@ -777,6 +781,8 @@ export class WorkspaceStore extends AbstractStore<WorkspacePrefsSerialized, Work
     if (!workspace.id) {
       workspace.id = name;
     }
+    this.workspaces = [...this.workspaces];
+    this.engine.fireRepaintListeners();
     this.save();
   }
 

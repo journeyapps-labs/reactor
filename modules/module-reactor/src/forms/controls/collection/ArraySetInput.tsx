@@ -53,6 +53,9 @@ export class ArraySetInput<T> extends FormInput<ArraySetInputGenerics<T>> {
     this.entries = new Map();
     this.entryListeners = new Map();
     this.loading = false;
+    const initialValue = this.value;
+    this.value = {};
+    this.setValue(initialValue || {});
   }
 
   setLoading(loading = this.loading) {

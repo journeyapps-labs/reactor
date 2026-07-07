@@ -5,6 +5,7 @@ import {
   System,
   UXStore,
   VisorStore,
+  WorkspaceGroup,
   WorkspaceModel,
   WorkspaceStore
 } from '@journeyapps-labs/reactor-mod';
@@ -24,6 +25,7 @@ import { EditTodoNoteAction } from './actions/EditTodoNoteAction';
 import { DeleteTodoNoteAction } from './actions/DeleteTodoNoteAction';
 import { TodoNoteModel } from './models/TodoNoteModel';
 import { TodoEntities } from './TodoEntities';
+import { OpenTodoDialogAction } from './actions/OpenTodoDialogAction';
 
 export class ReactorTodosModule extends AbstractReactorModule {
   constructor() {
@@ -52,6 +54,7 @@ export class ReactorTodosModule extends AbstractReactorModule {
     actionStore.registerAction(new DeleteTodoNoteAction());
     actionStore.registerAction(new RenameTodoAction());
     actionStore.registerAction(new DuplicateTodoAction());
+    actionStore.registerAction(new OpenTodoDialogAction());
 
     visorStore.registerActiveMetadata(new CurrentTodoItemVisorMetadata());
 
@@ -65,10 +68,19 @@ export class ReactorTodosModule extends AbstractReactorModule {
 
     workspaceStore.registerWorkspaceGenerator({
       generateWorkspace: async () => {
-        return new WorkspaceModel({
+        const selectWorkspace = new WorkspaceModel({
+          name: 'Select',
+          model: generateTodosWorkspace()
+        }).setPreferredOpenAction(TodoEntities.TODO_ITEM, SetCurrentTodoItemAction.ID);
+        const viewWorkspace = new WorkspaceModel({
+          name: 'View',
+          model: generateTodosWorkspace()
+        }).setPreferredOpenAction(TodoEntities.TODO_ITEM, OpenTodoDialogAction.ID);
+
+        return new WorkspaceGroup({
           name: 'todos',
           priority: 1,
-          model: generateTodosWorkspace()
+          children: [selectWorkspace, viewWorkspace]
         });
       }
     });

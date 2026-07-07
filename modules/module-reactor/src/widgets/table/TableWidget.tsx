@@ -37,6 +37,8 @@ namespace S {
     width: 100%;
     border: 1px solid ${(p) => p.theme.table.border};
     border-collapse: separate;
+    border-radius: 4px;
+    overflow: hidden;
   `;
 
   export const ColumnsRow = themed.tr`

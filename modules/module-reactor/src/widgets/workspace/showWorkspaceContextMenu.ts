@@ -22,11 +22,27 @@ export const showWorkspaceContextMenu = async (options: ShowWorkspaceContextMenu
     return;
   }
 
-  const items: ComboBoxItem[] = [
-    ...options.workspace.getContextMenuItems({
-      workspaceStore: options.workspaceStore,
-      dialogStore: options.dialogStore
-    }),
+  const items: ComboBoxItem[] = options.workspace.getContextMenuItems({
+    workspaceStore: options.workspaceStore,
+    dialogStore: options.dialogStore
+  });
+  const exportItem = items.find((item) => item.key === 'export');
+  if (exportItem) {
+    exportItem.children = [
+      ...(exportItem.children || []),
+      {
+        ...ExportWorkspacesAction.get().representAsComboBoxItem(),
+        key: 'export-all-workspaces',
+        title: 'Export all workspaces',
+        download: {
+          url: options.workspaceStore.getExportedWorkspacesURL(),
+          name: ExportWorkspacesAction.FILENAME
+        }
+      }
+    ];
+  }
+
+  items.push(
     {
       ...ResetWorkspacesAction.get().representAsComboBoxItem(),
       group: 'reset'
@@ -34,16 +50,8 @@ export const showWorkspaceContextMenu = async (options: ShowWorkspaceContextMenu
     {
       ...ImportWorkspaceAction.get().representAsComboBoxItem(),
       group: 'actions'
-    },
-    {
-      ...ExportWorkspacesAction.get().representAsComboBoxItem(),
-      group: 'actions',
-      download: {
-        url: options.workspaceStore.getExportedWorkspacesURL(),
-        name: ExportWorkspacesAction.FILENAME
-      }
     }
-  ];
+  );
 
   const selection = await options.comboBoxStore.showComboBox(items, options.position);
   if (selection?.action) {

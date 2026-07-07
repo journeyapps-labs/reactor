@@ -32,6 +32,7 @@ namespace S {
   export const Container = styled(SurfaceWidget)`
     display: flex;
     flex-direction: column;
+    user-select: none;
   `;
 
   export const LoadingBar = styled(FooterLoaderWidget)`

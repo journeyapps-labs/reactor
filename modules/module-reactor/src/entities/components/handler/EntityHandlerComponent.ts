@@ -22,4 +22,8 @@ export abstract class EntityHandlerComponent<T extends any = any> extends Entity
   abstract openEntity(event: OpenEntityEvent<T>): Promise<any>;
 
   abstract getDescription(entity: T): Omit<ComboBoxItem, 'key'>;
+
+  getPreferredActionId(): string | null {
+    return null;
+  }
 }

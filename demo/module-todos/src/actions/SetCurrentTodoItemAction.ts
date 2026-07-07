@@ -8,11 +8,11 @@ export class SetCurrentTodoItemAction extends EntityAction<TodoModel> {
   constructor() {
     super({
       id: SetCurrentTodoItemAction.ID,
-      name: 'Set current todo item',
-      icon: 'arrow-right',
+      name: 'Select item',
+      icon: 'check-square',
       target: TodoEntities.TODO_ITEM,
       category: {
-        grouping: 'state'
+        grouping: 'open'
       }
     });
   }

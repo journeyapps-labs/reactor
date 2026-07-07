@@ -17,4 +17,5 @@ export * from './actions/DuplicateTodoAction';
 export * from './actions/AddTodoNoteAction';
 export * from './actions/EditTodoNoteAction';
 export * from './actions/DeleteTodoNoteAction';
+export * from './actions/OpenTodoDialogAction';
 export * from './visor/CurrentTodoItemVisorMetadata';

@@ -13,7 +13,8 @@ export interface PanelToolbarButton extends Btn {
 }
 
 export interface PanelTitleToolbarContext {
-  name: string;
+  label: string;
+  value?: string;
   tracking: boolean;
   onChange: (event: MouseEvent) => any;
 }
@@ -50,6 +51,8 @@ namespace S {
     padding-left: 5px;
     padding-right: 5px;
     align-items: center;
+    min-width: 0;
+    max-width: 100%;
     color: ${(p) => (p.tracking ? p.theme.tabs.selectedAccentSingle : p.theme.panels.tabForeground)};
 
     ${REACTOR_MOBILE_MEDIA_QUERY} {
@@ -59,9 +62,33 @@ namespace S {
     }
   `;
 
+  export const ContextLabelValue = styled.div`
+    display: flex;
+    flex-wrap: wrap;
+    align-items: baseline;
+    min-width: 0;
+    gap: 3px;
+  `;
+
   export const ContextLabel = styled.div`
     font-size: 12px;
+    opacity: 0.58;
+    flex-shrink: 0;
     white-space: nowrap;
+
+    &::after {
+      content: ':';
+    }
+
+    ${REACTOR_MOBILE_MEDIA_QUERY} {
+      font-size: 15px;
+    }
+  `;
+
+  export const ContextValue = styled.div`
+    font-size: 12px;
+    min-width: 0;
+    overflow-wrap: anywhere;
 
     ${REACTOR_MOBILE_MEDIA_QUERY} {
       font-size: 15px;
@@ -70,12 +97,19 @@ namespace S {
 
   export const Icon = styled(FontAwesomeIcon)`
     margin-left: 5px;
+    flex-shrink: 0;
     font-size: 12px;
 
     ${REACTOR_MOBILE_MEDIA_QUERY} {
       margin-left: 8px;
       font-size: 15px;
     }
+  `;
+
+  export const ContextText = styled.div`
+    display: flex;
+    min-width: 0;
+    max-width: 100%;
   `;
 
   export const Buttons = styled.div`
@@ -93,14 +127,23 @@ export class PanelTitleToolbarWidget extends React.Component<PanelTitleToolbarWi
   createContextWidget(opts: PanelTitleToolbarContext) {
     return (
       <S.Context
-        key={opts.name}
+        key={`${opts.label}:${opts.value || ''}`}
         tracking={opts.tracking}
         onClick={(event) => {
           event.persist();
           opts.onChange(event);
         }}
       >
-        <S.ContextLabel>{opts.name}</S.ContextLabel>
+        <S.ContextText>
+          {opts.value ? (
+            <S.ContextLabelValue>
+              <S.ContextLabel>{opts.label}</S.ContextLabel>
+              <S.ContextValue>{opts.value}</S.ContextValue>
+            </S.ContextLabelValue>
+          ) : (
+            <S.ContextValue>{opts.label}</S.ContextValue>
+          )}
+        </S.ContextText>
         <S.Icon icon="angle-down" />
       </S.Context>
     );

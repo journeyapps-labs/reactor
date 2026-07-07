@@ -17,6 +17,10 @@ export class EntityActionHandlerComponent extends EntityHandlerComponent {
     return ioc.get(ActionStore).getActionByID<EntityAction>(this.actionID);
   }
 
+  getPreferredActionId(): string {
+    return this.actionID;
+  }
+
   openEntity(event) {
     return this.getAction().fireAction({
       targetEntity: event.entity,

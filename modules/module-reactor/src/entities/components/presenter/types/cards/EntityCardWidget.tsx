@@ -87,13 +87,15 @@ export const EntityCardWidget = observer(function <T>(props: EntityCardWidgetPro
                 }
               }
             : null,
-          {
-            key: 'nested-trees',
-            grow: false,
-            content: () => {
-              return <NestedTreesSectionWidget nestedTrees={nestedTrees} />;
-            }
-          }
+          nestedTrees.length > 0
+            ? {
+                key: 'nested-trees',
+                grow: false,
+                content: () => {
+                  return <NestedTreesSectionWidget nestedTrees={nestedTrees} />;
+                }
+              }
+            : null
         ].filter((f) => !!f)}
       />
     </S.CardWrapper>

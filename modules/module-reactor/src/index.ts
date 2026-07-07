@@ -151,6 +151,7 @@ export * from './stores/combo2/ComboBoxStore2';
 export * from './stores/dialog2/DialogStore2';
 export * from './stores/dialog2/AbstractDialogDirective';
 export * from './stores/dialog2/directives/FormDialogDirective';
+export * from './stores/dialog2/directives/InlineDialogDirective';
 export * from './stores/combo2/directives/ComposableComboBoxDirective';
 export * from './stores/combo2/directives/simple/BaseComboBoxDirective';
 export * from './stores/combo2/directives/simple/SimpleComboBoxDirective';
