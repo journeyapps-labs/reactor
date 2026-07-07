@@ -1,15 +1,20 @@
 ## Reactor
 
-Reactor is an application framework for building ambitious, stateful, desktop-grade web software. It is the framework that powers
-OXIDE (JourneyApps Platform IDE), the PowerSync Dashboard and other internal administration systems within JourneyApps.
+Reactor is a serious application framework for building ambitious, stateful, desktop-grade web software. It is the framework that powers
+OXIDE (JourneyApps Platform IDE), Sector and other internal administration systems within JourneyApps.
 
-It is more than a component library. Reactor provides the application shell, workspace model, command system, theming layer,
-settings infrastructure and extensibility primitives needed to build complex tools that behave like serious installed software,
-while still running in the browser.
+Reactor provides the application shell, configurable workspace model, command system, theming layer, settings infrastructure
+and extensibility primitives needed to build complex tools that behave like serious installed software while still running in
+the browser. Reactor was originally designed to be the only framework we needed to build our primary IDE, but since its
+conception we have come to see it as much more than that. Internally, we also use it for advanced administration systems and
+feature-rich data browsing software. If you need to build an application with serious capability, Reactor's deeply declarative
+model is almost certainly up to the task.
 
 Docs: [https://journeyapps-labs.github.io/reactor](https://journeyapps-labs.github.io/reactor) (WIP)
 
 News: [https://labs.journeyapps.com/blog/tags/reactor](https://labs.journeyapps.com/blog/tags/reactor)
+
+![Reactor screenshot](./screenshots/main.png)
 
 __Core capabilities:__
 * **Workspace runtime:** Multi-panel workspaces with drag and drop, tabs, trays, floating windows, split layouts and persistent workspace state.
@@ -21,32 +26,20 @@ __Core capabilities:__
 * **Settings and forms infrastructure:** Built-in form models, controls, validation hooks and pluggable storage make preferences and configuration screens a normal part of the platform.
 * **Operational polish:** Tooltips, overlays, context menus, cross-window interactions, keyboard navigation and drag-and-drop workflows are built into the framework.
 
-![Reactor screenshot](./screenshots/main.png)
-
 ## Desktop Mode
 
-<p>
-  <img src="./screenshots/desktop/Screenshot 2026-07-07 at 1.22.27 PM.png" width="48%" alt="Reactor desktop mode" />
-  <img src="./screenshots/desktop/Screenshot 2026-07-07 at 1.22.32 PM.png" width="48%" alt="Reactor desktop mode" />
-</p>
-<p>
-  <img src="./screenshots/desktop/Screenshot 2026-07-07 at 1.22.39 PM.png" width="48%" alt="Reactor desktop mode" />
-  <img src="./screenshots/desktop/Screenshot 2026-07-07 at 1.23.15 PM.png" width="48%" alt="Reactor desktop mode" />
-</p>
-<p>
-  <img src="./screenshots/desktop/Screenshot 2026-07-07 at 1.23.29 PM.png" width="48%" alt="Reactor desktop mode" />
-  <img src="./screenshots/desktop/Screenshot 2026-07-07 at 1.23.38 PM.png" width="48%" alt="Reactor desktop mode" />
-</p>
+|  |  |
+| --- | --- |
+| <img src="./screenshots/desktop/Screenshot 2026-07-07 at 1.22.27 PM.png" alt="Reactor desktop mode" /> | <img src="./screenshots/desktop/Screenshot 2026-07-07 at 1.22.32 PM.png" alt="Reactor desktop mode" /> |
+| <img src="./screenshots/desktop/Screenshot 2026-07-07 at 1.22.39 PM.png" alt="Reactor desktop mode" /> | <img src="./screenshots/desktop/Screenshot 2026-07-07 at 1.23.15 PM.png" alt="Reactor desktop mode" /> |
+| <img src="./screenshots/desktop/Screenshot 2026-07-07 at 1.23.29 PM.png" alt="Reactor desktop mode" /> | <img src="./screenshots/desktop/Screenshot 2026-07-07 at 1.23.38 PM.png" alt="Reactor desktop mode" /> |
 
 ## Mobile Mode
 
-<div>
-  <img src="./screenshots/mobile/Screenshot 2026-07-07 at 1.26.39 PM.png" width="20%" alt="Reactor mobile mode" />
-  <img src="./screenshots/mobile/Screenshot 2026-07-07 at 1.26.46 PM.png" width="20%" alt="Reactor mobile mode" />
-  <img src="./screenshots/mobile/Screenshot 2026-07-07 at 1.27.10 PM.png" width="20%" alt="Reactor mobile mode" />
-  <img src="./screenshots/mobile/Screenshot 2026-07-07 at 1.27.26 PM.png" width="20%" alt="Reactor mobile mode" />
-  <img src="./screenshots/mobile/Screenshot 2026-07-07 at 1.27.37 PM.png" width="20%" alt="Reactor mobile mode" />
-</div>
+|  |  |  |
+| --- | --- | --- |
+| <img src="./screenshots/mobile/Screenshot 2026-07-07 at 1.26.39 PM.png" alt="Reactor mobile mode" /> | <img src="./screenshots/mobile/Screenshot 2026-07-07 at 1.26.46 PM.png" alt="Reactor mobile mode" /> | <img src="./screenshots/mobile/Screenshot 2026-07-07 at 1.27.10 PM.png" alt="Reactor mobile mode" /> |
+| <img src="./screenshots/mobile/Screenshot 2026-07-07 at 1.27.26 PM.png" alt="Reactor mobile mode" /> | <img src="./screenshots/mobile/Screenshot 2026-07-07 at 1.27.37 PM.png" alt="Reactor mobile mode" /> |  |
 
 ## Run Locally
 
