@@ -3,18 +3,20 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { IconName } from '@fortawesome/fontawesome-svg-core';
 import styled from '@emotion/styled';
 import { themed } from '../../stores/themes/reactor-theme-fragment';
+import { ContextMenuTriggerWidget } from '../context-menu/ContextMenuTriggerWidget';
+import { MousePosition } from '../../layers/combo/SmartPositionWidget';
 
 export interface TreeItemWidgetProps {
   name: string;
   draggable?: boolean;
   icon: IconName;
-  rightClick?: (event) => any;
+  rightClick?: (event: MousePosition) => any;
   onClick?: (e: any) => any;
   selected?: boolean;
 }
 
 namespace S {
-  export const Container = themed.div<{ selected: boolean }>`
+  export const Container = themed(ContextMenuTriggerWidget)<{ selected: boolean }>`
     display: flex;
     align-items: center;
     cursor: pointer;
@@ -48,9 +50,8 @@ export class TreeItemWidget extends React.PureComponent<TreeItemWidgetProps> {
         selected={this.props.selected}
         onClick={this.props.onClick}
         draggable={this.props.draggable}
-        onContextMenu={(event) => {
-          event.preventDefault();
-          this.props.rightClick && this.props.rightClick(event);
+        onContextMenu={(position) => {
+          this.props.rightClick && this.props.rightClick(position);
         }}
       >
         <S.FA icon={this.props.icon} />

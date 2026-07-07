@@ -5,6 +5,7 @@ import { ComboBoxStore } from '../../stores/combo/ComboBoxStore';
 import { inject } from '../../inversify.config';
 import { Btn } from '../../definitions/common';
 import { IconWidget } from '../icons/IconWidget';
+import { ContextMenuTriggerWidget } from '../context-menu/ContextMenuTriggerWidget';
 
 export interface HeaderButtonWidgetProps {
   btn: Btn;
@@ -20,7 +21,7 @@ namespace S {
     margin-bottom: ${(p) => (p.vertical ? 5 : 0)}px;
     margin-right: ${(p) => (p.vertical ? 0 : 5)}px;
   `;
-  export const Btn = styled.div`
+  export const Btn = styled(ContextMenuTriggerWidget)`
     min-width: 32px;
     min-height: 26px;
     border-radius: 5px;
@@ -73,12 +74,10 @@ export class HeaderButtonWidget extends React.Component<HeaderButtonWidgetProps>
           `}
         />
         <S.Btn
-          onContextMenu={async (event) => {
-            event.preventDefault();
-            event.stopPropagation();
+          onContextMenu={async (position) => {
             const selection = await this.uxStore.showComboBox(
               [{ title: 'Delete', key: 'delete', children: [] }],
-              event
+              position
             );
             if (selection) {
               this.props.remove();

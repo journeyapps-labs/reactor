@@ -51,7 +51,8 @@ export const Scarlet = theme.addThemeValues({
       depth2Background: '#1d2027',
       depth2Border: '#2f3744',
       depth3Background: '#111318',
-      depth3Border: 'rgba(255,255,255,0.08)'
+      depth3Border: 'rgba(255,255,255,0.08)',
+      selectedBorder: '#ff0059'
     },
     status: {
       failed: '#c40f50',

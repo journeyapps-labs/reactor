@@ -1,20 +1,15 @@
 import * as React from 'react';
 import { ComboBoxStore } from '../../stores/combo/ComboBoxStore';
-import { ComboBoxItem } from '../../stores/combo/ComboBoxDirectives';
 import { inject } from '../../inversify.config';
 import { observer } from 'mobx-react';
 import { WorkspaceStore } from '../../stores/workspace/WorkspaceStore';
 import { DialogStore } from '../../stores/DialogStore';
-import { AdvancedWorkspacePreference } from '../../preferences/AdvancedWorkspacePreference';
 import { TabSelectionKeyboardWidget } from '../tabs/TabSelectionKeyboardWidget';
-import { ResetWorkspacesAction } from '../../actions/builtin-actions/workspace/ResetWorkspacesAction';
-import { ActionSource } from '../../actions/Action';
-import { ExportWorkspacesAction } from '../../actions/builtin-actions/workspace/ExportWorkspacesAction';
-import { ImportWorkspaceAction } from '../../actions/builtin-actions/workspace/ImportWorkspaceAction';
 import { MetaButton } from './HeaderMetaButtonWidget';
 import { CreateWorkspaceAction } from '../../actions/builtin-actions/workspace/CreateWorkspaceAction';
 import { styled } from '../../stores/themes/reactor-theme-fragment';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { showWorkspaceContextMenu } from '../workspace/showWorkspaceContextMenu';
 
 namespace S {
   export const Container = styled.div`
@@ -64,53 +59,18 @@ export class HeaderWorkspaceMenuWidget extends React.Component<HeaderWorkspaceMe
       return this.props.tabRightClick(event, tab);
     }
 
-    // dont allow users to manage workspaces when simple mode is enabled
-    if (!AdvancedWorkspacePreference.enabled()) {
-      return;
-    }
-
     const workspace = this.workspaceStore.getTopLevelWorkspace(tab.key) || this.workspaceStore.getWorkspace(tab.key);
     if (!workspace) {
       return;
     }
 
-    const items: ComboBoxItem[] = [
-      ...workspace.getContextMenuItems({
-        workspaceStore: this.workspaceStore,
-        dialogStore: this.dialogStore
-      }),
-      {
-        ...ResetWorkspacesAction.get().representAsComboBoxItem(),
-        group: 'reset'
-      },
-      {
-        ...ImportWorkspaceAction.get().representAsComboBoxItem(),
-        group: 'actions'
-      },
-      {
-        ...ExportWorkspacesAction.get().representAsComboBoxItem(),
-        group: 'actions',
-        download: {
-          url: this.workspaceStore.getExportedWorkspacesURL(),
-          name: ExportWorkspacesAction.FILENAME
-        }
-      }
-    ];
-
-    const selection = await this.comboBoxStore.showComboBox(items, event);
-    if (selection?.action) {
-      await selection.action(event);
-      return;
-    }
-
-    // import
-    if (selection?.key === ImportWorkspaceAction.NAME) {
-      this.workspaceStore.importWorkspace();
-    } else if (selection?.key === ResetWorkspacesAction.NAME) {
-      ResetWorkspacesAction.get().fireAction({
-        source: ActionSource.RIGHT_CLICK
-      });
-    }
+    return showWorkspaceContextMenu({
+      comboBoxStore: this.comboBoxStore,
+      dialogStore: this.dialogStore,
+      workspaceStore: this.workspaceStore,
+      workspace,
+      position: event
+    });
   };
 
   getWorkspaceTabLabel = (workspace) => {

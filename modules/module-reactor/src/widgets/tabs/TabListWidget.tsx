@@ -4,6 +4,7 @@ import styled from '@emotion/styled';
 import { MouseEvent } from 'react';
 import { TabBadgeWidget } from './TabBadgeWidget';
 import { ReactorIcon } from '../icons/IconWidget';
+import { MousePosition } from '../../layers/combo/SmartPositionWidget';
 
 export interface TabDirective {
   key: string;
@@ -26,7 +27,7 @@ export interface TabSelectionWidgetProps {
   tabs: TabDirective[];
   selected: string;
   tabSelected: (key: string) => any;
-  tabRightClick?: (event: MouseEvent, tab: TabDirective) => any;
+  tabRightClick?: (event: MousePosition, tab: TabDirective) => any;
   selectedBoundsUpdated?: (rect: { left: number; width: number }) => any;
   className?;
   compact?: boolean;
@@ -48,7 +49,7 @@ export interface TabListWidgetProps extends TabSelectionWidgetProps {
 
 export interface TabItemWidgetProps {
   tabSelected: (event: MouseEvent) => any;
-  tabRightClick: (event: MouseEvent) => any;
+  tabRightClick: (event: MousePosition) => any;
   label: string;
   selected: boolean;
   forwardRef: React.RefObject<HTMLDivElement>;

@@ -145,7 +145,8 @@ export const theme = new ThemeFragment({
         depth2Background: 'Depth 2 background',
         depth2Border: 'Depth 2 border',
         depth3Background: 'Depth 3 background',
-        depth3Border: 'Depth 3 border'
+        depth3Border: 'Depth 3 border',
+        selectedBorder: 'Selected border'
       }
     },
     combobox: {

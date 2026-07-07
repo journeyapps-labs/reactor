@@ -109,7 +109,8 @@ theme.addThemeValues({
       depth2Background: '#101010',
       depth2Border: '#2a2a2a',
       depth3Background: '#0c0c0c',
-      depth3Border: '#262626'
+      depth3Border: '#262626',
+      selectedBorder: '#33b8de'
     },
     status: {
       ...DarkTheme.status,

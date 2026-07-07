@@ -10,6 +10,7 @@ import { KeyboardShortcutPillsWidget } from './KeyboardShortcutPillsWidget';
 import styled from '@emotion/styled';
 import { TableButtonWidget } from '../../../widgets/table/TableButtonWidget';
 import { SearchableTableWidget } from '../../../widgets/table/SearchableTableWidget';
+import { ContextMenuTriggerWidget } from '../../../widgets/context-menu/ContextMenuTriggerWidget';
 
 export enum KeyboardTableColumns {
   NAME = 'name',
@@ -25,6 +26,10 @@ namespace S {
 
   export const TableButton = styled(TableButtonWidget)`
     margin-left: 5px;
+  `;
+
+  export const ShortcutTrigger = styled(ContextMenuTriggerWidget)`
+    display: inline-block;
   `;
 }
 
@@ -127,11 +132,8 @@ export class KeysTableWidget extends React.Component<React.PropsWithChildren<Key
                   {shortcuts.map((shortcut, index) => {
                     return (
                       <React.Fragment key={shortcut.chord.uuid}>
-                        <div
-                          onContextMenu={async (event) => {
-                            event.preventDefault();
-                            event.stopPropagation();
-                            event.persist();
+                        <S.ShortcutTrigger
+                          onContextMenu={async (position) => {
                             const selection = await this.comboBoxStore.showComboBox(
                               [
                                 {
@@ -139,7 +141,7 @@ export class KeysTableWidget extends React.Component<React.PropsWithChildren<Key
                                   key: 'delete'
                                 }
                               ],
-                              event
+                              position
                             );
                             if (selection?.key === 'delete') {
                               shortcut.delete();
@@ -147,7 +149,7 @@ export class KeysTableWidget extends React.Component<React.PropsWithChildren<Key
                           }}
                         >
                           <KeyboardShortcutPillsWidget chord={shortcut.chord} />
-                        </div>
+                        </S.ShortcutTrigger>
                         {index !== shortcuts.length - 1 && shortcuts.length > 0 ? <S.Separator>,</S.Separator> : null}
                       </React.Fragment>
                     );

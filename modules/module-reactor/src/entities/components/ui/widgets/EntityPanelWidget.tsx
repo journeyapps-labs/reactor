@@ -13,6 +13,7 @@ import { BatchStore } from '../../../../stores/batch/BatchStore';
 import { autorun } from 'mobx';
 import { useForceUpdate } from '../../../../hooks/useForceUpdate';
 import { ActionStore } from '../../../../stores/actions/ActionStore';
+import { ContextMenuTriggerWidget } from '../../../../widgets/context-menu/ContextMenuTriggerWidget';
 
 export interface EntityPanelWidgetProps {
   model: EntityPanelModel;
@@ -62,9 +63,7 @@ export const EntityPanelWidget: React.FC<EntityPanelWidgetProps> = observer((pro
             onClick={() => {
               batchStore.clearSelection();
             }}
-            onContextMenu={async (e) => {
-              e.preventDefault();
-
+            onContextMenu={async (event) => {
               // 1) get actions based on the category
               let actions = actionStore
                 .getActions()
@@ -83,7 +82,7 @@ export const EntityPanelWidget: React.FC<EntityPanelWidgetProps> = observer((pro
               comboBoxStore.show(
                 new SimpleComboBoxDirective({
                   items: actions.map((a) => a.representAsComboBoxItem({ installAction: true })).filter((a) => !!a),
-                  event: e
+                  event
                 })
               );
             }}
@@ -106,7 +105,7 @@ export const EntityPanelWidget: React.FC<EntityPanelWidgetProps> = observer((pro
 });
 
 namespace S {
-  export const Container = styled.div`
+  export const Container = styled(ContextMenuTriggerWidget)`
     height: 100%;
   `;
 }

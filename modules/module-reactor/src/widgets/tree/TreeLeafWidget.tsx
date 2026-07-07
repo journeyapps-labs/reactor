@@ -13,11 +13,13 @@ import { ButtonComponentSelection, ReactorComponentType } from '../../stores/gui
 import { getTransparentColor } from '@journeyapps-labs/lib-reactor-utils';
 import { themed } from '../../stores/themes/reactor-theme-fragment';
 import { REACTOR_MOBILE_MEDIA_QUERY } from '../../hooks/useReactorViewportMode';
+import { ContextMenuTriggerWidget } from '../context-menu/ContextMenuTriggerWidget';
+import { MousePosition } from '../../layers/combo/SmartPositionWidget';
 
 export interface TreeLeafWidgetCommonProps {
   rightChildren?: React.JSX.Element;
   rightChildrenWrap?: boolean;
-  rightClick?: (event: MouseEvent) => any;
+  rightClick?: (event: MousePosition) => any;
   normalClick?: (event: MouseEvent) => any;
   mouseOver?: (event: MouseEvent, hover: boolean) => any;
   dropZoneHint?: boolean;
@@ -48,7 +50,7 @@ export interface TreeLeafWidgetProps extends TreeLeafWidgetCommonProps {
 }
 
 namespace S {
-  export const Top = themed.div<{
+  export const Top = themed(ContextMenuTriggerWidget)<{
     selected: boolean;
     deactivated: boolean;
     attention: boolean;
@@ -238,11 +240,9 @@ export class TreeLeafWidget extends React.Component<TreeLeafWidgetProps> {
             this.props.normalClick(event);
           }
         }}
-        onContextMenu={(event) => {
+        onContextMenu={(position) => {
           if (this.props.rightClick) {
-            event.preventDefault();
-            event.stopPropagation();
-            this.props.rightClick(event);
+            this.props.rightClick(position);
           }
         }}
         onMouseEnter={(event) => {

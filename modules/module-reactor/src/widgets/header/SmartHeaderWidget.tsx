@@ -58,6 +58,7 @@ export class SmartHeaderWidget extends React.Component<SmartHeaderWidgetProps> {
               new SimpleComboBoxDirective({
                 items: Array.from(this.uxStore.accountButtonOptions.values()),
                 event,
+                centerOnMobile: false,
                 title: this.uxStore.account?.name,
                 subtitle: this.uxStore.account?.email
               })

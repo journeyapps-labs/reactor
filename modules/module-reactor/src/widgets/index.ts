@@ -1,6 +1,7 @@
 export * from './toolbar/ToolbarWidget';
 
 export * from './cards/CardWidget';
+export * from './context-menu/ContextMenuTriggerWidget';
 
 export * from '../layers/combo/ComboBoxLayer';
 export * from '../layers/combo/ComboBoxWidget';

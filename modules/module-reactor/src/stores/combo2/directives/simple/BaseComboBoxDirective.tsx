@@ -119,6 +119,9 @@ export const SimpleComboBoxDirectiveWidget: React.FC<BaseComboBoxDirectiveWidget
         placeholder={props.directive.searchPlaceholder}
         items={props.directive.getItems()}
         hovered={(item, dimensions) => {
+          if (viewportMode === ReactorViewportMode.MOBILE) {
+            return;
+          }
           if (!dimensions || item.key === childDirective.current?.key) {
             return;
           }

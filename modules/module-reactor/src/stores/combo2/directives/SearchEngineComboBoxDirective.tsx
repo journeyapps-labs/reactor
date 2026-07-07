@@ -8,6 +8,7 @@ import { ComboBoxWidget } from '../../../layers/combo/ComboBoxWidget';
 import { observer } from 'mobx-react';
 import styled from '@emotion/styled';
 import { SearchResult, SearchResultEntry } from '@journeyapps-labs/lib-reactor-search';
+import { ReactorViewportMode, useReactorViewportMode } from '../../../hooks/useReactorViewportMode';
 
 export interface SearchEngineComboBoxDirectiveOptions<
   E extends SearchResultEntry,
@@ -16,6 +17,7 @@ export interface SearchEngineComboBoxDirectiveOptions<
   engine: SearchEngine<SearchResult<E>>;
   transformResult: (item: E) => T;
   filter?: (entity: E) => boolean;
+  hideSearchOnMobile?: boolean;
 }
 
 export class SearchEngineComboBoxDirective<
@@ -36,6 +38,10 @@ export class SearchEngineComboBoxDirective<
 
   get engine() {
     return this.options.engine;
+  }
+
+  showSearch(viewportMode: ReactorViewportMode) {
+    return !(viewportMode === ReactorViewportMode.MOBILE && this.options.hideSearchOnMobile);
   }
 
   dismiss() {
@@ -85,16 +91,37 @@ export interface SearchEngineComboBoxDirectiveWidgetProps {
 
 export const SearchEngineComboBoxDirectiveWidget: React.FC<SearchEngineComboBoxDirectiveWidgetProps> = observer(
   (props) => {
+    const viewportMode = useReactorViewportMode();
+    const showSearch = props.directive.showSearch(viewportMode);
+
+    React.useEffect(() => {
+      if (showSearch) {
+        return;
+      }
+
+      const result = props.directive.engine.search({
+        value: null,
+        parameters: props.directive.parameters
+      });
+      props.directive.setResult(result);
+
+      return () => {
+        result.dispose();
+      };
+    }, [props.directive, showSearch]);
+
     return (
       <>
-        <S.Search
-          engine={props.directive.engine}
-          focusOnMount={true}
-          parameters={props.directive.parameters}
-          gotSearchResult={(result) => {
-            props.directive.setResult(result);
-          }}
-        />
+        {showSearch ? (
+          <S.Search
+            engine={props.directive.engine}
+            focusOnMount={true}
+            parameters={props.directive.parameters}
+            gotSearchResult={(result) => {
+              props.directive.setResult(result);
+            }}
+          />
+        ) : null}
         <ComboBoxWidget
           initialSelected={null}
           placeholder={props.directive.searchPlaceholder}

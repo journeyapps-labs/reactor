@@ -85,7 +85,8 @@ theme.addThemeValues({
       depth2Background: 'rgba(28, 28, 30, 1)',
       depth2Border: 'rgb(38,38,40)',
       depth3Background: 'rgba(24, 24, 26, 1)',
-      depth3Border: 'rgba(255, 255, 255, 0.12)'
+      depth3Border: 'rgba(255, 255, 255, 0.12)',
+      selectedBorder: '#fff'
     },
     table: {
       ...DarkTheme.table,

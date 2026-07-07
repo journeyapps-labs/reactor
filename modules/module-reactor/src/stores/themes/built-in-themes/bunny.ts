@@ -70,7 +70,8 @@ export const Bunny = theme.addThemeValues({
       depth2Background: '#2c2345',
       depth2Border: '#40305f',
       depth3Background: '#171328',
-      depth3Border: 'rgba(233,222,255,0.14)'
+      depth3Border: 'rgba(233,222,255,0.14)',
+      selectedBorder: '#b98fff'
     },
     status: {
       failed: '#a93b80',

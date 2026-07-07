@@ -11,6 +11,7 @@ import { EntityCardsPresenterContext } from './EntityCardsPresenterComponent';
 import { TagsSectionWidget } from './TagsSectionWidget';
 import { NestedTreesSectionWidget } from './NestedTreesSectionWidget';
 import { EntityCardTitleWidget } from './EntityCardTitleWidget';
+import { ContextMenuTriggerWidget } from '../../../../../widgets/context-menu/ContextMenuTriggerWidget';
 
 export interface EntityCardWidgetProps<T> {
   entity: T;
@@ -26,7 +27,7 @@ namespace S {
     flex: 1;
   `;
 
-  export const CardWrapper = styled.div`
+  export const CardWrapper = styled(ContextMenuTriggerWidget)`
     cursor: pointer;
     min-width: 0;
     display: flex;
@@ -58,10 +59,8 @@ export const EntityCardWidget = observer(function <T>(props: EntityCardWidgetPro
         event.stopPropagation();
         presenterContext.handleClick(entity, event as any, ActionSource.CARD);
       }}
-      onContextMenu={(event) => {
-        event.preventDefault();
-        event.stopPropagation();
-        presenterContext.handleContextMenu(entity, event as any);
+      onContextMenu={(position) => {
+        presenterContext.handleContextMenu(entity, position);
       }}
     >
       <S.Card

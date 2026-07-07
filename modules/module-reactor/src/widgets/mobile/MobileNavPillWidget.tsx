@@ -1,5 +1,7 @@
 import * as React from 'react';
 
+import { MousePosition } from '../../layers/combo/SmartPositionWidget';
+import { useLongPressContextMenu } from '../../hooks/useLongPressContextMenu';
 import { themed } from '../../stores/themes/reactor-theme-fragment';
 import { Fonts } from '../../fonts';
 
@@ -7,6 +9,8 @@ export interface MobileNavPillWidgetProps {
   selected: boolean;
   children: React.ReactNode;
   onClick: () => void;
+  disabled?: boolean;
+  onContextMenu?: (position: MousePosition) => any;
 }
 
 namespace S {
@@ -21,12 +25,29 @@ namespace S {
     color: ${(p) => (p.selected ? p.theme.mobileNavigation.selectedForeground : p.theme.mobileNavigation.foreground)};
     background: ${(p) =>
       p.selected ? p.theme.mobileNavigation.selectedBackground : p.theme.mobileNavigation.background};
+    &:disabled {
+      cursor: not-allowed;
+      opacity: 0.5;
+    }
   `;
 }
 
 export const MobileNavPillWidget: React.FC<MobileNavPillWidgetProps> = (props) => {
+  const ref = React.useRef<HTMLButtonElement>(null);
+  useLongPressContextMenu(ref, props.onContextMenu, props.disabled);
+
   return (
-    <S.Pill selected={props.selected} onClick={props.onClick}>
+    <S.Pill
+      ref={ref}
+      selected={props.selected}
+      disabled={props.disabled}
+      onClick={() => {
+        if (props.disabled) {
+          return;
+        }
+        props.onClick();
+      }}
+    >
       {props.children}
     </S.Pill>
   );

@@ -16,6 +16,7 @@ export interface ComboBoxDirectiveOptions<T extends ComboBoxItem = ComboBoxItem>
   subtitle?: string;
   event?: MousePosition;
   searchPlaceholder?: string;
+  centerOnMobile?: boolean;
 }
 
 export abstract class ComboBoxDirective<
@@ -59,6 +60,10 @@ export abstract class ComboBoxDirective<
 
   getPosition() {
     return this.options.event;
+  }
+
+  centerOnMobile() {
+    return this.options.centerOnMobile ?? true;
   }
 
   dismiss() {

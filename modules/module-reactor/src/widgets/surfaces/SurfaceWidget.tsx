@@ -5,6 +5,7 @@ export type SurfaceDepth = 0 | 1 | 2 | 3;
 
 export interface SurfaceWidgetProps {
   depth?: SurfaceDepth;
+  selected?: boolean;
   className?: any;
   children?: React.ReactNode;
 }
@@ -21,9 +22,10 @@ export const useSurfaceDepth = (depth?: SurfaceDepth): SurfaceDepth => {
 };
 
 namespace S {
-  export const Container = themed.div<{ $depth: SurfaceDepth }>`
+  export const Container = themed.div<{ $depth: SurfaceDepth; $selected?: boolean }>`
     background: ${(p) => p.theme.surfaces[`depth${p.$depth}Background`]};
-    border: solid 1px ${(p) => p.theme.surfaces[`depth${p.$depth}Border`]};
+    border: solid 1px
+      ${(p) => (p.$selected ? p.theme.surfaces.selectedBorder : p.theme.surfaces[`depth${p.$depth}Border`])};
     border-radius: 6px;
     box-sizing: border-box;
   `;
@@ -34,7 +36,7 @@ export const SurfaceWidget: React.FC<SurfaceWidgetProps> = (props) => {
 
   return (
     <SurfaceDepthContext.Provider value={depth}>
-      <S.Container className={props.className} $depth={depth}>
+      <S.Container className={props.className} $depth={depth} $selected={props.selected}>
         {props.children}
       </S.Container>
     </SurfaceDepthContext.Provider>

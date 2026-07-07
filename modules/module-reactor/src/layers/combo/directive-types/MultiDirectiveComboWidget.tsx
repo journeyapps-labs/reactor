@@ -130,8 +130,8 @@ export class MultiDirectiveComboWidget extends React.Component<
 
   render() {
     return (
-      <SmartPositionWidget position={this.props.directive.position}>
-        <FloatingPanelWidget center={false}>
+      <SmartPositionWidget position={this.props.directive.position} centerOnMobile>
+        <FloatingPanelWidget center={false} scaleInOnMobile>
           {this.getTitle()}
           <RawComboBoxWidget
             selected={() => {

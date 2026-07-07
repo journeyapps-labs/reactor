@@ -18,7 +18,6 @@ export interface CardWidgetProps {
   color?: string;
   subHeadingColor?: string;
   selected?: boolean;
-  selectedBorderColor?: string;
   depth?: SurfaceDepth;
   className?;
   sections: { content: () => React.JSX.Element | null; grow?: boolean; key: string }[];
@@ -30,18 +29,7 @@ export interface CardWidgetProps {
 }
 
 namespace S {
-  export const Container = themed(SurfaceWidget)<{ selected?: boolean; selectedBorderColor?: string }>`
-    ${(p) => {
-      if (!p.selected) {
-        return '';
-      }
-      const borderColor = p.selectedBorderColor || p.theme.tabs.selectedAccentSingle;
-      return `
-        && {
-          border-color: ${borderColor};
-        }
-      `;
-    }}
+  export const Container = styled(SurfaceWidget)`
     display: flex;
     flex-direction: column;
   `;
@@ -138,12 +126,7 @@ export class CardWidget extends React.Component<CardWidgetProps> {
 
   render() {
     return (
-      <S.Container
-        className={this.props.className}
-        depth={this.props.depth}
-        selected={this.props.selected}
-        selectedBorderColor={this.props.selectedBorderColor}
-      >
+      <S.Container className={this.props.className} depth={this.props.depth} selected={this.props.selected}>
         <S.Top>
           <S.Info>
             {this.getTitle()}

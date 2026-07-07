@@ -8,6 +8,7 @@ import { ioc } from '../../inversify.config';
 import { ComboBoxStore2 } from '../../stores/combo2/ComboBoxStore2';
 import { SimpleComboBoxDirective } from '../../stores/combo2/directives/simple/SimpleComboBoxDirective';
 import { Fonts } from '../../fonts';
+import { ContextMenuTriggerWidget } from '../context-menu/ContextMenuTriggerWidget';
 
 const loader = require('../../../media/loader.png');
 
@@ -21,7 +22,7 @@ export interface ToolbarWidgetProps {
 namespace S {
   const SIZE = 10;
 
-  export const ContainerVertical = themed.div`
+  export const ContainerVertical = themed(ContextMenuTriggerWidget)`
     min-width: 40px;
     width: 40px;
     flex-grow: 0;
@@ -95,7 +96,6 @@ export const ToolbarWidget: React.FC<ToolbarWidgetProps> = observer((props) => {
   return (
     <S.ContainerVertical
       onContextMenu={(event) => {
-        event.preventDefault();
         ioc.get(ComboBoxStore2).show(
           new SimpleComboBoxDirective({
             event,

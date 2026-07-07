@@ -56,6 +56,7 @@ export class LayersWidget extends React.Component {
               clickThough={() => {
                 return layer.clickThrough;
               }}
+              animate={layer.options.animate ?? true}
               hide={() => {
                 if (layer.userCanExit()) {
                   layer.dispose();

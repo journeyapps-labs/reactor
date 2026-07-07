@@ -23,6 +23,7 @@ import { useButton } from '../../../../hooks/useButton';
 import { PassiveActionValidationState } from '../../../../actions/validators/ActionValidator';
 import { WorkspaceTabModel } from '@projectstorm/react-workspaces-model-tabs';
 import { WORKSPACE_PANEL_RADIUS } from '../../../workspace/workspacePanelChrome';
+import { ContextMenuTriggerWidget } from '../../../context-menu/ContextMenuTriggerWidget';
 
 export interface PanelTitleWidgetProps {
   name: string;
@@ -75,7 +76,7 @@ namespace S {
     flex-grow: 1;
   `;
 
-  export const Title = styled.div<{ attention: boolean; $rounded: boolean }>`
+  export const Title = styled(ContextMenuTriggerWidget)<{ attention: boolean; $rounded: boolean }>`
     width: 100%;
     display: flex;
     min-height: 30px;
@@ -201,13 +202,11 @@ export class PanelTitleWidget extends React.Component<PanelTitleWidgetProps> {
           }}
           attention={this.props.model?.grabAttention}
           $rounded={rounded}
-          onContextMenu={async (event) => {
+          onContextMenu={async (position) => {
             if (AdvancedWorkspacePreference.enabled()) {
-              event.persist();
-              event.preventDefault();
               await this.comboBoxStore.show(
                 new SimpleComboBoxDirective({
-                  event,
+                  event: position,
                   items: [
                     {
                       key: 'close',

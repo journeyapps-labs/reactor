@@ -88,7 +88,8 @@ theme.addThemeValues({
       depth2Background: '#e5eaf1',
       depth2Border: '#b5c0cd',
       depth3Background: '#ffffff',
-      depth3Border: '#c8d3e2'
+      depth3Border: '#c8d3e2',
+      selectedBorder: '#2f5f8f'
     },
     status: {
       failed: '#d86a86',

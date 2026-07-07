@@ -93,7 +93,8 @@ theme.addThemeValues({
       depth2Background: '#2f3f47',
       depth2Border: '#41565f',
       depth3Background: '#202d34',
-      depth3Border: '#3f555f'
+      depth3Border: '#3f555f',
+      selectedBorder: '#ff8c2b'
     },
     meta: {
       background: 'rgba(204,178,148,0.18)',

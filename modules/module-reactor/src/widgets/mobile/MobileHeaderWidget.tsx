@@ -115,6 +115,7 @@ export const MobileHeaderWidget: React.FC<MobileHeaderWidgetProps> = observer((p
       new SimpleComboBoxDirective({
         items,
         event,
+        centerOnMobile: false,
         title: uxStore.account?.name || 'Menu',
         subtitle: uxStore.account?.email
       })

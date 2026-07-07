@@ -3,11 +3,14 @@ import { keyframes } from '@emotion/react';
 import { observer } from 'mobx-react';
 
 import { WorkspaceEntry, WorkspaceStore } from '../../stores/workspace/WorkspaceStore';
-import { WorkspaceModel } from '../../stores/workspace/models/WorkspaceModel';
 import { ioc } from '../../inversify.config';
 import { styled, themed } from '../../stores/themes/reactor-theme-fragment';
 import { Fonts } from '../../fonts';
 import { IconWidget } from '../icons/IconWidget';
+import { useLongPressContextMenu } from '../../hooks/useLongPressContextMenu';
+import { showWorkspaceContextMenu } from '../workspace/showWorkspaceContextMenu';
+import { ComboBoxStore } from '../../stores/combo/ComboBoxStore';
+import { DialogStore } from '../../stores/DialogStore';
 
 export interface MobileWorkspaceDrawerWidgetProps {
   close: () => void;
@@ -153,13 +156,31 @@ namespace S {
 }
 
 const MobileWorkspaceDrawerItem: React.FC<{
-  workspace: WorkspaceEntry | WorkspaceModel;
+  workspace: WorkspaceEntry;
   expandedKeys: string[];
   collapsedKeys: string[];
-  toggleExpanded: (workspace: WorkspaceEntry | WorkspaceModel) => void;
+  toggleExpanded: (workspace: WorkspaceEntry) => void;
   selectWorkspace: (key: string) => void;
 }> = observer((props) => {
   const workspaceStore = ioc.get(WorkspaceStore);
+  const comboBoxStore = ioc.get(ComboBoxStore);
+  const dialogStore = ioc.get(DialogStore);
+  const showContextMenu = React.useCallback(
+    (position) => {
+      return showWorkspaceContextMenu({
+        comboBoxStore,
+        dialogStore,
+        workspaceStore,
+        workspace: props.workspace,
+        position
+      });
+    },
+    [comboBoxStore, dialogStore, workspaceStore, props.workspace]
+  );
+  const groupRef = React.useRef<HTMLButtonElement>(null);
+  const workspaceRef = React.useRef<HTMLButtonElement>(null);
+  useLongPressContextMenu(groupRef, showContextMenu);
+  useLongPressContextMenu(workspaceRef, showContextMenu);
   const selected =
     props.workspace.key === workspaceStore.currentTopWorkspace || props.workspace.key === workspaceStore.currentModel;
   const expanded =
@@ -171,7 +192,7 @@ const MobileWorkspaceDrawerItem: React.FC<{
   if (children.length > 0) {
     return (
       <S.GroupSection>
-        <S.GroupButton onClick={() => props.toggleExpanded(props.workspace)}>
+        <S.GroupButton ref={groupRef} onClick={() => props.toggleExpanded(props.workspace)}>
           <S.GroupLabel>{props.workspace.name}</S.GroupLabel>
           <S.ChevronButton
             onClick={(event) => {
@@ -203,7 +224,11 @@ const MobileWorkspaceDrawerItem: React.FC<{
   }
 
   return (
-    <S.WorkspaceButton selected={selected} onClick={() => props.selectWorkspace(props.workspace.key)}>
+    <S.WorkspaceButton
+      ref={workspaceRef}
+      selected={selected}
+      onClick={() => props.selectWorkspace(props.workspace.key)}
+    >
       <span>{props.workspace.name}</span>
     </S.WorkspaceButton>
   );
@@ -214,7 +239,7 @@ export const MobileWorkspaceDrawerWidget: React.FC<MobileWorkspaceDrawerWidgetPr
   const [expandedKeys, setExpandedKeys] = React.useState<string[]>([]);
   const [collapsedKeys, setCollapsedKeys] = React.useState<string[]>([]);
 
-  const toggleExpanded = (workspace: WorkspaceEntry | WorkspaceModel) => {
+  const toggleExpanded = (workspace: WorkspaceEntry) => {
     const expanded =
       collapsedKeys.indexOf(workspace.key) === -1 &&
       (workspace.key === workspaceStore.currentTopWorkspace || expandedKeys.indexOf(workspace.key) !== -1);

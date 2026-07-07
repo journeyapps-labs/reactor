@@ -85,7 +85,8 @@ export const DarkTheme = theme.addThemeValues({
       depth2Background: '#161d28',
       depth2Border: '#324053',
       depth3Background: '#0f141d',
-      depth3Border: '#2f3d4f'
+      depth3Border: '#2f3d4f',
+      selectedBorder: '#00c0ff'
     },
     status: {
       failed: '#862c00',

@@ -4,6 +4,8 @@ import { styled } from '../../stores/themes/reactor-theme-fragment';
 import { ButtonComponentSelection, ReactorComponentType } from '../../stores/guide/selections/common';
 import { TabItemWidgetProps } from './TabListWidget';
 import { Fonts } from '../../fonts';
+import { MousePosition } from '../../layers/combo/SmartPositionWidget';
+import { useLongPressContextMenu } from '../../hooks/useLongPressContextMenu';
 
 namespace S {
   export const Tab = styled.div<{
@@ -42,6 +44,18 @@ export const TabWidget: React.FC<TabItemWidgetProps> = (props) => {
       label: props.label
     }
   });
+
+  const showContextMenu = React.useCallback(
+    (position: MousePosition) => {
+      if (props.disabled || !props.tabRightClick) {
+        return;
+      }
+      props.tabRightClick(position);
+    },
+    [props.disabled, props.tabRightClick]
+  );
+  useLongPressContextMenu(props.forwardRef, showContextMenu, props.disabled || !props.tabRightClick);
+
   return (
     <S.Tab
       attention={!!selected}
@@ -52,13 +66,6 @@ export const TabWidget: React.FC<TabItemWidgetProps> = (props) => {
         }
         event.persist();
         props.tabSelected(event);
-      }}
-      onContextMenu={(event) => {
-        if (!props.disabled && props.tabRightClick) {
-          event.persist();
-          event.preventDefault();
-          props.tabRightClick(event);
-        }
       }}
       onMouseEnter={props.onMouseEnter}
       onMouseLeave={props.onMouseLeave}
