@@ -1,5 +1,25 @@
 # @journeyapps-labs/reactor-mod-editor
 
+## 2.3.0
+
+### Minor Changes
+
+- ad662fe: Modernize Reactor workspaces and module packaging.
+
+  - Add the mobile Reactor shell, viewport-aware workspace rendering, workspace groups, and updated tab/header/workspace navigation APIs.
+  - Export JSON path helpers from `module-editor` for locating Monaco JSON AST nodes by path.
+  - Remove built-in server PWA/mobile middleware so apps can own static PWA assets and mobile routing themselves.
+  - Make module builds fail when webpack reports errors, restore Terser minification compatibility, and move pnpm override maintenance into `pnpm-workspace.yaml`.
+  - Declare missing direct dependencies, remove stale `@types/uuid` packages, and pin transitive dependency overrides for pnpm 11 compatibility.
+
+### Patch Changes
+
+- Updated dependencies [1671610]
+- Updated dependencies [ad662fe]
+  - @journeyapps-labs/reactor-mod@6.0.0
+  - @journeyapps-labs/lib-reactor-search@1.0.12
+  - @journeyapps-labs/lib-reactor-utils@2.0.11
+
 ## 2.2.4
 
 ### Patch Changes
