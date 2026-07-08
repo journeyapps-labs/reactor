@@ -7,18 +7,18 @@ export interface InlineDialogDirectiveOptions extends AbstractDialogDirectiveOpt
   buttons?: Btn[];
 }
 
-export class InlineDialogDirective extends AbstractDialogDirective {
-  constructor(protected options2: InlineDialogDirectiveOptions) {
-    super(options2);
+export class InlineDialogDirective extends AbstractDialogDirective<InlineDialogDirectiveOptions> {
+  constructor(options: InlineDialogDirectiveOptions) {
+    super(options);
   }
 
   generateContent(): React.JSX.Element {
-    return this.options2.generateContent();
+    return this.options.generateContent();
   }
 
   getButtons(): Btn[] {
     return (
-      this.options2.buttons || [
+      this.options.buttons || [
         {
           label: 'Ok',
           action: () => {
