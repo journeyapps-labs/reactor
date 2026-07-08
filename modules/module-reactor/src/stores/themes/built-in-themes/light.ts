@@ -17,7 +17,7 @@ theme.addThemeValues({
       grid: '#dde2e8'
     },
     workspace: {
-      background: '#f6f8fb',
+      background: '#d8e0ea',
       overlayBackground: 'rgba(246,248,251,0.45)',
       overlayBorder: '#a8b3c0',
       overlayBackgroundHover: 'rgba(246,248,251,0.85)',
@@ -26,8 +26,7 @@ theme.addThemeValues({
       overlayDividerColor: '#a8b3c0'
     },
     tooltips: {
-      background: 'rgb(87,87,87)',
-      foreground: '#fff'
+      background: 'rgb(87,87,87)'
     },
     dnd: {
       hintColor: 'red',
@@ -65,9 +64,7 @@ theme.addThemeValues({
     guide: {
       accent: '#ff6a1a',
       tooltipBackground: 'hsl(21deg 58% 16%)',
-      accentText: '#000',
-      startButton: '#fff',
-      startButtonText: '#000'
+      accentText: '#000'
     },
     graphs: {
       grid: 'rgb(180,180,180)',
@@ -78,20 +75,27 @@ theme.addThemeValues({
       thresholdLine: '#b92900'
     },
     cards: {
-      background: '#f5f7fa',
       foreground: '#283445',
-      border: '#b2bdcb',
       tagBackground: '#94a1b3',
       tagLabelBackground: 'rgba(0, 0, 0, 0.16)',
       tagLabelForeground: 'rgba(255, 255, 255, 0.95)'
     },
+    surfaces: {
+      depth0Background: '#f5f7fa',
+      depth0Border: '#b2bdcb',
+      depth1Background: '#edf2f8',
+      depth1Border: '#b5c0cd',
+      depth2Background: '#e5eaf1',
+      depth2Border: '#b5c0cd',
+      depth3Background: '#ffffff',
+      depth3Border: '#c8d3e2',
+      selectedBorder: '#2f5f8f'
+    },
     status: {
-      cardBackground: '#edf2f8',
       failed: '#d86a86',
       failedForeground: 'white',
       loading: '#2b6e99',
-      success: '#78a85c',
-      successForeground: 'white'
+      success: '#78a85c'
     },
     header: {
       background: '#e7ebf1',
@@ -100,6 +104,18 @@ theme.addThemeValues({
       backgroundLogo: '#dbe3ee',
       backgroundLogoHover: '#c8d3e3',
       foreground: '#1f2936'
+    },
+    workspaceSubMenu: {
+      background: '#e7ebf1',
+      backgroundUnPinned: '#dfe5ee',
+      foreground: 'rgba(38,50,67,0.68)'
+    },
+    mobileNavigation: {
+      background: '#e7ebf1',
+      foreground: 'rgba(38,50,67,0.68)',
+      border: '#c8d3e2',
+      selectedBackground: '#dbe7f4',
+      selectedForeground: '#17243a'
     },
     changelog: {
       codeForeground: 'rgb(132,221,255)',
@@ -120,11 +136,7 @@ theme.addThemeValues({
     },
     tabs: {
       selectedAccentSingle: '#2f5f8f',
-      selectedAccent: '#2f5f8f',
-      selectedBackground: '#f1f6fc'
-    },
-    visor: {
-      background: 'rgba(0,0,0,0.2)'
+      selectedBackground: '#dbe7f4'
     },
     button: {
       background: '#f5f7fa',
@@ -180,7 +192,8 @@ theme.addThemeValues({
     floating: {
       background: 'rgba(245,249,253,0.92)',
       backgroundInactive: 'rgba(245,249,253,0.65)',
-      border: 'rgba(157,170,188,0.8)'
+      border: 'rgba(123,140,164,0.92)',
+      shadowColor: 'rgba(43,57,78,0.32)'
     }
   }
 });

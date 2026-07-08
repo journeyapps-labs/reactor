@@ -4,6 +4,7 @@ import { InputTransformedWidget } from './InputTransformedWidget';
 import { getTransparentColor } from '@journeyapps-labs/lib-reactor-utils';
 import { themed } from '../../stores/themes/reactor-theme-fragment';
 import { Btn } from '../../definitions/common';
+import { REACTOR_MOBILE_MEDIA_QUERY } from '../../hooks/useReactorViewportMode';
 
 export enum InputDialogType {
   FIELD = 'field',
@@ -41,6 +42,11 @@ namespace S {
     outline: none;
     box-sizing: border-box;
     border: none;
+
+    ${REACTOR_MOBILE_MEDIA_QUERY} {
+      padding: 12px;
+      font-size: 18px;
+    }
   `;
 
   export const Area = themed.textarea`
@@ -53,6 +59,12 @@ namespace S {
     outline: none;
     box-sizing: border-box;
     border: none;
+
+    ${REACTOR_MOBILE_MEDIA_QUERY} {
+      padding: 12px;
+      font-size: 18px;
+      min-height: 120px;
+    }
   `;
 
   export const Transformed = themed.div`

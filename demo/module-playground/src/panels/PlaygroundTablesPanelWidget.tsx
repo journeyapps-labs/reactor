@@ -204,9 +204,9 @@ export const PlaygroundTablesPanelWidget: React.FC<PlaygroundTablesPanelWidgetPr
       accessor: (cell: string[]) => (
         <S.Tags>
           {cell.map((tag, index) => (
-            <TablePillWidget key={`${tag}-${index}`} special={index === 0}>
-              {tag}
-            </TablePillWidget>
+            <React.Fragment key={`${tag}-${index}`}>
+              <TablePillWidget special={index === 0}>{tag}</TablePillWidget>
+            </React.Fragment>
           ))}
         </S.Tags>
       ),
@@ -266,7 +266,9 @@ export const PlaygroundTablesPanelWidget: React.FC<PlaygroundTablesPanelWidgetPr
                 />
                 <S.SelectedPills>
                   {selectedRows.map((rowKey) => (
-                    <TablePillWidget key={rowKey}>{rowKey}</TablePillWidget>
+                    <React.Fragment key={rowKey}>
+                      <TablePillWidget>{rowKey}</TablePillWidget>
+                    </React.Fragment>
                   ))}
                 </S.SelectedPills>
               </S.MultiSelectContent>

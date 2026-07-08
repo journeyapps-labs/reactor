@@ -10,6 +10,7 @@ import { themed } from '../../stores/themes/reactor-theme-fragment';
 import { COMBOBOX_ITEM_H_PADDING } from '../../layout';
 import * as _ from 'lodash';
 import { Dimensions, useDimensionObserver } from '../../hooks/useDimensionObserver';
+import { REACTOR_MOBILE_MEDIA_QUERY } from '../../hooks/useReactorViewportMode';
 
 export interface ComboBoxItemWidgetProps {
   item: ComboBoxItem;
@@ -37,6 +38,12 @@ namespace S {
     cursor: pointer;
     display: flex;
     align-items: center;
+
+    ${REACTOR_MOBILE_MEDIA_QUERY} {
+      min-height: 44px;
+      font-size: 17px;
+      padding: 10px 12px;
+    }
   `;
 
   export const Item = themed.div<{ selected: boolean; attention: boolean }>`
@@ -62,10 +69,19 @@ namespace S {
     margin-right: 5px;
     display: flex;
     width: 16px;
+
+    ${REACTOR_MOBILE_MEDIA_QUERY} {
+      margin-right: 10px;
+      width: 24px;
+    }
   `;
 
   export const IconInner = themed(IconWidget)`
     max-height: 15px;
+
+    ${REACTOR_MOBILE_MEDIA_QUERY} {
+      max-height: 20px;
+    }
   `;
 
   export const Label = themed.div<{ disabled: boolean }>`

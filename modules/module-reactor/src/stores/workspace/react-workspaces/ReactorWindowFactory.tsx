@@ -7,6 +7,7 @@ import * as React from 'react';
 import { WorkspaceEngine, WorkspaceModel } from '@projectstorm/react-workspaces-core';
 import { observable } from 'mobx';
 import { styled } from '../../themes/reactor-theme-fragment';
+import { WORKSPACE_PANEL_RADIUS } from '../../../widgets/workspace/workspacePanelChrome';
 
 export class ReactorWindowModel extends FloatingWindowModel {
   @observable
@@ -62,13 +63,17 @@ export const DefaultFloatingWindowWidget: React.FC<DefaultFloatingWindowWidgetPr
 
 namespace S {
   export const Container = styled.div`
-    box-shadow: 0 0 20px ${(p) => p.theme.combobox.shadowColor};
+    box-shadow:
+      0 18px 48px ${(p) => p.theme.floating.shadowColor},
+      0 0 0 1px ${(p) => p.theme.floating.backgroundInactive};
     pointer-events: all;
-    border: solid 1px ${(p) => p.theme.combobox.border};
+    border: solid 2px ${(p) => p.theme.floating.border};
     height: 100%;
     width: 100%;
     display: flex;
     flex-direction: column;
-    background: ${(p) => p.theme.workspace.background};
+    background: ${(p) => p.theme.floating.background};
+    border-radius: ${WORKSPACE_PANEL_RADIUS}px;
+    overflow: hidden;
   `;
 }

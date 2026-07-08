@@ -7,9 +7,9 @@ import { FooterLoaderWidget } from '../footer/FooterLoaderWidget';
 import { LoadingDirectiveState } from '../../stores/visor/VisorLoadingDirective';
 import { MetaBarWidget } from '../meta/MetaBarWidget';
 import { ReadOnlyMetadataWidgetProps } from '../meta/ReadOnlyMetadataWidget';
-import { getDarkenedColor, getTransparentColor } from '@journeyapps-labs/lib-reactor-utils';
 import { themed } from '../../stores/themes/reactor-theme-fragment';
 import { getScrollableCSS } from '../panel/panel/PanelWidget';
+import { SurfaceDepth, SurfaceWidget } from '../surfaces/SurfaceWidget';
 
 export interface CardWidgetProps {
   btns?: PanelBtn[];
@@ -18,9 +18,9 @@ export interface CardWidgetProps {
   color?: string;
   subHeadingColor?: string;
   selected?: boolean;
-  selectedBorderColor?: string;
+  depth?: SurfaceDepth;
   className?;
-  sections: { content: () => React.JSX.Element | null; key: string }[];
+  sections: { content: () => React.JSX.Element | null; grow?: boolean; key: string }[];
   loader?: {
     color?: string;
     percentage: number;
@@ -29,13 +29,10 @@ export interface CardWidgetProps {
 }
 
 namespace S {
-  export const Container = themed.div<{ selected?: boolean; selectedBorderColor?: string }>`
-    border-radius: 5px;
-    background: ${(p) => p.theme.cards.background};
-    border: solid 1px
-      ${(p) => (p.selected ? p.selectedBorderColor || p.theme.tabs.selectedAccentSingle : p.theme.cards.border)};
+  export const Container = styled(SurfaceWidget)`
     display: flex;
     flex-direction: column;
+    user-select: none;
   `;
 
   export const LoadingBar = styled(FooterLoaderWidget)`
@@ -45,7 +42,7 @@ namespace S {
   `;
 
   export const Loading = themed.div`
-    background: ${(p) => getDarkenedColor(p.theme.cards.background, 0.3)};
+    background: ${(p) => p.theme.surfaces.depth1Background};
   `;
 
   export const LoadingMeta = themed(MetaBarWidget)`
@@ -73,9 +70,10 @@ namespace S {
     color: ${(p) => p.color || p.theme.cards.foreground};
   `;
 
-  export const Content = themed.div`
-    flex-grow: 1;
-    border-top: solid 1px ${(p) => getTransparentColor(p.theme.cards.border, 0.4)};
+  export const Content = themed.div<{ grow: boolean }>`
+    flex-grow: ${(p) => (p.grow ? 1 : 0)};
+    border-top: solid 1px;
+    border-color: inherit;
     padding: 10px;
     min-width: 0;
     overflow-x: auto;
@@ -129,11 +127,7 @@ export class CardWidget extends React.Component<CardWidgetProps> {
 
   render() {
     return (
-      <S.Container
-        className={this.props.className}
-        selected={this.props.selected}
-        selectedBorderColor={this.props.selectedBorderColor}
-      >
+      <S.Container className={this.props.className} depth={this.props.depth} selected={this.props.selected}>
         <S.Top>
           <S.Info>
             {this.getTitle()}
@@ -158,7 +152,7 @@ export class CardWidget extends React.Component<CardWidgetProps> {
                   if (!content) {
                     return null;
                   }
-                  return <S.Content>{content}</S.Content>;
+                  return <S.Content grow={section.grow ?? true}>{content}</S.Content>;
                 }}
               />
             );

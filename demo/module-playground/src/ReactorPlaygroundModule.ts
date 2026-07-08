@@ -6,6 +6,8 @@ import { PlaygroundPanelFactory } from './panels/PlaygroundPanelFactory';
 import { PlaygroundDialogsComboboxesPanelWidget } from './panels/PlaygroundDialogsComboboxesPanelWidget';
 import { PlaygroundFormsPanelWidget } from './panels/PlaygroundFormsPanelWidget';
 import { PlaygroundCardsPanelWidget } from './panels/PlaygroundCardsPanelWidget';
+import { PlaygroundSurfacesPanelWidget } from './panels/PlaygroundSurfacesPanelWidget';
+import { PlaygroundTabsPanelWidget } from './panels/PlaygroundTabsPanelWidget';
 import { PlaygroundButtonsPanelWidget } from './panels/PlaygroundButtonsPanelWidget';
 import { PlaygroundEditorsPanelWidget } from './panels/PlaygroundEditorsPanelWidget';
 import { PlaygroundTablesPanelWidget } from './panels/PlaygroundTablesPanelWidget';
@@ -56,6 +58,22 @@ export class ReactorPlaygroundModule extends AbstractReactorModule {
     );
     workspaceStore.registerFactory(
       new PlaygroundPanelFactory({
+        type: 'playground.surfaces',
+        name: 'Surfaces',
+        icon: 'layer-group',
+        widget: PlaygroundSurfacesPanelWidget
+      })
+    );
+    workspaceStore.registerFactory(
+      new PlaygroundPanelFactory({
+        type: 'playground.tabs',
+        name: 'Tabs',
+        icon: 'folder',
+        widget: PlaygroundTabsPanelWidget
+      })
+    );
+    workspaceStore.registerFactory(
+      new PlaygroundPanelFactory({
         type: 'playground.buttons',
         name: 'Buttons',
         icon: 'mouse-pointer',
@@ -92,6 +110,9 @@ export class ReactorPlaygroundModule extends AbstractReactorModule {
 
   async init(ioc: Container): Promise<any> {
     const uxStore = ioc.get<UXStore>(UXStore);
+    uxStore.primaryHeader = {
+      label: 'Reactor Demo'
+    };
     uxStore.setRootComponent(DemoBodyWidget);
   }
 }

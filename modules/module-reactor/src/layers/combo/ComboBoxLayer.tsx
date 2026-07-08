@@ -6,6 +6,7 @@ import { ItemsDirectiveComboWidget } from './directive-types/ItemsDirectiveCombo
 import { SearchEngineDirectiveComboWidget } from './directive-types/SearchEngineDirectiveComboWidget';
 import { MultiDirectiveComboWidget } from './directive-types/MultiDirectiveComboWidget';
 import { LayerDirective } from '../../stores/layer/LayerDirective';
+import { MousePosition } from './SmartPositionWidget';
 
 export class ComboBoxLayer extends LayerDirective {
   @inject(ComboBoxStore)
@@ -29,7 +30,18 @@ export class ComboBoxLayer extends LayerDirective {
     if (this.comboBoxStore.directive.type === UIDirectiveType.ITEMS) {
       return (
         <ItemsDirectiveComboWidget
-          resolve={(item) => {
+          resolve={(item, event: MousePosition) => {
+            if (item.children?.length > 0) {
+              const directive = this.comboBoxStore.directive as UIItemsDirective;
+              this.comboBoxStore.directive = {
+                ...directive,
+                items: item.children,
+                position: event || directive.position,
+                title: item.title,
+                title2: null
+              } as UIItemsDirective;
+              return;
+            }
             this.comboBoxStore.resolve([item]);
           }}
           directive={this.comboBoxStore.directive as UIItemsDirective}

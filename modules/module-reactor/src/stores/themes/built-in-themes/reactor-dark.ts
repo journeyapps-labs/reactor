@@ -12,7 +12,7 @@ theme.addThemeValues({
     },
     workspace: {
       ...DarkTheme.workspace,
-      background: '#0b0b0b',
+      background: '#070707',
       overlayBackground: 'rgba(12,12,12,0.5)',
       overlayBackgroundHover: 'rgba(12,12,12,0.82)'
     },
@@ -35,20 +35,31 @@ theme.addThemeValues({
     },
     header: {
       ...DarkTheme.header,
-      background: '#0d0d0d',
-      backgroundLogo: '#090909',
-      backgroundLogoHover: '#050505',
+      background: '#141414',
+      backgroundLogo: '#101010',
+      backgroundLogoHover: '#171717',
       primary: '#33b8de',
       secondary: '#79b7cf',
       foreground: '#dedede'
     },
+    workspaceSubMenu: {
+      background: '#141414',
+      backgroundUnPinned: '#101010',
+      foreground: 'rgba(205,205,205,0.68)'
+    },
+    mobileNavigation: {
+      background: '#141414',
+      foreground: 'rgba(205,205,205,0.68)',
+      border: 'rgba(255,255,255,0.08)',
+      selectedBackground: 'rgba(255,255,255,0.08)',
+      selectedForeground: 'white'
+    },
     footer: {
-      background: '#0d0d0d'
+      background: '#141414'
     },
     tabs: {
       selectedAccentSingle: '#33b8de',
-      selectedAccent: '#33b8de',
-      selectedBackground: '#101010'
+      selectedBackground: 'rgba(255,255,255,0.08)'
     },
     trees: {
       ...DarkTheme.trees,
@@ -85,16 +96,24 @@ theme.addThemeValues({
       icon: '#33b8de'
     },
     cards: {
-      background: '#121212',
       foreground: '#c7c7c7',
-      border: '#333333',
       tagBackground: '#58595d',
       tagLabelBackground: 'rgba(0, 0, 0, 0.16)',
       tagLabelForeground: 'rgba(240, 240, 240, 0.92)'
     },
+    surfaces: {
+      depth0Background: '#121212',
+      depth0Border: '#333333',
+      depth1Background: '#141414',
+      depth1Border: '#2a2a2a',
+      depth2Background: '#101010',
+      depth2Border: '#2a2a2a',
+      depth3Background: '#0c0c0c',
+      depth3Border: '#262626',
+      selectedBorder: '#33b8de'
+    },
     status: {
       ...DarkTheme.status,
-      cardBackground: '#141414',
       failed: '#7d3510',
       loading: '#2fa4c6',
       success: '#5f7e14'
@@ -132,7 +151,8 @@ theme.addThemeValues({
     floating: {
       background: 'rgba(12,12,12,0.84)',
       backgroundInactive: 'rgba(16,16,16,0.56)',
-      border: 'rgba(148,148,148,0.3)'
+      border: 'rgba(164,164,164,0.42)',
+      shadowColor: 'rgba(0, 0, 0, 0.72)'
     }
   }
 });

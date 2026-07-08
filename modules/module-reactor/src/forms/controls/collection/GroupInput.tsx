@@ -8,6 +8,7 @@ import {
 import { styled } from '../../../stores/themes/reactor-theme-fragment';
 import * as React from 'react';
 import { useEffect } from 'react';
+import { SurfaceWidget } from '../../../widgets/surfaces/SurfaceWidget';
 
 export interface GroupInputOptions<T extends {}> extends FormInputOptions<T> {
   inputs?: FormInput[];
@@ -153,10 +154,9 @@ namespace S {
     row-gap: 4px;
   `;
 
-  export const Entry = styled.div`
-    border-radius: 4px;
-    border: solid 2px ${(p) => p.theme.forms.groupBorder};
+  export const Entry = styled(SurfaceWidget)`
     margin-bottom: 3px;
+    overflow: hidden;
   `;
 
   export const EntryTop = styled.div`

@@ -34,9 +34,12 @@ args.command<{ module: string; entry: boolean; watch: boolean }>(
           process.exit(1);
           return;
         }
-        if (stats.hasErrors()) {
+        if (stats?.hasErrors()) {
           console.log(stats.toString());
           resolve(false);
+          if (!yargs.watch) {
+            process.exitCode = 1;
+          }
           return;
         }
         resolve(true);

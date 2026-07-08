@@ -25,6 +25,7 @@ import { AbstractPresenterContext } from '../../presenter/AbstractPresenterConte
 import { ActionStore } from '../../../../stores/actions/ActionStore';
 import { EntityDefinitionError } from '../../../EntityDefinitionError';
 import { SetControl } from '../../../../controls/SetControl';
+import { WorkspaceStore } from '../../../../stores/workspace/WorkspaceStore';
 
 export interface EntityPanelModelListener<T extends any = any> extends WorkspaceModelListener, SelectEntityListener<T> {
   contextGenerated: (context: AbstractPresenterContext<T>) => any;
@@ -154,6 +155,9 @@ export class EntityPanelFactory<T> extends ReactorPanelFactory<EntityPanelModel<
   @inject(ActionStore)
   accessor actionStore: ActionStore;
 
+  @inject(WorkspaceStore)
+  accessor workspaceStore: WorkspaceStore;
+
   constructor(public component: EntityPanelComponent) {
     super({
       type: component.generateFactoryType(),
@@ -186,7 +190,8 @@ export class EntityPanelFactory<T> extends ReactorPanelFactory<EntityPanelModel<
       return null;
     }
     return {
-      name: `View: ${event.model.getPresenter().label}`,
+      label: 'View',
+      value: event.model.getPresenter().label,
       tracking: false,
       onChange: async (event2) => {
         await this.comboBoxStore.show(
@@ -213,7 +218,8 @@ export class EntityPanelFactory<T> extends ReactorPanelFactory<EntityPanelModel<
       return null;
     }
     return {
-      name: `Info: ${this.component.definition.getPreferredDescriber()?.label}`,
+      label: 'Info',
+      value: this.component.definition.getPreferredDescriber()?.label,
       tracking: false,
       onChange: async (event2) => {
         await this.comboBoxStore.show(
@@ -227,6 +233,72 @@ export class EntityPanelFactory<T> extends ReactorPanelFactory<EntityPanelModel<
                 }
               };
             }),
+            event: event2
+          })
+        );
+      }
+    };
+  }
+
+  getOpenActionSelectionContext(event: WorkspaceModelFactoryEvent<EntityPanelModel>) {
+    const handlers = this.component.definition.getHandlers();
+    const actionHandlers = handlers
+      .map((handler) => {
+        const actionId = handler.getPreferredActionId();
+        if (!actionId) {
+          return null;
+        }
+        const action = this.actionStore.getActionByID(actionId);
+        if (!action) {
+          return null;
+        }
+        return {
+          handler,
+          action
+        };
+      })
+      .filter((entry) => !!entry);
+    if (actionHandlers.length <= 1) {
+      return null;
+    }
+
+    const activeWorkspace = this.workspaceStore.getActiveWorkspace();
+    const preferredActionId = activeWorkspace?.getPreferredOpenAction(this.component.definition.type);
+    const preferredAction = preferredActionId ? this.actionStore.getActionByID(preferredActionId) : null;
+
+    return {
+      label: 'On click',
+      value: preferredAction?.options.name || 'Ask each time',
+      tracking: !!preferredAction,
+      onChange: async (event2) => {
+        await this.comboBoxStore.show(
+          new SimpleComboBoxDirective({
+            items: [
+              ...actionHandlers.map(({ action }) => {
+                return {
+                  title: action.options.name,
+                  key: action.id,
+                  icon: action.options.icon,
+                  group: 'actions',
+                  action: async () => {
+                    activeWorkspace?.setPreferredOpenAction(this.component.definition.type, action.id);
+                    this.workspaceStore.saveWorkspaceDebounced();
+                    this.workspaceStore.engine.fireRepaintListeners();
+                  }
+                };
+              }),
+              {
+                title: 'Ask each time',
+                key: 'ask-each-time',
+                icon: 'question-circle',
+                group: 'fallback',
+                action: async () => {
+                  activeWorkspace?.setPreferredOpenAction(this.component.definition.type, null);
+                  this.workspaceStore.saveWorkspaceDebounced();
+                  this.workspaceStore.engine.fireRepaintListeners();
+                }
+              }
+            ],
             event: event2
           })
         );
@@ -271,6 +343,7 @@ export class EntityPanelFactory<T> extends ReactorPanelFactory<EntityPanelModel<
   generateToolbar(event: WorkspaceModelFactoryEvent<EntityPanelModel>) {
     const describerContext = this.getDescriberSelectionContext(event);
     const presenterContext = this.getPresenterSelectionContext(event);
+    const openActionContext = this.getOpenActionSelectionContext(event);
 
     let buttons = [
       this.getSelectAllButton(event),
@@ -278,9 +351,12 @@ export class EntityPanelFactory<T> extends ReactorPanelFactory<EntityPanelModel<
       ...Array.from(event.model.presenterContext.toolbarButtons).map((btn) => btn.representAsBtn())
     ].filter((f) => !!f);
 
-    if (describerContext || presenterContext || buttons.length > 0) {
+    if (describerContext || presenterContext || openActionContext || buttons.length > 0) {
       return (
-        <PanelTitleToolbarWidget btns={buttons} context={[describerContext, presenterContext].filter((f) => !!f)} />
+        <PanelTitleToolbarWidget
+          btns={buttons}
+          context={[describerContext, presenterContext, openActionContext].filter((f) => !!f)}
+        />
       );
     }
   }

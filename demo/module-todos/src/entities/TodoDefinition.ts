@@ -15,12 +15,13 @@ import { TodoEntities } from '../TodoEntities';
 import { TodoStore } from '../stores/TodoStore';
 import { TodoModel } from '../models/TodoModel';
 import { CreateTodoAction } from '../actions/CreateTodoAction';
-import { SetCurrentTodoItemAction } from '../actions/SetCurrentTodoItemAction';
 import { AddSubTodoAction } from '../actions/AddSubTodoAction';
 import { RenameTodoAction } from '../actions/RenameTodoAction';
 import { DuplicateTodoAction } from '../actions/DuplicateTodoAction';
 import { TodoNoteModel } from '../models/TodoNoteModel';
 import { AddTodoNoteAction } from '../actions/AddTodoNoteAction';
+import { OpenTodoDialogAction } from '../actions/OpenTodoDialogAction';
+import { SetCurrentTodoItemAction } from '../actions/SetCurrentTodoItemAction';
 
 export class TodoDefinition extends EntityDefinition<TodoModel> {
   @inject(TodoStore)
@@ -206,8 +207,8 @@ export class TodoDefinition extends EntityDefinition<TodoModel> {
       })
     );
 
-    // selecting an item via the tree or cmd palette should make it the current todo item by default
     this.registerComponent(new EntityActionHandlerComponent(SetCurrentTodoItemAction.ID));
+    this.registerComponent(new EntityActionHandlerComponent(OpenTodoDialogAction.ID));
     this.registerAdditionalAction(AddTodoNoteAction.ID);
     this.registerAdditionalAction(RenameTodoAction.ID);
     this.registerAdditionalAction(DuplicateTodoAction.ID);

@@ -9,10 +9,15 @@ import {
   WorkspaceNodePanelRenderer
 } from '@projectstorm/react-workspaces-core';
 import { PanelWidget } from '../../../widgets/panel/panel/PanelWidget';
-import { ActionValidator, PassiveActionValidationState } from '../../../actions/validators/ActionValidator';
+import { ActionValidator } from '../../../actions/validators/ActionValidator';
 import { Btn } from '../../../definitions/common';
 import { TabRenderer, TabRendererEvent } from '@projectstorm/react-workspaces-model-tabs';
-import { TrayModelPanelRenderer, TrayModelPanelRendererEvent } from '@projectstorm/react-workspaces-model-tray';
+import {
+  TrayIconPosition,
+  TrayModelPanelRenderer,
+  TrayModelPanelRendererEvent,
+  WorkspaceTrayMode
+} from '@projectstorm/react-workspaces-model-tray';
 import {
   FloatingWindowRenderer,
   FloatingWindowSubRendererEvent
@@ -131,7 +136,15 @@ export abstract class ReactorPanelFactory<T extends ReactorPanelModel = ReactorP
   }
 
   renderIcon(event: TrayModelPanelRendererEvent<T>): React.JSX.Element {
-    return <WidgetTrayItem icon={this.options.icon} selected={event.selected} name={this.options.name} />;
+    return (
+      <WidgetTrayItem
+        collapsed={event.parent.mode === WorkspaceTrayMode.COLLAPSED}
+        onleft={event.parent.iconBarPosition === TrayIconPosition.LEFT}
+        icon={this.options.icon}
+        selected={event.selected}
+        name={this.options.name}
+      />
+    );
   }
 
   // !--------------- RENDERING TITLEBAR ---------------

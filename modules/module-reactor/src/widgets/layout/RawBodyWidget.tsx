@@ -16,6 +16,7 @@ import { KeyCommandDialogLayer } from '../../layers/keys-dialog/KeyCommandDialog
 import { GuideLayer } from '../../layers/guide/GuideLayer';
 import { NotificationLayer } from '../../layers/notifications/NotificationLayer';
 import { Fonts } from '../../fonts';
+import { REACTOR_MOBILE_MEDIA_QUERY } from '../../hooks/useReactorViewportMode';
 
 export interface RawBodyWidgetProps {
   logo: string;
@@ -59,6 +60,40 @@ namespace S {
       box-sizing: border-box;
       margin: 0;
       outline: none;
+    }
+
+    ${REACTOR_MOBILE_MEDIA_QUERY} {
+      * {
+        -webkit-touch-callout: none;
+        -webkit-tap-highlight-color: transparent;
+        -webkit-user-select: none;
+        user-select: none;
+        touch-action: manipulation;
+      }
+
+      input,
+      textarea,
+      select,
+      [contenteditable='true'] {
+        -webkit-user-select: text;
+        font-size: 16px !important;
+        user-select: text;
+      }
+
+      .reactor-long-press-pending {
+        animation: reactor-long-press-pending 430ms ease-out forwards;
+        transform-origin: center;
+        will-change: transform;
+      }
+    }
+
+    @keyframes reactor-long-press-pending {
+      from {
+        transform: scale(1);
+      }
+      to {
+        transform: scale(0.97);
+      }
     }
 
     html {

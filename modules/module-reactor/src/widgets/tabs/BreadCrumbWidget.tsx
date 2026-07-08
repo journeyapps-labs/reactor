@@ -1,13 +1,15 @@
 import React from 'react';
 import { styled, theme } from '../../stores/themes/reactor-theme-fragment';
-import { GenericTabWidgetProps } from './GenericTabSelectionWidget';
+import { TabItemWidgetProps } from './TabListWidget';
 import { useAttention } from '../guide/AttentionWrapperWidget';
 import { ButtonComponentSelection, ReactorComponentType } from '../../stores/guide/selections/common';
 import { ioc } from '../../inversify.config';
 import { css } from '@emotion/react';
 import { ThemeStore } from '../../stores/themes/ThemeStore';
+import { MousePosition } from '../../layers/combo/SmartPositionWidget';
+import { useLongPressContextMenu } from '../../hooks/useLongPressContextMenu';
 
-export interface BreadCrumbWidgetProps extends GenericTabWidgetProps {
+export interface BreadCrumbWidgetProps extends TabItemWidgetProps {
   backgroundColor: string;
 }
 
@@ -38,7 +40,6 @@ namespace S {
     font-size: 15px;
     line-height: 25px;
     white-space: nowrap;
-
     &:before {
       ${(p) => BREAD_CRUMB_SHARED_CSS}
       border-left: 15px solid ${(p) => p.backgroundColor};
@@ -82,6 +83,17 @@ export const BreadCrumbWidget: React.FC<BreadCrumbWidgetProps> = (props) => {
     return currentTheme.panels.searchBackground;
   }, [props.selected, props.disabled, currentTheme]);
 
+  const showContextMenu = React.useCallback(
+    (position: MousePosition) => {
+      if (props.disabled || !props.tabRightClick) {
+        return;
+      }
+      props.tabRightClick(position);
+    },
+    [props.disabled, props.tabRightClick]
+  );
+  useLongPressContextMenu(props.forwardRef, showContextMenu, props.disabled || !props.tabRightClick);
+
   return (
     <S.BreadCrumbContainer
       {...props}
@@ -95,13 +107,6 @@ export const BreadCrumbWidget: React.FC<BreadCrumbWidgetProps> = (props) => {
         }
         event.persist();
         props.tabSelected(event);
-      }}
-      onContextMenu={(event) => {
-        if (!props.disabled && props.tabRightClick) {
-          event.persist();
-          event.preventDefault();
-          props.tabRightClick(event);
-        }
       }}
       ref={props.forwardRef}
     >

@@ -8,6 +8,7 @@ import { getTransparentColor } from '@journeyapps-labs/lib-reactor-utils';
 import { themed } from '../../stores/themes/reactor-theme-fragment';
 import { COMBOBOX_ITEM_H_PADDING } from '../../layout';
 import { Dimensions } from '../../hooks/useDimensionObserver';
+import { REACTOR_MOBILE_MEDIA_QUERY } from '../../hooks/useReactorViewportMode';
 
 export interface ComboBoxWidgetProps {
   items: ComboBoxItem[];
@@ -26,6 +27,12 @@ namespace S {
     font-size: 11px;
     border-bottom: solid 1px ${(p) => getTransparentColor(p.theme.combobox.text, 0.5)};
     opacity: 0.4;
+
+    ${REACTOR_MOBILE_MEDIA_QUERY} {
+      font-size: 16px;
+      margin: 10px 14px 6px 14px;
+      padding-bottom: 5px;
+    }
   `;
 }
 

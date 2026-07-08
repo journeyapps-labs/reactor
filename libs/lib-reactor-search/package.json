@@ -17,8 +17,10 @@
     "build": "../node_modules/.bin/tsc --build"
   },
   "dependencies": {
+    "@journeyapps-labs/common-utils": "^1.0.1",
     "@journeyapps-labs/lib-reactor-utils": "workspace:*",
     "fastest-levenshtein": "^1.0.16",
-    "mobx": "^6.15.0"
+    "lodash": "^4.18.1",
+    "mobx": "^6.16.1"
   }
 }

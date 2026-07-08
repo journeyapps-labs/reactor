@@ -16,10 +16,14 @@ import { styled, themed } from '../../stores/themes/reactor-theme-fragment';
 import { ToolbarPreference } from '../../settings/ToolbarPreference';
 import Avatar from 'react-avatar';
 import { TooltipPosition } from '../info/tooltips';
+import { HeaderWorkspaceSubMenuWidget } from './HeaderWorkspaceSubMenuWidget';
+import { WorkspaceSubMenuPinnedPreference } from '../../preferences/WorkspaceSubMenuPinnedPreference';
+import { WORKSPACE_PANEL_INSET, WORKSPACE_PANEL_RADIUS } from '../workspace/workspacePanelChrome';
+import { WorkspaceStore } from '../../stores/workspace/WorkspaceStore';
 
 export interface HeaderWidgetProps {
   primaryHeading: Btn;
-  secondaryHeading: Btn;
+  secondaryHeading?: Btn;
   additionalLogo: string;
   toolbar: ToolbarPreference;
   logoClicked: (event: React.MouseEvent) => any;
@@ -46,16 +50,32 @@ const width = 40;
 const widthAvatar = 30;
 
 namespace S {
-  export const Header = themed.div<{ shadow: boolean }>`
+  export const HeaderContainer = styled.div`
+    display: flex;
+    flex-direction: column;
+    flex-grow: 0;
+    flex-shrink: 0;
+    position: relative;
+  `;
+
+  export const Header = themed.div<{ shadow: boolean; hasSubbar: boolean }>`
     display: flex;
     min-height: ${width}px;
     flex-grow: 0;
     flex-shrink: 0;
     background: ${(p) => p.theme.header.background};
-    margin-bottom: 2px;
     user-select: none;
     box-shadow: ${(p) => (p.shadow ? '0 0 10px rgba(0,0,0,0.2)' : 'none')};
     z-index: ${(p) => (p.shadow ? 1 : 'inherit')};
+    margin: ${WORKSPACE_PANEL_INSET}px ${WORKSPACE_PANEL_INSET}px 0;
+    border-top-left-radius: ${WORKSPACE_PANEL_RADIUS}px;
+    border-top-right-radius: ${WORKSPACE_PANEL_RADIUS}px;
+    ${(p) =>
+      !p.hasSubbar
+        ? `border-bottom-left-radius: ${WORKSPACE_PANEL_RADIUS}px;
+            border-bottom-right-radius: ${WORKSPACE_PANEL_RADIUS}px;`
+        : ``}
+    overflow: hidden;
   `;
 
   export const AvatarCircle = styled(Avatar)`
@@ -182,12 +202,35 @@ namespace S {
 interface HeaderWidgetState {
   logoClickStarted: boolean;
   primaryHeadingClickStarted: boolean;
+  workspaceMenuOffsetLeft: number;
+  hoveredWorkspaceGroupKey: string | null;
+  hoveredWorkspaceMenuOffsetLeft: number | null;
 }
 
 @observer
 export class HeaderWidget extends React.Component<HeaderWidgetProps, HeaderWidgetState> {
+  clearHoverTimeout: number | undefined;
+
   @inject(CMDPalletStore)
   accessor commandPalletStore: CMDPalletStore;
+
+  @inject(WorkspaceStore)
+  accessor workspaceStore: WorkspaceStore;
+
+  constructor(props: HeaderWidgetProps) {
+    super(props);
+    this.state = {
+      logoClickStarted: false,
+      primaryHeadingClickStarted: false,
+      workspaceMenuOffsetLeft: 0,
+      hoveredWorkspaceGroupKey: null,
+      hoveredWorkspaceMenuOffsetLeft: null
+    };
+  }
+
+  componentWillUnmount() {
+    this.cancelClearHoveredWorkspaceGroup();
+  }
 
   getLeftButtons() {
     if (!this.props.leftButtons) {
@@ -209,92 +252,170 @@ export class HeaderWidget extends React.Component<HeaderWidgetProps, HeaderWidge
     return this.props.rightContent;
   }
 
+  updateWorkspaceMenuOffset = (rect: { left: number; width: number }) => {
+    const containerBounds = this.props.forwardRef.current?.getBoundingClientRect();
+    const offsetLeft = rect.left - (containerBounds?.left || 0);
+    if (Math.abs(offsetLeft - this.state.workspaceMenuOffsetLeft) > 1) {
+      this.setState({
+        workspaceMenuOffsetLeft: offsetLeft
+      });
+    }
+  };
+
+  updateHoveredWorkspaceGroup = (key: string | null, rect?: { left: number; width: number }) => {
+    this.cancelClearHoveredWorkspaceGroup();
+    const containerBounds = this.props.forwardRef.current?.getBoundingClientRect();
+    const offsetLeft = rect ? rect.left - (containerBounds?.left || 0) : null;
+    if (
+      key !== this.state.hoveredWorkspaceGroupKey ||
+      Math.abs((offsetLeft ?? -1) - (this.state.hoveredWorkspaceMenuOffsetLeft ?? -1)) > 1
+    ) {
+      this.setState({
+        hoveredWorkspaceGroupKey: key,
+        hoveredWorkspaceMenuOffsetLeft: offsetLeft
+      });
+    }
+  };
+
+  cancelClearHoveredWorkspaceGroup = () => {
+    if (this.clearHoverTimeout !== undefined) {
+      window.clearTimeout(this.clearHoverTimeout);
+      this.clearHoverTimeout = undefined;
+    }
+  };
+
+  scheduleClearHoveredWorkspaceGroup = () => {
+    this.cancelClearHoveredWorkspaceGroup();
+    this.clearHoverTimeout = window.setTimeout(() => {
+      this.clearHoverTimeout = undefined;
+      this.clearHoveredWorkspaceGroup();
+    }, 150);
+  };
+
+  clearHoveredWorkspaceGroup = () => {
+    this.cancelClearHoveredWorkspaceGroup();
+    if (this.state.hoveredWorkspaceGroupKey || this.state.hoveredWorkspaceMenuOffsetLeft !== null) {
+      this.setState({
+        hoveredWorkspaceGroupKey: null,
+        hoveredWorkspaceMenuOffsetLeft: null
+      });
+    }
+  };
+
   render() {
+    const pinnedSubMenu = WorkspaceSubMenuPinnedPreference.pinned();
+    const subMenuWorkspaceKey = pinnedSubMenu ? undefined : this.state.hoveredWorkspaceGroupKey || undefined;
+    const hoveredWorkspaceIsActive = this.state.hoveredWorkspaceGroupKey === this.workspaceStore.currentTopWorkspace;
+    const subMenuOffsetLeft = pinnedSubMenu
+      ? this.state.workspaceMenuOffsetLeft
+      : hoveredWorkspaceIsActive
+        ? this.state.workspaceMenuOffsetLeft
+        : (this.state.hoveredWorkspaceMenuOffsetLeft ?? this.state.workspaceMenuOffsetLeft);
+
     return (
-      <S.Header
+      <S.HeaderContainer
         className={this.props.className}
-        shadow={!AdvancedWorkspacePreference.enabled()}
         ref={this.props.forwardRef}
+        onMouseEnter={this.cancelClearHoveredWorkspaceGroup}
+        onMouseLeave={pinnedSubMenu ? undefined : this.scheduleClearHoveredWorkspaceGroup}
       >
-        <S.Logo
-          onMouseDown={() => {
-            this.setState({ logoClickStarted: true });
-          }}
-          onMouseUp={(event: React.MouseEvent) => {
-            if (this.state.logoClickStarted) {
-              event.persist();
-              this.props.logoClicked(event);
-            }
-            this.setState({ logoClickStarted: false });
-          }}
-          onMouseLeave={() => {
-            this.setState({ logoClickStarted: false });
-          }}
-        >
-          <S.LogoImg src={this.props.additionalLogo} />
-        </S.Logo>
-        <S.Meta>
-          <S.MetaApp
+        <S.Header hasSubbar={pinnedSubMenu} shadow={!AdvancedWorkspacePreference.enabled()}>
+          <S.Logo
             onMouseDown={() => {
-              this.setState({ primaryHeadingClickStarted: true });
+              this.setState({ logoClickStarted: true });
             }}
-            onMouseUp={(event) => {
-              if (this.state.primaryHeadingClickStarted) {
+            onMouseUp={(event: React.MouseEvent) => {
+              if (this.state.logoClickStarted) {
                 event.persist();
-                this.props.primaryHeading?.action(event);
+                this.props.logoClicked(event);
               }
-              this.setState({ primaryHeadingClickStarted: false });
+              this.setState({ logoClickStarted: false });
             }}
             onMouseLeave={() => {
-              this.setState({ primaryHeadingClickStarted: false });
+              this.setState({ logoClickStarted: false });
             }}
           >
-            <S.MetaLabel>{this.props.primaryHeading?.label || '...'}</S.MetaLabel>
-            {this.props.primaryHeading?.action ? <FontAwesomeIcon className="icon" icon="angle-down" /> : null}
-          </S.MetaApp>
-          <S.MetaOrg
+            <S.LogoImg src={this.props.additionalLogo} />
+          </S.Logo>
+          <S.Meta>
+            <S.MetaApp
+              onMouseDown={() => {
+                this.setState({ primaryHeadingClickStarted: true });
+              }}
+              onMouseUp={(event) => {
+                if (this.state.primaryHeadingClickStarted) {
+                  event.persist();
+                  this.props.primaryHeading?.action(event);
+                }
+                this.setState({ primaryHeadingClickStarted: false });
+              }}
+              onMouseLeave={() => {
+                this.setState({ primaryHeadingClickStarted: false });
+              }}
+            >
+              <S.MetaLabel>{this.props.primaryHeading?.label || '...'}</S.MetaLabel>
+              {this.props.primaryHeading?.action ? <FontAwesomeIcon className="icon" icon="angle-down" /> : null}
+            </S.MetaApp>
+            {this.props.secondaryHeading ? (
+              <S.MetaOrg
+                onClick={(event) => {
+                  event.persist();
+                  this.props.secondaryHeading.action?.(event);
+                }}
+              >
+                <S.MetaLabel>{this.props.secondaryHeading.label}</S.MetaLabel>
+                {this.props.secondaryHeading.action ? <FontAwesomeIcon className="icon" icon="angle-down" /> : null}
+              </S.MetaOrg>
+            ) : null}
+          </S.Meta>
+          <HeaderWorkspaceMenuWidget
+            selectedBoundsUpdated={this.updateWorkspaceMenuOffset}
+            pinnedSubMenu={pinnedSubMenu}
+            workspaceGroupHovered={this.updateHoveredWorkspaceGroup}
+          />
+          {this.getLeftButtons()}
+
+          {AdvancedWorkspacePreference.enabled() ? (
+            <S.HeaderButtonsZone vertical={false} size={40} preference={this.props.toolbar} />
+          ) : (
+            <S.Spacer />
+          )}
+
+          <MetaButton
+            btn={{
+              icon: 'search',
+              tooltipPos: TooltipPosition.BOTTOM,
+              tooltip: 'Search',
+              action: () => {
+                this.commandPalletStore.showPallet(true);
+              }
+            }}
+          />
+
+          {_.map(this.props.metaButtons, (btn) => {
+            return <MetaButton key={btn.tooltip || btn.label} btn={btn} />;
+          })}
+          {this.getRightContent()}
+          <S.User
             onClick={(event) => {
               event.persist();
-              this.props.secondaryHeading?.action(event);
+              this.props.accountButton.action(event);
             }}
           >
-            <S.MetaLabel>{this.props.secondaryHeading?.label || '...'}</S.MetaLabel>
-            {this.props.secondaryHeading?.action ? <FontAwesomeIcon className="icon" icon="angle-down" /> : null}
-          </S.MetaOrg>
-        </S.Meta>
-        <HeaderWorkspaceMenuWidget />
-        {this.getLeftButtons()}
-
-        {AdvancedWorkspacePreference.enabled() ? (
-          <S.HeaderButtonsZone vertical={false} size={40} preference={this.props.toolbar} />
-        ) : (
-          <S.Spacer />
-        )}
-
-        <MetaButton
-          btn={{
-            icon: 'search',
-            tooltipPos: TooltipPosition.BOTTOM,
-            tooltip: 'Search',
-            action: () => {
-              this.commandPalletStore.showPallet(true);
-            }
+            <S.AvatarCircle email={this.props.email || ''} name={this.props.name} maxInitials={2} />
+          </S.User>
+        </S.Header>
+        <HeaderWorkspaceSubMenuWidget
+          offsetLeft={subMenuOffsetLeft}
+          workspaceKey={subMenuWorkspaceKey}
+          pinned={pinnedSubMenu}
+          togglePinned={() => {
+            WorkspaceSubMenuPinnedPreference.get().toggle();
           }}
+          hoverActive={this.cancelClearHoveredWorkspaceGroup}
+          hoverInactive={pinnedSubMenu ? undefined : this.scheduleClearHoveredWorkspaceGroup}
         />
-
-        {_.map(this.props.metaButtons, (btn) => {
-          return <MetaButton key={btn.tooltip || btn.label} btn={btn} />;
-        })}
-        {this.getRightContent()}
-        <S.User
-          onClick={(event) => {
-            event.persist();
-            this.props.accountButton.action(event);
-          }}
-        >
-          <S.AvatarCircle email={this.props.email || ''} name={this.props.name} maxInitials={2} />
-        </S.User>
-      </S.Header>
+      </S.HeaderContainer>
     );
   }
 }

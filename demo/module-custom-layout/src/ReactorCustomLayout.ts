@@ -1,5 +1,11 @@
 import { Container } from '@journeyapps-labs/common-ioc';
-import { AbstractReactorModule, RawBodyWidget, UXStore, WorkspaceStore } from '@journeyapps-labs/reactor-mod';
+import {
+  AbstractReactorModule,
+  RawBodyWidget,
+  UXStore,
+  WorkspaceModel,
+  WorkspaceStore
+} from '@journeyapps-labs/reactor-mod';
 
 export class ReactorCustomLayout extends AbstractReactorModule {
   constructor() {
@@ -12,18 +18,18 @@ export class ReactorCustomLayout extends AbstractReactorModule {
     const workspaceStore = ioc.get(WorkspaceStore);
     workspaceStore.registerWorkspaceGenerator({
       generateAdvancedWorkspace: async () => {
-        return {
+        return new WorkspaceModel({
           name: 'Advanced workspace',
           priority: 1,
           model: workspaceStore.generateRootModel()
-        };
+        });
       },
       generateSimpleWorkspace: async () => {
-        return {
+        return new WorkspaceModel({
           name: 'Simple workspace',
           priority: 1,
           model: workspaceStore.generateRootModel()
-        };
+        });
       }
     });
   }

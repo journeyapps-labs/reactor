@@ -244,12 +244,15 @@ export abstract class Action<
       validator: this.generateValidationContext(),
       action: async (event, loading?: (loading: boolean) => any) => {
         loading?.(true);
-        await this.fireAction({
-          source: ActionSource.BUTTON,
-          position: event,
-          ...extraData
-        } as unknown as T['EVENT']);
-        loading?.(false);
+        try {
+          await this.fireAction({
+            source: ActionSource.BUTTON,
+            position: event,
+            ...extraData
+          } as unknown as T['EVENT']);
+        } finally {
+          loading?.(false);
+        }
       }
     };
   }

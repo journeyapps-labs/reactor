@@ -12,7 +12,7 @@ export const Bunny = theme.addThemeValues({
     },
     workspace: {
       ...DarkTheme.workspace,
-      background: '#171328',
+      background: '#110d1f',
       overlayBackground: 'rgba(34, 26, 56, 0.45)',
       overlayBackgroundHover: 'rgba(34, 26, 56, 0.78)',
       overlayBorder: 'rgba(0,0,0,0)',
@@ -54,37 +54,54 @@ export const Bunny = theme.addThemeValues({
     guide: {
       accent: '#c98cff',
       tooltipBackground: 'hsl(263deg 36% 20%)',
-      accentText: '#1d1129',
-      startButton: 'linear-gradient(135deg, #8a63ff 0%, #e37fff 100%)',
-      startButtonText: '#fff'
+      accentText: '#1d1129'
     },
     cards: {
-      background: '#201834',
       foreground: '#e8ddff',
-      border: '#40305f',
       tagBackground: '#5f5378',
       tagLabelBackground: 'rgba(0, 0, 0, 0.1)',
       tagLabelForeground: 'rgba(242, 236, 255, 0.92)'
     },
+    surfaces: {
+      depth0Background: '#201834',
+      depth0Border: '#40305f',
+      depth1Background: '#1c162d',
+      depth1Border: '#32294d',
+      depth2Background: '#2c2345',
+      depth2Border: '#40305f',
+      depth3Background: '#171328',
+      depth3Border: 'rgba(233,222,255,0.14)',
+      selectedBorder: '#b98fff'
+    },
     status: {
-      cardBackground: '#1c162d',
       failed: '#a93b80',
       failedForeground: '#fff',
       loading: '#9f7bff',
-      success: '#5ca978',
-      successForeground: '#fff'
+      success: '#5ca978'
     },
     header: {
       ...DarkTheme.header,
-      background: '#171328',
+      background: '#1c162d',
       primary: '#d1a6ff',
       secondary: '#8c5dff',
-      backgroundLogo: '#0f0b19',
-      backgroundLogoHover: '#1d1530',
+      backgroundLogo: '#171328',
+      backgroundLogoHover: '#201834',
       foreground: '#f6eeff'
     },
+    workspaceSubMenu: {
+      background: '#1c162d',
+      backgroundUnPinned: '#171328',
+      foreground: 'rgba(233,222,255,0.7)'
+    },
+    mobileNavigation: {
+      background: '#1c162d',
+      foreground: 'rgba(233,222,255,0.7)',
+      border: 'rgba(233,222,255,0.14)',
+      selectedBackground: 'rgba(185,143,255,0.2)',
+      selectedForeground: 'white'
+    },
     footer: {
-      background: '#171328'
+      background: '#1c162d'
     },
     combobox: {
       textSelected: '#fff',
@@ -98,11 +115,7 @@ export const Bunny = theme.addThemeValues({
     },
     tabs: {
       selectedAccentSingle: '#b98fff',
-      selectedAccent: 'linear-gradient(145deg, #8c5dff, #e07cff)',
-      selectedBackground: 'rgba(141,96,255,0.2)'
-    },
-    visor: {
-      background: 'rgba(0, 0, 0, 0.28)'
+      selectedBackground: 'rgba(185,143,255,0.2)'
     },
     button: {
       background: '#1a1430',
@@ -159,7 +172,8 @@ export const Bunny = theme.addThemeValues({
     floating: {
       background: 'rgba(32,24,54,0.86)',
       backgroundInactive: 'rgba(32,24,54,0.55)',
-      border: 'rgba(197,161,255,0.35)'
+      border: 'rgba(211,181,255,0.5)',
+      shadowColor: 'rgba(0, 0, 0, 0.66)'
     }
   }
 });

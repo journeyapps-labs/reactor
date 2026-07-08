@@ -4,6 +4,7 @@ import { useAttention } from '../../widgets/guide/AttentionWrapperWidget';
 import { ReactorComponentType } from '../../stores/guide/selections/common';
 import { FloatingPanelWidget } from '../../widgets/floating/FloatingPanelWidget';
 import { themed } from '../../stores/themes/reactor-theme-fragment';
+import { REACTOR_MOBILE_MEDIA_QUERY } from '../../hooks/useReactorViewportMode';
 
 export interface ReactorDialogWidgetProps {
   footer?: React.JSX.Element;
@@ -45,6 +46,12 @@ namespace S {
     label: ${BASE_LABEL};
     display: flex;
     flex-direction: column;
+
+    ${REACTOR_MOBILE_MEDIA_QUERY} {
+      width: calc(100vw - 28px);
+      max-height: calc(100vh - 28px);
+      min-width: 0;
+    }
   `;
 
   export const Header = themed.div`
@@ -57,6 +64,10 @@ namespace S {
     flex-direction: column;
     align-items: center;
     user-select: none;
+
+    ${REACTOR_MOBILE_MEDIA_QUERY} {
+      padding: 18px;
+    }
   `;
 
   export const Logo = themed.img`
@@ -67,6 +78,11 @@ namespace S {
   export const Content = themed.div`
     label: ${BASE_LABEL}__Content;
     flex-grow: 1;
+
+    ${REACTOR_MOBILE_MEDIA_QUERY} {
+      min-height: 0;
+      overflow-y: auto;
+    }
   `;
 
   export const Footer = themed.div`
@@ -78,6 +94,10 @@ namespace S {
     justify-content: flex-end;
     align-items: center;
     flex-shrink: 0;
+
+    ${REACTOR_MOBILE_MEDIA_QUERY} {
+      padding: 10px 14px;
+    }
   `;
 
   export const Title = themed.div`
@@ -86,6 +106,11 @@ namespace S {
     font-weight: 600;
     color: ${(p) => p.theme.combobox.text};
     margin-bottom: 15px;
+
+    ${REACTOR_MOBILE_MEDIA_QUERY} {
+      font-size: 28px;
+      line-height: 1.15;
+    }
   `;
 
   export const Desc = themed.div`

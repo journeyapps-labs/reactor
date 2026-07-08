@@ -1,11 +1,5 @@
 // !----------- MODULE ----------
 
-export interface ReactorModulePWAConfig {
-  serviceWorker: string;
-  manifest: string;
-  other: { [key: string]: string };
-}
-
 export interface ReactorModuleConfig {
   name: string;
   slug: string;
@@ -14,5 +8,4 @@ export interface ReactorModuleConfig {
     fragment: string;
     backgroundColor: string;
   };
-  pwa?: ReactorModulePWAConfig;
 }

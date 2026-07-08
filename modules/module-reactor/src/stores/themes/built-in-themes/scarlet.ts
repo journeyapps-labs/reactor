@@ -10,6 +10,10 @@ export const Scarlet = theme.addThemeValues({
       background: 'rgb(17,18,23)',
       grid: 'rgb(24,26,33)'
     },
+    workspace: {
+      ...DarkTheme.workspace,
+      background: '#0f1117'
+    },
     panels: {
       ...DarkTheme.panels,
       iconBackground: 'rgb(27,29,36)',
@@ -31,40 +35,57 @@ export const Scarlet = theme.addThemeValues({
     guide: {
       accent: '#ff4aa6',
       tooltipBackground: 'hsl(21deg 58% 16%)',
-      accentText: '#000',
-      startButton: 'linear-gradient(131deg, rgba(255,143,0,1) 0%, rgba(255,23,68,1) 100%)',
-      startButtonText: '#ffffff'
+      accentText: '#000'
     },
     cards: {
-      background: '#191e25',
       foreground: 'rgb(205,205,205)',
-      border: '#2f3744',
       tagBackground: '#67515a',
       tagLabelBackground: 'rgba(0, 0, 0, 0.14)',
       tagLabelForeground: 'rgba(244, 232, 238, 0.92)'
     },
+    surfaces: {
+      depth0Background: '#191e25',
+      depth0Border: '#2f3744',
+      depth1Background: '#14181e',
+      depth1Border: 'rgb(23,24,31)',
+      depth2Background: '#1d2027',
+      depth2Border: '#2f3744',
+      depth3Background: '#111318',
+      depth3Border: 'rgba(255,255,255,0.08)',
+      selectedBorder: '#ff0059'
+    },
     status: {
-      cardBackground: '#14181e',
       failed: '#c40f50',
       failedForeground: '#fff',
       loading: '#0084b4',
-      success: '#6ebe00',
-      successForeground: 'black'
+      success: '#6ebe00'
     },
     header: {
       ...DarkTheme.header,
-      background: 'rgb(17,18,23)',
+      background: '#191e25',
       primary: '#ff0059',
       secondary: '#9370db',
-      backgroundLogo: '#000000',
-      backgroundLogoHover: '#2f1a1a'
+      backgroundLogo: '#14181e',
+      backgroundLogoHover: '#1d2027'
+    },
+    workspaceSubMenu: {
+      background: '#191e25',
+      backgroundUnPinned: '#14181e',
+      foreground: 'rgba(225,218,222,0.68)'
+    },
+    mobileNavigation: {
+      background: '#191e25',
+      foreground: 'rgba(225,218,222,0.68)',
+      border: 'rgba(255,255,255,0.08)',
+      selectedBackground: 'rgba(255,0,89,0.18)',
+      selectedForeground: 'white'
     },
     changelog: {
       codeForeground: 'rgb(132,221,255)',
       codeBackground: 'rgb(4,33,40)'
     },
     footer: {
-      background: 'rgb(17,18,23)'
+      background: '#191e25'
     },
     combobox: {
       textSelected: 'white',
@@ -78,11 +99,7 @@ export const Scarlet = theme.addThemeValues({
     },
     tabs: {
       selectedAccentSingle: '#ff0059',
-      selectedAccent: '#ff0059',
-      selectedBackground: '#2d1e21'
-    },
-    visor: {
-      background: 'rgba(0, 0, 0, 0.2)'
+      selectedBackground: 'rgba(255,0,89,0.18)'
     },
     button: {
       background: '#0a0d14',
@@ -139,7 +156,8 @@ export const Scarlet = theme.addThemeValues({
     floating: {
       background: 'rgba(20,24,29,0.8)',
       backgroundInactive: 'rgba(25,30,37,0.45)',
-      border: 'rgba(255, 74, 166, 0.28)'
+      border: 'rgba(255, 74, 166, 0.42)',
+      shadowColor: 'rgba(0, 0, 0, 0.68)'
     }
   }
 });

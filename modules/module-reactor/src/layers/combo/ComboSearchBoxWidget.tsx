@@ -19,6 +19,7 @@ export interface ComboSearchBoxWidgetProps {
   loading?: boolean;
   hint?: string;
   title?: string;
+  scaleInOnMobile?: boolean;
 }
 
 namespace S {
@@ -77,7 +78,12 @@ export class ComboSearchBoxWidget extends React.Component<ComboSearchBoxWidgetPr
         type={ReactorComponentType.COMBO_BOX}
         activated={(selection) => {
           return (
-            <FloatingPanelWidget highlight={!!selection} forwardRef={this.ref} center={false}>
+            <FloatingPanelWidget
+              highlight={!!selection}
+              forwardRef={this.ref}
+              center={false}
+              scaleInOnMobile={this.props.scaleInOnMobile}
+            >
               {this.props.title ? <S.Title>{this.props.title}</S.Title> : null}
               <S.Search
                 highlight={!!selection}

@@ -4,6 +4,7 @@ import {
   CardWidget,
   ControlledSearchWidget,
   SearchableCoreTreeWidget,
+  SurfaceWidget,
   getScrollableCSS,
   styled
 } from '@journeyapps-labs/reactor-mod';
@@ -42,27 +43,28 @@ export const CoreTreeVariantsCard: React.FC<CoreTreeVariantsCardProps> = observe
               <S.Grid>
                 {coreTreeVariants.map((variant) => {
                   return (
-                    <CardWidget
-                      key={variant.key}
-                      title={variant.title}
-                      subHeading={variant.subtitle}
-                      sections={[
-                        {
-                          key: `core-tree-${variant.key}`,
-                          content: () => {
-                            return (
-                              <S.TreeFrame>
-                                <SearchableCoreTreeWidget
-                                  tree={variant.tree}
-                                  search={search}
-                                  searchScope={variant.searchScope}
-                                />
-                              </S.TreeFrame>
-                            );
+                    <React.Fragment key={variant.key}>
+                      <CardWidget
+                        title={variant.title}
+                        subHeading={variant.subtitle}
+                        sections={[
+                          {
+                            key: `core-tree-${variant.key}`,
+                            content: () => {
+                              return (
+                                <S.TreeFrame>
+                                  <SearchableCoreTreeWidget
+                                    tree={variant.tree}
+                                    search={search}
+                                    searchScope={variant.searchScope}
+                                  />
+                                </S.TreeFrame>
+                              );
+                            }
                           }
-                        }
-                      ]}
-                    />
+                        ]}
+                      />
+                    </React.Fragment>
                   );
                 })}
               </S.Grid>
@@ -85,10 +87,8 @@ namespace S {
     }
   `;
 
-  export const TreeFrame = styled.div`
+  export const TreeFrame = styled(SurfaceWidget)`
     height: 180px;
-    border: solid 1px ${(p) => p.theme.panels.divider};
-    border-radius: 6px;
     overflow: auto;
     ${(p) => getScrollableCSS(p.theme)};
   `;

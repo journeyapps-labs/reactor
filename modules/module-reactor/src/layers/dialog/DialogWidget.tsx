@@ -14,6 +14,7 @@ import ReactMarkdown from 'react-markdown';
 import { ReactorComponentType } from '../../stores/guide/selections/common';
 import { PanelButtonWidget } from '../../widgets/forms/PanelButtonWidget';
 import rehypeExternalLinks from 'rehype-external-links';
+import { REACTOR_MOBILE_MEDIA_QUERY } from '../../hooks/useReactorViewportMode';
 
 export interface DialogWidgetProps {
   title: string;
@@ -31,17 +32,37 @@ namespace S {
   export const Container = themed.form`
     padding: 20px;
     min-width: 400px;
+
+    ${REACTOR_MOBILE_MEDIA_QUERY} {
+      box-sizing: border-box;
+      width: calc(100vw - 28px);
+      min-width: 0;
+      max-height: calc(100vh - 28px);
+      padding: 18px;
+      display: flex;
+      flex-direction: column;
+    }
   `;
 
   export const TitleContainer = themed.div`
     display: flex;
     justify-content: space-between;
     margin-bottom: 10px;
+
+    ${REACTOR_MOBILE_MEDIA_QUERY} {
+      align-items: flex-start;
+      margin-bottom: 14px;
+    }
   `;
   export const Title = themed.div`
     font-size: 25px;
     color: ${(p) => p.theme.combobox.text};
     user-select: none;
+
+    ${REACTOR_MOBILE_MEDIA_QUERY} {
+      font-size: 28px;
+      line-height: 1.15;
+    }
   `;
 
   export const ContextIcon = themed.div`
@@ -59,14 +80,31 @@ namespace S {
     margin-bottom: 20px;
     max-width: 400px;
     user-select: none;
+
+    ${REACTOR_MOBILE_MEDIA_QUERY} {
+      max-width: none;
+      font-size: 16px;
+      margin-bottom: 16px;
+    }
   `;
   export const Content = themed.div`
     margin-bottom: 10px;
+
+    ${REACTOR_MOBILE_MEDIA_QUERY} {
+      min-height: 0;
+      overflow-y: auto;
+      margin-bottom: 16px;
+    }
   `;
   export const Bottom = themed.div`
     display: flex;
     justify-content: flex-end;
     column-gap: 5px;
+
+    ${REACTOR_MOBILE_MEDIA_QUERY} {
+      flex-shrink: 0;
+      column-gap: 8px;
+    }
   `;
 
   export const Markdown = themed.div`

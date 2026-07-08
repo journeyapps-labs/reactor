@@ -65,8 +65,9 @@ export class SearchEngineDirectiveComboWidget extends React.Component<
 
   render() {
     return (
-      <SmartPositionWidget position={this.props.directive.position}>
+      <SmartPositionWidget position={this.props.directive.position} centerOnMobile>
         <ComboSearchBoxWidget
+          scaleInOnMobile
           loading={this.isLoading()}
           searchChanged={(search) => {
             // stop listening to the old search result

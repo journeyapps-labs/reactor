@@ -12,7 +12,7 @@ theme.addThemeValues({
     },
     workspace: {
       ...DarkTheme.workspace,
-      background: '#2d2d2f'
+      background: '#202124'
     },
     panels: {
       ...DarkTheme.panels,
@@ -34,6 +34,18 @@ theme.addThemeValues({
       backgroundLogoHover: 'rgba(255,255,255,0.15)',
       background: 'rgba(44, 44, 46, 1)'
     },
+    workspaceSubMenu: {
+      background: 'rgba(44, 44, 46, 1)',
+      backgroundUnPinned: 'rgb(38,38,40)',
+      foreground: 'rgba(206,206,210,0.72)'
+    },
+    mobileNavigation: {
+      background: 'rgba(44, 44, 46, 1)',
+      foreground: 'rgba(206,206,210,0.72)',
+      border: 'rgba(255, 255, 255, 0.12)',
+      selectedBackground: 'rgba(255,255,255,0.13)',
+      selectedForeground: 'white'
+    },
     trees: {
       ...DarkTheme.trees,
       selectedBackground: 'rgba(255, 255, 255, 0.08)'
@@ -41,17 +53,14 @@ theme.addThemeValues({
     guide: {
       accent: 'rgb(248,171,4)',
       tooltipBackground: 'hsl(41deg 35% 22%)',
-      accentText: '#000',
-      startButton: '#b0501c',
-      startButtonText: '#fff'
+      accentText: '#000'
     },
     footer: {
       background: 'rgba(44, 44, 46, 1)'
     },
     tabs: {
       selectedAccentSingle: '#fff',
-      selectedAccent: '#fff',
-      selectedBackground: 'rgba(0,0,0,0)'
+      selectedBackground: 'rgba(255,255,255,0.13)'
     },
     changelog: {
       codeForeground: 'white',
@@ -60,16 +69,24 @@ theme.addThemeValues({
     status: {
       ...DarkTheme.status,
       success: 'rgb(145,189,57)',
-      failed: 'rgb(213,70,91)',
-      cardBackground: '#262628'
+      failed: 'rgb(213,70,91)'
     },
     cards: {
-      background: 'rgba(58, 58, 60, 1)',
       foreground: 'white',
-      border: '#666668',
       tagBackground: '#6f6f71',
       tagLabelBackground: 'rgba(0, 0, 0, 0.14)',
       tagLabelForeground: 'rgba(255, 255, 255, 0.92)'
+    },
+    surfaces: {
+      depth0Background: 'rgba(58, 58, 60, 1)',
+      depth0Border: '#666668',
+      depth1Background: '#262628',
+      depth1Border: 'rgb(38,38,40)',
+      depth2Background: 'rgba(28, 28, 30, 1)',
+      depth2Border: 'rgb(38,38,40)',
+      depth3Background: 'rgba(24, 24, 26, 1)',
+      depth3Border: 'rgba(255, 255, 255, 0.12)',
+      selectedBorder: '#fff'
     },
     table: {
       ...DarkTheme.table,
@@ -123,7 +140,8 @@ theme.addThemeValues({
     floating: {
       background: 'rgba(28, 28, 30, 0.8)',
       backgroundInactive: 'rgba(28, 28, 30, 0.5)',
-      border: 'rgba(255,255,255,0.2)'
+      border: 'rgba(255,255,255,0.34)',
+      shadowColor: 'rgba(0, 0, 0, 0.62)'
     }
   }
 });

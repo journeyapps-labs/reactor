@@ -44,6 +44,10 @@ export abstract class LayerDirective {
     return false;
   }
 
+  animate() {
+    return true;
+  }
+
   install() {
     this.disposer = autorun(() => {
       const show = this.show();
@@ -53,6 +57,7 @@ export abstract class LayerDirective {
           render: (event) => {
             return this.getLayerContent(event);
           },
+          animate: this.animate(),
           alwaysOnTop: this.alwaysOnTop(),
           clickThrough: this.transparent(),
           layerWillHide: () => {

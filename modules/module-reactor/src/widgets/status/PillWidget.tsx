@@ -1,8 +1,9 @@
 import * as React from 'react';
-import { MouseEvent } from 'react';
 import styled from '@emotion/styled';
 import { IconWidget, ReactorIcon } from '../icons/IconWidget';
 import { setupTooltipProps } from '../info/tooltips';
+import { ContextMenuTriggerWidget } from '../context-menu/ContextMenuTriggerWidget';
+import { MousePosition } from '../../layers/combo/SmartPositionWidget';
 
 export interface PillWidgetProps {
   label: string;
@@ -11,7 +12,7 @@ export interface PillWidgetProps {
   labelColor?: string;
   className?;
   action?: (event: React.MouseEvent) => any;
-  rightClick?: (event: MouseEvent) => any;
+  rightClick?: (event: MousePosition) => any;
   meta?: {
     label?: string;
     icon?: ReactorIcon;
@@ -22,7 +23,7 @@ export interface PillWidgetProps {
 namespace S {
   const RADIUS = 3;
 
-  export const Container = styled.div<{ color: string; $cursor: boolean }>`
+  export const Container = styled(ContextMenuTriggerWidget)<{ color: string; $cursor: boolean }>`
     border-radius: ${RADIUS}px;
     background: ${(p) => p.color};
     overflow: hidden;
@@ -64,11 +65,8 @@ export const PillWidget: React.FC<PillWidgetProps> = (props) => {
       onClick={(event) => {
         props.action?.(event);
       }}
-      onContextMenu={(event) => {
-        event.preventDefault();
-        event.stopPropagation();
-        event.persist();
-        props.rightClick?.(event);
+      onContextMenu={(position) => {
+        props.rightClick?.(position);
       }}
       className={props.className}
       color={props.color || 'rgb(150,150,150)'}

@@ -28,8 +28,7 @@ export const theme = new ThemeFragment({
     tooltips: {
       label: 'Tooltip colors',
       colors: {
-        background: 'Default background color',
-        foreground: 'Default foreground color'
+        background: 'Default background color'
       }
     },
     workspace: {
@@ -97,9 +96,7 @@ export const theme = new ThemeFragment({
       colors: {
         accent: 'Main accent color',
         tooltipBackground: 'Background color for guide tooltips',
-        accentText: 'Main accent text color',
-        startButton: 'Start button background',
-        startButtonText: 'Start button text color'
+        accentText: 'Main accent text color'
       }
     },
     graphs: {
@@ -117,30 +114,39 @@ export const theme = new ThemeFragment({
       label: 'Tabs',
       colors: {
         selectedAccentSingle: '',
-        selectedAccent: '',
         selectedBackground: ''
       }
     },
     status: {
       label: 'Status information',
       colors: {
-        cardBackground: 'Status card background',
         success: 'Success color',
         failed: 'Failed color',
         failedForeground: 'Failed text color',
-        loading: 'Loading color',
-        successForeground: 'Success text color'
+        loading: 'Loading color'
       }
     },
     cards: {
       label: 'Cards',
       colors: {
-        background: 'Background color',
         foreground: 'Text color',
-        border: 'Border color',
         tagBackground: 'Tag pill background color',
         tagLabelBackground: 'Tag label background color',
         tagLabelForeground: 'Tag label text color'
+      }
+    },
+    surfaces: {
+      label: 'Surfaces',
+      colors: {
+        depth0Background: 'Depth 0 background',
+        depth0Border: 'Depth 0 border',
+        depth1Background: 'Depth 1 background',
+        depth1Border: 'Depth 1 border',
+        depth2Background: 'Depth 2 background',
+        depth2Border: 'Depth 2 border',
+        depth3Background: 'Depth 3 background',
+        depth3Border: 'Depth 3 border',
+        selectedBorder: 'Selected border'
       }
     },
     combobox: {
@@ -188,10 +194,22 @@ export const theme = new ThemeFragment({
         foreground: 'Text color'
       }
     },
-    visor: {
-      label: 'Visor',
+    workspaceSubMenu: {
+      label: 'Workspace submenu',
       colors: {
-        background: 'Background color'
+        background: 'Workspace submenu background',
+        backgroundUnPinned: 'Floating workspace submenu background',
+        foreground: 'Workspace text color'
+      }
+    },
+    mobileNavigation: {
+      label: 'Mobile navigation sidebar',
+      colors: {
+        background: 'Mobile navigation background',
+        foreground: 'Mobile navigation text color',
+        border: 'Mobile navigation border color',
+        selectedBackground: 'Selected mobile navigation item background',
+        selectedForeground: 'Selected mobile navigation item text color'
       }
     },
     text: {
@@ -242,7 +260,8 @@ export const theme = new ThemeFragment({
       colors: {
         background: 'Background color',
         backgroundInactive: 'Background color when inactive',
-        border: 'Border color'
+        border: 'Border color',
+        shadowColor: 'Shadow color'
       }
     }
   }

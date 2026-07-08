@@ -46,7 +46,7 @@ namespace S {
     display: flex;
     height: ${TAB_BAR_HEIGHT}px;
     flex-shrink: 0;
-    background: ${(p) => p.theme.panels.trayBackground};
+    background: ${(p) => p.theme.panels.titleBackground};
     box-sizing: border-box;
   `;
 }

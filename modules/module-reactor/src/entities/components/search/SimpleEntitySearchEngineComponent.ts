@@ -26,6 +26,10 @@ export class SimpleEntitySearchEngineComponent<T extends any = any> extends Enti
   getSearchEngine(): SearchEngine<SearchResult<EntitySearchResultEntry<T>>> {
     return new SimpleEntitySearchEngine<T>(this);
   }
+
+  hideSearchOnMobile() {
+    return true;
+  }
 }
 
 export class SimpleEntitySearchEngine<T> extends SearchEngine<SearchResult<EntitySearchResultEntry<T>>> {

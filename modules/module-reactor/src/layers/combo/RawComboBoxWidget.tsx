@@ -2,6 +2,7 @@ import * as React from 'react';
 import * as _ from 'lodash';
 import { themed } from '../../stores/themes/reactor-theme-fragment';
 import { ControlledListWidget, ListItem } from '../../widgets/list/ControlledListWidget';
+import { REACTOR_MOBILE_MEDIA_QUERY } from '../../hooks/useReactorViewportMode';
 
 export interface RawComboBoxWidgetProps {
   items: ListItem[];
@@ -54,6 +55,12 @@ namespace S {
     user-select: none;
     max-height: ${(p) => p.maxHeight}px;
     overflow-y: auto;
+    min-height: 0;
+
+    ${REACTOR_MOBILE_MEDIA_QUERY} {
+      flex-grow: 1;
+      max-height: none;
+    }
 
     ::-webkit-scrollbar {
       width: 10px;

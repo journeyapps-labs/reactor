@@ -303,13 +303,6 @@ export class ReactorModule extends AbstractReactorModule {
     const workspaceStore = ioc.get(WorkspaceStore);
     const visorStore = ioc.get(VisorStore);
 
-    //!---------- MOBILE FIX ---------------
-    window.addEventListener('beforeinstallprompt', (e) => {
-      // Prevent the mini-infobar from appearing on mobile
-      e.preventDefault();
-    });
-    //!-------------------------------------
-
     cmdPaletteStore.init();
     visorStore.init();
 

@@ -4,12 +4,13 @@ import { CommandPalletWidget } from './CommandPalletWidget';
 import { CMDPalletSearchEngineResult, CommandPalletSearchResultEntry } from '../../cmd-pallet/CMDPalletSearchEngine';
 import { ioc } from '../../inversify.config';
 import { MousePosition } from '../combo/SmartPositionWidget';
-import { TabDirective } from '../../widgets/tabs/GenericTabSelectionWidget';
+import { TabDirective } from '../../widgets/tabs/TabListWidget';
 import { SmartCommandPalletCategorywidget } from './SmartCommandPalletCategorywidget';
 import { autorun, IReactionDisposer } from 'mobx';
 import { CommonKeys, KeyboardContext, KeyboardStore } from '../../stores/KeyboardStore';
 
 export interface ControlledCommandPalletWidgetProps {
+  mobile?: boolean;
   getSearchResults: (search: string, tab: string) => CMDPalletSearchEngineResult[];
   selected: (entry: CommandPalletSearchResultEntry, position: MousePosition) => any;
   enter: (entry: CommandPalletSearchResultEntry, position: MousePosition) => any;
@@ -200,6 +201,8 @@ export class ControlledCommandPalletWidget extends React.Component<
   render() {
     return (
       <CommandPalletWidget
+        close={this.props.close}
+        mobile={this.props.mobile}
         wheelScroll={() => {
           if (this.state.scrollIntoViewEnabled) {
             this.setState({

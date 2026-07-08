@@ -1,6 +1,7 @@
 export * from './toolbar/ToolbarWidget';
 
 export * from './cards/CardWidget';
+export * from './context-menu/ContextMenuTriggerWidget';
 
 export * from '../layers/combo/ComboBoxLayer';
 export * from '../layers/combo/ComboBoxWidget';
@@ -46,6 +47,15 @@ export * from './meta/MetaBarWidget';
 export * from './meta/MetadataWidget';
 export * from './meta/ReadOnlyMetadataWidget';
 
+export * from './mobile/MobileReactorShell';
+export * from './mobile/MobileHeaderWidget';
+export * from './mobile/MobileWorkspaceDrawerWidget';
+export * from './mobile/MobileWorkspaceWidget';
+export * from './mobile/MobileNavPillWidget';
+export * from './mobile/MobilePanelScreenWidget';
+export * from './mobile/MobileTabScreenWidget';
+export * from './mobile/MobileWorkspaceTypes';
+
 export * from './table/SearchableTableWidget';
 export * from './table/TableWidget';
 export * from './table/TableButtonWidget';
@@ -75,13 +85,15 @@ export * from './panel/toolbar/PanelToolbarWidget';
 export * from './status/PillWidget';
 export * from './status/StatusCardWidget';
 
+export * from './surfaces/SurfaceWidget';
+
 export * from './search/ControlledSearchWidget';
 export * from './search/SearchablePanelWidget';
 export * from './search/SearchWidget';
 export * from './search/SearchablePanelPlaceholderWidget';
 export * from './search/MatchesWidget';
 
-export * from './tabs/GenericTabSelectionWidget';
+export * from './tabs/TabListWidget';
 export * from './tabs/BreadCrumbTabSelectionWidget';
 export * from './tabs/BreadCrumbWidget';
 export * from './tabs/TabSelectionWidget';

@@ -12,7 +12,7 @@ theme.addThemeValues({
     },
     workspace: {
       ...DarkTheme.workspace,
-      background: '#1f2a31',
+      background: '#19242b',
       overlayBackground: 'rgba(32,45,51,0.4)',
       overlayBorder: 'rgba(0,192,255,0)',
       overlayBackgroundHover: 'rgba(32,45,51,0.8)',
@@ -39,15 +39,12 @@ theme.addThemeValues({
     },
     tabs: {
       selectedAccentSingle: '#ff8c2b',
-      selectedBackground: 'rgba(255,100,0,0.14)',
-      selectedAccent: '#ff8c2b'
+      selectedBackground: 'rgba(255,140,43,0.18)'
     },
     guide: {
       accent: 'rgb(184 107 255)',
       tooltipBackground: 'hsl(285deg 36% 23%)',
-      accentText: '#fff',
-      startButton: '#546e79',
-      startButtonText: '#fff'
+      accentText: '#fff'
     },
     trees: {
       ...DarkTheme.trees,
@@ -62,22 +59,42 @@ theme.addThemeValues({
       backgroundLogoHover: 'rgba(255,255,255,0.15)',
       background: '#253238'
     },
+    workspaceSubMenu: {
+      background: '#253238',
+      backgroundUnPinned: '#202d34',
+      foreground: 'rgba(214,226,233,0.72)'
+    },
+    mobileNavigation: {
+      background: '#253238',
+      foreground: 'rgba(214,226,233,0.72)',
+      border: '#3f555f',
+      selectedBackground: 'rgba(255,140,43,0.18)',
+      selectedForeground: 'white'
+    },
     changelog: {
       codeForeground: 'white',
       codeBackground: 'rgba(255,255,255,0.1)'
     },
     status: {
       ...DarkTheme.status,
-      failed: 'rgb(141,49,73)',
-      cardBackground: '#29373f'
+      failed: 'rgb(141,49,73)'
     },
     cards: {
-      background: '#26343a',
       foreground: '#d6e2e9',
-      border: '#4a626d',
       tagBackground: '#716b62',
       tagLabelBackground: 'rgba(0, 0, 0, 0.12)',
       tagLabelForeground: 'rgba(245, 236, 226, 0.92)'
+    },
+    surfaces: {
+      depth0Background: '#26343a',
+      depth0Border: '#4a626d',
+      depth1Background: '#29373f',
+      depth1Border: '#41565f',
+      depth2Background: '#2f3f47',
+      depth2Border: '#41565f',
+      depth3Background: '#202d34',
+      depth3Border: '#3f555f',
+      selectedBorder: '#ff8c2b'
     },
     meta: {
       background: 'rgba(204,178,148,0.18)',
@@ -136,7 +153,8 @@ theme.addThemeValues({
     floating: {
       background: 'rgba(41, 55, 63, 0.82)',
       backgroundInactive: 'rgba(41, 55, 63, 0.58)',
-      border: 'rgba(111, 135, 146, 0.42)'
+      border: 'rgba(129, 154, 166, 0.56)',
+      shadowColor: 'rgba(0, 0, 0, 0.54)'
     }
   }
 });

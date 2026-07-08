@@ -12,11 +12,14 @@ import { AttentionWrapperWidget } from '../guide/AttentionWrapperWidget';
 import { ButtonComponentSelection, ReactorComponentType } from '../../stores/guide/selections/common';
 import { getTransparentColor } from '@journeyapps-labs/lib-reactor-utils';
 import { themed } from '../../stores/themes/reactor-theme-fragment';
+import { REACTOR_MOBILE_MEDIA_QUERY } from '../../hooks/useReactorViewportMode';
+import { ContextMenuTriggerWidget } from '../context-menu/ContextMenuTriggerWidget';
+import { MousePosition } from '../../layers/combo/SmartPositionWidget';
 
 export interface TreeLeafWidgetCommonProps {
   rightChildren?: React.JSX.Element;
   rightChildrenWrap?: boolean;
-  rightClick?: (event: MouseEvent) => any;
+  rightClick?: (event: MousePosition) => any;
   normalClick?: (event: MouseEvent) => any;
   mouseOver?: (event: MouseEvent, hover: boolean) => any;
   dropZoneHint?: boolean;
@@ -47,7 +50,7 @@ export interface TreeLeafWidgetProps extends TreeLeafWidgetCommonProps {
 }
 
 namespace S {
-  export const Top = themed.div<{
+  export const Top = themed(ContextMenuTriggerWidget)<{
     selected: boolean;
     deactivated: boolean;
     attention: boolean;
@@ -57,6 +60,7 @@ namespace S {
 
     display: flex;
     align-items: center;
+    min-height: 23px;
     user-select: none;
     cursor: pointer;
     border: solid 1px transparent;
@@ -73,6 +77,10 @@ namespace S {
     &:hover {
       color: ${(p) => p.theme.trees.labelColor};
     }
+
+    ${REACTOR_MOBILE_MEDIA_QUERY} {
+      min-height: 30px;
+    }
   `;
 
   export const Title = styled.div<{ selected: boolean; $wrap: boolean; color: string }>`
@@ -84,6 +92,11 @@ namespace S {
     align-items: center;
     padding-right: 10px;
     ${(p) => (p.color ? `color: ${p.color}` : '')};
+
+    ${REACTOR_MOBILE_MEDIA_QUERY} {
+      font-size: 17px;
+      padding-right: 12px;
+    }
   `;
 
   export const Label2 = themed.div`
@@ -107,10 +120,20 @@ namespace S {
     align-items: center;
     display: flex;
     opacity: ${(p) => (p.deactivated == null ? 1 : p.deactivated ? 0.2 : 0.62)};
+
+    ${REACTOR_MOBILE_MEDIA_QUERY} {
+      margin-right: 8px;
+      font-size: 14px;
+      min-width: 17px;
+    }
   `;
 
   export const NestedIcon = styled(IconWidget)`
     max-height: 13px;
+
+    ${REACTOR_MOBILE_MEDIA_QUERY} {
+      max-height: 16px;
+    }
   `;
 
   export const Arrow = themed(FontAwesomeIcon)<{ open: boolean }>`
@@ -122,6 +145,12 @@ namespace S {
     text-align: center;
 
     ${(p) => (p.open ? `transform: rotateZ(90deg);` : '')}
+
+    ${REACTOR_MOBILE_MEDIA_QUERY} {
+      font-size: 13px;
+      width: 17px;
+    }
+
     &:hover {
       opacity: 1;
     }
@@ -211,11 +240,9 @@ export class TreeLeafWidget extends React.Component<TreeLeafWidgetProps> {
             this.props.normalClick(event);
           }
         }}
-        onContextMenu={(event) => {
+        onContextMenu={(position) => {
           if (this.props.rightClick) {
-            event.preventDefault();
-            event.stopPropagation();
-            this.props.rightClick(event);
+            this.props.rightClick(position);
           }
         }}
         onMouseEnter={(event) => {

@@ -68,11 +68,13 @@ export * from './hooks/useValidator';
 export * from './hooks/useCopyButton';
 export * from './hooks/useDisplayDateOptions';
 export * from './hooks/useDimensionObserver';
+export * from './hooks/useReactorViewportMode';
 
 export * from './search/SearchEngine';
 
 export * from './preferences/AdvancedWorkspacePreference';
 export * from './preferences/ShowChangelogSetting';
+export * from './preferences/WorkspaceSubMenuPinnedPreference';
 
 export * from './panels/settings/keys/KeyboardShortcutPillsWidget';
 export * from './panels/settings/SettingsPanelFactory';
@@ -110,6 +112,9 @@ export * from './stores/NotificationStore';
 export * from './stores/batch/BatchStore';
 export * from './cmd-pallet/CMDPalletSearchEngine';
 export * from './stores/workspace/WorkspaceStore';
+export * from './stores/workspace/models/WorkspaceModel';
+export * from './stores/workspace/models/WorkspaceGroup';
+export * from './stores/workspace/models/serialization';
 export * from './stores/workspace/layout-engines/AbstractLayoutEngine';
 export * from './stores/workspace/react-workspaces/ReactorRootWorkspaceModel';
 export * from './stores/visor/VisorStore';
@@ -146,6 +151,7 @@ export * from './stores/combo2/ComboBoxStore2';
 export * from './stores/dialog2/DialogStore2';
 export * from './stores/dialog2/AbstractDialogDirective';
 export * from './stores/dialog2/directives/FormDialogDirective';
+export * from './stores/dialog2/directives/InlineDialogDirective';
 export * from './stores/combo2/directives/ComposableComboBoxDirective';
 export * from './stores/combo2/directives/simple/BaseComboBoxDirective';
 export * from './stores/combo2/directives/simple/SimpleComboBoxDirective';

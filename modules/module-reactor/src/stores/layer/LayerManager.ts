@@ -10,6 +10,7 @@ export interface LayerRenderEvent {
 
 export interface LayerOptions {
   render: (event: LayerRenderEvent) => React.JSX.Element;
+  animate?: boolean;
   clickThrough?: boolean;
   userCanExit?: boolean;
   alwaysOnTop?: boolean;

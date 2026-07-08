@@ -13,8 +13,18 @@ import { SmartTrayTitleWidget } from '../../../widgets/panel/tray/SmartTrayTitle
 import { FloatingWindowFactory } from '@projectstorm/react-workspaces-model-floating-window';
 import { styled } from '../../themes/reactor-theme-fragment';
 import { serializeChildren } from './ReactorExpandNodeFactory';
+import { WORKSPACE_PANEL_RADIUS } from '../../../widgets/workspace/workspacePanelChrome';
 
 namespace S {
+  export const GroupSurface = styled.div`
+    width: 100%;
+    height: 100%;
+    min-width: 0;
+    min-height: 0;
+    overflow: hidden;
+    border-radius: ${WORKSPACE_PANEL_RADIUS}px;
+  `;
+
   export const Pin = styled.div`
     color: ${(p) => getTransparentColor(p.theme.panels.titleForeground, 0.5)};
     cursor: pointer;
@@ -54,6 +64,10 @@ export class ReactorTrayModel extends WorkspaceTrayModel {
 export class ReactorTrayFactory extends WorkspaceTrayFactory<ReactorTrayModel> {
   protected _generateModel() {
     return new ReactorTrayModel(this.options.windowFactory);
+  }
+
+  generateContent(event: WorkspaceModelFactoryEvent<WorkspaceTrayModel>): React.JSX.Element {
+    return <S.GroupSurface>{super.generateContent(event)}</S.GroupSurface>;
   }
 
   generateTrayHeader(event: WorkspaceModelFactoryEvent<WorkspaceTrayModel>): any {

@@ -6,6 +6,7 @@ import {
   PanelButtonMode,
   PanelButtonWidget,
   ReactorPanelModel,
+  SurfaceWidget,
   styled
 } from '@journeyapps-labs/reactor-mod';
 import { DualEditorWidget, EditorWidget, MonacoLanguages } from '@journeyapps-labs/reactor-mod-editor';
@@ -257,19 +258,15 @@ namespace S {
     gap: 8px;
   `;
 
-  export const TrioFrame = styled.div`
+  export const TrioFrame = styled(SurfaceWidget)`
     position: relative;
     height: 200px;
-    border: solid 1px ${(p) => p.theme.panels.divider};
-    border-radius: 6px;
     overflow: hidden;
   `;
 
-  export const DualEditorFrame = styled.div`
+  export const DualEditorFrame = styled(SurfaceWidget)`
     position: relative;
     height: 300px;
-    border: solid 1px ${(p) => p.theme.panels.divider};
-    border-radius: 6px;
     overflow: hidden;
   `;
 }

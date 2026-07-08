@@ -16,7 +16,10 @@ export interface AbstractDialogDirectiveOptions {
   markdown?: string;
 }
 
-export abstract class AbstractDialogDirective extends BaseObserver<AbstractDialogDirectiveListener> {
+export abstract class AbstractDialogDirective<
+  T extends AbstractDialogDirectiveOptions = AbstractDialogDirectiveOptions,
+  L extends AbstractDialogDirectiveListener = AbstractDialogDirectiveListener
+> extends BaseObserver<L> {
   @observable
   accessor title: string;
 
@@ -28,7 +31,7 @@ export abstract class AbstractDialogDirective extends BaseObserver<AbstractDialo
 
   public id: string;
 
-  constructor(protected options: AbstractDialogDirectiveOptions) {
+  constructor(protected options: T) {
     super();
     this.title = options.title;
     this.markdown = options.markdown;

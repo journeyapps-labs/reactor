@@ -55,7 +55,7 @@ export class WorkspaceEntityDefinition extends EntityDefinition<IDEWorkspace> {
       new SimpleEntitySearchEngineComponent<IDEWorkspace>({
         label: 'Workspaces',
         getEntities: async () => {
-          return this.workspaceStore.workspaces;
+          return this.workspaceStore.getAllWorkspaces();
         }
       })
     );
@@ -66,7 +66,7 @@ export class WorkspaceEntityDefinition extends EntityDefinition<IDEWorkspace> {
       new EntityPanelComponent<IDEWorkspace>({
         label: 'Workspaces',
         getEntities: () => {
-          return this.workspaceStore.workspaces;
+          return this.workspaceStore.getAllWorkspaces();
         }
       })
     );

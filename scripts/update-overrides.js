@@ -29,14 +29,14 @@ let dep = {};
     });
   }
 
-  const rootPackage = require(path.join(__dirname, '../package.json'));
-  for (let k in rootPackage.pnpm?.overrides || {}) {
-    let existing = rootPackage.pnpm.overrides[k];
+  workspaces.overrides = workspaces.overrides || {};
+  for (let k in workspaces.overrides) {
+    let existing = workspaces.overrides[k];
     if (dep[k] && existing !== dep[k]) {
-      rootPackage.pnpm.overrides[k] = dep[k];
+      workspaces.overrides[k] = dep[k];
       console.log(`patching override [${k}] ${existing} -> ${dep[k]}`);
     }
   }
-  await fs.writeFileSync(path.join(__dirname, '../package.json'), JSON.stringify(rootPackage, null, 2));
+  await fs.writeFileSync(path.join(__dirname, '../pnpm-workspace.yaml'), yaml.dump(workspaces));
   console.log('pnpm overrides are up to date!');
 })();

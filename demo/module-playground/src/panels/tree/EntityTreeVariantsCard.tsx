@@ -6,6 +6,7 @@ import {
   CheckboxLabelWidget,
   ControlledSearchWidget,
   EntityPresenterComponentRenderType,
+  SurfaceWidget,
   getScrollableCSS,
   styled
 } from '@journeyapps-labs/reactor-mod';
@@ -94,26 +95,27 @@ export const EntityTreeVariantsCard: React.FC<EntityTreeVariantsCardProps> = obs
               <S.Grid>
                 {entityContexts.map((entry) => {
                   return (
-                    <CardWidget
-                      key={entry.label}
-                      title={entry.title}
-                      subHeading={entry.subtitle}
-                      sections={[
-                        {
-                          key: `entity-tree-${entry.label}`,
-                          content: () => {
-                            return (
-                              <S.TreeFrame>
-                                {entry.context.renderCollection({
-                                  entities: todoStore.rootTodos as TodoModel[],
-                                  searchEvent
-                                })}
-                              </S.TreeFrame>
-                            );
+                    <React.Fragment key={entry.label}>
+                      <CardWidget
+                        title={entry.title}
+                        subHeading={entry.subtitle}
+                        sections={[
+                          {
+                            key: `entity-tree-${entry.label}`,
+                            content: () => {
+                              return (
+                                <S.TreeFrame>
+                                  {entry.context.renderCollection({
+                                    entities: todoStore.rootTodos as TodoModel[],
+                                    searchEvent
+                                  })}
+                                </S.TreeFrame>
+                              );
+                            }
                           }
-                        }
-                      ]}
-                    />
+                        ]}
+                      />
+                    </React.Fragment>
                   );
                 })}
               </S.Grid>
@@ -136,10 +138,8 @@ namespace S {
     }
   `;
 
-  export const TreeFrame = styled.div`
+  export const TreeFrame = styled(SurfaceWidget)`
     height: 180px;
-    border: solid 1px ${(p) => p.theme.panels.divider};
-    border-radius: 6px;
     overflow: auto;
     ${(p) => getScrollableCSS(p.theme)};
   `;

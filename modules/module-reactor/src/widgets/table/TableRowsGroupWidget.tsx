@@ -1,15 +1,15 @@
 import * as React from 'react';
 import { TableRow, TableColumn } from './TableWidget';
 import { TableRowsWidget } from './TableRowsWidget';
-import { MouseEvent } from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { styled } from '../../stores/themes/reactor-theme-fragment';
 import { getTransparentColor } from '@journeyapps-labs/lib-reactor-utils';
+import { MousePosition } from '../../layers/combo/SmartPositionWidget';
 
 export interface TableRowsGroupWidgetProps<T extends TableRow = TableRow> {
   rows: T[];
   cols: TableColumn[];
-  onContextMenu: (event: MouseEvent, row: T) => any;
+  onContextMenu: (event: MousePosition, row: T) => any;
   defaultCollapsed?: boolean;
   children?: any;
 }

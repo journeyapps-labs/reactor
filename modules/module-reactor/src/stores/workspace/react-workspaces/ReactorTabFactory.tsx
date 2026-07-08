@@ -16,18 +16,27 @@ import { ReactorPanelModel } from './ReactorPanelModel';
 import { ComboBoxItem } from '../../combo/ComboBoxDirectives';
 import { styled } from '../../themes/reactor-theme-fragment';
 import { serializeChildren } from './ReactorExpandNodeFactory';
+import { WORKSPACE_PANEL_RADIUS } from '../../../widgets/workspace/workspacePanelChrome';
 
 export const TAB_BAR_HEIGHT = 30;
 
 namespace S {
+  export const GroupSurface = styled.div`
+    width: 100%;
+    height: 100%;
+    min-width: 0;
+    min-height: 0;
+    overflow: hidden;
+    border-radius: ${WORKSPACE_PANEL_RADIUS}px;
+  `;
+
   export const Outer = styled.div`
     height: ${TAB_BAR_HEIGHT}px;
     position: relative;
     width: 100%;
   `;
   export const Container = styled.div`
-    border-top: solid 2px transparent;
-    border-bottom: solid 2px ${(p) => p.theme.panels.trayBackground};
+    border-bottom: solid 2px ${(p) => p.theme.panels.tabBackgroundSelected};
     display: flex;
     position: absolute;
     top: 0;
@@ -128,6 +137,10 @@ export class ReactorTabFactory extends WorkspaceTabFactory<ReactorTabFactoryMode
 
   protected _generateModel(): ReactorTabFactoryModel {
     return new ReactorTabFactoryModel();
+  }
+
+  generateContent(event): React.JSX.Element {
+    return <S.GroupSurface>{super.generateContent(event)}</S.GroupSurface>;
   }
 
   generateTabsContainer(event): React.JSX.Element {

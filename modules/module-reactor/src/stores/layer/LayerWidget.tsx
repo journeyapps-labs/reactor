@@ -9,6 +9,7 @@ import { NotificationStore, NotificationType } from '../NotificationStore';
 
 export interface LayerWidgetProps {
   zIndex: number;
+  animate: boolean;
   clickThough: () => boolean;
   hide: () => any;
 }
@@ -27,14 +28,14 @@ namespace S {
     }
   `;
 
-  export const Layer = styled.div<{ index: number }>`
+  export const Layer = styled.div<{ index: number; animate: boolean }>`
     position: fixed;
     top: 0;
     left: 0;
     right: 0;
     bottom: 0;
     z-index: ${(p) => p.index};
-    animation: ${fade} 0.3s;
+    animation: ${(p) => (p.animate ? `${fade} 0.3s` : 'none')};
     transition: opacity ${LAYER_ANIMATION_DURATION / 1000}s;
 
     // for iPad
@@ -62,6 +63,7 @@ export const LayerWidget: React.FC<React.PropsWithChildren<LayerWidgetProps>> = 
       onMouseDown={(event) => {
         props.hide();
       }}
+      animate={props.animate}
       index={props.zIndex}
     >
       {props.children}

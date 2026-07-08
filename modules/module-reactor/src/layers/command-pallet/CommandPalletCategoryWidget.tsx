@@ -4,6 +4,7 @@ import { themed } from '../../stores/themes/reactor-theme-fragment';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { Btn } from '../../definitions/common';
 import { PanelButtonMode, PanelButtonWidget } from '../../widgets/forms/PanelButtonWidget';
+import { REACTOR_MOBILE_MEDIA_QUERY } from '../../hooks/useReactorViewportMode';
 
 export interface CommandPalletCategoryWidgetProps {
   name: string;
@@ -17,6 +18,10 @@ export interface CommandPalletCategoryWidgetProps {
 namespace S {
   export const Container = styled.div`
     margin-bottom: 20px;
+
+    ${REACTOR_MOBILE_MEDIA_QUERY} {
+      margin-bottom: 24px;
+    }
   `;
 
   export const Title = themed.div`
@@ -26,6 +31,12 @@ namespace S {
     margin-bottom: 5px;
     margin-left: 10px;
     flex-shrink: 0;
+
+    ${REACTOR_MOBILE_MEDIA_QUERY} {
+      font-size: 15px;
+      margin-left: 20px;
+      margin-bottom: 8px;
+    }
   `;
 
   export const Top = styled.div`
@@ -50,6 +61,11 @@ namespace S {
 
     &:hover {
       opacity: 1.0;
+    }
+
+    ${REACTOR_MOBILE_MEDIA_QUERY} {
+      padding: 14px;
+      font-size: 16px;
     }
   `;
 

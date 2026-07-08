@@ -1,11 +1,11 @@
 import * as React from 'react';
-import { MouseEvent } from 'react';
 import * as _ from 'lodash';
 import { TableColumnWidget } from './TableColumnWidget';
 import { observer } from 'mobx-react';
 import { themed } from '../../stores/themes/reactor-theme-fragment';
 import { TableRowsWidget } from './TableRowsWidget';
 import { TableRowsGroupWidget, TableRowsGroupWidgetProps } from './TableRowsGroupWidget';
+import { MousePosition } from '../../layers/combo/SmartPositionWidget';
 
 export interface TableColumn {
   display: string | React.JSX.Element;
@@ -27,7 +27,7 @@ export interface TableWidgetProps<T extends TableRow = TableRow> {
   columns: TableColumn[];
   rows: T[];
   renderGroup?: (event: { rows: T[]; groupKey: string }) => Partial<TableRowsGroupWidgetProps>;
-  onContextMenu?: (event: MouseEvent, row: T) => any;
+  onContextMenu?: (event: MousePosition, row: T) => any;
 }
 
 namespace S {
@@ -37,6 +37,8 @@ namespace S {
     width: 100%;
     border: 1px solid ${(p) => p.theme.table.border};
     border-collapse: separate;
+    border-radius: 4px;
+    overflow: hidden;
   `;
 
   export const ColumnsRow = themed.tr`

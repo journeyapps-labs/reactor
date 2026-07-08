@@ -11,6 +11,7 @@ import { styled } from '../../../themes/reactor-theme-fragment';
 import { ioc } from '../../../../inversify.config';
 import { ComboBoxStore2 } from '../../ComboBoxStore2';
 import { SimpleComboBoxDirective } from './SimpleComboBoxDirective';
+import { ReactorViewportMode, useReactorViewportMode } from '../../../../hooks/useReactorViewportMode';
 
 export interface BaseComboBoxDirectiveOptions<T extends ComboBoxItem = ComboBoxItem> extends ComboBoxDirectiveOptions {
   items: T[];
@@ -81,6 +82,7 @@ export interface BaseComboBoxDirectiveWidgetProps {
 
 export const SimpleComboBoxDirectiveWidget: React.FC<BaseComboBoxDirectiveWidgetProps> = (props) => {
   const forceUpdate = useForceUpdate();
+  const viewportMode = useReactorViewportMode();
   const store = ioc.get(ComboBoxStore2);
   const childDirective = useRef<{
     directive: SimpleComboBoxDirective;
@@ -117,6 +119,9 @@ export const SimpleComboBoxDirectiveWidget: React.FC<BaseComboBoxDirectiveWidget
         placeholder={props.directive.searchPlaceholder}
         items={props.directive.getItems()}
         hovered={(item, dimensions) => {
+          if (viewportMode === ReactorViewportMode.MOBILE) {
+            return;
+          }
           if (!dimensions || item.key === childDirective.current?.key) {
             return;
           }
@@ -148,6 +153,25 @@ export const SimpleComboBoxDirectiveWidget: React.FC<BaseComboBoxDirectiveWidget
           }
         }}
         selected={(item, event) => {
+          if (viewportMode === ReactorViewportMode.MOBILE && item.children?.length > 0) {
+            childDirective.current?.listener();
+            childDirective.current?.directive.dismiss();
+            childDirective.current = null;
+
+            props.directive.dismiss();
+            store.show(
+              new SimpleComboBoxDirective({
+                items: item.children,
+                event: {
+                  clientX: event?.clientX || props.directive.getPosition()?.clientX,
+                  clientY: event?.clientY || props.directive.getPosition()?.clientY
+                },
+                title: item.title
+              })
+            );
+            return;
+          }
+
           if (item.link) {
             window.open(item.link, '_blank');
           }

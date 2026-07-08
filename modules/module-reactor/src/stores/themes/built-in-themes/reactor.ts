@@ -14,7 +14,7 @@ export const DarkTheme = theme.addThemeValues({
       grid: '#232a34'
     },
     workspace: {
-      background: '#181f27',
+      background: '#111821',
       overlayBackground: 'rgba(33,39,49,0.4)',
       overlayBorder: 'rgba(0,0,0,0)',
       overlayBackgroundHover: 'rgba(33,39,49,0.8)',
@@ -27,8 +27,7 @@ export const DarkTheme = theme.addThemeValues({
       hoverColor: 'red'
     },
     tooltips: {
-      background: 'rgb(0,0,0)',
-      foreground: '#fff'
+      background: 'rgb(0,0,0)'
     },
     panels: {
       iconBackground: '#242d39',
@@ -62,9 +61,7 @@ export const DarkTheme = theme.addThemeValues({
     guide: {
       accent: '#ff6a1a',
       tooltipBackground: 'hsl(21deg 58% 16%)',
-      accentText: '#000',
-      startButton: '#2f3a51',
-      startButtonText: '#fff'
+      accentText: '#000'
     },
     graphs: {
       grid: 'rgba(255,255,255,0.05)',
@@ -75,20 +72,27 @@ export const DarkTheme = theme.addThemeValues({
       thresholdLine: '#ff4800'
     },
     cards: {
-      background: '#151c27',
       foreground: '#c6d2e1',
-      border: '#3b4a5f',
       tagBackground: '#5b6a80',
       tagLabelBackground: 'rgba(0, 0, 0, 0.12)',
       tagLabelForeground: 'rgba(236, 244, 255, 0.92)'
     },
+    surfaces: {
+      depth0Background: '#151c27',
+      depth0Border: '#3b4a5f',
+      depth1Background: '#172130',
+      depth1Border: '#324053',
+      depth2Background: '#161d28',
+      depth2Border: '#324053',
+      depth3Background: '#0f141d',
+      depth3Border: '#2f3d4f',
+      selectedBorder: '#00c0ff'
+    },
     status: {
-      cardBackground: '#172130',
       failed: '#862c00',
       failedForeground: 'black',
       loading: '#00b4ff',
-      success: '#658600',
-      successForeground: 'white'
+      success: '#658600'
     },
     header: {
       background: '#161d26',
@@ -97,6 +101,18 @@ export const DarkTheme = theme.addThemeValues({
       backgroundLogo: '#13171c',
       backgroundLogoHover: '#000000',
       foreground: '#fff'
+    },
+    workspaceSubMenu: {
+      background: '#161d26',
+      backgroundUnPinned: '#121922',
+      foreground: 'rgba(222,232,246,0.72)'
+    },
+    mobileNavigation: {
+      background: '#161d26',
+      foreground: 'rgba(222,232,246,0.72)',
+      border: '#324053',
+      selectedBackground: 'rgba(0, 192, 255, 0.16)',
+      selectedForeground: 'white'
     },
     changelog: {
       codeForeground: 'rgb(132,221,255)',
@@ -117,11 +133,7 @@ export const DarkTheme = theme.addThemeValues({
     },
     tabs: {
       selectedAccentSingle: '#00c0ff',
-      selectedAccent: '#00c0ff',
-      selectedBackground: '#171b23'
-    },
-    visor: {
-      background: 'rgba(0, 0, 0, 0.2)'
+      selectedBackground: 'rgba(0, 192, 255, 0.16)'
     },
     button: {
       background: '#0d121b',
@@ -177,7 +189,8 @@ export const DarkTheme = theme.addThemeValues({
     floating: {
       background: 'rgba(20,24,29,0.8)',
       backgroundInactive: 'rgba(25,30,37,0.45)',
-      border: 'rgba(184,204,231,0.22)'
+      border: 'rgba(184,204,231,0.34)',
+      shadowColor: 'rgba(0, 0, 0, 0.62)'
     }
   }
 });

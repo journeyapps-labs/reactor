@@ -34,6 +34,7 @@ import { ProviderActionParameter } from '../actions/parameterized/params/Provide
 import { DescendantEntityProviderComponent } from './components/exposer/DescendantEntityProviderComponent';
 import { ThemeStore } from '../stores/themes/ThemeStore';
 import { ActionStore } from '../stores/actions/ActionStore';
+import { WorkspaceStore } from '../stores/workspace/WorkspaceStore';
 
 export interface EntityDefinitionOptions {
   type: string;
@@ -65,6 +66,9 @@ export abstract class EntityDefinition<T extends any = any> {
 
   @inject(ActionStore)
   accessor actionStore: ActionStore;
+
+  @inject(WorkspaceStore)
+  accessor workspaceStore: WorkspaceStore;
 
   private describers: EntityDescriberBank<T>;
   private docsComponents: ComponentBank<EntityDocsComponent<T>>;
@@ -379,6 +383,15 @@ export abstract class EntityDefinition<T extends any = any> {
     if (handlers.length === 0) {
       return;
     }
+
+    const preferredActionId = this.workspaceStore.getActiveWorkspace()?.getPreferredOpenAction(this.type);
+    const preferredHandler = preferredActionId
+      ? handlers.find((handler) => handler.getPreferredActionId() === preferredActionId)
+      : null;
+    if (preferredHandler) {
+      return preferredHandler.openEntity(event);
+    }
+
     if (handlers.length === 1) {
       return handlers[0].openEntity(event);
     }

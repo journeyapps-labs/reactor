@@ -1,0 +1,2 @@
+export const WORKSPACE_PANEL_INSET = 5;
+export const WORKSPACE_PANEL_RADIUS = 8;

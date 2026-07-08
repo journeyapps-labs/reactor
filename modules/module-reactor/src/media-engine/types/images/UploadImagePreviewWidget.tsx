@@ -7,6 +7,7 @@ import { ioc } from '../../../inversify.config';
 import { ImagePreviewWidget } from './ImagePreviewWidget';
 import { styled } from '../../../stores/themes/reactor-theme-fragment';
 import { PanelButtonWidget } from '../../../widgets/forms/PanelButtonWidget';
+import { Fonts } from '../../../fonts';
 
 export interface UploadImagePreviewWidgetProps {
   onUpload: (media: ImageMedia) => Promise<void> | void;
@@ -72,7 +73,7 @@ namespace S {
     left: 50%;
     transform: translateX(-50%) translateY(-50%);
     font-size: 14px;
-    font-family: 'Open Sans';
+    font-family: ${Fonts.PRIMARY};
   `;
 
   export const Preview = styled.div`

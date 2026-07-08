@@ -56,6 +56,7 @@ export abstract class EntitySearchEngineComponent<T extends any = any> extends E
       event: event.position,
       engine: this.getSearchEngine(),
       title: this.getLabel(),
+      hideSearchOnMobile: this.hideSearchOnMobile(),
       filter: (r) => {
         if (!event.filter) {
           return true;
@@ -66,5 +67,9 @@ export abstract class EntitySearchEngineComponent<T extends any = any> extends E
         return this.definition.getAsComboBoxItem(e.entity);
       }
     });
+  }
+
+  hideSearchOnMobile() {
+    return false;
   }
 }

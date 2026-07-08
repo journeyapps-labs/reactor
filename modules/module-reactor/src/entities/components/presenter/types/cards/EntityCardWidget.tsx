@@ -11,6 +11,7 @@ import { EntityCardsPresenterContext } from './EntityCardsPresenterComponent';
 import { TagsSectionWidget } from './TagsSectionWidget';
 import { NestedTreesSectionWidget } from './NestedTreesSectionWidget';
 import { EntityCardTitleWidget } from './EntityCardTitleWidget';
+import { ContextMenuTriggerWidget } from '../../../../../widgets/context-menu/ContextMenuTriggerWidget';
 
 export interface EntityCardWidgetProps<T> {
   entity: T;
@@ -26,7 +27,7 @@ namespace S {
     flex: 1;
   `;
 
-  export const CardWrapper = styled.div`
+  export const CardWrapper = styled(ContextMenuTriggerWidget)`
     cursor: pointer;
     min-width: 0;
     display: flex;
@@ -55,12 +56,11 @@ export const EntityCardWidget = observer(function <T>(props: EntityCardWidgetPro
   return (
     <S.CardWrapper
       onClick={(event) => {
+        event.stopPropagation();
         presenterContext.handleClick(entity, event as any, ActionSource.CARD);
       }}
-      onContextMenu={(event) => {
-        event.preventDefault();
-        event.stopPropagation();
-        presenterContext.handleContextMenu(entity, event as any);
+      onContextMenu={(position) => {
+        presenterContext.handleContextMenu(entity, position);
       }}
     >
       <S.Card
@@ -72,6 +72,7 @@ export const EntityCardWidget = observer(function <T>(props: EntityCardWidgetPro
           labels.length > 0
             ? {
                 key: 'labels',
+                grow: false,
                 content: () => {
                   return <S.Labels meta={labels} />;
                 }
@@ -80,17 +81,21 @@ export const EntityCardWidget = observer(function <T>(props: EntityCardWidgetPro
           tags.length > 0
             ? {
                 key: 'tags',
+                grow: false,
                 content: () => {
                   return <TagsSectionWidget tags={tags} theme={theme} />;
                 }
               }
             : null,
-          {
-            key: 'nested-trees',
-            content: () => {
-              return <NestedTreesSectionWidget nestedTrees={nestedTrees} />;
-            }
-          }
+          nestedTrees.length > 0
+            ? {
+                key: 'nested-trees',
+                grow: false,
+                content: () => {
+                  return <NestedTreesSectionWidget nestedTrees={nestedTrees} />;
+                }
+              }
+            : null
         ].filter((f) => !!f)}
       />
     </S.CardWrapper>

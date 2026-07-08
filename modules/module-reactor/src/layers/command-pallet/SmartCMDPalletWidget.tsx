@@ -6,13 +6,23 @@ import { ControlledCommandPalletWidget } from './ControlledCommandPalletWidget';
 import * as _ from 'lodash';
 import { MousePosition } from '../combo/SmartPositionWidget';
 import { createSearchEventMatcher } from '@journeyapps-labs/lib-reactor-search';
+import { ReactorViewportMode, useReactorViewportMode } from '../../hooks/useReactorViewportMode';
 
 export interface SmartCMDPalletWidgetProps {
   focused: boolean;
   selected: string;
 }
 
-export class SmartCMDPalletWidget extends React.Component<SmartCMDPalletWidgetProps> {
+export const SmartCMDPalletWidget: React.FC<SmartCMDPalletWidgetProps> = (props) => {
+  const viewportMode = useReactorViewportMode();
+  return <SmartCMDPalletWidgetInternal {...props} mobile={viewportMode === ReactorViewportMode.MOBILE} />;
+};
+
+interface SmartCMDPalletWidgetInternalProps extends SmartCMDPalletWidgetProps {
+  mobile: boolean;
+}
+
+export class SmartCMDPalletWidgetInternal extends React.Component<SmartCMDPalletWidgetInternalProps> {
   listener: any;
 
   @inject(CMDPalletStore)
@@ -21,6 +31,7 @@ export class SmartCMDPalletWidget extends React.Component<SmartCMDPalletWidgetPr
   render() {
     return (
       <ControlledCommandPalletWidget
+        mobile={this.props.mobile}
         close={() => {
           this.commandPalletStore.showPallet(false);
         }}

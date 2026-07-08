@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { TabBadgeDirective } from './GenericTabSelectionWidget';
+import { TabBadgeDirective } from './TabListWidget';
 import { themed } from '../../stores/themes/reactor-theme-fragment';
 import { Fonts } from '../../fonts';
 

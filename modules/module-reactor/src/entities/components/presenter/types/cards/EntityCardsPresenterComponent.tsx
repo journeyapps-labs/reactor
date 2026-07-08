@@ -120,7 +120,7 @@ export class EntityCardsPresenterContext<T> extends AbstractPresenterContext<T, 
     const encoded = this.definition.encode(entity, false);
     if (encoded && this.definition.isMultiSelectable()) {
       if ((position as any).shiftKey) {
-        this.batchStore.select(encoded);
+        return this.batchStore.select(encoded);
       } else {
         this.batchStore.selectOne(encoded);
       }
