@@ -1,5 +1,32 @@
 # @journeyapps-labs/reactor-mod
 
+## 6.0.0
+
+### Major Changes
+
+- 1671610: Improve Reactor's desktop and mobile application experience.
+
+  - Add a shared selected-state surface primitive so card-based UI can opt into consistent selected styling through theme tokens.
+  - Add viewport-aware mobile workspace chrome, mobile navigation, long-press context menus, and touch-safe context menu triggers for cards, trees, tables, tabs, pills, toolbars, headers, and panel titles.
+  - Rework mobile combo and context menu presentation into screen-aware sheets with backdrop treatment, close affordances, larger touch-friendly text, and mobile-only click suppression for synthetic long-press follow-up events.
+  - Improve simple entity search behavior on mobile by hiding unnecessary search fields when the result set is already available locally.
+  - Expand the demo and README screenshots to better show Reactor as a full application framework across desktop and mobile modes.
+
+- ad662fe: Modernize Reactor workspaces and module packaging.
+
+  - Add the mobile Reactor shell, viewport-aware workspace rendering, workspace groups, and updated tab/header/workspace navigation APIs.
+  - Export JSON path helpers from `module-editor` for locating Monaco JSON AST nodes by path.
+  - Remove built-in server PWA/mobile middleware so apps can own static PWA assets and mobile routing themselves.
+  - Make module builds fail when webpack reports errors, restore Terser minification compatibility, and move pnpm override maintenance into `pnpm-workspace.yaml`.
+  - Declare missing direct dependencies, remove stale `@types/uuid` packages, and pin transitive dependency overrides for pnpm 11 compatibility.
+
+### Patch Changes
+
+- Updated dependencies [ad662fe]
+  - @journeyapps-labs/lib-reactor-data-layer@1.0.12
+  - @journeyapps-labs/lib-reactor-search@1.0.12
+  - @journeyapps-labs/lib-reactor-utils@2.0.11
+
 ## 5.6.0
 
 ### Minor Changes
