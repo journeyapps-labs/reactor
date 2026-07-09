@@ -1,17 +1,16 @@
 import * as React from 'react';
 import styled from '@emotion/styled';
-import { PanelWidget } from '../../widgets/panel/panel/PanelWidget';
 import { WorkspaceCollectionModel, WorkspaceModelFactoryEvent } from '@projectstorm/react-workspaces-core';
 import { observer } from 'mobx-react';
 import { AdvancedWorkspacePreference } from '../../preferences/AdvancedWorkspacePreference';
 import * as _ from 'lodash';
 import { PanelPlaceholderWidget } from '../../widgets/panel/panel/PanelPlaceholderWidget';
-import { PanelTitleWidget } from '../../widgets/panel/panel/title/PanelTitleWidget';
 import { ReactorPanelModel } from '../../stores/workspace/react-workspaces/ReactorPanelModel';
 import { ReactorPanelFactory } from '../../stores/workspace/react-workspaces/ReactorPanelFactory';
 import { themed } from '../../stores/themes/reactor-theme-fragment';
 import { EntityPlaceholderWidget } from '../../widgets/panel/panel/EntityPlaceholderWidget';
 import { ReactorEntities } from '../../entities-reactor/ReactorEntities';
+import { SurfaceWidget } from '../../widgets';
 
 export interface EmptyWorkspacePanelProps {
   event: WorkspaceModelFactoryEvent<ReactorPanelModel>;
@@ -31,16 +30,15 @@ namespace S {
     color: ${(p) => p.theme.panels.trayBackground}
   `;
 
-  export const Placeholder = themed.div`
-    flex-grow: 1;
-    align-self: stretch;
+  export const Placeholder = themed(SurfaceWidget)`
     margin: 10px;
-    background: ${(p) => p.theme.panels.divider};
     display: flex;
     align-items: center;
     justify-content: center;
     border-radius: 10px;
     margin-bottom: 40px;
+    width: 300px;
+    height: 300px;
   `;
 }
 
@@ -48,21 +46,19 @@ namespace S {
 export class EmptyWorkspacePanel extends React.Component<EmptyWorkspacePanelProps> {
   getSelector() {
     return (
-      <S.Container>
-        <EntityPlaceholderWidget<ReactorPanelModel, ReactorPanelFactory>
-          entity={ReactorEntities.PANEL}
-          placeholder={{
-            text: 'No panel selected'
-          }}
-          button={{
-            label: 'Select a panel'
-          }}
-          model={this.props.event.model}
-          patchModel={async (factory, model) => {
-            (model.parent as WorkspaceCollectionModel).replaceModel(model, factory.generateModel());
-          }}
-        />
-      </S.Container>
+      <EntityPlaceholderWidget<ReactorPanelModel, ReactorPanelFactory>
+        entity={ReactorEntities.PANEL}
+        placeholder={{
+          text: 'No panel selected'
+        }}
+        button={{
+          label: 'Select a panel'
+        }}
+        model={this.props.event.model}
+        patchModel={async (factory, model) => {
+          (model.parent as WorkspaceCollectionModel).replaceModel(model, factory.generateModel());
+        }}
+      />
     );
   }
 
@@ -84,31 +80,17 @@ export class EmptyWorkspacePanel extends React.Component<EmptyWorkspacePanelProp
     const highestSuggestionsFirst = _.orderBy(panels, ['score'], ['desc']);
     const highestSuggestion = _.first(highestSuggestionsFirst);
     if (highestSuggestion) {
-      return (
-        <>
-          <PanelTitleWidget color="#fff" model={null} name={highestSuggestion.panelTitle} />
-          <S.Container>
-            <S.Placeholder>
-              <PanelPlaceholderWidget {...highestSuggestion.placeholder} />
-            </S.Placeholder>
-          </S.Container>
-        </>
-      );
+      return <PanelPlaceholderWidget {...highestSuggestion.placeholder} />;
     }
 
-    return (
-      <>
-        <PanelTitleWidget color="#fff" model={null} name="..." />
-        <S.Container>
-          <S.Placeholder>
-            <PanelPlaceholderWidget icon="cube" text="Please select something!" />
-          </S.Placeholder>
-        </S.Container>
-      </>
-    );
+    return <PanelPlaceholderWidget icon="cube" text="Please select something!" />;
   }
 
   render() {
-    return <>{AdvancedWorkspacePreference.enabled() ? this.getSelector() : this.getHint()}</>;
+    return (
+      <S.Container>
+        <S.Placeholder>{AdvancedWorkspacePreference.enabled() ? this.getSelector() : this.getHint()}</S.Placeholder>
+      </S.Container>
+    );
   }
 }

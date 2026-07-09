@@ -32,7 +32,7 @@ export interface PanelTitleWidgetProps {
   color?: string;
   btns?: (Btn & { highlight?: boolean })[];
   active?: boolean;
-  model: ReactorPanelModel;
+  model: ReactorPanelModel | null;
 }
 
 namespace S {
@@ -144,7 +144,8 @@ export class PanelTitleWidget extends React.Component<PanelTitleWidgetProps> {
   }
 
   getIconWrapped() {
-    if (AdvancedWorkspacePreference.enabled()) {
+    const { model } = this.props;
+    if (model && AdvancedWorkspacePreference.enabled()) {
       return (
         <div
           onClick={async (event) => {
@@ -155,10 +156,10 @@ export class PanelTitleWidget extends React.Component<PanelTitleWidgetProps> {
               entity: null
             });
 
-            if (this.props.model.parent instanceof FloatingWindowModel) {
-              this.props.model.parent.setChild(factoryOb.generateModel());
-            } else if (this.props.model.parent instanceof WorkspaceCollectionModel) {
-              this.props.model.parent.replaceModel(this.props.model, factoryOb.generateModel());
+            if (model.parent instanceof FloatingWindowModel) {
+              model.parent.setChild(factoryOb.generateModel());
+            } else if (model.parent instanceof WorkspaceCollectionModel) {
+              model.parent.replaceModel(model, factoryOb.generateModel());
             }
           }}
         >
@@ -184,26 +185,27 @@ export class PanelTitleWidget extends React.Component<PanelTitleWidgetProps> {
   }
 
   render() {
-    const rounded = !(this.props.model.parent instanceof WorkspaceTabModel);
+    const { model } = this.props;
+    const rounded = !model || !(model.parent instanceof WorkspaceTabModel);
 
     return (
-      <WorkspaceModelContext.Provider value={this.props.model}>
+      <WorkspaceModelContext.Provider value={model}>
         <S.Title
           onDoubleClick={() => {
-            if (this.props.model.parent instanceof FloatingWindowModel) {
+            if (!model || model.parent instanceof FloatingWindowModel) {
               return;
             }
             const workspaceStore = ioc.get(WorkspaceStore);
             if (workspaceStore.fullscreenModel) {
               workspaceStore.setFullscreenModel(null);
             } else {
-              workspaceStore.setFullscreenModel(this.props.model);
+              workspaceStore.setFullscreenModel(model);
             }
           }}
-          attention={this.props.model?.grabAttention}
+          attention={model?.grabAttention}
           $rounded={rounded}
           onContextMenu={async (position) => {
-            if (AdvancedWorkspacePreference.enabled()) {
+            if (model && AdvancedWorkspacePreference.enabled()) {
               await this.comboBoxStore.show(
                 new SimpleComboBoxDirective({
                   event: position,
@@ -212,7 +214,7 @@ export class PanelTitleWidget extends React.Component<PanelTitleWidgetProps> {
                       key: 'close',
                       title: 'Close',
                       action: async () => {
-                        this.props.model.delete();
+                        model.delete();
                         ioc.get(WorkspaceStore).engine.normalize();
                       }
                     },
@@ -221,8 +223,8 @@ export class PanelTitleWidget extends React.Component<PanelTitleWidgetProps> {
                       title: 'Convert to tabs',
                       action: async () => {
                         const tabs = ioc.get(WorkspaceStore).engine.generateReactorTabModel();
-                        (this.props.model.parent as WorkspaceNodeModel).replaceModel(this.props.model, tabs);
-                        tabs.addModel(this.props.model);
+                        (model.parent as WorkspaceNodeModel).replaceModel(model, tabs);
+                        tabs.addModel(model);
                       }
                     },
                     {
@@ -230,8 +232,8 @@ export class PanelTitleWidget extends React.Component<PanelTitleWidgetProps> {
                       title: 'Convert to tray',
                       action: async () => {
                         const tray = ioc.get(WorkspaceStore).engine.generateReactorTrayModel();
-                        (this.props.model.parent as WorkspaceNodeModel).replaceModel(this.props.model, tray);
-                        tray.addModel(this.props.model);
+                        (model.parent as WorkspaceNodeModel).replaceModel(model, tray);
+                        tray.addModel(model);
                       }
                     }
                   ]

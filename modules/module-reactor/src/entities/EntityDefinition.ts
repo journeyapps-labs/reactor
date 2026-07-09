@@ -8,6 +8,7 @@ import { MousePosition } from '../layers/combo/SmartPositionWidget';
 import { ReactorIcon } from '../widgets/icons/IconWidget';
 import { EntityPresenterComponent } from './components/presenter/EntityPresenterComponent';
 import { EntityHandlerComponent, OpenEntityEvent } from './components/handler/EntityHandlerComponent';
+import { EntityHandlerBank } from './components/handler/EntityHandlerBank';
 import { ComboBoxItem } from '../stores/combo/ComboBoxDirectives';
 import { inject } from '../inversify.config';
 import { EntityPanelComponent } from './components/ui/EntityPanelComponent';
@@ -75,7 +76,7 @@ export abstract class EntityDefinition<T extends any = any> {
   private encoders: EntityEncoderBank<T>;
   private searches: EntitySearchBank<T>;
   private presenterComponents: ComponentBank<EntityPresenterComponent>;
-  private handlerComponents: ComponentBank<EntityHandlerComponent>;
+  private handlerComponents: EntityHandlerBank<T>;
   private panelComponents: ComponentBank<EntityPanelComponent>;
   private exposerComponents: ComponentBank<DescendantEntityProviderComponent<T, any>>;
 
@@ -87,7 +88,7 @@ export abstract class EntityDefinition<T extends any = any> {
     this.encoders = new EntityEncoderBank<T>({ type: this.options.type });
     this.searches = new EntitySearchBank<T>({ label: this.options.label });
     this.presenterComponents = new ComponentBank<EntityPresenterComponent>();
-    this.handlerComponents = new ComponentBank<EntityHandlerComponent>();
+    this.handlerComponents = new EntityHandlerBank<T>();
     this.panelComponents = new ComponentBank<EntityPanelComponent>();
     this.exposerComponents = new ComponentBank<DescendantEntityProviderComponent<T, any>>();
     this.additionalActionIds = [];
@@ -120,7 +121,7 @@ export abstract class EntityDefinition<T extends any = any> {
       return;
     }
     if (component instanceof EntityHandlerComponent) {
-      this.handlerComponents.register(component);
+      this.handlerComponents.register(component as EntityHandlerComponent<T>);
       return;
     }
     if (component instanceof EntityPanelComponent) {
@@ -385,11 +386,16 @@ export abstract class EntityDefinition<T extends any = any> {
     }
 
     const preferredActionId = this.workspaceStore.getActiveWorkspace()?.getPreferredOpenAction(this.type);
-    const preferredHandler = preferredActionId
+    const workspacePreferredHandler = preferredActionId
       ? handlers.find((handler) => handler.getPreferredActionId() === preferredActionId)
       : null;
-    if (preferredHandler) {
-      return preferredHandler.openEntity(event);
+    if (workspacePreferredHandler) {
+      return workspacePreferredHandler.openEntity(event);
+    }
+
+    const definitionPreferredHandler = this.handlerComponents.getPreferred();
+    if (definitionPreferredHandler) {
+      return definitionPreferredHandler.openEntity(event);
     }
 
     if (handlers.length === 1) {

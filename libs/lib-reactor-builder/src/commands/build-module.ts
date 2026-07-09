@@ -1,7 +1,7 @@
 import webpack from 'webpack';
 import * as path from 'path';
 import * as fs from 'fs';
-import { generateCommonWebpack } from '../webpack.config';
+import { generateCommonWebpack, ModuleWebpackConfigContext } from '../webpack.config';
 import { args } from '../yargs';
 
 args.command<{ module: string; entry: boolean; watch: boolean }>(
@@ -17,14 +17,21 @@ args.command<{ module: string; entry: boolean; watch: boolean }>(
     const modulePath = path.join(process.cwd(), yargs.module);
     const moduleWebpackPath = path.join(modulePath, 'webpack.config.js');
 
-    let webpackConfig = generateCommonWebpack(modulePath);
+    const commonWebpackConfig = generateCommonWebpack(modulePath);
+    let webpackConfig: webpack.Configuration | webpack.Configuration[] = commonWebpackConfig;
 
     if (fs.existsSync(moduleWebpackPath)) {
-      const moduleWebpackFunc = require(moduleWebpackPath);
-      webpackConfig = moduleWebpackFunc(webpackConfig);
+      const moduleWebpackFunc: (
+        config: webpack.Configuration,
+        context: ModuleWebpackConfigContext
+      ) => webpack.Configuration | webpack.Configuration[] = require(moduleWebpackPath);
+      webpackConfig = moduleWebpackFunc(commonWebpackConfig, { webpack });
     }
 
-    const compiler = webpack(webpackConfig);
+    const createCompiler = webpack as unknown as (
+      config: webpack.Configuration | webpack.Configuration[]
+    ) => webpack.Compiler | webpack.MultiCompiler;
+    const compiler = createCompiler(webpackConfig);
 
     const callback = (resolve: (compiled: boolean) => any) => {
       return (err, stats) => {
