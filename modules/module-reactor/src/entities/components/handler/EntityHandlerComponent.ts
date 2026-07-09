@@ -10,13 +10,19 @@ export interface OpenEntityEvent<T> {
   source: ActionSource;
 }
 
+export interface EntityHandlerComponentOptions {
+  preferred?: boolean;
+}
+
 export abstract class EntityHandlerComponent<T extends any = any> extends EntityDefinitionComponent {
   static TYPE = 'handler';
   uuid: string;
+  readonly preferred: boolean;
 
-  constructor() {
+  constructor(options: EntityHandlerComponentOptions = {}) {
     super(EntityHandlerComponent.TYPE);
     this.uuid = v4();
+    this.preferred = options.preferred ?? false;
   }
 
   abstract openEntity(event: OpenEntityEvent<T>): Promise<any>;

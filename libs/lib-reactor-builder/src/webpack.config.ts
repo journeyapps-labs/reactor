@@ -1,10 +1,13 @@
 import * as path from 'path';
-import * as webpack from 'webpack';
-import { Configuration, ExternalItem } from 'webpack';
+import webpack, { Configuration, ExternalItem } from 'webpack';
 import * as fs from 'fs';
 import TerserPlugin from 'terser-webpack-plugin';
 import { WatchIgnorePlugin } from './WatchIgnorePlugin';
 import { patchExportedLibrary, patchImportedLibrary } from './utils';
+
+export interface ModuleWebpackConfigContext {
+  webpack: typeof webpack;
+}
 
 export const generateCommonWebpack = (dir: string): Configuration => {
   const p = require(path.join(dir, 'package.json'));

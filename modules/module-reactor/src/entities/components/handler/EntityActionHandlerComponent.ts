@@ -1,12 +1,15 @@
-import { EntityHandlerComponent } from './EntityHandlerComponent';
+import { EntityHandlerComponent, EntityHandlerComponentOptions } from './EntityHandlerComponent';
 import { ComboBoxItem } from '../../../stores/combo/ComboBoxDirectives';
 import { EntityAction } from '../../../actions/parameterized/EntityAction';
 import { ioc } from '../../../inversify.config';
 import { ActionStore } from '../../../stores/actions/ActionStore';
 
 export class EntityActionHandlerComponent extends EntityHandlerComponent {
-  constructor(protected actionID: string) {
-    super();
+  constructor(
+    protected actionID: string,
+    options: EntityHandlerComponentOptions = {}
+  ) {
+    super(options);
   }
 
   getDescription(): ComboBoxItem {

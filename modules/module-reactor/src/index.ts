@@ -175,6 +175,7 @@ export * from './entities/components/exposer/DescendantEntityProviderComponent';
 export * from './entities/components/exposer/DescendantLoadingEntityProviderComponent';
 export * from './entities/components/handler/EntityActionHandlerComponent';
 export * from './entities/components/handler/EntityHandlerComponent';
+export * from './entities/components/handler/EntityHandlerBank';
 export * from './entities/components/handler/InlineEntityHandlerComponent';
 export * from './entities/components/banks/ComponentBank';
 export * from './entities/components/banks/PreferredSetBank';

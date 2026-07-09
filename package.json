@@ -2,7 +2,7 @@
   "name": "reactor",
   "main": "index.js",
   "private": true,
-  "packageManager": "pnpm@11.9.0",
+  "packageManager": "pnpm@11.10.0",
   "scripts": {
     "build": "pnpm build:builder && pnpm build:ts && pnpm build:modules",
     "build:builder": "pnpm run --filter '@journeyapps-labs/lib-reactor-builder' build",
@@ -29,7 +29,7 @@
     "inquirer": "^14.0.2",
     "js-yaml": "^5.2.1",
     "npm-check-updates": "^22.2.9",
-    "prettier": "3.9.4",
+    "prettier": "3.9.5",
     "typescript": "^5.9.3"
   }
 }
