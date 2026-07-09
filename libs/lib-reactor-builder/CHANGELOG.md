@@ -1,5 +1,13 @@
 # @journeyapps-labs/lib-reactor-builder
 
+## 3.1.0
+
+### Minor Changes
+
+- 6a9a58d: Add preferred entity handlers and an `EntityHandlerBank` for resolving a default handler.
+
+  Pass the builder's webpack instance to module webpack configuration functions, so custom configurations can share the compiler instance used for builds.
+
 ## 3.0.3
 
 ### Patch Changes
