@@ -9,10 +9,12 @@ import {
 } from '@journeyapps-labs/reactor-mod';
 import * as _ from 'lodash';
 import * as monaco from 'monaco-editor';
+import { editor } from 'monaco-editor';
 import { StoredThemesSettings } from '../settings/StoredThemesSettings';
 import * as uuid from 'uuid';
 import { EditorEntities } from '../entities/EditorEntities';
 import { MonacoSystemThemeStore } from './MonacoSystemThemeStore';
+import IStandaloneThemeData = editor.IStandaloneThemeData;
 
 export interface EditorTheme {
   label: string;
@@ -33,7 +35,8 @@ export class EditorThemeControl extends EntitySetting<EditorTheme> {
   async reset() {
     // this ensures that resets cause the editor theme to follow the selected IDE theme
     const selectedTheme = await ioc.get(ThemeStore).selectedTheme.waitForReady();
-    this.setItem(await this.store.getMonacoThemeForReactorTheme(selectedTheme.entity.key));
+    const monacoTheme = this.store.getMonacoThemeForReactorTheme(selectedTheme.entity.key);
+    this.setItem(monacoTheme);
   }
 }
 
@@ -60,8 +63,7 @@ export class MonacoThemeStore extends AbstractStore {
           description: 'This is the syntax-color theme in the IDE',
           changed: (item) => {
             if (!!item) {
-              monaco.editor.defineTheme(DARK_THEME, item.theme);
-              monaco.editor.setTheme(DARK_THEME);
+              this.applyTheme(item.theme);
             }
           }
         },
@@ -69,7 +71,14 @@ export class MonacoThemeStore extends AbstractStore {
       )
     );
     this.storedThemes = this.addControl(new StoredThemesSettings());
-    monaco.editor.defineTheme(DARK_THEME, defaultTheme.theme);
+  }
+
+  protected async _init(): Promise<void> {
+    this.applyTheme(this.selectedTheme.entity.theme);
+  }
+
+  protected applyTheme(theme: IStandaloneThemeData) {
+    monaco.editor.defineTheme(DARK_THEME, theme);
     monaco.editor.setTheme(DARK_THEME);
   }
 

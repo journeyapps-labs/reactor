@@ -35,6 +35,13 @@ export class EntitySetting<I> extends AbstractUserSetting<EntityControl<I>, Enti
     });
   }
 
+  updateOptions(options: Partial<EntitySettingOptions<I>>) {
+    super.updateOptions(options);
+    if (!this.initialized && options.defaultEntity !== undefined) {
+      this.entity = options.defaultEntity;
+    }
+  }
+
   setItem(item: I) {
     this.control.value = item;
   }

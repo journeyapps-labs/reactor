@@ -51,7 +51,7 @@ export class AbstractStore<T = any, L extends AbstractStoreListener = AbstractSt
     // do nothing
   }
 
-  private async runDeserialization() {
+  public async runDeserialization() {
     if (!this.options.serializer) {
       return;
     }

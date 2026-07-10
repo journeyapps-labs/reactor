@@ -93,6 +93,7 @@ export class EditorModule extends AbstractReactorModule {
 
   async init(ioc: Container): Promise<any> {
     ioc.get(MonacoStore).init();
+    ioc.get(MonacoThemeStore).init();
     ioc.get(MonacoKeybindingStore).init();
   }
 }
