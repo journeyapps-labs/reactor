@@ -30,10 +30,11 @@ export class EditorThemeControl extends EntitySetting<EditorTheme> {
     this.store = store;
   }
 
-  async reset() {
-    // this ensures that resets cause the editor theme to follow the selected IDE theme
-    const selectedTheme = await ioc.get(ThemeStore).selectedTheme.waitForReady();
-    this.setItem(await this.store.getMonacoThemeForReactorTheme(selectedTheme.entity.key));
+  reset() {
+    // Preference resets run controls in registration order. Waiting for this control to be marked
+    // ready deadlocks that sequence, so use the IDE theme selected earlier in the same reset pass.
+    const selectedTheme = ioc.get(ThemeStore).selectedTheme;
+    this.setItem(this.store.getMonacoThemeForReactorTheme(selectedTheme.entity.key));
   }
 }
 
