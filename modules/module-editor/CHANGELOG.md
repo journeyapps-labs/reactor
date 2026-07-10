@@ -1,5 +1,13 @@
 # @journeyapps-labs/reactor-mod-editor
 
+## 2.3.2
+
+### Patch Changes
+
+- 3af4a4e: Fix issues with the workspace system by using the latest projectstorm react-workspaces packages
+- Updated dependencies [3af4a4e]
+  - @journeyapps-labs/reactor-mod@6.1.1
+
 ## 2.3.1
 
 ### Patch Changes
