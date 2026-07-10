@@ -25,7 +25,7 @@
     "@journeyapps-labs/lib-reactor-search": "workspace:*",
     "@journeyapps-labs/lib-reactor-utils": "workspace:*",
     "@journeyapps-labs/reactor-mod": "workspace:*",
-    "@projectstorm/react-workspaces-core": "4.2.3",
+    "@projectstorm/react-workspaces-core": "4.3.2",
     "json5": "^2.2.3",
     "jszip": "^3.10.1",
     "lodash": "^4.18.1",

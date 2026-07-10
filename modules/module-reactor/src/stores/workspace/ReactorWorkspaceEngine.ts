@@ -78,7 +78,7 @@ export class ReactorWorkspaceEngine extends WorkspaceEngine {
             transformZones: [ConvertToTabZone(this.tabFactory), ConvertToTrayZone(this.trayFactory)],
             generateParentNode: () => this.nodeFactory.generateModel()
           }) ||
-          getDirectiveForTabModel(model)
+          getDirectiveForTabModel(model, [], () => this.nodeFactory.generateModel())
         );
       },
       debug: false

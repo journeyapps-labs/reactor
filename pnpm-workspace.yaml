@@ -14,3 +14,12 @@ minimumReleaseAgeExclude:
   - '@types/node@26.1.0'
   - js-yaml@5.2.1
   - prettier@3.9.5
+  - '@projectstorm/react-workspaces-behavior-divider-dropzone@2.4.13 || 2.4.14 || 2.4.15'
+  - '@projectstorm/react-workspaces-behavior-panel-dropzone@2.4.0 || 2.4.1 || 2.4.2'
+  - '@projectstorm/react-workspaces-behavior-resize@2.3.12 || 2.3.13 || 2.3.14'
+  - '@projectstorm/react-workspaces-core@4.3.0 || 4.3.1 || 4.3.2'
+  - '@projectstorm/react-workspaces-dropzone-plugin-tabs@2.3.0 || 2.3.1 || 2.3.2'
+  - '@projectstorm/react-workspaces-dropzone-plugin-tray@2.3.0 || 2.3.1 || 2.3.2'
+  - '@projectstorm/react-workspaces-model-floating-window@2.2.15 || 2.2.16 || 2.2.17'
+  - '@projectstorm/react-workspaces-model-tabs@2.3.12 || 2.3.13 || 2.3.14'
+  - '@projectstorm/react-workspaces-model-tray@2.5.13 || 2.5.14 || 2.5.15'

@@ -15,7 +15,7 @@
     "@journeyapps-labs/reactor-mod": "workspace:^",
     "@journeyapps-labs/reactor-mod-editor": "workspace:^",
     "@journeyapps-labs/reactor-mod-todos": "workspace:^",
-    "@projectstorm/react-workspaces-core": "^4.2.3",
+    "@projectstorm/react-workspaces-core": "^4.3.2",
     "mobx": "^6.16.1",
     "mobx-react": "^9.2.2",
     "monaco-editor": "^0.55.1",
