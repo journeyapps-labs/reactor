@@ -14,3 +14,4 @@ minimumReleaseAgeExclude:
   - '@types/node@26.1.0'
   - js-yaml@5.2.1
   - prettier@3.9.5
+  - '@projectstorm/*'
