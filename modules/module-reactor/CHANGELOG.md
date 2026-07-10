@@ -1,5 +1,11 @@
 # @journeyapps-labs/reactor-mod
 
+## 6.1.2
+
+### Patch Changes
+
+- a454696: small api fixes
+
 ## 6.1.1
 
 ### Patch Changes
