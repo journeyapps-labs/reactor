@@ -59,7 +59,8 @@ theme.addThemeValues({
     },
     trees: {
       labelColor: '#202b39',
-      selectedBackground: '#dce7f5'
+      selectedBackground: '#dce7f5',
+      overflowBackground: '#66758a'
     },
     guide: {
       accent: '#ff6a1a',

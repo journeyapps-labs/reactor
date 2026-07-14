@@ -7,6 +7,7 @@ import { AbstractValueControl } from '../../../controls/AbstractValueControl';
 import { ButtonControl } from '../../../controls/ButtonControl';
 import { BaseObserver, BaseObserverInterface } from '@journeyapps-labs/common-utils';
 import { SetControl, SetControlOption } from '../../../controls/SetControl';
+import type { EntityLabel } from '../meta/EntityDescriberComponent';
 
 export interface RenderCollectionOptions<T> {
   entities: T[];
@@ -42,12 +43,29 @@ export enum GroupingOptionValue {
   TAGS = 'tags'
 }
 
+type MetadataLabelGroupingOption = `metadata-label:${string}`;
+
+/** Serializable grouping values, including metadata-label grouping. */
+export type GroupingOption = GroupingOptionValue | MetadataLabelGroupingOption;
+
+export const GroupingOption = {
+  metadataLabel(label: string): MetadataLabelGroupingOption {
+    return `metadata-label:${label}`;
+  },
+
+  getMetadataLabel(option: GroupingOption): string | null {
+    const prefix = 'metadata-label:';
+    return option.startsWith(prefix) ? option.slice(prefix.length) : null;
+  }
+};
+
 export interface GroupBySettingOptions {
   allowedGroupingSettings?: {
     complexName?: boolean;
     tags?: boolean;
+    labels?: string[];
   };
-  defaultGroupingSetting?: GroupingOptionValue;
+  defaultGroupingSetting?: GroupingOption;
 }
 
 export interface GroupByEntityOptions<T> {
@@ -55,6 +73,7 @@ export interface GroupByEntityOptions<T> {
   describe?: (entity: T) => {
     complexName?: string;
     tags?: string[];
+    labels?: EntityLabel[];
   };
 }
 
@@ -63,7 +82,7 @@ export enum AbstractPresenterContextSetting {
 }
 
 export interface AbstractPresenterContextSettings {
-  [AbstractPresenterContextSetting.GROUP_BY]: GroupingOptionValue;
+  [AbstractPresenterContextSetting.GROUP_BY]: GroupingOption;
 }
 
 export abstract class AbstractPresenterContext<
@@ -138,7 +157,7 @@ export abstract class AbstractPresenterContext<
 
   protected registerGroupBySetting(options: GroupBySettingOptions) {
     const allowed = options.allowedGroupingSettings || {};
-    const groupByOptions: SetControlOption<GroupingOptionValue>[] = [
+    const groupByOptions: SetControlOption<GroupingOption>[] = [
       { key: GroupingOptionValue.NONE, icon: 'layer-group', label: 'No grouping' }
     ];
 
@@ -158,6 +177,15 @@ export abstract class AbstractPresenterContext<
       });
     }
 
+    for (const label of allowed.labels || []) {
+      groupByOptions.push({
+        key: GroupingOption.metadataLabel(label),
+        icon: 'list',
+        label,
+        group: 'Metadata'
+      });
+    }
+
     if (groupByOptions.length <= 1) {
       return;
     }
@@ -166,39 +194,56 @@ export abstract class AbstractPresenterContext<
       icon: 'layer-group',
       label: 'Group by',
       key: AbstractPresenterContextSetting.GROUP_BY,
-      control: new SetControl<GroupingOptionValue>({
+      control: new SetControl<GroupingOption>({
         initialValue: options.defaultGroupingSetting || GroupingOptionValue.NONE,
         options: groupByOptions
       })
     });
   }
 
-  protected groupBySelectedSetting<Item extends { complexName?: string; tags?: string[] }>(
+  protected groupBySelectedSetting<Item extends { complexName?: string; tags?: string[]; labels?: EntityLabel[] }>(
     items: Item[],
-    selectedGrouping: GroupingOptionValue,
+    selectedGrouping: GroupingOption,
     fallback: string
   ): Record<string, Item[]> {
     if (selectedGrouping === GroupingOptionValue.COMPLEX_NAME) {
       return _.groupBy(items, (item) => item.complexName || fallback);
     }
 
-    const taggedEntries = _.flatMap(items, (item) => {
-      const tags = (item.tags || []).filter((tag) => !!tag);
-      const selectedTags = tags.length > 0 ? tags : [fallback];
-      return selectedTags.map((tag) => ({
-        key: tag,
-        item
-      }));
-    });
+    if (selectedGrouping === GroupingOptionValue.TAGS) {
+      const taggedEntries = _.flatMap(items, (item) => {
+        const tags = (item.tags || []).filter((tag) => !!tag);
+        const selectedTags = tags.length > 0 ? tags : [fallback];
+        return selectedTags.map((tag) => ({
+          key: tag,
+          item
+        }));
+      });
 
-    const grouped = _.groupBy(taggedEntries, (entry) => entry.key);
-    return _.mapValues(grouped, (groupedEntries) => groupedEntries.map((entry) => entry.item));
+      const grouped = _.groupBy(taggedEntries, (entry) => entry.key);
+      return _.mapValues(grouped, (groupedEntries) => groupedEntries.map((entry) => entry.item));
+    }
+
+    const metadataLabel = GroupingOption.getMetadataLabel(selectedGrouping);
+    if (metadataLabel) {
+      return _.groupBy(items, (item) => {
+        return item.labels?.find((label) => label.label === metadataLabel)?.value || fallback;
+      });
+    }
+
+    return _.groupBy(items, () => fallback);
   }
 
   isGroupingEnabled(): boolean {
     const controlValues = this.getControlValues();
     const selectedGrouping = controlValues[AbstractPresenterContextSetting.GROUP_BY] || GroupingOptionValue.NONE;
     return selectedGrouping !== GroupingOptionValue.NONE;
+  }
+
+  getSelectedMetadataGroupingLabel(): string | null {
+    const controlValues = this.getControlValues();
+    const selectedGrouping = controlValues[AbstractPresenterContextSetting.GROUP_BY] || GroupingOptionValue.NONE;
+    return GroupingOption.getMetadataLabel(selectedGrouping);
   }
 
   groupEntitiesBySelectedSetting<T>(options: GroupByEntityOptions<T>): Record<string, T[]> {

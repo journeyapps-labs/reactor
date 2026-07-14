@@ -9,6 +9,7 @@ import { BatchStore } from '../../../../../stores/batch/BatchStore';
 import { AbstractEntityTreePresenterContext } from './presenter-contexts/AbstractEntityTreePresenterContext';
 import { SearchableTreeSearchScope } from '../../../../../widgets/core-tree/SearchableTreeSearchScope';
 import { AbstractPresenterContextSettings, GroupBySettingOptions } from '../../AbstractPresenterContext';
+import { MetadataDisplayOptions, TagDisplayMode } from './EntityTreeDisplayMode';
 
 export enum EntityTreePresenterSetting {
   SORT = 'sort'
@@ -32,6 +33,9 @@ export interface EntityTreePresenterComponentOptions<T = any>
   loadChildrenAsNodesAreOpened?: boolean;
   searchScope?: SearchableTreeSearchScope;
   label?: string;
+  tagDisplayMode?: TagDisplayMode;
+  metadataDisplayOptions?: MetadataDisplayOptions;
+  maxTags?: number;
 }
 
 export abstract class EntityTreePresenterComponent<T> extends EntityPresenterComponent<
@@ -56,5 +60,17 @@ export abstract class EntityTreePresenterComponent<T> extends EntityPresenterCom
 
   get searchScope() {
     return this.options2.searchScope || SearchableTreeSearchScope.FULL_TREE;
+  }
+
+  get tagDisplayMode() {
+    return this.options2.tagDisplayMode || TagDisplayMode.NONE;
+  }
+
+  get metadataDisplayOptions() {
+    return this.options2.metadataDisplayOptions || {};
+  }
+
+  get maxTags() {
+    return this.options2.maxTags;
   }
 }

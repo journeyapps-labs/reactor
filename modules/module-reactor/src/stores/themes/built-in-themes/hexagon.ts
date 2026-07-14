@@ -71,7 +71,8 @@ theme.addThemeValues({
     },
     trees: {
       ...DarkTheme.trees,
-      selectedBackground: 'linear-gradient(155deg, rgba(255, 143, 0, 0.2), rgba(255, 23, 68,0.2))'
+      selectedBackground: 'linear-gradient(155deg, rgba(255, 143, 0, 0.2), rgba(255, 23, 68,0.2))',
+      overflowBackground: '#1e1e20'
     },
     cards: {
       foreground: 'white',

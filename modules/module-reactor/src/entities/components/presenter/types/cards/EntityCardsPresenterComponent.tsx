@@ -2,7 +2,7 @@ import React from 'react';
 import {
   AbstractPresenterContext,
   AbstractPresenterContextSettings,
-  GroupingOptionValue,
+  GroupingOption,
   RenderCollectionOptions
 } from '../../AbstractPresenterContext';
 import { EntityPresenterComponent, EntityPresenterComponentRenderType } from '../../EntityPresenterComponent';
@@ -21,8 +21,9 @@ export interface EntityCardsPresenterComponentOptions {
   allowedGroupingSettings?: {
     complexName?: boolean;
     tags?: boolean;
+    labels?: string[];
   };
-  defaultGroupingSetting?: GroupingOptionValue;
+  defaultGroupingSetting?: GroupingOption;
 }
 
 export enum EntityCardsPresenterSetting {

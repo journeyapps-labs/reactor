@@ -32,6 +32,11 @@ namespace S {
   export const Container = themed.form`
     padding: 20px;
     min-width: 400px;
+    box-sizing: border-box;
+    max-height: 90vh;
+    min-height: 0;
+    display: flex;
+    flex-direction: column;
 
     ${REACTOR_MOBILE_MEDIA_QUERY} {
       box-sizing: border-box;
@@ -48,6 +53,7 @@ namespace S {
     display: flex;
     justify-content: space-between;
     margin-bottom: 10px;
+    flex-shrink: 0;
 
     ${REACTOR_MOBILE_MEDIA_QUERY} {
       align-items: flex-start;
@@ -80,6 +86,7 @@ namespace S {
     margin-bottom: 20px;
     max-width: 400px;
     user-select: none;
+    flex-shrink: 0;
 
     ${REACTOR_MOBILE_MEDIA_QUERY} {
       max-width: none;
@@ -89,10 +96,10 @@ namespace S {
   `;
   export const Content = themed.div`
     margin-bottom: 10px;
+    min-height: 0;
+    overflow: auto;
 
     ${REACTOR_MOBILE_MEDIA_QUERY} {
-      min-height: 0;
-      overflow-y: auto;
       margin-bottom: 16px;
     }
   `;

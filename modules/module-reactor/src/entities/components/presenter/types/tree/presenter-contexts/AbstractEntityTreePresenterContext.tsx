@@ -34,6 +34,7 @@ import { AbstractDescendentContextOptions } from '../descendent/AbstractDescende
 import { LazyDescendentContext } from '../descendent/LazyDescendentContext';
 import { ImmediateDescendentContext } from '../descendent/ImmediateDescendentContext';
 import { untracked } from 'mobx';
+import { MetadataDisplayMode, TagDisplayMode } from '../EntityTreeDisplayMode';
 
 export interface GenerateTreeOptions<T> {
   events?: BaseObserverInterface<SelectEntityListener<T>>;
@@ -142,6 +143,7 @@ export abstract class AbstractEntityTreePresenterContext<
     const groupedEntities = this.groupEntitiesBySelectedSetting({
       entities
     });
+    const metadataGroupingLabel = this.getSelectedMetadataGroupingLabel();
 
     const nodesByEntity = new Map<T, ReactorTreeEntity>(entities.map((entity, index) => [entity, nodes[index]]));
 
@@ -149,7 +151,7 @@ export abstract class AbstractEntityTreePresenterContext<
       const groupNode = new ReactorTreeNode({
         key: `group-${group}`,
         getTreeProps: () => ({
-          label: group,
+          label: metadataGroupingLabel ? `${metadataGroupingLabel}: ${group}` : group,
           icon: 'layer-group'
         }),
         match: (searchEvent) => searchEvent.matches(group),
@@ -217,13 +219,26 @@ export abstract class AbstractEntityTreePresenterContext<
     let node = this.doGenerateTreeNode(entity, options);
     node.addPropGenerator(() => {
       const described = this.definition.describeEntity(entity);
+      const rootPresenter = this.getRootContext().presenter;
+      const renderDescription =
+        rootPresenter.tagDisplayMode !== TagDisplayMode.NONE ||
+        Object.values(rootPresenter.metadataDisplayOptions).some((option) => option.mode !== MetadataDisplayMode.NONE);
+      const rootContext = this.getRootContext();
+      const metadataGroupingLabel = rootContext.getSelectedMetadataGroupingLabel();
+      const groupingByTags =
+        rootContext.getControlValues()[AbstractPresenterContextSetting.GROUP_BY] === GroupingOptionValue.TAGS;
       return {
         icon: described.icon,
         iconColor: described.iconColor,
         icon2: described.icon2,
         icon2Color: described.icon2Color,
         label: described.simpleName,
-        label2: this.shouldRenderSecondaryLabel() ? described.complexName : null
+        label2: this.shouldRenderSecondaryLabel() ? described.complexName : null,
+        tags: renderDescription && !groupingByTags ? described.tags : [],
+        metadata: renderDescription ? described.labels?.filter((label) => label.label !== metadataGroupingLabel) : [],
+        tagDisplayMode: rootPresenter.tagDisplayMode,
+        metadataDisplayOptions: rootPresenter.metadataDisplayOptions,
+        maxTags: rootPresenter.maxTags
       };
     });
     this.patchTreeInteractions(node, entity);

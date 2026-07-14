@@ -8,10 +8,20 @@ import { PanelPlaceholderWidget } from '../../../../../widgets/panel/panel/Panel
 import { RenderCollectionOptions } from '../../AbstractPresenterContext';
 import { AbstractEntityTreePresenterContext } from './presenter-contexts/AbstractEntityTreePresenterContext';
 import { SearchableCoreTreeWidget } from '../../../../../widgets/index';
+import styled from '@emotion/styled';
 
 export interface EntityTreeCollectionWidgetProps<T extends any> {
   event: RenderCollectionOptions<T>;
   presenterContext: AbstractEntityTreePresenterContext<T>;
+}
+
+namespace S {
+  export const Container = styled.div`
+    width: 100%;
+    min-width: 0;
+    max-width: 100%;
+    overflow: hidden;
+  `;
 }
 
 export const EntityTreeCollectionWidget = observer(function <T>(props: EntityTreeCollectionWidgetProps<T>) {
@@ -80,20 +90,28 @@ export const EntityTreeCollectionWidget = observer(function <T>(props: EntityTre
   }, [event.events, nodes]);
 
   if (nodes.length === 0) {
-    return <PanelPlaceholderWidget center={true} icon="clone" text="No entities to display" />;
+    return (
+      <S.Container>
+        <PanelPlaceholderWidget center={true} icon="clone" text="No entities to display" />
+      </S.Container>
+    );
   }
 
   if (event.searchEvent?.search) {
-    return nodes.map((tree) => {
-      return (
-        <SearchableCoreTreeWidget
-          key={tree.options.key}
-          tree={tree}
-          search={event.searchEvent.search}
-          searchScope={presenterContext.presenter.searchScope}
-        />
-      );
-    });
+    return (
+      <S.Container>
+        {nodes.map((tree) => {
+          return (
+            <SearchableCoreTreeWidget
+              key={tree.options.key}
+              tree={tree}
+              search={event.searchEvent.search}
+              searchScope={presenterContext.presenter.searchScope}
+            />
+          );
+        })}
+      </S.Container>
+    );
   }
 
   const jsxElements = nodes.map((tree) => {
@@ -110,5 +128,5 @@ export const EntityTreeCollectionWidget = observer(function <T>(props: EntityTre
     );
   });
 
-  return <>{jsxElements}</>;
+  return <S.Container>{jsxElements}</S.Container>;
 });

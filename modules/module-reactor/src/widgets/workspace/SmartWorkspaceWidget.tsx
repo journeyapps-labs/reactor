@@ -30,8 +30,6 @@ namespace S {
     min-width: 0;
     min-height: 0;
     position: relative;
-    margin-left: -${WORKSPACE_PANEL_INSET}px;
-    margin-right: -${WORKSPACE_PANEL_INSET}px;
 
     > * {
       flex-grow: 1;

@@ -48,7 +48,8 @@ theme.addThemeValues({
     },
     trees: {
       ...DarkTheme.trees,
-      selectedBackground: 'rgba(255, 255, 255, 0.08)'
+      selectedBackground: 'rgba(255, 255, 255, 0.08)',
+      overflowBackground: '#202022'
     },
     guide: {
       accent: 'rgb(248,171,4)',

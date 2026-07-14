@@ -7,6 +7,7 @@ import {
   DialogStore,
   DialogStore2,
   FormDialogDirective,
+  InlineDialogDirective,
   NotificationStore,
   NotificationType,
   PanelButtonMode,
@@ -14,6 +15,8 @@ import {
   ReactorPanelModel,
   SimpleComboBoxDirective,
   System,
+  TableRow,
+  TableWidget,
   ioc,
   styled
 } from '@journeyapps-labs/reactor-mod';
@@ -80,6 +83,23 @@ const TOP_LEVEL_ITEMS: ComboBoxItem[] = [
   }
 ];
 
+interface DialogTableRow extends TableRow {
+  cells: {
+    row: number;
+    name: string;
+    status: string;
+  };
+}
+
+const DIALOG_TABLE_ROWS: DialogTableRow[] = Array.from({ length: 400 }, (_, index) => ({
+  key: `dialog-table-row-${index + 1}`,
+  cells: {
+    row: index + 1,
+    name: `Dialog table row ${index + 1}`,
+    status: index % 3 === 0 ? 'Pending' : index % 3 === 1 ? 'Processing' : 'Complete'
+  }
+}));
+
 export const PlaygroundDialogsComboboxesPanelWidget: React.FC<PlaygroundDialogsComboboxesPanelWidgetProps> = observer(
   () => {
     const dialogStore = ioc.get(DialogStore);
@@ -129,6 +149,27 @@ export const PlaygroundDialogsComboboxesPanelWidget: React.FC<PlaygroundDialogsC
       });
 
       await dialogStore2.showDialog(directive);
+    };
+
+    const runTableDialog = async () => {
+      await dialogStore2.showDialog(
+        new InlineDialogDirective({
+          title: 'Large table dialog',
+          markdown: '400 rows to test a dialog larger than the OXIDE viewport.',
+          generateContent: () => (
+            <S.TableDialogContent>
+              <TableWidget
+                columns={[
+                  { key: 'row', display: 'Row', shrink: true },
+                  { key: 'name', display: 'Name' },
+                  { key: 'status', display: 'Status', shrink: true }
+                ]}
+                rows={DIALOG_TABLE_ROWS}
+              />
+            </S.TableDialogContent>
+          )
+        })
+      );
     };
 
     const runNestedComboDemo = async (position: any) => {
@@ -213,6 +254,7 @@ export const PlaygroundDialogsComboboxesPanelWidget: React.FC<PlaygroundDialogsC
                       action={runFormDialog}
                       mode={PanelButtonMode.PRIMARY}
                     />
+                    <PanelButtonWidget label="Large table dialog" icon="table" action={runTableDialog} />
                   </S.Buttons>
                 );
               }
@@ -277,6 +319,10 @@ export const PlaygroundDialogsComboboxesPanelWidget: React.FC<PlaygroundDialogsC
 );
 
 namespace S {
+  export const TableDialogContent = styled.div`
+    min-width: 560px;
+  `;
+
   export const Container = styled.div`
     padding: 12px;
     display: flex;

@@ -1,10 +1,9 @@
 import * as React from 'react';
-import { MouseEvent } from 'react';
+import { MouseEvent, useRef } from 'react';
 import styled from '@emotion/styled';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { IconWidget, ReactorIcon } from '../icons/IconWidget';
 import { DualIconWidget } from '../icons/DualIconWidget';
-import { observer } from 'mobx-react';
 import { TreeContentWidget } from './TreeContentWidget';
 import { SearchEventMatch } from '@journeyapps-labs/lib-reactor-search';
 import { MatchesWidget } from '../search/MatchesWidget';
@@ -15,6 +14,9 @@ import { themed } from '../../stores/themes/reactor-theme-fragment';
 import { REACTOR_MOBILE_MEDIA_QUERY } from '../../hooks/useReactorViewportMode';
 import { ContextMenuTriggerWidget } from '../context-menu/ContextMenuTriggerWidget';
 import { MousePosition } from '../../layers/combo/SmartPositionWidget';
+import { TreeEntityDetailsWidget } from './TreeEntityDetailsWidget';
+import type { MetadataWidgetProps } from '../meta/MetadataWidget';
+import { MetadataDisplayOptions, TagDisplayMode } from './TreeEntityDisplayMode';
 
 export interface TreeLeafWidgetCommonProps {
   rightChildren?: React.JSX.Element;
@@ -39,6 +41,11 @@ export interface TreeLeafWidgetCommonProps {
   forwardRef?: React.RefObject<HTMLDivElement>;
   wrap?: boolean;
   matches?: SearchEventMatch;
+  tags?: string[];
+  metadata?: MetadataWidgetProps[];
+  tagDisplayMode?: TagDisplayMode;
+  metadataDisplayOptions?: MetadataDisplayOptions;
+  maxTags?: number;
 }
 
 export interface TreeLeafWidgetProps extends TreeLeafWidgetCommonProps {
@@ -60,6 +67,10 @@ namespace S {
 
     display: flex;
     align-items: center;
+    width: 100%;
+    min-width: 0;
+    box-sizing: border-box;
+    overflow: hidden;
     min-height: 23px;
     user-select: none;
     cursor: pointer;
@@ -83,10 +94,17 @@ namespace S {
     }
   `;
 
+  export const TopLeft = styled(TreeContentWidget)`
+    flex-grow: 0;
+  `;
+
   export const Title = styled.div<{ selected: boolean; $wrap: boolean; color: string }>`
     font-size: 15px;
     user-select: none;
     ${(p) => (p.$wrap ? '' : 'white-space: nowrap')};
+    min-width: 0;
+    overflow: hidden;
+    text-overflow: ellipsis;
     margin-top: -1px;
     display: flex;
     align-items: center;
@@ -105,17 +123,25 @@ namespace S {
     white-space: nowrap;
   `;
 
-  export const RightContent = styled.div<{ $wrap: boolean }>`
+  export const RightContent = styled.div`
+    display: flex;
+    justify-content: flex-end;
+    flex-shrink: 1;
+    flex-grow: 1;
+    min-width: 0;
+  `;
+
+  export const Actions = styled.div`
     display: flex;
     align-items: center;
-    flex-shrink: ${(p) => (p.$wrap ? 1 : 0)};
-    ${(p) => (p.$wrap ? 'flex-wrap: wrap' : '')};
+    flex-shrink: 0;
   `;
 
   export const Icon = styled.div<{ deactivated?: boolean }>`
     margin-right: 6px;
     font-size: 12px;
     min-width: 14px;
+    flex-shrink: 0;
     text-align: center;
     align-items: center;
     display: flex;
@@ -157,133 +183,111 @@ namespace S {
   `;
 }
 
-@observer
-export class TreeLeafWidget extends React.Component<TreeLeafWidgetProps> {
-  ref: React.RefObject<HTMLDivElement>;
+export const TreeLeafWidget: React.FC<TreeLeafWidgetProps> = (props) => {
+  const localRef = useRef<HTMLDivElement>(null);
+  const forwardRef = props.forwardRef || localRef;
+  const hasDetails = (props.tags?.length || 0) > 0 || (props.metadata?.length || 0) > 0;
 
-  constructor(props) {
-    super(props);
-    this.ref = React.createRef();
-  }
-
-  getNormalIcon() {
-    if (!this.props.icon) {
+  const getTitle = () => {
+    if (!props.label) {
       return null;
     }
-
-    if (this.props.icon2) {
-      return (
-        <S.Icon>
-          <DualIconWidget
-            icon1={this.props.icon}
-            icon2={this.props.icon2}
-            color1={this.props.iconColor}
-            color2={this.props.icon2Color}
-          />
-        </S.Icon>
-      );
+    if (!props.matches) {
+      return props.label;
     }
+    return <MatchesWidget locators={props.matches.locators} text={props.label as string} />;
+  };
 
+  const getNormalIcon = () => {
+    if (!props.icon) {
+      return null;
+    }
     return (
-      <S.Icon style={{ color: this.props.iconColor }}>
-        <S.NestedIcon icon={this.props.icon as any} spin={this.props.iconSpin} />
+      <S.Icon style={{ color: props.iconColor }}>
+        {props.icon2 ? (
+          <DualIconWidget icon1={props.icon} icon2={props.icon2} color1={props.iconColor} color2={props.icon2Color} />
+        ) : (
+          <S.NestedIcon icon={props.icon as any} spin={props.iconSpin} />
+        )}
       </S.Icon>
     );
-  }
+  };
 
-  getPlayIcon() {
-    if (!this.props.collapse) {
+  const getPlayIcon = () => {
+    if (!props.collapse) {
       return null;
     }
     return (
       <S.Icon
-        deactivated={!this.props.collapse.enabled}
+        deactivated={!props.collapse.enabled}
         onClick={(event) => {
           event.stopPropagation();
           event.persist();
-          this.props.collapse.changed(!this.props.collapse.collapsed, event.altKey);
+          props.collapse.changed(!props.collapse.collapsed, event.altKey);
         }}
       >
-        <S.Arrow open={!this.props.collapse.collapsed} icon="play" />
+        <S.Arrow open={!props.collapse.collapsed} icon="play" />
       </S.Icon>
     );
+  };
+
+  let depth = props.depth || 0;
+  if (!props.collapse) {
+    depth++;
   }
 
-  getRightContent() {
-    if (this.props.rightChildren) {
-      return <S.RightContent $wrap={this.props.rightChildrenWrap}>{this.props.rightChildren}</S.RightContent>;
-    }
-    return null;
-  }
-
-  getTitle() {
-    if (!this.props.label) {
-      return null;
-    }
-    if (!this.props.matches) {
-      return this.props.label;
-    }
-    return <MatchesWidget locators={this.props.matches.locators} text={this.props.label as string} />;
-  }
-
-  getMainContent(selected: boolean, depth, ref: React.RefObject<any>) {
-    return (
-      <S.Top
-        title={this.props.tooltip}
-        dropzoneHover={this.props.dropZoneHover}
-        dropzoneHint={this.props.dropZoneHint}
-        attention={selected}
-        deactivated={this.props.deactivated}
-        onClick={(event) => {
-          if (this.props.normalClick) {
-            event.stopPropagation();
-            this.props.normalClick(event);
-          }
-        }}
-        onContextMenu={(position) => {
-          if (this.props.rightClick) {
-            this.props.rightClick(position);
-          }
-        }}
-        onMouseEnter={(event) => {
-          this.props.mouseOver?.(event, true);
-        }}
-        onMouseLeave={(event) => {
-          this.props.mouseOver?.(event, false);
-        }}
-        ref={ref}
-        selected={this.props.selected}
-      >
-        <TreeContentWidget depth={depth}>
-          {this.getPlayIcon()}
-          {this.getNormalIcon()}
-          <S.Title color={this.props.labelColor} $wrap={this.props.wrap} selected={this.props.selected}>
-            {this.getTitle()}
-            {this.props.label2 ? <S.Label2>{this.props.label2}</S.Label2> : null}
-          </S.Title>
-        </TreeContentWidget>
-        {this.getRightContent()}
-      </S.Top>
-    );
-  }
-
-  render() {
-    let depth = this.props.depth || 0;
-    if (!this.props.collapse) {
-      depth++;
-    }
-    const ref = this.props.forwardRef || this.ref;
-    return (
-      <AttentionWrapperWidget<ButtonComponentSelection>
-        forwardRef={ref}
-        selection={{
-          label: this.props.label
-        }}
-        type={ReactorComponentType.TREE_LEAF}
-        activated={(selected) => {
-          return this.getMainContent(!!selected, depth, ref);
-        }}
-      />
-    );
-  }
-}
+  return (
+    <AttentionWrapperWidget<ButtonComponentSelection>
+      forwardRef={forwardRef}
+      selection={{ label: props.label }}
+      type={ReactorComponentType.TREE_LEAF}
+      activated={(selected) => (
+        <S.Top
+          title={props.tooltip}
+          dropzoneHover={props.dropZoneHover}
+          dropzoneHint={props.dropZoneHint}
+          attention={!!selected}
+          deactivated={props.deactivated}
+          onClick={(event) => {
+            if (props.normalClick) {
+              event.stopPropagation();
+              props.normalClick(event);
+            }
+          }}
+          onContextMenu={(position) => props.rightClick?.(position)}
+          onMouseEnter={(event) => props.mouseOver?.(event, true)}
+          onMouseLeave={(event) => props.mouseOver?.(event, false)}
+          ref={forwardRef}
+          selected={props.selected}
+        >
+          <S.TopLeft depth={depth}>
+            {getPlayIcon()}
+            {getNormalIcon()}
+            <S.Title color={props.labelColor} $wrap={props.wrap} selected={props.selected}>
+              {getTitle()}
+              {props.label2 ? <S.Label2>{props.label2}</S.Label2> : null}
+            </S.Title>
+          </S.TopLeft>
+          {hasDetails ? (
+            <S.RightContent>
+              <TreeEntityDetailsWidget
+                tags={props.tags}
+                metadata={props.metadata}
+                tagDisplayMode={props.tagDisplayMode}
+                metadataDisplayOptions={props.metadataDisplayOptions}
+                maxTags={props.maxTags}
+              />
+            </S.RightContent>
+          ) : null}
+          {props.rightChildren ? (
+            hasDetails ? (
+              <S.Actions>{props.rightChildren}</S.Actions>
+            ) : (
+              <S.RightContent>{props.rightChildren}</S.RightContent>
+            )
+          ) : null}
+        </S.Top>
+      )}
+    />
+  );
+};

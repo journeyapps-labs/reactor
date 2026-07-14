@@ -117,7 +117,8 @@ export const Scarlet = theme.addThemeValues({
     },
     trees: {
       ...DarkTheme.trees,
-      selectedBackground: 'rgba(255, 74, 166, 0.18)'
+      selectedBackground: 'rgba(255, 74, 166, 0.18)',
+      overflowBackground: '#181014'
     },
     buttonPrimary: {
       background: '#0a0d14',

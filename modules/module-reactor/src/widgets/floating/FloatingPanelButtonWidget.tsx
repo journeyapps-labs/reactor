@@ -40,15 +40,21 @@ namespace S {
     }
 
     ${REACTOR_MOBILE_MEDIA_QUERY} {
+      min-width: 88px;
       min-height: 40px;
       padding: 8px 12px;
       font-size: 16px;
+      justify-content: center;
     }
   `;
 
   export const Label = styled.div`
     flex-grow: 1;
     user-select: none;
+
+    ${REACTOR_MOBILE_MEDIA_QUERY} {
+      text-align: center;
+    }
   `;
 
   export const Icon = styled.div`

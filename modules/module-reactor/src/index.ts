@@ -68,6 +68,9 @@ export * from './hooks/useValidator';
 export * from './hooks/useCopyButton';
 export * from './hooks/useDisplayDateOptions';
 export * from './hooks/useDimensionObserver';
+export * from './hooks/useWidthObserver';
+export * from './hooks/useTheme';
+export * from './widgets/tree/TreeEntityDisplayMode';
 export * from './hooks/useReactorViewportMode';
 
 export * from './search/SearchEngine';
@@ -190,6 +193,7 @@ export * from './entities/components/presenter/types/tree/EntityReactorLeaf';
 export * from './entities/components/presenter/types/tree/InlineTreePresenterComponent';
 export * from './entities/components/presenter/types/tree/EntityTreeCollectionWidget';
 export * from './entities/components/presenter/types/tree/EntityTreePresenterComponent';
+export * from './entities/components/presenter/types/tree/EntityTreeDisplayMode';
 export * from './entities/components/presenter/types/tree/presenter-contexts/AbstractEntityTreePresenterContext';
 export * from './entities/components/presenter/types/tree/presenter-contexts/CachedEntityTreePresenterContext';
 export * from './entities/components/presenter/types/tree/presenter-contexts/EntityTreePresenterContext';
