@@ -39,7 +39,7 @@ export const TreeEntityDetailsBadgesWidget: React.FC<TreeEntityDetailsBadgesWidg
         return (
           <TreeBadgeWidget
             key={getTreeEntityMetadataKey(item)}
-            icon={item.icon?.name || 'list'}
+            icon={item.showIcon === false ? null : item.icon?.name || 'list'}
             background={color}
             iconColor={getDarkenedColor(color, 0.7)}
             tooltip={`${item.label}: ${item.value}`}

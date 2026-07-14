@@ -1,10 +1,9 @@
 import * as React from 'react';
-import { MouseEvent } from 'react';
+import { MouseEvent, useRef } from 'react';
 import styled from '@emotion/styled';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { IconWidget, ReactorIcon } from '../icons/IconWidget';
 import { DualIconWidget } from '../icons/DualIconWidget';
-import { useLayoutEffect, useRef, useState } from 'react';
 import { TreeContentWidget } from './TreeContentWidget';
 import { SearchEventMatch } from '@journeyapps-labs/lib-reactor-search';
 import { MatchesWidget } from '../search/MatchesWidget';
@@ -17,7 +16,7 @@ import { ContextMenuTriggerWidget } from '../context-menu/ContextMenuTriggerWidg
 import { MousePosition } from '../../layers/combo/SmartPositionWidget';
 import { TreeEntityDetailsWidget } from './TreeEntityDetailsWidget';
 import type { MetadataWidgetProps } from '../meta/MetadataWidget';
-import { MetadataDisplayMode, TagDisplayMode } from './TreeEntityDisplayMode';
+import { MetadataDisplayOptions, TagDisplayMode } from './TreeEntityDisplayMode';
 
 export interface TreeLeafWidgetCommonProps {
   rightChildren?: React.JSX.Element;
@@ -45,7 +44,7 @@ export interface TreeLeafWidgetCommonProps {
   tags?: string[];
   metadata?: MetadataWidgetProps[];
   tagDisplayMode?: TagDisplayMode;
-  metadataDisplayMode?: MetadataDisplayMode;
+  metadataDisplayOptions?: MetadataDisplayOptions;
   maxTags?: number;
 }
 
@@ -56,8 +55,6 @@ export interface TreeLeafWidgetProps extends TreeLeafWidgetCommonProps {
     enabled?: boolean;
   };
 }
-
-const RIGHT_CONTENT_OVERFLOW_TOLERANCE = 8;
 
 namespace S {
   export const Top = themed(ContextMenuTriggerWidget)<{
@@ -97,10 +94,17 @@ namespace S {
     }
   `;
 
+  export const TopLeft = styled(TreeContentWidget)`
+    flex-grow: 0;
+  `;
+
   export const Title = styled.div<{ selected: boolean; $wrap: boolean; color: string }>`
     font-size: 15px;
     user-select: none;
     ${(p) => (p.$wrap ? '' : 'white-space: nowrap')};
+    min-width: 0;
+    overflow: hidden;
+    text-overflow: ellipsis;
     margin-top: -1px;
     display: flex;
     align-items: center;
@@ -119,18 +123,25 @@ namespace S {
     white-space: nowrap;
   `;
 
-  export const RightContent = styled.div<{ $wrap: boolean }>`
+  export const RightContent = styled.div`
+    display: flex;
+    justify-content: flex-end;
+    flex-shrink: 1;
+    flex-grow: 1;
+    min-width: 0;
+  `;
+
+  export const Actions = styled.div`
     display: flex;
     align-items: center;
-    margin-left: auto;
-    flex-shrink: ${(p) => (p.$wrap ? 1 : 0)};
-    ${(p) => (p.$wrap ? 'flex-wrap: wrap' : '')};
+    flex-shrink: 0;
   `;
 
   export const Icon = styled.div<{ deactivated?: boolean }>`
     margin-right: 6px;
     font-size: 12px;
     min-width: 14px;
+    flex-shrink: 0;
     text-align: center;
     align-items: center;
     display: flex;
@@ -175,36 +186,7 @@ namespace S {
 export const TreeLeafWidget: React.FC<TreeLeafWidgetProps> = (props) => {
   const localRef = useRef<HTMLDivElement>(null);
   const forwardRef = props.forwardRef || localRef;
-  const [detailsOverflowed, setDetailsOverflowed] = useState(false);
-  const [expandedMinWidth, setExpandedMinWidth] = useState(0);
   const hasDetails = (props.tags?.length || 0) > 0 || (props.metadata?.length || 0) > 0;
-
-  useLayoutEffect(() => {
-    const row = forwardRef.current;
-    if (!row || !hasDetails) {
-      return;
-    }
-
-    const measure = () => {
-      if (detailsOverflowed) {
-        if (row.clientWidth >= expandedMinWidth - RIGHT_CONTENT_OVERFLOW_TOLERANCE) {
-          setDetailsOverflowed(false);
-          setExpandedMinWidth(0);
-        }
-        return;
-      }
-
-      if (row.scrollWidth - row.clientWidth > RIGHT_CONTENT_OVERFLOW_TOLERANCE) {
-        setDetailsOverflowed(true);
-        setExpandedMinWidth(row.scrollWidth);
-      }
-    };
-
-    const observer = new ResizeObserver(measure);
-    observer.observe(row);
-    measure();
-    return () => observer.disconnect();
-  }, [forwardRef, hasDetails, detailsOverflowed, expandedMinWidth, props.tags, props.metadata]);
 
   const getTitle = () => {
     if (!props.label) {
@@ -278,28 +260,31 @@ export const TreeLeafWidget: React.FC<TreeLeafWidgetProps> = (props) => {
           ref={forwardRef}
           selected={props.selected}
         >
-          <TreeContentWidget depth={depth}>
+          <S.TopLeft depth={depth}>
             {getPlayIcon()}
             {getNormalIcon()}
             <S.Title color={props.labelColor} $wrap={props.wrap} selected={props.selected}>
               {getTitle()}
               {props.label2 ? <S.Label2>{props.label2}</S.Label2> : null}
             </S.Title>
-          </TreeContentWidget>
-          {hasDetails || props.rightChildren ? (
-            <S.RightContent $wrap={props.rightChildrenWrap}>
-              {hasDetails ? (
-                <TreeEntityDetailsWidget
-                  tags={props.tags}
-                  metadata={props.metadata}
-                  tagDisplayMode={props.tagDisplayMode}
-                  metadataDisplayMode={props.metadataDisplayMode}
-                  maxTags={props.maxTags}
-                  overflowed={detailsOverflowed}
-                />
-              ) : null}
-              {props.rightChildren}
+          </S.TopLeft>
+          {hasDetails ? (
+            <S.RightContent>
+              <TreeEntityDetailsWidget
+                tags={props.tags}
+                metadata={props.metadata}
+                tagDisplayMode={props.tagDisplayMode}
+                metadataDisplayOptions={props.metadataDisplayOptions}
+                maxTags={props.maxTags}
+              />
             </S.RightContent>
+          ) : null}
+          {props.rightChildren ? (
+            hasDetails ? (
+              <S.Actions>{props.rightChildren}</S.Actions>
+            ) : (
+              <S.RightContent>{props.rightChildren}</S.RightContent>
+            )
           ) : null}
         </S.Top>
       )}

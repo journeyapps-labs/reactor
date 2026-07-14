@@ -6,7 +6,6 @@ import { TreeEntityDetailsPillsWidget } from './TreeEntityDetailsPillsWidget';
 
 export interface TreeEntityDetailsContentWidgetProps {
   details: TreeEntityDetailsDisplayModel;
-  overflowed?: boolean;
   onShowOverflowMenu: (event: React.MouseEvent) => void;
 }
 
@@ -19,10 +18,6 @@ namespace S {
 }
 
 export const TreeEntityDetailsContentWidget: React.FC<TreeEntityDetailsContentWidgetProps> = (props) => {
-  if (props.overflowed) {
-    return null;
-  }
-
   return (
     <S.Tags>
       <TreeEntityDetailsBadgesWidget
@@ -33,7 +28,6 @@ export const TreeEntityDetailsContentWidget: React.FC<TreeEntityDetailsContentWi
       />
       <TreeEntityDetailsPillsWidget
         tags={props.details.pillTags}
-        metadata={props.details.pillMetadata}
         hiddenTagCount={props.details.pillHiddenTagCount}
         onShowOverflowMenu={props.onShowOverflowMenu}
       />

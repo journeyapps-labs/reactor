@@ -1,5 +1,10 @@
 import type { MetadataWidgetProps } from '../meta/MetadataWidget';
-import { MetadataDisplayMode, TagDisplayMode } from './TreeEntityDisplayMode';
+import {
+  DEFAULT_METADATA_DISPLAY_OPTION,
+  MetadataDisplayMode,
+  MetadataDisplayOptions,
+  TagDisplayMode
+} from './TreeEntityDisplayMode';
 import type { GetTheme } from '../../stores/themes/ThemeFragment';
 import { theme } from '../../stores/themes/reactor-theme-fragment';
 
@@ -9,7 +14,6 @@ export interface TreeEntityDetailsDisplayModel {
   badgeTags: string[];
   pillTags: string[];
   badgeMetadata: MetadataWidgetProps[];
-  pillMetadata: MetadataWidgetProps[];
   metaBarMetadata: MetadataWidgetProps[];
   badgeHiddenTagCount: number;
   pillHiddenTagCount: number;
@@ -19,11 +23,41 @@ export const createTreeEntityDetailsDisplayModel = (options: {
   tags?: string[];
   metadata?: MetadataWidgetProps[];
   tagDisplayMode?: TagDisplayMode;
-  metadataDisplayMode?: MetadataDisplayMode;
+  metadataDisplayOptions?: MetadataDisplayOptions;
+  metadataDisplayModeOverride?: MetadataDisplayMode;
   maxTags?: number;
 }): TreeEntityDetailsDisplayModel => {
   const tags = options.tagDisplayMode === TagDisplayMode.NONE ? [] : options.tags || [];
-  const metadata = options.metadataDisplayMode === MetadataDisplayMode.NONE ? [] : options.metadata || [];
+  const metadataByMode = (options.metadata || []).reduce(
+    (result, item) => {
+      const displayOption =
+        options.metadataDisplayOptions?.[item.label] ||
+        options.metadataDisplayOptions?.[DEFAULT_METADATA_DISPLAY_OPTION];
+      const mode = options.metadataDisplayModeOverride || displayOption?.mode || MetadataDisplayMode.NONE;
+      if (mode === MetadataDisplayMode.NONE) {
+        return result;
+      }
+
+      const configuredItem = {
+        ...item,
+        showIcon: displayOption?.icon ?? true,
+        showLabel: displayOption?.label ?? true
+      };
+      result.metadata.push(configuredItem);
+      if (mode === MetadataDisplayMode.BADGE) {
+        result.badgeMetadata.push(configuredItem);
+      } else if (mode === MetadataDisplayMode.PILL) {
+        result.metaBarMetadata.push(configuredItem);
+      }
+      return result;
+    },
+    {
+      metadata: [] as MetadataWidgetProps[],
+      badgeMetadata: [] as MetadataWidgetProps[],
+      metaBarMetadata: [] as MetadataWidgetProps[]
+    }
+  );
+  const metadata = metadataByMode.metadata;
   const visibleTags = tags.slice(0, options.maxTags ?? 3);
   const hiddenTagCount = tags.length - visibleTags.length;
   const tagsAreBadges = options.tagDisplayMode === TagDisplayMode.BADGE;
@@ -34,9 +68,8 @@ export const createTreeEntityDetailsDisplayModel = (options: {
     metadata,
     badgeTags: tagsAreBadges ? visibleTags : [],
     pillTags: tagsArePills ? visibleTags : [],
-    badgeMetadata: options.metadataDisplayMode === MetadataDisplayMode.BADGE ? metadata : [],
-    pillMetadata: options.metadataDisplayMode === MetadataDisplayMode.PILL ? metadata : [],
-    metaBarMetadata: options.metadataDisplayMode === MetadataDisplayMode.METADATA ? metadata : [],
+    badgeMetadata: metadataByMode.badgeMetadata,
+    metaBarMetadata: metadataByMode.metaBarMetadata,
     badgeHiddenTagCount: tagsAreBadges ? hiddenTagCount : 0,
     pillHiddenTagCount: tagsArePills ? hiddenTagCount : 0
   };

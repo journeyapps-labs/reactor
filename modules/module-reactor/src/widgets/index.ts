@@ -127,6 +127,7 @@ export * from '../stores/workspace/react-workspaces/ReactorWindowFactory';
 export * from './layout/BodyWidget';
 export * from './layout/RawBodyWidget';
 export * from './layout/BorderLayoutWidget';
+export * from './layout/OverflowCollapseWidget';
 
 export * from '../stores/layer/LayerWidget';
 

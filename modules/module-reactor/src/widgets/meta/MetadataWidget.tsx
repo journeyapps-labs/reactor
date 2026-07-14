@@ -9,6 +9,8 @@ import type { EntityLabel } from '../../entities/components/meta/EntityDescriber
 export interface MetadataWidgetProps extends EntityLabel {
   className?: any;
   onClick?: MouseEventHandler<any>;
+  showIcon?: boolean;
+  showLabel?: boolean;
 }
 
 namespace S {
@@ -72,7 +74,7 @@ export const MetadataWidget: React.FC<MetadataWidgetProps> = (props) => {
           : null
       }
     >
-      <S.MetaKey active={isActive}>{props.label}</S.MetaKey>
+      {(props.showLabel ?? true) ? <S.MetaKey active={isActive}>{props.label}</S.MetaKey> : null}
       <S.MetaValue>{props.value}</S.MetaValue>
       {props.icon ? <S.MetaIcon spin={props.icon.spin} icon={props.icon.name} color={props.icon.color} /> : null}
     </S.MetaEntry>

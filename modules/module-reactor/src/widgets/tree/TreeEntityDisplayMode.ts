@@ -5,8 +5,17 @@ export enum TagDisplayMode {
 }
 
 export enum MetadataDisplayMode {
-  METADATA = 'metadata',
   BADGE = 'badge',
   PILL = 'pill',
   NONE = 'none'
 }
+
+export interface MetadataDisplayOption {
+  mode: MetadataDisplayMode;
+  icon?: boolean;
+  label?: boolean;
+}
+
+export type MetadataDisplayOptions = Record<string, MetadataDisplayOption>;
+
+export const DEFAULT_METADATA_DISPLAY_OPTION = '_default';

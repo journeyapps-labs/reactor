@@ -222,7 +222,7 @@ export abstract class AbstractEntityTreePresenterContext<
       const rootPresenter = this.getRootContext().presenter;
       const renderDescription =
         rootPresenter.tagDisplayMode !== TagDisplayMode.NONE ||
-        rootPresenter.metadataDisplayMode !== MetadataDisplayMode.NONE;
+        Object.values(rootPresenter.metadataDisplayOptions).some((option) => option.mode !== MetadataDisplayMode.NONE);
       const rootContext = this.getRootContext();
       const metadataGroupingLabel = rootContext.getSelectedMetadataGroupingLabel();
       const groupingByTags =
@@ -237,7 +237,7 @@ export abstract class AbstractEntityTreePresenterContext<
         tags: renderDescription && !groupingByTags ? described.tags : [],
         metadata: renderDescription ? described.labels?.filter((label) => label.label !== metadataGroupingLabel) : [],
         tagDisplayMode: rootPresenter.tagDisplayMode,
-        metadataDisplayMode: rootPresenter.metadataDisplayMode,
+        metadataDisplayOptions: rootPresenter.metadataDisplayOptions,
         maxTags: rootPresenter.maxTags
       };
     });

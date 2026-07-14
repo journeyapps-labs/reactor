@@ -33,12 +33,16 @@ const TODO_TREE_GROUPING_SETTINGS = {
 
 const TODO_TREE_DESCRIPTION_SETTINGS = {
   tagDisplayMode: TagDisplayMode.PILL,
-  metadataDisplayMode: MetadataDisplayMode.METADATA
+  metadataDisplayOptions: {
+    _default: { mode: MetadataDisplayMode.PILL }
+  }
 };
 
 const TODO_TREE_BADGE_DESCRIPTION_SETTINGS = {
   tagDisplayMode: TagDisplayMode.BADGE,
-  metadataDisplayMode: MetadataDisplayMode.BADGE
+  metadataDisplayOptions: {
+    _default: { mode: MetadataDisplayMode.BADGE }
+  }
 };
 
 export class TodoDefinition extends EntityDefinition<TodoModel> {
