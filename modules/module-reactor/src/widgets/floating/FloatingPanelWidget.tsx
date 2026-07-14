@@ -58,6 +58,7 @@ namespace S {
 
     *::-webkit-scrollbar {
       width: 10px;
+      height: 10px;
       padding-left: 3px;
     }
     *::-webkit-scrollbar-thumb {
@@ -66,6 +67,9 @@ namespace S {
       border-left: solid 2px ${(p) => p.theme.combobox.background};
       border-top-left-radius: 15px;
       border-bottom-left-radius: 15px;
+    }
+    *::-webkit-scrollbar-corner {
+      background: transparent;
     }
   `;
 }
