@@ -43,19 +43,20 @@ export enum GroupingOptionValue {
   TAGS = 'tags'
 }
 
-export type GroupingOption = GroupingOptionValue | `label:${string}`;
+type MetadataLabelGroupingOption = `metadata-label:${string}`;
 
-const METADATA_LABEL_GROUPING_PREFIX = 'label:';
+/** Serializable grouping values, including metadata-label grouping. */
+export type GroupingOption = GroupingOptionValue | MetadataLabelGroupingOption;
 
-const getMetadataLabelGroupingOption = (label: string): GroupingOption => {
-  return `${METADATA_LABEL_GROUPING_PREFIX}${label}`;
-};
+export const GroupingOption = {
+  metadataLabel(label: string): MetadataLabelGroupingOption {
+    return `metadata-label:${label}`;
+  },
 
-const getMetadataLabelFromGroupingOption = (option: GroupingOption): string | null => {
-  if (!option.startsWith(METADATA_LABEL_GROUPING_PREFIX)) {
-    return null;
+  getMetadataLabel(option: GroupingOption): string | null {
+    const prefix = 'metadata-label:';
+    return option.startsWith(prefix) ? option.slice(prefix.length) : null;
   }
-  return option.slice(METADATA_LABEL_GROUPING_PREFIX.length);
 };
 
 export interface GroupBySettingOptions {
@@ -178,7 +179,7 @@ export abstract class AbstractPresenterContext<
 
     for (const label of allowed.labels || []) {
       groupByOptions.push({
-        key: getMetadataLabelGroupingOption(label),
+        key: GroupingOption.metadataLabel(label),
         icon: 'list',
         label,
         group: 'Metadata'
@@ -223,7 +224,7 @@ export abstract class AbstractPresenterContext<
       return _.mapValues(grouped, (groupedEntries) => groupedEntries.map((entry) => entry.item));
     }
 
-    const metadataLabel = getMetadataLabelFromGroupingOption(selectedGrouping);
+    const metadataLabel = GroupingOption.getMetadataLabel(selectedGrouping);
     if (metadataLabel) {
       return _.groupBy(items, (item) => {
         return item.labels?.find((label) => label.label === metadataLabel)?.value || fallback;
@@ -242,7 +243,7 @@ export abstract class AbstractPresenterContext<
   getSelectedMetadataGroupingLabel(): string | null {
     const controlValues = this.getControlValues();
     const selectedGrouping = controlValues[AbstractPresenterContextSetting.GROUP_BY] || GroupingOptionValue.NONE;
-    return getMetadataLabelFromGroupingOption(selectedGrouping);
+    return GroupingOption.getMetadataLabel(selectedGrouping);
   }
 
   groupEntitiesBySelectedSetting<T>(options: GroupByEntityOptions<T>): Record<string, T[]> {
