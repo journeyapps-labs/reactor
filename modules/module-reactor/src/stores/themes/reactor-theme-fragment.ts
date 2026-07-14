@@ -88,7 +88,8 @@ export const theme = new ThemeFragment({
       label: 'Tree structures',
       colors: {
         labelColor: 'Color of primary labels',
-        selectedBackground: 'Background color of tree item when selected'
+        selectedBackground: 'Background color of tree item when selected',
+        overflowBackground: 'Background color of tree detail overflow control'
       }
     },
     guide: {

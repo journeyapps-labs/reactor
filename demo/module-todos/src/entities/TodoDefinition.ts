@@ -9,7 +9,9 @@ import {
   inject,
   InlineEntityEncoderComponent,
   InlineTreePresenterComponent,
-  SimpleEntitySearchEngineComponent
+  MetadataDisplayMode,
+  SimpleEntitySearchEngineComponent,
+  TagDisplayMode
 } from '@journeyapps-labs/reactor-mod';
 import { TodoEntities } from '../TodoEntities';
 import { TodoStore } from '../stores/TodoStore';
@@ -22,6 +24,22 @@ import { TodoNoteModel } from '../models/TodoNoteModel';
 import { AddTodoNoteAction } from '../actions/AddTodoNoteAction';
 import { OpenTodoDialogAction } from '../actions/OpenTodoDialogAction';
 import { SetCurrentTodoItemAction } from '../actions/SetCurrentTodoItemAction';
+
+const TODO_TREE_GROUPING_SETTINGS = {
+  complexName: true,
+  tags: true,
+  labels: ['Sub-todos', 'Notes']
+};
+
+const TODO_TREE_DESCRIPTION_SETTINGS = {
+  tagDisplayMode: TagDisplayMode.PILL,
+  metadataDisplayMode: MetadataDisplayMode.METADATA
+};
+
+const TODO_TREE_BADGE_DESCRIPTION_SETTINGS = {
+  tagDisplayMode: TagDisplayMode.BADGE,
+  metadataDisplayMode: MetadataDisplayMode.BADGE
+};
 
 export class TodoDefinition extends EntityDefinition<TodoModel> {
   @inject(TodoStore)
@@ -46,7 +64,26 @@ export class TodoDefinition extends EntityDefinition<TodoModel> {
           return {
             simpleName: entity.name,
             iconColor: activeTask ? 'rgb(192,255,0)' : null,
-            complexName: activeTask ? 'Active task' : null
+            complexName: activeTask ? 'Active task' : null,
+            tags: entity.tags,
+            labels: [
+              {
+                label: 'Sub-todos',
+                value: `${entity.children.length}`,
+                icon: {
+                  name: 'sitemap',
+                  color: '#67c7ff'
+                }
+              },
+              {
+                label: 'Notes',
+                value: `${entity.notes.length}`,
+                icon: {
+                  name: 'sticky-note',
+                  color: '#ffb454'
+                }
+              }
+            ]
           };
         }
       })
@@ -67,7 +104,7 @@ export class TodoDefinition extends EntityDefinition<TodoModel> {
                 value: `${this.getTodoDepth(entity)}`,
                 icon: {
                   name: 'sitemap',
-                  color: 'currentColor'
+                  color: '#67c7ff'
                 }
               }
             ]
@@ -101,7 +138,9 @@ export class TodoDefinition extends EntityDefinition<TodoModel> {
     // allow the todos to be represented as tree items
     this.registerComponent(
       new InlineTreePresenterComponent<TodoModel>({
-        label: 'uncached',
+        label: 'Tree: uncached',
+        allowedGroupingSettings: TODO_TREE_GROUPING_SETTINGS,
+        ...TODO_TREE_DESCRIPTION_SETTINGS,
         augmentTreeNodeProps: () => {
           return {
             openOnSingleClick: false
@@ -111,8 +150,10 @@ export class TodoDefinition extends EntityDefinition<TodoModel> {
     );
     this.registerComponent(
       new InlineTreePresenterComponent<TodoModel>({
-        label: 'cached',
+        label: 'Tree: cached',
         cacheTreeEntities: true,
+        allowedGroupingSettings: TODO_TREE_GROUPING_SETTINGS,
+        ...TODO_TREE_DESCRIPTION_SETTINGS,
         augmentTreeNodeProps: () => {
           return {
             openOnSingleClick: false
@@ -122,8 +163,22 @@ export class TodoDefinition extends EntityDefinition<TodoModel> {
     );
     this.registerComponent(
       new InlineTreePresenterComponent<TodoModel>({
-        label: 'lazy uncached',
+        label: 'Tree: badges',
+        allowedGroupingSettings: TODO_TREE_GROUPING_SETTINGS,
+        ...TODO_TREE_BADGE_DESCRIPTION_SETTINGS,
+        augmentTreeNodeProps: () => {
+          return {
+            openOnSingleClick: false
+          };
+        }
+      })
+    );
+    this.registerComponent(
+      new InlineTreePresenterComponent<TodoModel>({
+        label: 'Tree: lazy uncached',
         loadChildrenAsNodesAreOpened: true,
+        allowedGroupingSettings: TODO_TREE_GROUPING_SETTINGS,
+        ...TODO_TREE_DESCRIPTION_SETTINGS,
         augmentTreeNodeProps: () => {
           return {
             openOnSingleClick: false
@@ -133,13 +188,11 @@ export class TodoDefinition extends EntityDefinition<TodoModel> {
     );
     this.registerComponent(
       new InlineTreePresenterComponent<TodoModel>({
-        label: 'lazy cached',
+        label: 'Tree: lazy cached',
         loadChildrenAsNodesAreOpened: true,
         cacheTreeEntities: true,
-        allowedGroupingSettings: {
-          tags: true,
-          complexName: true
-        },
+        allowedGroupingSettings: TODO_TREE_GROUPING_SETTINGS,
+        ...TODO_TREE_DESCRIPTION_SETTINGS,
         augmentTreeNodeProps: () => {
           return {
             openOnSingleClick: false

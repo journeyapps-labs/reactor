@@ -42,15 +42,16 @@ export interface TreeBadgeWidgetProps {
   background?: string;
   iconColor?: string;
   tooltip?: string;
-  icon: ReactorIcon;
+  icon?: ReactorIcon;
+  value?: string;
   action?: ButtonAction;
 }
 
 export const TreeBadgeWidget: React.FC<TreeBadgeWidgetProps> = (props) => {
-  const { background, iconColor, icon, tooltip, action } = props;
+  const { background, iconColor, icon, value, tooltip, action } = props;
   return (
     <S.Symbol
-      key={`${tooltip}-${icon}`}
+      key={`${tooltip}-${icon || value}`}
       color={background}
       foreground={iconColor || '#fff'}
       aria-label={tooltip}
@@ -60,7 +61,7 @@ export const TreeBadgeWidget: React.FC<TreeBadgeWidgetProps> = (props) => {
         action?.(event);
       }}
     >
-      <IconWidget icon={icon} />
+      {value || (icon ? <IconWidget icon={icon} /> : null)}
     </S.Symbol>
   );
 };

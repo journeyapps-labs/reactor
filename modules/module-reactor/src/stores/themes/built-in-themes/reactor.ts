@@ -56,7 +56,8 @@ export const DarkTheme = theme.addThemeValues({
     },
     trees: {
       labelColor: '#eef5ff',
-      selectedBackground: 'rgba(0, 192, 255, 0.14)'
+      selectedBackground: 'rgba(0, 192, 255, 0.14)',
+      overflowBackground: '#0d141d'
     },
     guide: {
       accent: '#ff6a1a',

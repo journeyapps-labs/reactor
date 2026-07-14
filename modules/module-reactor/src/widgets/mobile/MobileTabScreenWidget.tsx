@@ -11,6 +11,7 @@ export interface MobileTabScreenWidgetProps {
   engine: WorkspaceEngine;
   screen: MobileTabScreen;
   workspaceStore: WorkspaceStore;
+  showPanelTitle?: boolean;
 }
 
 namespace S {
@@ -69,7 +70,12 @@ export const MobileTabScreenWidget: React.FC<MobileTabScreenWidgetProps> = (prop
         </S.ScreenNav>
       ) : null}
       <S.Content>
-        <MobilePanelScreenWidget engine={props.engine} screen={activePanel} workspaceStore={props.workspaceStore} />
+        <MobilePanelScreenWidget
+          engine={props.engine}
+          screen={activePanel}
+          workspaceStore={props.workspaceStore}
+          showTitle={props.showPanelTitle !== false && props.screen.panels.length <= 1}
+        />
       </S.Content>
     </S.Container>
   );

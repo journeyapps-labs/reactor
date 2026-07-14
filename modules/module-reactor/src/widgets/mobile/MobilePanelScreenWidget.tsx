@@ -11,6 +11,7 @@ export interface MobilePanelScreenWidgetProps {
   engine: WorkspaceEngine;
   screen: MobilePanelScreen;
   workspaceStore: WorkspaceStore;
+  showTitle?: boolean;
 }
 
 namespace S {
@@ -74,19 +75,21 @@ export const MobilePanelScreenWidget: React.FC<MobilePanelScreenWidgetProps> = (
 
   return (
     <S.Container>
-      <S.PanelHeader>
-        <S.PanelTitle>{props.screen.title}</S.PanelTitle>
-        {props.workspaceStore.fullscreenModel ? (
-          <S.PanelCloseButton
-            aria-label="Close fullscreen panel"
-            onClick={() => {
-              props.workspaceStore.setFullscreenModel(null);
-            }}
-          >
-            <IconWidget icon="times" />
-          </S.PanelCloseButton>
-        ) : null}
-      </S.PanelHeader>
+      {props.showTitle !== false ? (
+        <S.PanelHeader>
+          <S.PanelTitle>{props.screen.title}</S.PanelTitle>
+          {props.workspaceStore.fullscreenModel ? (
+            <S.PanelCloseButton
+              aria-label="Close fullscreen panel"
+              onClick={() => {
+                props.workspaceStore.setFullscreenModel(null);
+              }}
+            >
+              <IconWidget icon="times" />
+            </S.PanelCloseButton>
+          ) : null}
+        </S.PanelHeader>
+      ) : null}
       <S.Content>{props.screen.factory.generateContent(event)}</S.Content>
     </S.Container>
   );

@@ -49,7 +49,8 @@ export const Bunny = theme.addThemeValues({
     trees: {
       ...DarkTheme.trees,
       labelColor: '#f0e7ff',
-      selectedBackground: 'rgba(142, 104, 255, 0.26)'
+      selectedBackground: 'rgba(142, 104, 255, 0.26)',
+      overflowBackground: '#211634'
     },
     guide: {
       accent: '#c98cff',

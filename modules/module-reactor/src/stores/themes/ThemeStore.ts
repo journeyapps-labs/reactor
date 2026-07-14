@@ -1,4 +1,4 @@
-import { AbstractStore } from '../AbstractStore';
+import { AbstractStore, AbstractStoreListener } from '../AbstractStore';
 import * as _ from 'lodash';
 import { ColorDefinition, GetTheme, ThemeFragment } from './ThemeFragment';
 import { EntitySetting } from '../../settings/EntitySetting';
@@ -30,7 +30,11 @@ export class Theme {
   }
 }
 
-export class ThemeStore extends AbstractStore {
+export interface ThemeStoreListener extends AbstractStoreListener {
+  themeChanged: () => any;
+}
+
+export class ThemeStore extends AbstractStore<any, ThemeStoreListener> {
   protected themes: Map<string, Theme>;
   protected _fragments: Set<ThemeFragment>;
   public selectedTheme: EntitySetting<Theme>;
@@ -131,6 +135,7 @@ export class ThemeStore extends AbstractStore {
 
   setSelectedTheme(theme: Theme) {
     this.selectedTheme.setItem(theme);
+    this.iterateListeners((listener) => listener.themeChanged?.());
   }
 
   registerTheme(theme: Theme) {

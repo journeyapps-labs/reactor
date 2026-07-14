@@ -64,7 +64,8 @@ theme.addThemeValues({
     trees: {
       ...DarkTheme.trees,
       labelColor: '#d0d0d0',
-      selectedBackground: 'rgba(51, 184, 222, 0.16)'
+      selectedBackground: 'rgba(51, 184, 222, 0.16)',
+      overflowBackground: '#090909'
     },
     text: {
       primary: 'rgba(214,214,214,0.9)',

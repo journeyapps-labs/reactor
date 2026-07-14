@@ -109,14 +109,28 @@ const getScreens = (workspaceStore: WorkspaceStore): MobileScreen[] => {
   return screens;
 };
 
-const renderScreen = (workspaceStore: WorkspaceStore, screen: MobileScreen) => {
+const renderScreen = (workspaceStore: WorkspaceStore, screen: MobileScreen, showPanelTitle: boolean) => {
   if (!screen) {
     return <S.Empty>No workspace panels</S.Empty>;
   }
   if (screen.type === 'tabs') {
-    return <MobileTabScreenWidget engine={workspaceStore.engine} screen={screen} workspaceStore={workspaceStore} />;
+    return (
+      <MobileTabScreenWidget
+        engine={workspaceStore.engine}
+        screen={screen}
+        workspaceStore={workspaceStore}
+        showPanelTitle={showPanelTitle}
+      />
+    );
   }
-  return <MobilePanelScreenWidget engine={workspaceStore.engine} screen={screen} workspaceStore={workspaceStore} />;
+  return (
+    <MobilePanelScreenWidget
+      engine={workspaceStore.engine}
+      screen={screen}
+      workspaceStore={workspaceStore}
+      showTitle={showPanelTitle}
+    />
+  );
 };
 
 export const MobileWorkspaceWidget: React.FC<MobileWorkspaceWidgetProps> = observer((props) => {
@@ -142,7 +156,7 @@ export const MobileWorkspaceWidget: React.FC<MobileWorkspaceWidgetProps> = obser
           })}
         </S.ScreenNav>
       ) : null}
-      <S.Content>{renderScreen(workspaceStore, activeScreen)}</S.Content>
+      <S.Content>{renderScreen(workspaceStore, activeScreen, screens.length <= 1)}</S.Content>
     </S.Container>
   );
 });

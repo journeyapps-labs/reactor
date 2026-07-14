@@ -19,6 +19,7 @@ export interface SetControlOption<T extends string> {
   key: T;
   label: string;
   icon?: ReactorIcon;
+  group?: string;
 }
 
 export interface SetControlOptions<T extends string> extends AbstractValueControlOptions<T> {
@@ -49,7 +50,7 @@ export class SetControl<T extends string = string> extends AbstractValueControl<
       return {
         key: `${id}-${o.key}`,
         title: o.label,
-        group: options.label,
+        group: o.group || options.label,
         icon: selected ? 'check-square' : 'square',
         color: selected ? this.themeStore.getCurrentTheme(theme).status.success : null,
         action: async () => {

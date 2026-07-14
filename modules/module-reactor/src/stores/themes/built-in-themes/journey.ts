@@ -48,7 +48,8 @@ theme.addThemeValues({
     },
     trees: {
       ...DarkTheme.trees,
-      selectedBackground: 'rgba(255, 140, 43, 0.16)'
+      selectedBackground: 'rgba(255, 140, 43, 0.16)',
+      overflowBackground: '#243036'
     },
     footer: {
       background: '#253238'

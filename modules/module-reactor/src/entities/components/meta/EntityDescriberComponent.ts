@@ -2,6 +2,8 @@ import { EntityDefinitionComponent } from '../../EntityDefinitionComponent';
 import { ReactorIcon } from '../../../widgets/icons/IconWidget';
 
 export interface EntityLabel {
+  /** A stable identifier for renderers and menus when a label may repeat. */
+  id?: string;
   label: string;
   value: string;
   color?: string;

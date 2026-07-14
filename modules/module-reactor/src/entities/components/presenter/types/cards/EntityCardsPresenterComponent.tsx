@@ -21,6 +21,7 @@ export interface EntityCardsPresenterComponentOptions {
   allowedGroupingSettings?: {
     complexName?: boolean;
     tags?: boolean;
+    labels?: string[];
   };
   defaultGroupingSetting?: GroupingOptionValue;
 }

@@ -27,7 +27,7 @@ export interface PanelTitleToolbarWidgetProps {
 namespace S {
   const HEIGHT = 28;
 
-  export const Container = styled.div`
+  export const Container = styled.div<{ $hasContext: boolean }>`
     min-height: ${HEIGHT}px;
     flex-shrink: 0;
     background: ${(p) => p.theme.panels.iconBackground};
@@ -40,6 +40,7 @@ namespace S {
     padding: 2px;
 
     ${REACTOR_MOBILE_MEDIA_QUERY} {
+      ${(p) => (!p.$hasContext ? 'display: none;' : '')}
       min-height: 40px;
       padding: 4px;
       column-gap: 8px;
@@ -114,11 +115,15 @@ namespace S {
 
   export const Buttons = styled.div`
     display: flex;
-    flex-grow: 1;
-    justify-content: flex-end;
+    flex: 1 0 100%;
+    justify-content: flex-start;
+
+    > :first-child {
+      margin-right: auto;
+    }
 
     ${REACTOR_MOBILE_MEDIA_QUERY} {
-      column-gap: 4px;
+      display: none;
     }
   `;
 }
@@ -166,12 +171,20 @@ export class PanelTitleToolbarWidget extends React.Component<PanelTitleToolbarWi
   }
 
   render() {
+    const hasContext = isArray(this.props.context) ? this.props.context.length > 0 : !!this.props.context;
+    const buttons = this.props.btns || [];
+    const hasButtons = buttons.length > 0;
+
+    if (!hasContext && !hasButtons) {
+      return null;
+    }
+
     return (
-      <S.Container>
+      <S.Container $hasContext={hasContext}>
         {this.getContextButton()}
-        {this.props.btns ? (
+        {hasButtons ? (
           <S.Buttons>
-            {this.props.btns.map((p, index) => {
+            {buttons.map((p, index) => {
               return <PanelTitleToolbarButtonWidget {...p} key={p.label || p.tooltip || index} />;
             })}
           </S.Buttons>
