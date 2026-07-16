@@ -1,6 +1,6 @@
 import { ComboBoxItem } from '../stores/combo/ComboBoxDirectives';
 import { Btn } from '../definitions/common';
-import { observable } from 'mobx';
+import { computed, observable } from 'mobx';
 import { AbstractControl, RepresentAsComboBoxItemsEvent, RepresentAsControlOptions } from './AbstractControl';
 import { BaseObserver } from '@journeyapps-labs/common-utils';
 
@@ -42,7 +42,7 @@ export abstract class AbstractValueControl<
 
   abstract representAsComboBoxItems(options?: RepresentAsComboBoxItemsEvent): ComboBoxItem[];
 
-  get value() {
+  @computed get value() {
     return this._value;
   }
 
