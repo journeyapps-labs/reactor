@@ -1,5 +1,11 @@
 # @journeyapps-labs/reactor-mod
 
+## 6.2.1
+
+### Patch Changes
+
+- 214a4c7: Small fix where entity deserialization was too stateful and ended up with sync issues
+
 ## 6.2.0
 
 ### Minor Changes
