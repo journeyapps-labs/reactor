@@ -1,5 +1,5 @@
 import { AbstractInteractiveControlOptions } from './AbstractInteractiveSetting';
-import { observable } from 'mobx';
+import { computed, observable } from 'mobx';
 import { ioc } from '../inversify.config';
 import { AbstractUserSetting } from './AbstractUserSetting';
 import { EntityControl } from '../controls/EntityControl';
@@ -12,9 +12,6 @@ export interface EntitySettingOptions<I> extends AbstractInteractiveControlOptio
 }
 
 export class EntitySetting<I> extends AbstractUserSetting<EntityControl<I>, EntitySettingOptions<I>> {
-  @observable
-  accessor entity: I;
-
   constructor(options: EntitySettingOptions<I>) {
     super(
       options,
@@ -23,10 +20,8 @@ export class EntitySetting<I> extends AbstractUserSetting<EntityControl<I>, Enti
         initialValue: options.defaultEntity
       })
     );
-    this.entity = options.defaultEntity;
     this.control.registerListener({
       valueChanged: (value) => {
-        this.entity = value;
         if (this.initialized) {
           options.changed?.(value);
           this.save();
@@ -35,10 +30,14 @@ export class EntitySetting<I> extends AbstractUserSetting<EntityControl<I>, Enti
     });
   }
 
+  @computed get entity() {
+    return this.control.value;
+  }
+
   updateOptions(options: Partial<EntitySettingOptions<I>>) {
     super.updateOptions(options);
     if (!this.initialized && options.defaultEntity !== undefined) {
-      this.entity = options.defaultEntity;
+      this.setItem(options.defaultEntity);
     }
   }
 
