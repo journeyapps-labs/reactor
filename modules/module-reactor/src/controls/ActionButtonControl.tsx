@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import { ButtonControl } from './ButtonControl';
 import { RepresentAsControlOptions } from './AbstractControl';
 import type { Action } from '../actions/Action';
@@ -37,8 +37,10 @@ export class ActionButtonControl<T extends Action> extends ButtonControl {
 
 export interface ActionButtonWidgetProps<T extends Action> {
   action: T;
-  render: (result: ValidationResult) => React.JSX.Element;
+  render: (result: ValidationResult, validator: ActionButtonWidgetValidator<T>) => React.JSX.Element;
 }
+
+type ActionButtonWidgetValidator<T extends Action> = ReturnType<T['generateValidationContext']>;
 
 export const ActionButtonWidget = observer(<T extends Action>(props: ActionButtonWidgetProps<T>) => {
   const [context] = useState(() => {
@@ -50,5 +52,5 @@ export const ActionButtonWidget = observer(<T extends Action>(props: ActionButto
     return null;
   }
 
-  return props.render(result);
+  return props.render(result, context);
 });

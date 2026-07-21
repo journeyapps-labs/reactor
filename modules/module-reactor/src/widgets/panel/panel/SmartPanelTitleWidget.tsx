@@ -21,7 +21,6 @@ export interface SmartPanelTitleWidgetProps {
   color: string;
   name: string;
   btns?: (Btn & { highlight?: boolean })[];
-  fullscreen?: boolean;
   factory: ReactorPanelFactory;
 }
 

@@ -10,7 +10,7 @@ import { ReadOnlyMetadataWidgetProps } from '../meta/ReadOnlyMetadataWidget';
 import { themed } from '../../stores/themes/reactor-theme-fragment';
 import { getScrollableCSS } from '../panel/panel/PanelWidget';
 import { SurfaceDepth, SurfaceWidget } from '../surfaces/SurfaceWidget';
-import { ReactorSizeProvider, Size, useReactorSize } from '../../hooks/useReactorSize';
+import { getReactorBorderRadius, ReactorSizeProvider, Size, useReactorSize } from '../../hooks/useReactorSize';
 
 export interface CardWidgetProps {
   btns?: PanelBtn[];
@@ -35,7 +35,7 @@ namespace S {
     display: flex;
     flex-direction: column;
     user-select: none;
-    border-radius: ${(p) => (p.$size === Size.SMALL ? '6px' : p.$size === Size.LARGE ? '10px' : '8px')};
+    border-radius: ${(p) => getReactorBorderRadius(p.$size)}px;
   `;
 
   export const LoadingBar = styled(FooterLoaderWidget)<{ $size: Size }>`

@@ -37,7 +37,6 @@ export interface AbstractReactorPanelFactoryOptions {
   category?: string;
   type: string;
   isMultiple: boolean;
-  fullscreen?: boolean;
   padding?: boolean;
   /**
    * Panel can be serialized to URL when active
@@ -156,7 +155,6 @@ export abstract class ReactorPanelFactory<T extends ReactorPanelModel = ReactorP
           return (
             <SmartPanelTitleWidget
               btns={this.getAdditionalButtons(event)}
-              fullscreen={this.options.fullscreen}
               icon={this.options.icon}
               icon2={this.options.icon2}
               color={this.options.color}
@@ -181,7 +179,6 @@ export abstract class ReactorPanelFactory<T extends ReactorPanelModel = ReactorP
           const window = event.model.parent as ReactorWindowModel;
           return (
             <SmartPanelTitleWidget
-              fullscreen={this.options.fullscreen}
               icon={this.options.icon}
               icon2={this.options.icon2}
               color={this.options.color}

@@ -1,5 +1,6 @@
 import * as React from 'react';
 import { themed } from '../../stores/themes/reactor-theme-fragment';
+import { getReactorBorderRadius, useReactorSize } from '../../hooks/useReactorSize';
 
 export type SurfaceDepth = 0 | 1 | 2 | 3;
 
@@ -22,21 +23,27 @@ export const useSurfaceDepth = (depth?: SurfaceDepth): SurfaceDepth => {
 };
 
 namespace S {
-  export const Container = themed.div<{ $depth: SurfaceDepth; $selected?: boolean }>`
+  export const Container = themed.div<{ $depth: SurfaceDepth; $selected?: boolean; $radius: number }>`
     background: ${(p) => p.theme.surfaces[`depth${p.$depth}Background`]};
     border: solid 1px
       ${(p) => (p.$selected ? p.theme.surfaces.selectedBorder : p.theme.surfaces[`depth${p.$depth}Border`])};
-    border-radius: 6px;
+    border-radius: ${(p) => p.$radius}px;
     box-sizing: border-box;
   `;
 }
 
 export const SurfaceWidget: React.FC<SurfaceWidgetProps> = (props) => {
   const depth = useSurfaceDepth(props.depth);
+  const size = useReactorSize();
 
   return (
     <SurfaceDepthContext.Provider value={depth}>
-      <S.Container className={props.className} $depth={depth} $selected={props.selected}>
+      <S.Container
+        className={props.className}
+        $depth={depth}
+        $selected={props.selected}
+        $radius={getReactorBorderRadius(size)}
+      >
         {props.children}
       </S.Container>
     </SurfaceDepthContext.Provider>

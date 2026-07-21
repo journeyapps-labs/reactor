@@ -5,14 +5,15 @@ import { themed } from '../../stores/themes/reactor-theme-fragment';
 import { observer } from 'mobx-react';
 import styled from '@emotion/styled';
 import { ReactorTooltipWidget, TooltipPosition } from '../info/tooltips';
+import { getReactorBorderRadius, Size, useReactorSize } from '../../hooks/useReactorSize';
 
 namespace S {
-  export const ButtonContainer = themed.div`
+  export const ButtonContainer = themed.div<{ $size: Size }>`
       background: ${(p) => p.theme.table.pills};
-      padding: 1px 6px;
-      font-size: 13px;
+      padding: ${(p) => (p.$size === Size.SMALL ? '1px 6px' : p.$size === Size.LARGE ? '4px 10px' : '2px 8px')};
+      font-size: ${(p) => (p.$size === Size.SMALL ? '13px' : p.$size === Size.LARGE ? '15px' : '14px')};
       color: ${(p) => p.theme.text.primary};
-      border-radius: 3px;
+      border-radius: ${(p) => getReactorBorderRadius(p.$size)}px;
       opacity: 0.4;
       cursor: pointer;
       &:hover{
@@ -32,11 +33,13 @@ namespace S {
   `;
 }
 
-export const TableButtonWidget: React.FC<Btn & { className? }> = observer((props) => {
+export const TableButtonWidget: React.FC<Btn & { className?; size?: Size }> = observer((props) => {
+  const size = useReactorSize(props.size);
   const controls = useSubmit(props);
   return (
     <ReactorTooltipWidget tooltip={props.tooltip} tooltipPos={props.tooltipPos || TooltipPosition.TOP}>
       <S.ButtonContainer
+        $size={size}
         className={props.className}
         {...(props.tooltip ? { 'aria-label': props.tooltip } : {})}
         onClick={(event) => {

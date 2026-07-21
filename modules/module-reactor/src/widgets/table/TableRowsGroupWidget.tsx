@@ -5,6 +5,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { styled } from '../../stores/themes/reactor-theme-fragment';
 import { getTransparentColor } from '@journeyapps-labs/lib-reactor-utils';
 import { MousePosition } from '../../layers/combo/SmartPositionWidget';
+import { Size } from '../../hooks/useReactorSize';
 
 export interface TableRowsGroupWidgetProps<T extends TableRow = TableRow> {
   rows: T[];
@@ -12,6 +13,7 @@ export interface TableRowsGroupWidgetProps<T extends TableRow = TableRow> {
   onContextMenu: (event: MousePosition, row: T) => any;
   defaultCollapsed?: boolean;
   children?: any;
+  size: Size;
 }
 
 export interface TableRowsGroupWidgetState {
@@ -25,8 +27,8 @@ namespace S {
     padding: 0;
   `;
 
-  export const Container = styled.div`
-    padding: 5px 10px;
+  export const Container = styled.div<{ $size: Size }>`
+    padding: ${(p) => (p.$size === Size.SMALL ? '5px 10px' : p.$size === Size.LARGE ? '8px 14px' : '6px 12px')};
     display: flex;
     cursor: pointer;
     background: ${(p) => p.theme.table.groupBackground || p.theme.table.columnBackground};
@@ -68,7 +70,7 @@ export class TableRowsGroupWidget<T extends TableRow = TableRow> extends React.C
           }}
         >
           <S.Cell colSpan={this.props.cols.length}>
-            <S.Container>
+            <S.Container $size={this.props.size}>
               <S.Content>{this.props.children}</S.Content>
               <S.Icon icon={this.state.collapsed ? 'angle-down' : 'angle-up'} />
             </S.Container>

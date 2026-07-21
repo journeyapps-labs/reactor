@@ -10,7 +10,7 @@ import * as React from 'react';
 import { ShortcutChord } from '../stores/shortcuts/Shortcut';
 import { ComboBoxItem } from '../stores/combo/ComboBoxDirectives';
 import * as _ from 'lodash';
-import { ActionValidatorContext } from './validators/ActionValidatorContext';
+import { ActionValidatorContext, Validator } from './validators/ActionValidatorContext';
 import { ActionButtonControl, ActionButtonWidget, EventType } from '../controls/ActionButtonControl';
 import { ActionMetaWidget } from './ActionMetaWidget';
 import { processCallbackWithValidation } from '../hooks/useValidator';
@@ -236,17 +236,22 @@ export abstract class Action<
    * by representAsIcon to omit disallowed actions.
    */
   representAsButton(extraData: Partial<T['EVENT']> = {}, validate: boolean = false): Btn {
+    const validator = this.generateValidationContext();
     if (validate) {
-      const validation = this.generateValidationContext().validatePassively();
+      const validation = validator.validatePassively();
       if (validation === PassiveActionValidationState.DISALLOWED) {
         return null;
       }
     }
+    return this.createButton(extraData, validator);
+  }
+
+  private createButton(extraData: Partial<T['EVENT']>, validator: Validator): Btn {
     return {
       label: this.options.name,
       tooltip: this.options.name,
       icon: this.options.icon,
-      validator: this.generateValidationContext(),
+      validator,
       action: async (event, loading?: (loading: boolean) => any) => {
         loading?.(true);
         try {
@@ -269,8 +274,8 @@ export abstract class Action<
     return (
       <ActionButtonWidget
         action={this}
-        render={(result) => {
-          return render(this.representAsButton(extraData), result);
+        render={(result, validator) => {
+          return render(this.createButton(extraData, validator), result);
         }}
       />
     );

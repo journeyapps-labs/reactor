@@ -7,6 +7,18 @@ export enum Size {
   LARGE = 'large'
 }
 
+export const getReactorBorderRadius = (size: Size): number => {
+  if (size === Size.SMALL) {
+    return 6;
+  }
+
+  if (size === Size.LARGE) {
+    return 10;
+  }
+
+  return 8;
+};
+
 export const ReactorSizeContext = React.createContext<Size | undefined>(undefined);
 
 export interface ReactorSizeProviderProps {

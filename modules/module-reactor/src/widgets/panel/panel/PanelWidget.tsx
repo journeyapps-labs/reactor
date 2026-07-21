@@ -139,7 +139,7 @@ namespace S {
     display: flex;
     flex-direction: column;
     overflow: hidden;
-    border-radius: ${(p) => (p.$rounded ? `0 0 ${WORKSPACE_PANEL_RADIUS}px ${WORKSPACE_PANEL_RADIUS}px` : '0')};
+    border-radius: ${(p) => (p.$rounded ? `${WORKSPACE_PANEL_RADIUS}px` : '0')};
     background: ${(p) => p.theme.panels.background};
     box-sizing: border-box;
     ${(p) => (p.attention ? `border: solid 1px ${p.theme.guide.accent}` : ``)};

@@ -13,9 +13,9 @@ import { styled } from '../../stores/themes/reactor-theme-fragment';
 import { useLayoutEffect, useRef, useState } from 'react';
 
 namespace S {
-  export const Container = styled.div`
+  export const Container = styled.div<{ clickThrough: boolean }>`
     position: relative;
-    pointer-events: auto;
+    pointer-events: ${(p) => (p.clickThrough ? 'none' : 'auto')};
   `;
 }
 
@@ -67,7 +67,7 @@ const AnchoredOverlayWidget: React.FC<{ overlay: AnchoredOverlayRecord }> = obse
 
   return (
     <SmartPositionWidget position={position}>
-      <S.Container ref={ref}>
+      <S.Container ref={ref} clickThrough={overlay.clickThrough}>
         {overlay.render({ placement, above: placement === AnchoredOverlayPlacement.TOP })}
       </S.Container>
     </SmartPositionWidget>

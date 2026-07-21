@@ -9,7 +9,7 @@ import { IconWidget } from '../icons/IconWidget';
 import { ioc } from '../../inversify.config';
 import { ThemeStore } from '../../stores/themes/ThemeStore';
 import { ReactorTooltipWidget, setupTooltipProps, TooltipPosition } from '../info/tooltips';
-import { Size, useReactorSize } from '../../hooks/useReactorSize';
+import { getReactorBorderRadius, Size, useReactorSize } from '../../hooks/useReactorSize';
 
 namespace S {
   export const getMode = (p: { mode: PanelButtonMode; theme: GetTheme<typeof theme> }) => {
@@ -41,7 +41,7 @@ namespace S {
     align-items: center;
     padding: ${(p) => (p.$size === Size.SMALL ? '4px 10px' : p.$size === Size.LARGE ? '8px 18px' : '6px 14px')};
     border: solid 1px ${(p) => (p.selected ? p.theme.guide.accent : getMode(p).border)};
-    border-radius: ${(p) => (p.$size === Size.SMALL ? '3px' : p.$size === Size.LARGE ? '7px' : '5px')};
+    border-radius: ${(p) => getReactorBorderRadius(p.$size)}px;
     color: ${(p) => getMode(p).color};
     box-sizing: border-box;
     height: ${(p) => (p.$size === Size.SMALL ? '28px' : p.$size === Size.LARGE ? '42px' : '34px')};

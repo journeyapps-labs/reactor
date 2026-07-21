@@ -1,9 +1,7 @@
 import * as React from 'react';
-import { useEffect, useRef } from 'react';
 import styled from '@emotion/styled';
-import { keyframes } from '@emotion/react';
-import { autorun } from 'mobx';
-import * as _ from 'lodash';
+import { css, keyframes } from '@emotion/react';
+import { observer } from 'mobx-react';
 import { inject } from '../../inversify.config';
 import { NotificationStore, NotificationType } from '../NotificationStore';
 
@@ -28,14 +26,20 @@ namespace S {
     }
   `;
 
-  export const Layer = styled.div<{ index: number; animate: boolean }>`
+  export const Layer = styled.div<{ index: number; animate: boolean; clickThrough: boolean }>`
     position: fixed;
     top: 0;
     left: 0;
     right: 0;
     bottom: 0;
     z-index: ${(p) => p.index};
-    animation: ${(p) => (p.animate ? `${fade} 0.3s` : 'none')};
+    pointer-events: ${(p) => (p.clickThrough ? 'none' : 'all')};
+    animation: ${(p) =>
+      p.animate
+        ? css`
+            ${fade} 0.3s
+          `
+        : 'none'};
     transition: opacity ${LAYER_ANIMATION_DURATION / 1000}s;
 
     // for iPad
@@ -43,19 +47,11 @@ namespace S {
   `;
 }
 
-export const LayerWidget: React.FC<React.PropsWithChildren<LayerWidgetProps>> = (props) => {
-  const ref = useRef<HTMLDivElement>(null);
-  useEffect(() => {
-    return autorun(() => {
-      const clickThru = props.clickThough();
-      _.defer(() => {
-        ref.current.style.pointerEvents = clickThru ? 'none' : 'all';
-      });
-    });
-  }, [props.clickThough]);
+export const LayerWidget: React.FC<React.PropsWithChildren<LayerWidgetProps>> = observer((props) => {
+  const clickThrough = props.clickThough();
+
   return (
     <S.Layer
-      ref={ref}
       onContextMenu={(e) => {
         e.preventDefault();
         props.hide();
@@ -65,11 +61,12 @@ export const LayerWidget: React.FC<React.PropsWithChildren<LayerWidgetProps>> = 
       }}
       animate={props.animate}
       index={props.zIndex}
+      clickThrough={clickThrough}
     >
       {props.children}
     </S.Layer>
   );
-};
+});
 
 export class LayerWidgetErrorBoundary extends React.Component<
   React.PropsWithChildren<LayerWidgetProps>,
