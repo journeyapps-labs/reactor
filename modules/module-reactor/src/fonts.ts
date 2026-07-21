@@ -1,4 +1,3 @@
-import 'balloon-css';
 import 'typeface-source-sans-pro';
 
 import { library } from '@fortawesome/fontawesome-svg-core';

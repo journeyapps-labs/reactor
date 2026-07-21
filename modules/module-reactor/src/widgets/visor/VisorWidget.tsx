@@ -10,6 +10,7 @@ import { ComboBoxStore } from '../../stores/combo/ComboBoxStore';
 import { VisorStore } from '../../stores/visor/VisorStore';
 import { VisorMetadata } from '../../stores/visor/VisorMetadata';
 import { themed } from '../../stores/themes/reactor-theme-fragment';
+import { ReactorTooltipWidget, TooltipPosition } from '../info/tooltips';
 
 export interface VisorWidgetProps {
   metadata: VisorMetadata[];
@@ -77,31 +78,31 @@ export class VisorWidget extends React.Component<VisorWidgetProps> {
   render() {
     return (
       <S.Container>
-        <S.IconContainer
-          aria-label="Configure footer"
-          data-balloon-pos="up-left"
-          onClick={async (event) => {
-            const control = VisorMetadataControl.get();
-            const items = await this.comboBox.showMultiSelectComboBox(
-              this.visorStore.activeMetaData.map((m) => {
-                return {
-                  title: m.configurationName,
-                  key: m.options.key,
-                  checked: control.items.has(m.options.key)
-                };
-              }),
-              event
-            );
+        <ReactorTooltipWidget tooltip="Configure footer" tooltipPos={TooltipPosition.TOP}>
+          <S.IconContainer
+            onClick={async (event) => {
+              const control = VisorMetadataControl.get();
+              const items = await this.comboBox.showMultiSelectComboBox(
+                this.visorStore.activeMetaData.map((m) => {
+                  return {
+                    title: m.configurationName,
+                    key: m.options.key,
+                    checked: control.items.has(m.options.key)
+                  };
+                }),
+                event
+              );
 
-            control.setItems(
-              items.map((i) => {
-                return this.visorStore.getMetadata(i.key);
-              })
-            );
-          }}
-        >
-          <S.Icon icon="cog" />
-        </S.IconContainer>
+              control.setItems(
+                items.map((i) => {
+                  return this.visorStore.getMetadata(i.key);
+                })
+              );
+            }}
+          >
+            <S.Icon icon="cog" />
+          </S.IconContainer>
+        </ReactorTooltipWidget>
         <S.Visor>
           {_.map(this.props.metadata, (datum) => {
             if (!datum.currentInstance) {

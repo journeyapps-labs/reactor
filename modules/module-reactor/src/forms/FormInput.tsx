@@ -4,6 +4,7 @@ import { InputContainerWidget } from '../widgets/forms/InputContainerWidget';
 import styled from '@emotion/styled';
 import { useForceUpdate } from '../hooks/useForceUpdate';
 import { BaseObserver } from '@journeyapps-labs/common-utils';
+import { Size } from '../hooks/useReactorSize';
 
 export interface FormInputOptions<T = any> {
   label: string;
@@ -17,6 +18,7 @@ export interface FormInputOptions<T = any> {
   value?: T;
   visible?: boolean;
   disabled?: boolean;
+  size?: Size;
 }
 
 export interface FormInputRenderOptions {

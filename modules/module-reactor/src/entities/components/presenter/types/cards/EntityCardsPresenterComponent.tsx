@@ -15,8 +15,10 @@ import { DescendantEntityProviderComponent } from '../../../exposer/DescendantEn
 import { EntityTreePresenterComponent } from '../tree/EntityTreePresenterComponent';
 import { AbstractEntityTreePresenterContext } from '../tree/presenter-contexts/AbstractEntityTreePresenterContext';
 import { BooleanControl } from '../../../../../controls/BooleanControl';
+import { EntityCardWidget } from './EntityCardWidget';
+import { Btn } from '../../../../../definitions/common';
 
-export interface EntityCardsPresenterComponentOptions {
+export interface EntityCardsPresenterComponentOptions<T = any> {
   label?: string;
   allowedGroupingSettings?: {
     complexName?: boolean;
@@ -24,6 +26,7 @@ export interface EntityCardsPresenterComponentOptions {
     labels?: string[];
   };
   defaultGroupingSetting?: GroupingOption;
+  btns?: (entity: T) => Btn[];
 }
 
 export enum EntityCardsPresenterSetting {
@@ -39,6 +42,11 @@ export interface NestedTreeRenderOption {
   label: string;
   entities: any[];
   context: AbstractEntityTreePresenterContext;
+}
+
+export interface RenderCardOptions<T> {
+  entity: T;
+  searchEvent?: RenderCollectionOptions<T>['searchEvent'];
 }
 
 export class EntityCardsPresenterContext<T> extends AbstractPresenterContext<T, {}, EntityCardsPresenterSettings> {
@@ -62,6 +70,14 @@ export class EntityCardsPresenterContext<T> extends AbstractPresenterContext<T, 
 
   get definition() {
     return this.presenter.definition;
+  }
+
+  getCardButtons(entity: T): Btn[] {
+    return this.presenter.options2.btns?.(entity) || [];
+  }
+
+  renderCard(options: RenderCardOptions<T>): React.JSX.Element {
+    return <EntityCardWidget entity={options.entity} presenterContext={this} searchEvent={options.searchEvent} />;
   }
 
   getRenderableEntities(event: RenderCollectionOptions<T>): T[] {
@@ -169,7 +185,7 @@ export class EntityCardsPresenterContext<T> extends AbstractPresenterContext<T, 
 export class EntityCardsPresenterComponent<T> extends EntityPresenterComponent<T, EntityCardsPresenterContext<T>> {
   static DEFAULT_LABEL = 'Cards view';
 
-  constructor(public readonly options2: EntityCardsPresenterComponentOptions = {}) {
+  constructor(public readonly options2: EntityCardsPresenterComponentOptions<T> = {}) {
     super(EntityPresenterComponentRenderType.CARDS, {
       label: options2.label || EntityCardsPresenterComponent.DEFAULT_LABEL
     });

@@ -23,6 +23,7 @@ import { useButton } from '../../../../hooks/useButton';
 import { PassiveActionValidationState } from '../../../../actions/validators/ActionValidator';
 import { WorkspaceTabModel } from '@projectstorm/react-workspaces-model-tabs';
 import { WORKSPACE_PANEL_RADIUS } from '../../../workspace/workspacePanelChrome';
+import { ReactorTooltipWidget, TooltipPosition } from '../../../info/tooltips';
 import { ContextMenuTriggerWidget } from '../../../context-menu/ContextMenuTriggerWidget';
 
 export interface PanelTitleWidgetProps {
@@ -115,19 +116,20 @@ const PanelIconButton: React.FC<{ btn: Btn; highlight: boolean }> = ({ btn, high
       type={ReactorComponentType.PANEL_MICRO_BUTTON}
       activated={(selected) => {
         return (
-          <S.Button
-            ref={ref}
-            highlight={highlight && !disabled}
-            selected={!!selected}
-            aria-label={btn.tooltip || btn.label}
-            data-balloon-pos="left"
-            onClick={(event) => {
-              event.persist();
-              onClick(event);
-            }}
-          >
-            <S.PanelMicroButtonIcon highlight={highlight && !disabled} icon={btn.icon} />
-          </S.Button>
+          <ReactorTooltipWidget tooltip={btn.tooltip || btn.label} tooltipPos={TooltipPosition.LEFT}>
+            <S.Button
+              ref={ref}
+              highlight={highlight && !disabled}
+              selected={!!selected}
+              aria-label={btn.tooltip || btn.label}
+              onClick={(event) => {
+                event.persist();
+                onClick(event);
+              }}
+            >
+              <S.PanelMicroButtonIcon highlight={highlight && !disabled} icon={btn.icon} />
+            </S.Button>
+          </ReactorTooltipWidget>
         );
       }}
     />

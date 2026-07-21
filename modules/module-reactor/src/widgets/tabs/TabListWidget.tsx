@@ -5,6 +5,7 @@ import { MouseEvent } from 'react';
 import { TabBadgeWidget } from './TabBadgeWidget';
 import { ReactorIcon } from '../icons/IconWidget';
 import { MousePosition } from '../../layers/combo/SmartPositionWidget';
+import { Size } from '../../hooks/useReactorSize';
 
 export interface TabDirective {
   key: string;
@@ -31,6 +32,7 @@ export interface TabSelectionWidgetProps {
   selectedBoundsUpdated?: (rect: { left: number; width: number }) => any;
   className?;
   compact?: boolean;
+  size?: Size;
   vertical?: boolean;
   badgeProvider?: (key: string) => TabBadgeDirective;
 }
@@ -56,6 +58,7 @@ export interface TabItemWidgetProps {
   customContent?: React.JSX.Element;
   disabled?: boolean;
   compact?: boolean;
+  size?: Size;
   vertical?: boolean;
   onMouseEnter?: (event: MouseEvent) => any;
   onMouseLeave?: (event: MouseEvent) => any;
@@ -68,13 +71,13 @@ export interface TabListWidgetState {
 }
 
 namespace S {
-  export const Container = styled.div<{ compact?: boolean; vertical?: boolean }>`
+  export const Container = styled.div<{ compact?: boolean; size?: Size; vertical?: boolean }>`
     display: flex;
     flex-direction: column;
     position: relative;
     box-sizing: border-box;
     width: ${(p) => (p.vertical ? '100%' : 'auto')};
-    padding: ${(p) => (p.compact ? '4px 5px' : '6px 5px')};
+    padding: ${(p) => (p.size === Size.SMALL ? '4px 5px' : p.size === Size.LARGE ? '8px 6px' : '6px 5px')};
     user-select: none;
     overflow-x: ${(p) => (p.vertical ? 'hidden' : 'auto')};
     overflow-y: ${(p) => (p.vertical ? 'auto' : 'hidden')};
@@ -216,7 +219,12 @@ export class TabListWidget<T extends TabListWidgetProps = TabListWidgetProps> ex
 
   render() {
     return (
-      <S.Container className={this.props.className} compact={this.props.compact} vertical={this.props.vertical}>
+      <S.Container
+        className={this.props.className}
+        compact={this.props.compact}
+        size={this.props.size}
+        vertical={this.props.vertical}
+      >
         <S.LayerContainer ref={this.containerRef} vertical={this.props.vertical}>
           {this.props.selectedBackgroundGenerator && (
             <S.SelectedBackgroundLayer>

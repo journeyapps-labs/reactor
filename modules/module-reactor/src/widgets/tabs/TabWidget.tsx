@@ -6,6 +6,7 @@ import { TabItemWidgetProps } from './TabListWidget';
 import { Fonts } from '../../fonts';
 import { MousePosition } from '../../layers/combo/SmartPositionWidget';
 import { useLongPressContextMenu } from '../../hooks/useLongPressContextMenu';
+import { Size } from '../../hooks/useReactorSize';
 
 namespace S {
   export const Tab = styled.div<{
@@ -13,21 +14,22 @@ namespace S {
     attention: boolean;
     disabled?: boolean;
     compact?: boolean;
+    size?: Size;
     vertical?: boolean;
   }>`
     width: ${(p) => (p.vertical ? '100%' : 'auto')};
     box-sizing: border-box;
-    padding: ${(p) => (p.compact ? '2px 10px' : '4px 13px')};
+    padding: ${(p) => (p.size === Size.SMALL ? '2px 10px' : p.size === Size.LARGE ? '7px 17px' : '4px 13px')};
     color: ${(p) => p.theme.combobox.text};
     cursor: ${(p) => (p.disabled ? 'not-allowed' : 'pointer')};
     opacity: ${(p) => (p.disabled ? 0.34 : p.attention || p.selected ? 1 : 0.62)};
     background: transparent;
     font-family: ${Fonts.PRIMARY};
-    font-size: ${(p) => (p.compact ? '13px' : '15px')};
-    line-height: ${(p) => (p.compact ? '15px' : 'normal')};
+    font-size: ${(p) => (p.size === Size.SMALL ? '13px' : p.size === Size.LARGE ? '17px' : '15px')};
+    line-height: ${(p) => (p.size === Size.SMALL ? '15px' : 'normal')};
     white-space: nowrap;
     border: 0;
-    border-radius: 5px;
+    border-radius: ${(p) => (p.size === Size.SMALL ? '5px' : p.size === Size.LARGE ? '8px' : '6px')};
     outline: ${(p) => (p.attention ? p.theme.guide.accent : `transparent`)} solid 1px;
     outline-offset: -1px;
     &:hover {
@@ -72,6 +74,7 @@ export const TabWidget: React.FC<TabItemWidgetProps> = (props) => {
       ref={props.forwardRef}
       disabled={props.disabled}
       compact={props.compact}
+      size={props.size}
       vertical={props.vertical}
     >
       {props.customContent || props.label}

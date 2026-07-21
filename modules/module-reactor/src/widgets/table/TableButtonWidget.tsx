@@ -4,6 +4,7 @@ import { Btn } from '../../definitions/common';
 import { themed } from '../../stores/themes/reactor-theme-fragment';
 import { observer } from 'mobx-react';
 import styled from '@emotion/styled';
+import { ReactorTooltipWidget, TooltipPosition } from '../info/tooltips';
 
 namespace S {
   export const ButtonContainer = themed.div`
@@ -34,26 +35,23 @@ namespace S {
 export const TableButtonWidget: React.FC<Btn & { className? }> = observer((props) => {
   const controls = useSubmit(props);
   return (
-    <S.ButtonContainer
-      className={props.className}
-      {...(props.tooltip
-        ? {
-            'aria-label': props.tooltip,
-            'data-balloon-pos': props.tooltipPos || 'up'
-          }
-        : {})}
-      onClick={(event) => {
-        event.persist();
-        event.stopPropagation();
-        controls.action(event);
-      }}
-    >
-      <S.ButtonLabel>{props.label}</S.ButtonLabel>
-      {props.icon ? (
-        <S.ButtonIcon hasLabel={!!props.label}>
-          <ButtonWidgetIcon icon={props.icon} loading={controls.blocking} />
-        </S.ButtonIcon>
-      ) : null}
-    </S.ButtonContainer>
+    <ReactorTooltipWidget tooltip={props.tooltip} tooltipPos={props.tooltipPos || TooltipPosition.TOP}>
+      <S.ButtonContainer
+        className={props.className}
+        {...(props.tooltip ? { 'aria-label': props.tooltip } : {})}
+        onClick={(event) => {
+          event.persist();
+          event.stopPropagation();
+          controls.action(event);
+        }}
+      >
+        <S.ButtonLabel>{props.label}</S.ButtonLabel>
+        {props.icon ? (
+          <S.ButtonIcon hasLabel={!!props.label}>
+            <ButtonWidgetIcon icon={props.icon} loading={controls.blocking} />
+          </S.ButtonIcon>
+        ) : null}
+      </S.ButtonContainer>
+    </ReactorTooltipWidget>
   );
 });

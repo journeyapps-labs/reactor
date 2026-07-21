@@ -13,6 +13,8 @@ import { PlaygroundEditorsPanelWidget } from './panels/PlaygroundEditorsPanelWid
 import { PlaygroundTablesPanelWidget } from './panels/PlaygroundTablesPanelWidget';
 import { PlaygroundTreeSearchPanelWidget } from './panels/tree/PlaygroundTreeSearchPanelWidget';
 import { PlaygroundDragDropPanelWidget } from './panels/PlaygroundDragDropPanelWidget';
+import { PlaygroundOverlaysPanelWidget } from './panels/PlaygroundOverlaysPanelWidget';
+import { PlaygroundGuidePanelWidget } from './panels/PlaygroundGuidePanelWidget';
 
 export class ReactorPlaygroundModule extends AbstractReactorModule {
   constructor() {
@@ -30,6 +32,22 @@ export class ReactorPlaygroundModule extends AbstractReactorModule {
         name: 'Dialogs + Comboboxes',
         icon: 'sitemap',
         widget: PlaygroundDialogsComboboxesPanelWidget
+      })
+    );
+    workspaceStore.registerFactory(
+      new PlaygroundPanelFactory({
+        type: 'playground.overlays',
+        name: 'Overlays',
+        icon: 'layer-group',
+        widget: PlaygroundOverlaysPanelWidget
+      })
+    );
+    workspaceStore.registerFactory(
+      new PlaygroundPanelFactory({
+        type: 'playground.guide',
+        name: 'Guide',
+        icon: 'map-signs',
+        widget: PlaygroundGuidePanelWidget
       })
     );
     workspaceStore.registerFactory(

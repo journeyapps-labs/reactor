@@ -9,6 +9,7 @@ import { SimpleComboBoxDirective } from '../../stores/combo2/directives/simple/S
 import { SearchStore } from '../../stores/SearchStore';
 import { ComboBoxItem } from '../../stores/combo/ComboBoxDirectives';
 import { getTransparentColor } from '@journeyapps-labs/lib-reactor-utils';
+import { Size, useReactorSize } from '../../hooks/useReactorSize';
 
 export interface SearchWidgetProps {
   searchChanged: (search: string) => any;
@@ -22,6 +23,7 @@ export interface SearchWidgetProps {
   design?: SearchWidgetDesign;
   icon?: ReactorIcon;
   historyContext?: string;
+  size?: Size;
 }
 
 export enum SearchWidgetDesign {
@@ -32,10 +34,10 @@ export enum SearchWidgetDesign {
 export const SEARCH_ICON_WIDTH = 30;
 
 namespace S {
-  export const IconRight = themed.div`
+  export const IconRight = themed.div<{ $size: Size }>`
     color: ${(p) => p.theme.panels.searchForeground};
     opacity: 0.58;
-    padding: 5px;
+    padding: ${(p) => (p.$size === Size.SMALL ? '5px' : p.$size === Size.LARGE ? '9px' : '7px')};
     cursor: pointer;
 
     &:hover{
@@ -52,28 +54,28 @@ namespace S {
     align-items: center;
   `;
 
-  export const Container = themed.div<{ rounded: boolean; design: SearchWidgetDesign }>`
+  export const Container = themed.div<{ rounded: boolean; design: SearchWidgetDesign; $size: Size }>`
     position: relative;
     background: ${(p) =>
       p.design === SearchWidgetDesign.FORM ? p.theme.forms.inputBackground : p.theme.panels.searchBackground};
-    border-radius: 3px;
+    border-radius: ${(p) => (p.$size === Size.SMALL ? '3px' : p.$size === Size.LARGE ? '7px' : '5px')};
     border: solid 1px ${(p) =>
       getTransparentColor(
         p.design === SearchWidgetDesign.FORM ? p.theme.forms.inputForeground : p.theme.panels.searchForeground,
         0.1
       )};
-    ${(p) => p.rounded && `border-radius: 8px;`}
+    ${(p) => p.rounded && `border-radius: ${p.$size === Size.LARGE ? 12 : p.$size === Size.MEDIUM ? 10 : 8}px;`}
   `;
 
-  export const Input = themed.input<{ design: SearchWidgetDesign }>`
+  export const Input = themed.input<{ design: SearchWidgetDesign; $size: Size }>`
     width: 100%;
-    padding-left: ${SEARCH_ICON_WIDTH}px;
+    padding-left: ${(p) => (p.$size === Size.SMALL ? SEARCH_ICON_WIDTH : p.$size === Size.LARGE ? 42 : 36)}px;
     background: transparent;
     border: none;
     outline: none;
-    font-size: 13px;
+    font-size: ${(p) => (p.$size === Size.SMALL ? '13px' : p.$size === Size.LARGE ? '17px' : '15px')};
     vertical-align: middle;
-    line-height: 23px;
+    line-height: ${(p) => (p.$size === Size.SMALL ? '23px' : p.$size === Size.LARGE ? '31px' : '27px')};
     color: ${(p) =>
       p.design === SearchWidgetDesign.FORM ? p.theme.forms.inputForeground : p.theme.panels.searchForeground};
 
@@ -84,19 +86,19 @@ namespace S {
     }
   `;
 
-  export const Icon = themed.div`
+  export const Icon = themed.div<{ $size: Size }>`
     position: absolute;
     pointer-events: none;
-    left: 6px;
+    left: ${(p) => (p.$size === Size.SMALL ? '6px' : p.$size === Size.LARGE ? '10px' : '8px')};
     top: 50%;
     transform: translateY(-50%);
     color: ${(p) => p.theme.panels.searchForeground};
     opacity: 0.5;
-    font-size: 13px;
+    font-size: ${(p) => (p.$size === Size.SMALL ? '13px' : p.$size === Size.LARGE ? '17px' : '15px')};
   `;
 }
 
-export class SearchWidget extends React.Component<SearchWidgetProps> {
+class SearchWidgetInternal extends React.Component<SearchWidgetProps & { resolvedSize: Size }> {
   ref: React.RefObject<HTMLInputElement>;
 
   @inject(ComboBoxStore2)
@@ -105,7 +107,7 @@ export class SearchWidget extends React.Component<SearchWidgetProps> {
   @inject(SearchStore)
   accessor searchStore: SearchStore;
 
-  constructor(props: SearchWidgetProps) {
+  constructor(props: SearchWidgetProps & { resolvedSize: Size }) {
     super(props);
     this.ref = React.createRef();
   }
@@ -138,13 +140,13 @@ export class SearchWidget extends React.Component<SearchWidgetProps> {
   getSearchIcon() {
     if (this.props.loading) {
       return (
-        <S.Icon>
+        <S.Icon $size={this.props.resolvedSize}>
           <IconWidget icon="sync-alt" spin={true} />
         </S.Icon>
       );
     }
     return (
-      <S.Icon>
+      <S.Icon $size={this.props.resolvedSize}>
         <IconWidget icon={(this.props.icon as any) || 'search'} />
       </S.Icon>
     );
@@ -162,6 +164,7 @@ export class SearchWidget extends React.Component<SearchWidgetProps> {
     }
     return (
       <S.IconRight
+        $size={this.props.resolvedSize}
         onClick={() => {
           this.store();
           this.fireChange(null);
@@ -180,6 +183,7 @@ export class SearchWidget extends React.Component<SearchWidgetProps> {
     }
     return (
       <S.IconRight
+        $size={this.props.resolvedSize}
         onClick={(event) => {
           const context = this.searchStore.getHistoryContext(this.props.historyContext);
 
@@ -215,10 +219,16 @@ export class SearchWidget extends React.Component<SearchWidgetProps> {
 
   render() {
     return (
-      <S.Container design={this.getDesign()} rounded={this.props.rounded} className={this.props.className}>
+      <S.Container
+        design={this.getDesign()}
+        rounded={this.props.rounded}
+        $size={this.props.resolvedSize}
+        className={this.props.className}
+      >
         {this.getSearchIcon()}
         <S.Input
           design={this.getDesign()}
+          $size={this.props.resolvedSize}
           ref={this.getRef()}
           defaultValue={this.props.search || ''}
           placeholder={this.props.placeholder === '' ? '' : 'Search'}
@@ -240,3 +250,8 @@ export class SearchWidget extends React.Component<SearchWidgetProps> {
     );
   }
 }
+
+export const SearchWidget: React.FC<SearchWidgetProps> = (props) => {
+  const size = useReactorSize(props.size);
+  return <SearchWidgetInternal {...props} resolvedSize={size} />;
+};

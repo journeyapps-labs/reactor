@@ -60,6 +60,7 @@ import { CycleOpenTabsAction } from './actions/builtin-actions/workspace/CycleOp
 import { SearchStore } from './stores/SearchStore';
 import { SimpleEntitySearchEngineComponent } from './entities/components/search/SimpleEntitySearchEngineComponent';
 import { KeyboardStore } from './stores/KeyboardStore';
+import { AnchoredOverlayStore } from './stores/overlay/AnchoredOverlayStore';
 import { patchLightThemeEntityColors } from './stores/themes/built-in-themes/light';
 import { Container } from '@journeyapps-labs/common-ioc';
 import { EntityDefinition } from './entities/EntityDefinition';
@@ -133,8 +134,10 @@ export class ReactorModule extends AbstractReactorModule {
     const visorStore = new VisorStore();
     const workspaceStore = new WorkspaceStore();
     const keyboardStore = new KeyboardStore();
+    const anchoredOverlayStore = new AnchoredOverlayStore();
     const guideStore = new GuideStore({
-      workspaceStore: workspaceStore
+      workspaceStore: workspaceStore,
+      anchoredOverlayStore
     });
     const prefsStore = new PrefsStore();
     const cmdPaletteStore = new CMDPalletStore();
@@ -193,6 +196,7 @@ export class ReactorModule extends AbstractReactorModule {
     system.addStore(BatchStore, batchStore);
     system.addStore(SearchStore, searchStore);
     system.addStore(KeyboardStore, keyboardStore);
+    system.addStore(AnchoredOverlayStore, anchoredOverlayStore);
 
     themeStore.addThemeFragment(theme);
 

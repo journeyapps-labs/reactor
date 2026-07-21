@@ -73,7 +73,7 @@ interface Size {
   h: number;
 }
 
-const TooltipWidget = (props: GuideTooltipWidgetProps & { arrowAbove: boolean }) => {
+export const GuideTooltipContentWidget = (props: GuideTooltipWidgetProps & { arrowAbove: boolean }) => {
   if (_.isString(props.selection.tooltip)) {
     return (
       <S.Container
@@ -183,7 +183,7 @@ export const GuideTooltipWidget = observer((props: GuideTooltipWidgetProps) => {
           setSize(size);
         }}
       >
-        <TooltipWidget arrowAbove={pos !== ToolTipPositionHint.ABOVE} selection={props.selection} />
+        <GuideTooltipContentWidget arrowAbove={pos !== ToolTipPositionHint.ABOVE} selection={props.selection} />
       </TooltipWrapperWidget>
     </SmartPositionWidget>
   );

@@ -6,7 +6,7 @@ import { IconWidget } from '../icons/IconWidget';
 import styled from '@emotion/styled';
 import { getTransparentColor } from '@journeyapps-labs/lib-reactor-utils';
 import { useButton } from '../../hooks/useButton';
-import { setupTooltipProps, TooltipPosition } from '../info/tooltips';
+import { ReactorTooltipWidget, setupTooltipProps, TooltipPosition } from '../info/tooltips';
 import { REACTOR_MOBILE_MEDIA_QUERY } from '../../hooks/useReactorViewportMode';
 
 export interface FloatingPanelButtonWidgetProps {
@@ -67,21 +67,23 @@ export const FloatingPanelButtonWidget: React.FC<FloatingPanelButtonWidgetProps>
   const { icon, attention, onClick, tooltip } = useButton({ btn: props.btn, forwardRef: ref });
   const label = props.btn.label || props.btn.tooltip;
   return (
-    <S.Button
-      highlight={!!attention}
-      primary={props.btn.submitButton}
-      {...setupTooltipProps({ tooltip: tooltip, tooltipPos: TooltipPosition.BOTTOM })}
-      ref={ref}
-      className={props.className}
-      disabled={props.btn.disabled}
-      onClick={onClick}
-    >
-      {label ? <S.Label>{label}</S.Label> : null}
-      {icon ? (
-        <S.Icon>
-          <IconWidget {...icon} />
-        </S.Icon>
-      ) : null}
-    </S.Button>
+    <ReactorTooltipWidget tooltip={tooltip} tooltipPos={TooltipPosition.BOTTOM}>
+      <S.Button
+        highlight={!!attention}
+        primary={props.btn.submitButton}
+        {...setupTooltipProps({ tooltip: tooltip, tooltipPos: TooltipPosition.BOTTOM })}
+        ref={ref}
+        className={props.className}
+        disabled={props.btn.disabled}
+        onClick={onClick}
+      >
+        {label ? <S.Label>{label}</S.Label> : null}
+        {icon ? (
+          <S.Icon>
+            <IconWidget {...icon} />
+          </S.Icon>
+        ) : null}
+      </S.Button>
+    </ReactorTooltipWidget>
   );
 };

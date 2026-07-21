@@ -228,12 +228,17 @@ export abstract class Action<
   }
 
   /**
-   * @deprecated use representAsControl
+   * Create a button representation of this action.
+   *
+   * The button carries a live validation context, so consumers that render a
+   * Btn directly get the same dynamic enabled/disabled behavior as action
+   * controls. The second argument is retained for compatibility and is used
+   * by representAsIcon to omit disallowed actions.
    */
   representAsButton(extraData: Partial<T['EVENT']> = {}, validate: boolean = false): Btn {
     if (validate) {
-      const validate = this.validatePassively();
-      if (validate === PassiveActionValidationState.DISALLOWED) {
+      const validation = this.generateValidationContext().validatePassively();
+      if (validation === PassiveActionValidationState.DISALLOWED) {
         return null;
       }
     }
@@ -264,9 +269,8 @@ export abstract class Action<
     return (
       <ActionButtonWidget
         action={this}
-        render={() => {
-          // @ts-ignore
-          return render(this.representAsButton(extraData));
+        render={(result) => {
+          return render(this.representAsButton(extraData), result);
         }}
       />
     );

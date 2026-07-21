@@ -4,6 +4,7 @@ import { ButtonAction } from '../../definitions/common';
 import styled from '@emotion/styled';
 import { getDarkenedColor } from '@journeyapps-labs/lib-reactor-utils';
 import { REACTOR_MOBILE_MEDIA_QUERY } from '../../hooks/useReactorViewportMode';
+import { ReactorTooltipWidget, TooltipPosition } from '../info/tooltips';
 
 namespace S {
   export const Symbol = styled.div<{ color?: string; foreground: string }>`
@@ -20,7 +21,6 @@ namespace S {
     font-weight: 600;
     line-height: 1;
     flex-shrink: 0;
-    --balloon-color: ${(p) => p.color};
 
     svg {
       font-size: 10px;
@@ -50,18 +50,19 @@ export interface TreeBadgeWidgetProps {
 export const TreeBadgeWidget: React.FC<TreeBadgeWidgetProps> = (props) => {
   const { background, iconColor, icon, value, tooltip, action } = props;
   return (
-    <S.Symbol
-      key={`${tooltip}-${icon || value}`}
-      color={background}
-      foreground={iconColor || '#fff'}
-      aria-label={tooltip}
-      data-balloon-pos={'left'}
-      onClick={(event) => {
-        event.stopPropagation();
-        action?.(event);
-      }}
-    >
-      {value || (icon ? <IconWidget icon={icon} /> : null)}
-    </S.Symbol>
+    <ReactorTooltipWidget tooltip={tooltip} tooltipPos={TooltipPosition.LEFT}>
+      <S.Symbol
+        key={`${tooltip}-${icon || value}`}
+        color={background}
+        foreground={iconColor || '#fff'}
+        aria-label={tooltip}
+        onClick={(event) => {
+          event.stopPropagation();
+          action?.(event);
+        }}
+      >
+        {value || (icon ? <IconWidget icon={icon} /> : null)}
+      </S.Symbol>
+    </ReactorTooltipWidget>
   );
 };

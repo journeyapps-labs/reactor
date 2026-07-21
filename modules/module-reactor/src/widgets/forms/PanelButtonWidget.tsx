@@ -8,7 +8,8 @@ import { styled, theme } from '../../stores/themes/reactor-theme-fragment';
 import { IconWidget } from '../icons/IconWidget';
 import { ioc } from '../../inversify.config';
 import { ThemeStore } from '../../stores/themes/ThemeStore';
-import { setupTooltipProps, TooltipPosition } from '../info/tooltips';
+import { ReactorTooltipWidget, setupTooltipProps, TooltipPosition } from '../info/tooltips';
+import { Size, useReactorSize } from '../../hooks/useReactorSize';
 
 namespace S {
   export const getMode = (p: { mode: PanelButtonMode; theme: GetTheme<typeof theme> }) => {
@@ -21,24 +22,29 @@ namespace S {
     return p.theme.buttonPrimary;
   };
 
-  export const ButtonLabel = styled.div<{ mode: PanelButtonMode }>`
-    font-size: 14px;
+  export const ButtonLabel = styled.div<{ mode: PanelButtonMode; $size: Size }>`
+    font-size: ${(p) => (p.$size === Size.SMALL ? '14px' : p.$size === Size.LARGE ? '17px' : '15px')};
     user-select: none;
     white-space: nowrap;
   `;
 
-  export const ButtonContainer = styled.div<{ disabled?: boolean; mode: PanelButtonMode; selected: boolean }>`
+  export const ButtonContainer = styled.div<{
+    disabled?: boolean;
+    mode: PanelButtonMode;
+    selected: boolean;
+    $size: Size;
+  }>`
     background: ${(p) => getMode(p).background};
     display: inline-flex;
-    column-gap: 10px;
+    column-gap: ${(p) => (p.$size === Size.LARGE ? '12px' : '10px')};
     justify-content: space-between;
     align-items: center;
-    padding: 4px 10px;
+    padding: ${(p) => (p.$size === Size.SMALL ? '4px 10px' : p.$size === Size.LARGE ? '8px 18px' : '6px 14px')};
     border: solid 1px ${(p) => (p.selected ? p.theme.guide.accent : getMode(p).border)};
-    border-radius: 3px;
+    border-radius: ${(p) => (p.$size === Size.SMALL ? '3px' : p.$size === Size.LARGE ? '7px' : '5px')};
     color: ${(p) => getMode(p).color};
     box-sizing: border-box;
-    height: 28px;
+    height: ${(p) => (p.$size === Size.SMALL ? '28px' : p.$size === Size.LARGE ? '42px' : '34px')};
     cursor: ${(props) => (props.disabled ? 'default' : 'pointer')};
 
     &:hover {
@@ -51,10 +57,10 @@ namespace S {
     }
   `;
 
-  export const Icon = styled(IconWidget)<{ iconColor: string; disabled: boolean; mode: PanelButtonMode }>`
+  export const Icon = styled(IconWidget)<{ iconColor: string; disabled: boolean; mode: PanelButtonMode; $size: Size }>`
     color: ${(p) => (p.disabled ? p.iconColor : p.iconColor || getMode(p).icon)};
     ${(props) => (props.disabled ? 'opacity: .3' : '')};
-    max-height: 16px;
+    max-height: ${(p) => (p.$size === Size.SMALL ? '16px' : p.$size === Size.LARGE ? '22px' : '18px')};
   `;
 }
 
@@ -72,8 +78,10 @@ export enum PanelButtonMode {
 export const PanelButtonWidget: React.FC<
   PanelBtn & {
     className?: string;
+    size?: Size;
   }
 > = observer((props) => {
+  const size = useReactorSize(props.size);
   const ref = props.forwardRef || useRef(null);
   const { onClick, icon, attention, disabled, tooltip } = useButton({ btn: props, forwardRef: ref });
   const _theme = ioc.get(ThemeStore).getCurrentTheme(theme);
@@ -88,21 +96,34 @@ export const PanelButtonWidget: React.FC<
   }
 
   return (
-    <S.ButtonContainer
-      ref={ref}
-      selected={!!attention}
-      mode={!disabled ? props.mode : null}
-      disabled={disabled}
-      className={props.className}
-      {...setupTooltipProps({ tooltip: tooltip, tooltipPos: props.tooltipPos || TooltipPosition.BOTTOM })}
-      onClick={(event) => {
-        onClick(event);
-      }}
-    >
-      {props.label ? <S.ButtonLabel mode={props.mode}>{props.label}</S.ButtonLabel> : null}
-      {icon ? (
-        <S.Icon mode={props.mode} {...icon} disabled={disabled} iconColor={iconColor || props.iconColor} />
-      ) : null}
-    </S.ButtonContainer>
+    <ReactorTooltipWidget tooltip={tooltip} tooltipPos={props.tooltipPos || TooltipPosition.BOTTOM}>
+      <S.ButtonContainer
+        ref={ref}
+        selected={!!attention}
+        mode={!disabled ? props.mode : null}
+        disabled={disabled}
+        $size={size}
+        className={props.className}
+        {...setupTooltipProps({ tooltip })}
+        onClick={(event) => {
+          onClick(event);
+        }}
+      >
+        {props.label ? (
+          <S.ButtonLabel mode={props.mode} $size={size}>
+            {props.label}
+          </S.ButtonLabel>
+        ) : null}
+        {icon ? (
+          <S.Icon
+            mode={props.mode}
+            {...icon}
+            disabled={disabled}
+            iconColor={iconColor || props.iconColor}
+            $size={size}
+          />
+        ) : null}
+      </S.ButtonContainer>
+    </ReactorTooltipWidget>
   );
 });

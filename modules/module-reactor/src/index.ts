@@ -72,6 +72,8 @@ export * from './hooks/useWidthObserver';
 export * from './hooks/useTheme';
 export * from './widgets/tree/TreeEntityDisplayMode';
 export * from './hooks/useReactorViewportMode';
+export * from './hooks/useReactorSize';
+export * from './hooks/useAnchoredOverlay';
 
 export * from './search/SearchEngine';
 
@@ -142,6 +144,7 @@ export * from './stores/themes/reactor-theme-fragment';
 
 export * from './stores/layer/LayerDirective';
 export * from './stores/layer/LayerManager';
+export * from './stores/overlay/AnchoredOverlayStore';
 export * from './stores/layer/LayerDirectiveWidget';
 export * from './stores/guide/GuideWorkflow';
 export * from './stores/guide/GuideStore';

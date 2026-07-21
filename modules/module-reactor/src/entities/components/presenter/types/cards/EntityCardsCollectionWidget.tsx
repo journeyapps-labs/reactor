@@ -4,7 +4,6 @@ import styled from '@emotion/styled';
 import { RenderCollectionOptions } from '../../AbstractPresenterContext';
 import { EntityCardsPresenterContext } from './EntityCardsPresenterComponent';
 import { PanelPlaceholderWidget } from '../../../../../widgets/panel/panel/PanelPlaceholderWidget';
-import { EntityCardWidget } from './EntityCardWidget';
 import { GroupedEntityCardsWidget } from './GroupedEntityCardsWidget';
 import { REACTOR_MOBILE_MEDIA_QUERY } from '../../../../../hooks/useReactorViewportMode';
 
@@ -43,12 +42,12 @@ export const EntityCardsCollectionWidget = observer(function <T>(props: EntityCa
       <S.Grid>
         {entities.map((entity) => {
           return (
-            <EntityCardWidget
-              key={props.presenterContext.definition.getEntityUID(entity)}
-              entity={entity}
-              presenterContext={props.presenterContext}
-              searchEvent={props.event.searchEvent}
-            />
+            <React.Fragment key={props.presenterContext.definition.getEntityUID(entity)}>
+              {props.presenterContext.renderCard({
+                entity,
+                searchEvent: props.event.searchEvent
+              })}
+            </React.Fragment>
           );
         })}
       </S.Grid>

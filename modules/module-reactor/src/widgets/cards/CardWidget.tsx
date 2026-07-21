@@ -10,6 +10,7 @@ import { ReadOnlyMetadataWidgetProps } from '../meta/ReadOnlyMetadataWidget';
 import { themed } from '../../stores/themes/reactor-theme-fragment';
 import { getScrollableCSS } from '../panel/panel/PanelWidget';
 import { SurfaceDepth, SurfaceWidget } from '../surfaces/SurfaceWidget';
+import { ReactorSizeProvider, Size, useReactorSize } from '../../hooks/useReactorSize';
 
 export interface CardWidgetProps {
   btns?: PanelBtn[];
@@ -26,18 +27,20 @@ export interface CardWidgetProps {
     percentage: number;
     meta?: ReadOnlyMetadataWidgetProps[];
   };
+  size?: Size;
 }
 
 namespace S {
-  export const Container = styled(SurfaceWidget)`
+  export const Container = styled(SurfaceWidget)<{ $size: Size }>`
     display: flex;
     flex-direction: column;
     user-select: none;
+    border-radius: ${(p) => (p.$size === Size.SMALL ? '6px' : p.$size === Size.LARGE ? '10px' : '8px')};
   `;
 
-  export const LoadingBar = styled(FooterLoaderWidget)`
-    border-bottom-left-radius: 5px;
-    border-bottom-right-radius: 5px;
+  export const LoadingBar = styled(FooterLoaderWidget)<{ $size: Size }>`
+    border-bottom-left-radius: ${(p) => (p.$size === Size.LARGE ? '10px' : p.$size === Size.MEDIUM ? '8px' : '5px')};
+    border-bottom-right-radius: ${(p) => (p.$size === Size.LARGE ? '10px' : p.$size === Size.MEDIUM ? '8px' : '5px')};
     overflow: hidden;
   `;
 
@@ -50,31 +53,31 @@ namespace S {
     padding-left: 5px;
   `;
 
-  export const Top = styled.div`
+  export const Top = styled.div<{ $size: Size }>`
     display: flex;
-    padding: 10px;
+    padding: ${(p) => (p.$size === Size.SMALL ? '10px' : p.$size === Size.LARGE ? '16px' : '12px')};
   `;
 
   export const Info = styled.div`
     flex-grow: 1;
   `;
 
-  export const Title = themed.div`
-    font-size: 14px;
+  export const Title = themed.div<{ $size: Size }>`
+    font-size: ${(p) => (p.$size === Size.SMALL ? '14px' : p.$size === Size.LARGE ? '18px' : '16px')};
     font-weight: bold;
     color: ${(p) => p.theme.cards.foreground};
   `;
 
-  export const Subtitle = themed.div<{ color?: string }>`
-    font-size: 12px;
+  export const Subtitle = themed.div<{ color?: string; $size: Size }>`
+    font-size: ${(p) => (p.$size === Size.SMALL ? '12px' : p.$size === Size.LARGE ? '15px' : '13px')};
     color: ${(p) => p.color || p.theme.cards.foreground};
   `;
 
-  export const Content = themed.div<{ grow: boolean }>`
+  export const Content = themed.div<{ grow: boolean; $size: Size }>`
     flex-grow: ${(p) => (p.grow ? 1 : 0)};
     border-top: solid 1px;
     border-color: inherit;
-    padding: 10px;
+    padding: ${(p) => (p.$size === Size.SMALL ? '10px' : p.$size === Size.LARGE ? '16px' : '12px')};
     min-width: 0;
     overflow-x: auto;
     ${(p) => getScrollableCSS(p.theme)};
@@ -90,7 +93,7 @@ namespace S {
   `;
 }
 
-export class CardWidget extends React.Component<CardWidgetProps> {
+class CardWidgetInternal extends React.Component<CardWidgetProps & { resolvedSize: Size }> {
   getLoader() {
     if (!this.props.loader) {
       return null;
@@ -103,6 +106,7 @@ export class CardWidget extends React.Component<CardWidgetProps> {
           color={this.props.loader.color}
           show={true}
           percentage={this.props.loader.percentage}
+          $size={this.props.resolvedSize}
         />
       </S.Loading>
     );
@@ -112,7 +116,7 @@ export class CardWidget extends React.Component<CardWidgetProps> {
     if (React.isValidElement(this.props.title)) {
       return this.props.title;
     }
-    return <S.Title>{this.props.title}</S.Title>;
+    return <S.Title $size={this.props.resolvedSize}>{this.props.title}</S.Title>;
   }
 
   getSubHeading() {
@@ -122,13 +126,22 @@ export class CardWidget extends React.Component<CardWidgetProps> {
     if (React.isValidElement(this.props.subHeading)) {
       return this.props.subHeading;
     }
-    return <S.Subtitle color={this.props.subHeadingColor || this.props.color}>{this.props.subHeading}</S.Subtitle>;
+    return (
+      <S.Subtitle color={this.props.subHeadingColor || this.props.color} $size={this.props.resolvedSize}>
+        {this.props.subHeading}
+      </S.Subtitle>
+    );
   }
 
   render() {
     return (
-      <S.Container className={this.props.className} depth={this.props.depth} selected={this.props.selected}>
-        <S.Top>
+      <S.Container
+        className={this.props.className}
+        depth={this.props.depth}
+        selected={this.props.selected}
+        $size={this.props.resolvedSize}
+      >
+        <S.Top $size={this.props.resolvedSize}>
           <S.Info>
             {this.getTitle()}
             {this.getSubHeading()}
@@ -152,7 +165,11 @@ export class CardWidget extends React.Component<CardWidgetProps> {
                   if (!content) {
                     return null;
                   }
-                  return <S.Content grow={section.grow ?? true}>{content}</S.Content>;
+                  return (
+                    <S.Content grow={section.grow ?? true} $size={this.props.resolvedSize}>
+                      {content}
+                    </S.Content>
+                  );
                 }}
               />
             );
@@ -163,3 +180,13 @@ export class CardWidget extends React.Component<CardWidgetProps> {
     );
   }
 }
+
+export const CardWidget: React.FC<CardWidgetProps> = (props) => {
+  const size = useReactorSize(props.size);
+
+  return (
+    <ReactorSizeProvider size={size}>
+      <CardWidgetInternal {...props} resolvedSize={size} />
+    </ReactorSizeProvider>
+  );
+};

@@ -24,7 +24,9 @@ export const setupWorkspaces = () => {
       ['playground.buttons', 'Buttons'],
       ['playground.editors', 'Editors'],
       ['playground.tables', 'Tables'],
-      ['playground.drag-drop', 'Drag drop']
+      ['playground.drag-drop', 'Drag drop'],
+      ['playground.overlays', 'Overlays'],
+      ['playground.guide', 'Guide']
     ];
 
     return new WorkspaceGroup({

@@ -44,10 +44,6 @@ namespace S {
     position: relative;
     background: ${(p) => p.theme.workspace.background};
     animation: ${fadein} 0.3s;
-
-    [aria-label] {
-      --balloon-color: ${(p) => p.theme.tooltips.background};
-    }
   `;
 
   export const Content = styled.div<{ locked: boolean }>`

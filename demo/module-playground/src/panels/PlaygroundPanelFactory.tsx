@@ -1,6 +1,7 @@
 import * as React from 'react';
 import { ReactorPanelFactory, ReactorIcon, ReactorPanelModel } from '@journeyapps-labs/reactor-mod';
 import { WorkspaceModelFactoryEvent } from '@projectstorm/react-workspaces-core';
+import { PlaygroundSizeSelector } from './PlaygroundSizeSelector';
 
 export interface PlaygroundPanelWidgetProps {
   model: ReactorPanelModel;
@@ -36,7 +37,11 @@ export class PlaygroundPanelFactory extends ReactorPanelFactory<PlaygroundPanelM
   }
 
   protected generatePanelContent(event: WorkspaceModelFactoryEvent<PlaygroundPanelModel>): React.JSX.Element {
-    return <this.panelOptions.widget model={event.model} />;
+    return (
+      <PlaygroundSizeSelector>
+        <this.panelOptions.widget model={event.model} />
+      </PlaygroundSizeSelector>
+    );
   }
 
   protected _generateModel(): PlaygroundPanelModel {

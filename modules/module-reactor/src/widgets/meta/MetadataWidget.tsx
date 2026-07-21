@@ -3,7 +3,7 @@ import { MouseEventHandler } from 'react';
 import { IconWidget } from '../icons/IconWidget';
 import { getColorWithAlphaOptions } from '@journeyapps-labs/lib-reactor-utils';
 import { styled } from '../../stores/themes/reactor-theme-fragment';
-import { setupTooltipProps, TooltipPosition } from '../info/tooltips';
+import { ReactorTooltipWidget, setupTooltipProps, TooltipPosition } from '../info/tooltips';
 import type { EntityLabel } from '../../entities/components/meta/EntityDescriberComponent';
 
 export interface MetadataWidgetProps extends EntityLabel {
@@ -58,25 +58,27 @@ export const MetadataWidget: React.FC<MetadataWidgetProps> = (props) => {
   const isActive = props.active ?? true;
 
   return (
-    <S.MetaEntry
-      active={isActive}
-      $cursor={props.onClick ? 'pointer' : null}
-      background={props.color}
-      foreground={props.colorForeground}
-      className={props.className}
-      {...setupTooltipProps({ tooltip: props.tooltip, tooltipPos: TooltipPosition.BOTTOM })}
-      onClick={
-        props.onClick
-          ? (event) => {
-              event.persist();
-              return props.onClick(event);
-            }
-          : null
-      }
-    >
-      {(props.showLabel ?? true) ? <S.MetaKey active={isActive}>{props.label}</S.MetaKey> : null}
-      <S.MetaValue>{props.value}</S.MetaValue>
-      {props.icon ? <S.MetaIcon spin={props.icon.spin} icon={props.icon.name} color={props.icon.color} /> : null}
-    </S.MetaEntry>
+    <ReactorTooltipWidget tooltip={props.tooltip} tooltipPos={TooltipPosition.BOTTOM}>
+      <S.MetaEntry
+        active={isActive}
+        $cursor={props.onClick ? 'pointer' : null}
+        background={props.color}
+        foreground={props.colorForeground}
+        className={props.className}
+        {...setupTooltipProps({ tooltip: props.tooltip, tooltipPos: TooltipPosition.BOTTOM })}
+        onClick={
+          props.onClick
+            ? (event) => {
+                event.persist();
+                return props.onClick(event);
+              }
+            : null
+        }
+      >
+        {(props.showLabel ?? true) ? <S.MetaKey active={isActive}>{props.label}</S.MetaKey> : null}
+        <S.MetaValue>{props.value}</S.MetaValue>
+        {props.icon ? <S.MetaIcon spin={props.icon.spin} icon={props.icon.name} color={props.icon.color} /> : null}
+      </S.MetaEntry>
+    </ReactorTooltipWidget>
   );
 };
