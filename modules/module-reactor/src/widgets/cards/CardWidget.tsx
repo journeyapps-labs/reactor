@@ -32,13 +32,6 @@ export interface CardWidgetProps {
 }
 
 namespace S {
-  export const HoverContainer = styled.div`
-    display: flex;
-    flex: 1;
-    flex-direction: column;
-    min-width: 0;
-  `;
-
   export const Container = styled(SurfaceWidget)<{ $size: Size }>`
     display: flex;
     flex-direction: column;
@@ -160,57 +153,54 @@ class CardWidgetInternal extends React.Component<CardWidgetProps & { resolvedSiz
 
   render() {
     return (
-      <S.HoverContainer
+      <S.Container
+        className={this.props.className}
+        depth={this.props.depth}
+        selected={this.props.selected}
+        $size={this.props.resolvedSize}
         onMouseEnter={() => this.setState({ hovered: true })}
         onMouseLeave={() => this.setState({ hovered: false })}
       >
-        <S.Container
-          className={this.props.className}
-          depth={this.props.depth}
-          selected={this.props.selected}
-          $size={this.props.resolvedSize}
-        >
-          <S.Top $size={this.props.resolvedSize}>
-            <S.Info>
-              {this.getTitle()}
-              {this.getSubHeading()}
-            </S.Info>
-            <S.Buttons $visible={this.state.hovered}>
-              {this.props.btns?.map((btn, index) => {
-                return (
-                  <S.ButtonWrapper key={btn.label || `${index}`} onClick={(event) => event.stopPropagation()}>
-                    <S.Button {...btn} />
-                  </S.ButtonWrapper>
-                );
-              })}
-            </S.Buttons>
-          </S.Top>
-          <>
-            {this.props.sections.map((section) => {
-              if (!section) {
-                return null;
-              }
+        <S.Top $size={this.props.resolvedSize}>
+          <S.Info>
+            {this.getTitle()}
+            {this.getSubHeading()}
+          </S.Info>
+          <S.Buttons $visible={this.state.hovered}>
+            {this.props.btns?.map((btn, index) => {
               return (
-                <Observer
-                  key={section.key}
-                  render={() => {
-                    const content = section.content();
-                    if (!content) {
-                      return null;
-                    }
-                    return (
-                      <S.Content grow={section.grow ?? true} $size={this.props.resolvedSize}>
-                        {content}
-                      </S.Content>
-                    );
-                  }}
-                />
+                <S.ButtonWrapper key={btn.label || `${index}`} onClick={(event) => event.stopPropagation()}>
+                  <S.Button {...btn} />
+                </S.ButtonWrapper>
               );
             })}
-          </>
-          {this.getLoader()}
-        </S.Container>
-      </S.HoverContainer>
+          </S.Buttons>
+        </S.Top>
+        <>
+          {this.props.sections.map((section) => {
+            if (!section) {
+              return null;
+            }
+            return (
+              <Observer
+                key={section.key}
+                render={() => {
+                  const content = section.content();
+                  if (!content) {
+                    return null;
+                  }
+                  return (
+                    <S.Content grow={section.grow ?? true} $size={this.props.resolvedSize}>
+                      {content}
+                    </S.Content>
+                  );
+                }}
+              />
+            );
+          })}
+        </>
+        {this.getLoader()}
+      </S.Container>
     );
   }
 }

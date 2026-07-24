@@ -31,7 +31,7 @@ export const setupTooltipProps = (props: Partial<TooltipProps>) => {
 };
 
 namespace S {
-  export const Content = styled.div<{ position: TooltipPosition }>`
+  export const Content = styled.div`
     pointer-events: none;
     max-width: 320px;
     padding: 6px 9px;
@@ -43,13 +43,6 @@ namespace S {
     font-size: 12px;
     line-height: 1.35;
     white-space: pre-wrap;
-    transform: ${(p) => {
-      if (p.position === TooltipPosition.TOP) return 'translate(-50%, -100%)';
-      if (p.position === TooltipPosition.LEFT) return 'translate(-100%, -50%)';
-      if (p.position === TooltipPosition.RIGHT) return 'translate(0, -50%)';
-      if (p.position === TooltipPosition.BOTTOM_RIGHT) return 'translate(0, 0)';
-      return 'translate(-50%, 0)';
-    }};
   `;
 
   export const Anchor = styled.span`
@@ -72,10 +65,7 @@ export interface ReactorTooltipWidgetProps extends TooltipProps {
 export const ReactorTooltipWidget: React.FC<ReactorTooltipWidgetProps> = (props) => {
   const [active, setActive] = useState(props.tooltipState === TooltipState.SHOW);
   const position = props.tooltipPos || TooltipPosition.TOP;
-  const render = React.useCallback(
-    () => <S.Content position={position}>{props.tooltip}</S.Content>,
-    [position, props.tooltip]
-  );
+  const render = React.useCallback(() => <S.Content>{props.tooltip}</S.Content>, [props.tooltip]);
   const overlay = useAnchoredOverlay({
     source: 'tooltip',
     placement: placementFor(position),

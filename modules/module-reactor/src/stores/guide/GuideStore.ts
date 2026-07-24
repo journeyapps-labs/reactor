@@ -2,9 +2,8 @@ import { WorkspaceStore } from '../workspace/WorkspaceStore';
 import * as _ from 'lodash';
 import { ComponentSelection } from './selections/ComponentSelection';
 import { GuideWorkflow } from './GuideWorkflow';
-import { makeObservable, observable } from 'mobx';
+import { makeObservable, observable, reaction } from 'mobx';
 import { AbstractStore, AbstractStoreListener } from '../AbstractStore';
-import { autorun } from 'mobx';
 import * as React from 'react';
 import { AnchoredOverlayPlacement, AnchoredOverlayStore } from '../overlay/AnchoredOverlayStore';
 import { GuideTooltipContentWidget } from '../../layers/guide/GuideTooltipWidget';
@@ -68,9 +67,8 @@ export class GuideStore extends AbstractStore<{}, GuideStoreListener> {
     this.currentGuide = null;
     this.workspaceListener = null;
     this.selections = {};
-    autorun(() => {
-      this.anchoredOverlayStore.replaceSource(
-        'guide',
+    reaction(
+      () =>
         Object.values(this.selections)
           .filter((selection) => !!selection.rect && !!selection.tooltip)
           .map((selection) => ({
@@ -78,15 +76,20 @@ export class GuideStore extends AbstractStore<{}, GuideStoreListener> {
             source: 'guide',
             bounds: selection.rect,
             placement: AnchoredOverlayPlacement.AUTO,
-            clickThrough: false,
+            clickThrough: true,
             render: ({ above }) =>
               React.createElement(GuideTooltipContentWidget, {
                 selection,
                 arrowAbove: !above
               })
-          }))
-      );
-    });
+          })),
+      (overlays) => {
+        this.anchoredOverlayStore.replaceSource('guide', overlays);
+      },
+      {
+        fireImmediately: true
+      }
+    );
   }
 
   getCurrentGuide<T extends GuideWorkflow>(): T {

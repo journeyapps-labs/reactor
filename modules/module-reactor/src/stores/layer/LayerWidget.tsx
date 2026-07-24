@@ -26,16 +26,16 @@ namespace S {
     }
   `;
 
-  export const Layer = styled.div<{ index: number; animate: boolean; clickThrough: boolean }>`
+  export const Layer = styled.div<{ $index: number; $animate: boolean; $clickThrough: boolean }>`
     position: fixed;
     top: 0;
     left: 0;
     right: 0;
     bottom: 0;
-    z-index: ${(p) => p.index};
-    pointer-events: ${(p) => (p.clickThrough ? 'none' : 'all')};
+    z-index: ${(p) => p.$index};
+    pointer-events: ${(p) => (p.$clickThrough ? 'none' : 'all')};
     animation: ${(p) =>
-      p.animate
+      p.$animate
         ? css`
             ${fade} 0.3s
           `
@@ -59,9 +59,9 @@ export const LayerWidget: React.FC<React.PropsWithChildren<LayerWidgetProps>> = 
       onMouseDown={(event) => {
         props.hide();
       }}
-      animate={props.animate}
-      index={props.zIndex}
-      clickThrough={clickThrough}
+      $animate={props.animate}
+      $index={props.zIndex}
+      $clickThrough={clickThrough}
     >
       {props.children}
     </S.Layer>

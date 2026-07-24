@@ -4,10 +4,14 @@ import {
   AnchoredOverlayPlacement,
   AnchoredOverlayStore,
   CardWidget,
+  FloatingPanelWidget,
   getAnchoredOverlayBounds,
   ioc,
+  PanelButtonMode,
+  PanelButtonWidget,
   ReactorPanelModel,
-  styled
+  styled,
+  useDimensionObserver
 } from '@journeyapps-labs/reactor-mod';
 
 export interface PlaygroundOverlaysPanelWidgetProps {
@@ -15,32 +19,28 @@ export interface PlaygroundOverlaysPanelWidgetProps {
 }
 
 export const PlaygroundOverlaysPanelWidget: React.FC<PlaygroundOverlaysPanelWidgetProps> = observer(() => {
-  const anchorRef = React.useRef<HTMLButtonElement>(null);
+  const anchorRef = React.useRef<HTMLDivElement>(null);
   const [overlayId, setOverlayId] = React.useState<string>();
   const overlayStore = ioc.get(AnchoredOverlayStore);
+
+  useDimensionObserver(
+    {
+      element: anchorRef,
+      changed: () => {
+        if (overlayId && anchorRef.current) {
+          overlayStore.update(overlayId, { bounds: getAnchoredOverlayBounds(anchorRef.current) });
+        }
+      },
+      enabled: !!overlayId
+    },
+    [overlayId]
+  );
 
   React.useEffect(() => {
     return () => {
       if (overlayId) {
         overlayStore.hide(overlayId);
       }
-    };
-  }, [overlayId, overlayStore]);
-
-  React.useEffect(() => {
-    if (!overlayId) {
-      return;
-    }
-    const updateBounds = () => {
-      if (anchorRef.current) {
-        overlayStore.update(overlayId, { bounds: getAnchoredOverlayBounds(anchorRef.current) });
-      }
-    };
-    window.addEventListener('resize', updateBounds);
-    window.addEventListener('scroll', updateBounds, true);
-    return () => {
-      window.removeEventListener('resize', updateBounds);
-      window.removeEventListener('scroll', updateBounds, true);
     };
   }, [overlayId, overlayStore]);
 
@@ -57,12 +57,14 @@ export const PlaygroundOverlaysPanelWidget: React.FC<PlaygroundOverlaysPanelWidg
       source: 'playground.overlay-store',
       bounds: getAnchoredOverlayBounds(anchorRef.current),
       placement: AnchoredOverlayPlacement.AUTO,
-      clickThrough: false,
+      clickThrough: true,
       render: ({ above }) => (
-        <S.Overlay>
-          <S.OverlayTitle>Anchored overlay</S.OverlayTitle>
-          <S.OverlayText>Rendered by AnchoredOverlayStore {above ? 'above' : 'below'} the target.</S.OverlayText>
-        </S.Overlay>
+        <FloatingPanelWidget center={false} highlight={true}>
+          <S.Overlay>
+            <S.OverlayTitle>Anchored overlay</S.OverlayTitle>
+            <S.OverlayText>Rendered by AnchoredOverlayStore {above ? 'above' : 'below'} the target.</S.OverlayText>
+          </S.Overlay>
+        </FloatingPanelWidget>
       )
     });
     setOverlayId(id);
@@ -78,9 +80,13 @@ export const PlaygroundOverlaysPanelWidget: React.FC<PlaygroundOverlaysPanelWidg
             key: 'overlay-store-demo',
             content: () => (
               <S.Demo>
-                <S.Anchor ref={anchorRef} onClick={toggleOverlay}>
-                  {overlayId ? 'Hide overlay' : 'Show overlay'}
-                </S.Anchor>
+                <PanelButtonWidget
+                  forwardRef={anchorRef}
+                  label={overlayId ? 'Hide overlay' : 'Show overlay'}
+                  icon={overlayId ? 'eye-slash' : 'eye'}
+                  mode={PanelButtonMode.NORMAL}
+                  action={toggleOverlay}
+                />
                 <S.Help>Click the button, then resize or scroll the workspace to inspect the anchored layer.</S.Help>
               </S.Demo>
             )
@@ -102,17 +108,8 @@ namespace S {
   export const Demo = styled.div`
     display: flex;
     flex-direction: column;
+    align-items: flex-start;
     gap: 10px;
-  `;
-
-  export const Anchor = styled.button`
-    align-self: flex-start;
-    border: solid 1px ${(p) => p.theme.guide.accent};
-    border-radius: 5px;
-    padding: 8px 14px;
-    background: transparent;
-    color: ${(p) => p.theme.text.primary};
-    cursor: pointer;
   `;
 
   export const Help = styled.div`

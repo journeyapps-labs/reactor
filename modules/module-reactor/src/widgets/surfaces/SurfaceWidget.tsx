@@ -5,11 +5,9 @@ import { useTheme } from '../../hooks/useTheme';
 
 export type SurfaceDepth = 0 | 1 | 2 | 3;
 
-export interface SurfaceWidgetProps {
+export interface SurfaceWidgetProps extends React.HTMLAttributes<HTMLDivElement> {
   depth?: SurfaceDepth;
   selected?: boolean;
-  className?: any;
-  children?: React.ReactNode;
 }
 
 interface SurfaceContextValue {
@@ -40,20 +38,22 @@ namespace S {
 }
 
 export const SurfaceWidget: React.FC<SurfaceWidgetProps> = (props) => {
-  const depth = useSurfaceDepth(props.depth);
+  const { depth: requestedDepth, selected, children, className, ...containerProps } = props;
+  const depth = useSurfaceDepth(requestedDepth);
   const size = useReactorSize();
   const theme = useTheme();
-  const borderColor = props.selected ? theme.surfaces.selectedBorder : theme.surfaces[`depth${depth}Border`];
+  const borderColor = selected ? theme.surfaces.selectedBorder : theme.surfaces[`depth${depth}Border`];
 
   return (
     <SurfaceContext.Provider value={{ depth, borderColor }}>
       <S.Container
-        className={props.className}
+        {...containerProps}
+        className={className}
         $depth={depth}
         $borderColor={borderColor}
         $radius={getReactorBorderRadius(size)}
       >
-        {props.children}
+        {children}
       </S.Container>
     </SurfaceContext.Provider>
   );

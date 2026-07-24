@@ -1,5 +1,5 @@
 import { Container } from '@journeyapps-labs/common-ioc';
-import { AbstractReactorModule, UXStore, WorkspaceStore } from '@journeyapps-labs/reactor-mod';
+import { AbstractReactorModule, GuideStore, UXStore, WorkspaceStore } from '@journeyapps-labs/reactor-mod';
 import { DemoBodyWidget } from './BodyWidget';
 import { setupWorkspaces } from './setupWorkspaces';
 import { PlaygroundPanelFactory } from './panels/PlaygroundPanelFactory';
@@ -15,6 +15,7 @@ import { PlaygroundTreeSearchPanelWidget } from './panels/tree/PlaygroundTreeSea
 import { PlaygroundDragDropPanelWidget } from './panels/PlaygroundDragDropPanelWidget';
 import { PlaygroundOverlaysPanelWidget } from './panels/PlaygroundOverlaysPanelWidget';
 import { PlaygroundGuidePanelWidget } from './panels/PlaygroundGuidePanelWidget';
+import { PlaygroundGuideWorkflow } from './guides/PlaygroundGuideWorkflow';
 
 export class ReactorPlaygroundModule extends AbstractReactorModule {
   constructor() {
@@ -25,6 +26,7 @@ export class ReactorPlaygroundModule extends AbstractReactorModule {
 
   register(ioc: Container) {
     const workspaceStore = ioc.get(WorkspaceStore);
+    const guideStore = ioc.get(GuideStore);
 
     workspaceStore.registerFactory(
       new PlaygroundPanelFactory({
@@ -50,6 +52,7 @@ export class ReactorPlaygroundModule extends AbstractReactorModule {
         widget: PlaygroundGuidePanelWidget
       })
     );
+    guideStore.registerGuideWorkflow(new PlaygroundGuideWorkflow());
     workspaceStore.registerFactory(
       new PlaygroundPanelFactory({
         type: 'playground.tree-search',

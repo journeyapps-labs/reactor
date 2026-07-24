@@ -18,12 +18,12 @@ export interface SmartPositionWidgetProps {
 }
 
 namespace S {
-  export const Box = styled.div<{ animate?: boolean; centerOnMobile?: boolean }>`
+  export const Box = styled.div<{ $animate?: boolean; $centerOnMobile?: boolean }>`
     position: absolute;
-    ${(p) => (p.animate ? `transition: top 0.3s, left 0.3s` : '')};
+    ${(p) => (p.$animate ? `transition: top 0.3s, left 0.3s` : '')};
 
     ${(p) =>
-      p.centerOnMobile
+      p.$centerOnMobile
         ? `
           ${REACTOR_MOBILE_MEDIA_QUERY} {
             bottom: calc(24px + env(safe-area-inset-bottom));
@@ -88,7 +88,7 @@ export const SmartPositionWidget: React.FC<React.PropsWithChildren<SmartPosition
   );
 
   return (
-    <S.Box animate={props.animate} centerOnMobile={props.centerOnMobile} className={props.className} ref={ref}>
+    <S.Box $animate={props.animate} $centerOnMobile={props.centerOnMobile} className={props.className} ref={ref}>
       {props.children}
     </S.Box>
   );

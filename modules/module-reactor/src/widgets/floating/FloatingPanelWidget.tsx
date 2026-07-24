@@ -34,15 +34,15 @@ namespace S {
     transform: translate(-50%, -50%);
   `;
 
-  export const Container = themed.div<{ center: boolean; highlight: boolean; scaleInOnMobile?: boolean }>`
+  export const Container = themed.div<{ $center: boolean; $highlight: boolean; $scaleInOnMobile?: boolean }>`
     background: ${(p) => p.theme.combobox.background};
     border: solid 1px ${(p) => p.theme.combobox.border};
     border-radius: 4px;
     padding: 2px;
     box-shadow: 0 0 20px ${(p) => p.theme.combobox.shadowColor};
-    ${(p) => p.center && center};
+    ${(p) => p.$center && center};
 
-    ${(p) => (p.highlight ? `border: solid 2px ${p.theme.guide.accent}` : ``)};
+    ${(p) => (p.$highlight ? `border: solid 2px ${p.theme.guide.accent}` : ``)};
 
     ${REACTOR_MOBILE_MEDIA_QUERY} {
       border-radius: 10px;
@@ -52,7 +52,7 @@ namespace S {
       max-height: calc(100vh - 24px);
       min-height: 0;
       overflow: hidden;
-      animation: ${(p) => (p.scaleInOnMobile ? mobileScaleInAnimation : 'none')};
+      animation: ${(p) => (p.$scaleInOnMobile ? mobileScaleInAnimation : 'none')};
       transform-origin: center;
     }
 
@@ -79,7 +79,7 @@ export class FloatingPanelWidget extends React.Component<React.PropsWithChildren
     return (
       <S.Container
         ref={this.props.forwardRef}
-        highlight={this.props.highlight}
+        $highlight={this.props.highlight}
         className={this.props.className}
         onContextMenu={(e) => {
           e.stopPropagation();
@@ -88,8 +88,8 @@ export class FloatingPanelWidget extends React.Component<React.PropsWithChildren
         onMouseDown={(e) => {
           e.stopPropagation();
         }}
-        center={this.props.center}
-        scaleInOnMobile={this.props.scaleInOnMobile}
+        $center={this.props.center}
+        $scaleInOnMobile={this.props.scaleInOnMobile}
       >
         {this.props.children}
       </S.Container>

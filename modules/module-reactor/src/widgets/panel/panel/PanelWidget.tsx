@@ -79,7 +79,7 @@ export class PanelWidget extends React.Component<React.PropsWithChildren<PanelWi
       this.props.factory.options.renderTitlebar ??
       true;
     return (
-      <S.Container ref={this.ref} attention={selected} $rounded={rounded} $hasTitlebar={hasTitlebar}>
+      <S.Container ref={this.ref} $attention={selected} $rounded={rounded} $hasTitlebar={hasTitlebar}>
         <Observer render={() => this.props.factory.generateToolbar(this.props.event)} />
         {this.props.padding ? (
           <S.PanelScrolled ref={this.ref}>{this.props.children}</S.PanelScrolled>
@@ -138,7 +138,7 @@ export const getScrollableCSS = (t: GetTheme<typeof theme>) => {
 };
 
 namespace S {
-  export const Container = themed.div<{ attention: boolean; $rounded: boolean; $hasTitlebar: boolean }>`
+  export const Container = themed.div<{ $attention: boolean; $rounded: boolean; $hasTitlebar: boolean }>`
     width: 100%;
     height: 100%;
     min-height: 0;
@@ -155,8 +155,8 @@ namespace S {
     }};
     background: ${(p) => p.theme.panels.background};
     box-sizing: border-box;
-    ${(p) => (p.attention ? `border: solid 1px ${p.theme.guide.accent}` : ``)};
-    ${(p) => (p.attention ? `box-shadow: 0 0 20px 0px inset ${getTransparentColor(p.theme.guide.accent, 0.2)}` : ``)};
+    ${(p) => (p.$attention ? `border: solid 1px ${p.theme.guide.accent}` : ``)};
+    ${(p) => (p.$attention ? `box-shadow: 0 0 20px 0px inset ${getTransparentColor(p.theme.guide.accent, 0.2)}` : ``)};
   `;
 
   export const PanelNormal = themed.div`

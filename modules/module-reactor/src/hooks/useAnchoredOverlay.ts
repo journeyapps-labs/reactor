@@ -6,6 +6,7 @@ import {
   AnchoredOverlayOptions,
   AnchoredOverlayStore
 } from '../stores/overlay/AnchoredOverlayStore';
+import { useDimensionObserver } from './useDimensionObserver';
 
 export interface UseAnchoredOverlayOptions extends Omit<AnchoredOverlayOptions, 'bounds' | 'render'> {
   render: AnchoredOverlayOptions['render'];
@@ -37,6 +38,15 @@ export const useAnchoredOverlay = (options: UseAnchoredOverlayOptions) => {
     }
   }, [forwardRef, overlayStore]);
 
+  useDimensionObserver(
+    {
+      element: forwardRef,
+      changed: update,
+      enabled: options.enabled !== false
+    },
+    [options.enabled]
+  );
+
   useEffect(() => {
     if (options.enabled === false || !forwardRef.current) {
       return;
@@ -50,15 +60,7 @@ export const useAnchoredOverlay = (options: UseAnchoredOverlayOptions) => {
       render: options.render
     });
 
-    const resizeObserver = new ResizeObserver(update);
-    resizeObserver.observe(forwardRef.current);
-    window.addEventListener('resize', update);
-    window.addEventListener('scroll', update, true);
-
     return () => {
-      resizeObserver.disconnect();
-      window.removeEventListener('resize', update);
-      window.removeEventListener('scroll', update, true);
       if (idRef.current) {
         overlayStore.hide(idRef.current);
         idRef.current = undefined;
