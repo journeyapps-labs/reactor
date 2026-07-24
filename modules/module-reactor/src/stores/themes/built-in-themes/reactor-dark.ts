@@ -116,6 +116,7 @@ theme.addThemeValues({
     status: {
       ...DarkTheme.status,
       failed: '#7d3510',
+      failedForeground: '#f2e4dc',
       loading: '#2fa4c6',
       success: '#5f7e14'
     },

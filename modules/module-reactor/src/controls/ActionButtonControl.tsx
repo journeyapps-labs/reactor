@@ -4,6 +4,7 @@ import { ButtonControl } from './ButtonControl';
 import { RepresentAsControlOptions } from './AbstractControl';
 import type { Action } from '../actions/Action';
 import { PassiveActionValidationState, ValidationResult } from '../actions/validators/ActionValidator';
+import { ActionValidatorContext } from '../actions/validators/ActionValidatorContext';
 import { Btn } from '../definitions/common';
 import { observer } from 'mobx-react';
 
@@ -37,10 +38,8 @@ export class ActionButtonControl<T extends Action> extends ButtonControl {
 
 export interface ActionButtonWidgetProps<T extends Action> {
   action: T;
-  render: (result: ValidationResult, validator: ActionButtonWidgetValidator<T>) => React.JSX.Element;
+  render: (result: ValidationResult, validator: ActionValidatorContext) => React.JSX.Element;
 }
-
-type ActionButtonWidgetValidator<T extends Action> = ReturnType<T['generateValidationContext']>;
 
 export const ActionButtonWidget = observer(<T extends Action>(props: ActionButtonWidgetProps<T>) => {
   const [context] = useState(() => {

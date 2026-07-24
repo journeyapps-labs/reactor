@@ -47,6 +47,8 @@ export * from './meta/MetaBarWidget';
 export * from './meta/MetadataWidget';
 export * from './meta/ReadOnlyMetadataWidget';
 
+export * from './markdown/MarkdownWidget';
+
 export * from './mobile/MobileReactorShell';
 export * from './mobile/MobileHeaderWidget';
 export * from './mobile/MobileWorkspaceDrawerWidget';

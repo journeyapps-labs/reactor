@@ -18,6 +18,8 @@ export interface FormInputOptions<T = any> {
   value?: T;
   visible?: boolean;
   disabled?: boolean;
+  /** Keep the input invalid while allowing a nested control to render the validation message. */
+  hideError?: boolean;
   size?: Size;
 }
 
@@ -157,7 +159,7 @@ export const FormInputWidget: React.FC<FormInputWidgetProps> = (props) => {
       disabled={props.input.options.disabled}
       desc={props.input.options.desc}
       tooltip={props.input.options.tooltip}
-      error={props.input.error}
+      error={props.input.options.hideError ? null : props.input.error}
       label={props.input.label}
     >
       {props.children()}

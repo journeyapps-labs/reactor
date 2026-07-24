@@ -1,6 +1,7 @@
 import { WorkspaceCollectionModel, WorkspaceModel as StormWorkspaceModel } from '@projectstorm/react-workspaces-core';
 import { v4 } from 'uuid';
 import * as _ from 'lodash';
+import { computed } from 'mobx';
 
 import type { ComboBoxItem } from '../../combo/ComboBoxDirectives';
 import type { DialogStore } from '../../DialogStore';
@@ -8,6 +9,7 @@ import { ioc } from '../../../inversify.config';
 import { DialogStore2 } from '../../dialog2/DialogStore2';
 import { FormDialogDirective } from '../../dialog2/directives/FormDialogDirective';
 import { WorkspaceOptionsFormModel } from '../forms/WorkspaceOptionsFormModel';
+import { AdvancedWorkspacePreference } from '../../../preferences/AdvancedWorkspacePreference';
 import { ReactorRootWorkspaceModel } from '../react-workspaces/ReactorRootWorkspaceModel';
 import { ReactorWorkspaceEngine } from '../ReactorWorkspaceEngine';
 import type { WorkspaceStore } from '../WorkspaceStore';
@@ -18,6 +20,7 @@ export interface SerializedWorkspaceModel {
   model?: any;
   parentId?: string;
   preferredOpenActions?: Record<string, string>;
+  immutable?: boolean;
 }
 
 export interface WorkspaceModelOptions {
@@ -27,6 +30,7 @@ export interface WorkspaceModelOptions {
   parentId?: string;
   priority?: number;
   preferredOpenActions?: Record<string, string>;
+  immutable?: boolean;
 }
 
 export interface WorkspaceActivation {
@@ -57,6 +61,7 @@ export class WorkspaceModel {
   parentId?: string;
   priority?: number;
   preferredOpenActions: Record<string, string>;
+  immutable: boolean;
 
   constructor(options: WorkspaceModelOptions) {
     this.id = options.id || options.name || v4();
@@ -65,6 +70,7 @@ export class WorkspaceModel {
     this.parentId = options.parentId;
     this.priority = options.priority;
     this.preferredOpenActions = options.preferredOpenActions || {};
+    this.immutable = options.immutable ?? false;
   }
 
   get key() {
@@ -107,6 +113,10 @@ export class WorkspaceModel {
     return this.preferredOpenActions[entityType] || null;
   }
 
+  @computed get mutable(): boolean {
+    return !this.immutable && AdvancedWorkspacePreference.enabled();
+  }
+
   protected async showWorkspaceOptions(context: WorkspaceContextActionContext) {
     const form = new WorkspaceOptionsFormModel({
       preferredOpenActions: this.preferredOpenActions
@@ -128,6 +138,28 @@ export class WorkspaceModel {
   getContextMenuItems(context: WorkspaceContextActionContext): ComboBoxItem[] {
     const workspaceStore = context.workspaceStore;
     const isTopLevel = workspaceStore.getTopLevelWorkspace(this.key) === this;
+    if (this.immutable) {
+      return [
+        {
+          key: 'export',
+          icon: 'upload',
+          title: 'Export',
+          group: 'actions',
+          children: [
+            {
+              key: 'export-workspace',
+              icon: 'upload',
+              title: 'Export workspace',
+              download: {
+                url: workspaceStore.getExportedWorkspaceURL(this.key),
+                name: 'workspace.json'
+              }
+            }
+          ]
+        }
+      ];
+    }
+
     const items: ComboBoxItem[] = [
       {
         key: 'workspace-options',
@@ -220,7 +252,8 @@ export class WorkspaceModel {
       name: this.name,
       parentId: this.parentId,
       model: this.model.toArray(),
-      preferredOpenActions
+      preferredOpenActions,
+      immutable: this.immutable || undefined
     };
   }
 
@@ -234,7 +267,8 @@ export class WorkspaceModel {
       model,
       preferredOpenActions: {
         ...this.preferredOpenActions
-      }
+      },
+      immutable: this.immutable
     });
   }
 
@@ -260,7 +294,8 @@ export class WorkspaceModel {
       name: pref.name,
       parentId,
       model,
-      preferredOpenActions: pref.preferredOpenActions
+      preferredOpenActions: pref.preferredOpenActions,
+      immutable: pref.immutable
     });
   }
 }

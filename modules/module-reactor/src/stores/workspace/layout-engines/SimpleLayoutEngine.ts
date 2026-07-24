@@ -37,6 +37,16 @@ export class SimpleLayoutEngine extends AbstractLayoutEngine {
 
       this.store.setActiveWorkspace(workspaceName);
 
+      if (this.store.getActiveWorkspace()?.immutable) {
+        const existing = this.findExistingMatchingModel(model);
+        if (existing) {
+          this.store.activateModel(existing);
+        } else {
+          this.store.addModelInWindow(model, { width: 250, height: 200 });
+        }
+        continue;
+      }
+
       const flattened = this.store.getRoot().flatten();
 
       // 1. find the exact place this should go

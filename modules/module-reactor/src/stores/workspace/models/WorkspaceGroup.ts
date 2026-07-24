@@ -17,6 +17,7 @@ export interface SerializedWorkspaceGroup {
   name: string;
   children: SerializedWorkspaceModel[];
   lastActiveChildId?: string;
+  immutable?: boolean;
 }
 
 export interface WorkspaceGroupOptions {
@@ -25,6 +26,7 @@ export interface WorkspaceGroupOptions {
   children: (WorkspaceModel | WorkspaceModelOptions)[];
   lastActiveChildId?: string;
   priority?: number;
+  immutable?: boolean;
 }
 
 export class WorkspaceGroup extends WorkspaceModel {
@@ -35,7 +37,8 @@ export class WorkspaceGroup extends WorkspaceModel {
     super({
       id: options.id || options.name || v4(),
       name: options.name,
-      priority: options.priority
+      priority: options.priority,
+      immutable: options.immutable
     });
     this.children = options.children.map((workspace) => {
       const model = workspace instanceof WorkspaceModel ? workspace : new WorkspaceModel(workspace);
@@ -84,6 +87,10 @@ export class WorkspaceGroup extends WorkspaceModel {
   }
 
   getContextMenuItems(context: WorkspaceContextActionContext): ComboBoxItem[] {
+    if (this.immutable) {
+      return super.getContextMenuItems(context);
+    }
+
     const items: ComboBoxItem[] = [
       ...super.getContextMenuItems(context).filter((item) => item.key !== 'convert-group'),
       {
@@ -123,7 +130,8 @@ export class WorkspaceGroup extends WorkspaceModel {
       id: this.id,
       name: this.name,
       lastActiveChildId: this.lastActiveChildId,
-      children: this.children.map((child) => child.serialize())
+      children: this.children.map((child) => child.serialize()),
+      immutable: this.immutable || undefined
     };
   }
 
@@ -195,6 +203,7 @@ export class WorkspaceGroup extends WorkspaceModel {
       id,
       name: pref.name,
       lastActiveChildId: pref.lastActiveChildId,
+      immutable: pref.immutable,
       children: pref.children.map((child) => WorkspaceModel.deserialize(child, engine, generateRootModel, id))
     });
   }
@@ -215,7 +224,8 @@ export class WorkspaceGroup extends WorkspaceModel {
       name: groupName,
       priority: workspace.priority,
       children: [workspace],
-      lastActiveChildId: workspace.key
+      lastActiveChildId: workspace.key,
+      immutable: workspace.immutable
     });
   }
 

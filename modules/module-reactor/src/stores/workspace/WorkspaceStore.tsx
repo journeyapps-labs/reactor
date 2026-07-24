@@ -54,15 +54,15 @@ interface GetPanelFactoryOptions {
   validateFactories?: boolean;
 }
 
-type WorkspaceGeneratorCallback = () => Promise<GeneratedWorkspaceEntry>;
+type WorkspaceGeneratorCallback = () => Promise<GeneratedWorkspaceEntry | null | undefined>;
 
 export type WorkspaceGenerator =
   | {
       generateWorkspace: WorkspaceGeneratorCallback;
     }
   | {
-      generateAdvancedWorkspace: WorkspaceGeneratorCallback;
-      generateSimpleWorkspace: WorkspaceGeneratorCallback;
+      generateAdvancedWorkspace?: WorkspaceGeneratorCallback;
+      generateSimpleWorkspace?: WorkspaceGeneratorCallback;
     };
 
 export class WorkspaceStore extends AbstractStore<WorkspacePrefsSerialized, WorkspaceStoreListener> {
@@ -215,6 +215,7 @@ export class WorkspaceStore extends AbstractStore<WorkspacePrefsSerialized, Work
     const activation = topWorkspace.activate(key);
     this.currentTopWorkspace = activation.topWorkspace.key;
     this.currentModel = activation.workspace.key;
+    this.engine.setLocked(!activation.workspace.mutable);
     this.iterateListeners((l) => {
       if (l.workspaceActivated) {
         l.workspaceActivated(activation.workspace);
@@ -341,6 +342,14 @@ export class WorkspaceStore extends AbstractStore<WorkspacePrefsSerialized, Work
     return this.layoutEngine.addModels([input])[0];
   }
 
+  activateModel(model: StormWorkspaceModel) {
+    if (model.parent instanceof ReactorTabFactoryModel) {
+      model.parent.setSelected(model);
+    } else if (model.parent && 'setSelectedModel' in model.parent) {
+      (model.parent as any).setSelectedModel(model);
+    }
+  }
+
   addModelInWindow(input: StormWorkspaceModel, options: { position?: Alignment; width: number; height: number }) {
     if (getReactorViewportMode() === ReactorViewportMode.MOBILE) {
       const root = this.generateRootModel();
@@ -382,14 +391,17 @@ export class WorkspaceStore extends AbstractStore<WorkspacePrefsSerialized, Work
     this.workspaceGenerators.add(generator);
   }
 
-  generateWorkspace(generator: WorkspaceGenerator): Promise<GeneratedWorkspaceEntry> {
+  generateWorkspace(generator: WorkspaceGenerator): Promise<GeneratedWorkspaceEntry | null | undefined> {
     if ('generateWorkspace' in generator) {
       return generator.generateWorkspace();
     }
-    if (AdvancedWorkspacePreference.enabled()) {
+    if (AdvancedWorkspacePreference.enabled() && generator.generateAdvancedWorkspace) {
       return generator.generateAdvancedWorkspace();
     }
-    return generator.generateSimpleWorkspace();
+    if (!AdvancedWorkspacePreference.enabled() && generator.generateSimpleWorkspace) {
+      return generator.generateSimpleWorkspace();
+    }
+    return Promise.resolve(undefined);
   }
 
   @action
@@ -579,6 +591,7 @@ export class WorkspaceStore extends AbstractStore<WorkspacePrefsSerialized, Work
     const index = this.workspaces.findIndex((workspace) => workspace.key === key || workspace.name === key);
     if (index !== -1) {
       const workspace = this.workspaces[index];
+      if (workspace.immutable) return;
       if (workspace instanceof WorkspaceGroup && this.getAllWorkspaces().length === workspace.children.length) {
         return;
       }
@@ -591,7 +604,9 @@ export class WorkspaceStore extends AbstractStore<WorkspacePrefsSerialized, Work
     const parent = this.getWorkspaceEntry(key);
     if (parent) {
       const group = parent as WorkspaceGroup;
+      if (group.immutable) return;
       const childIndex = group.children.findIndex((child) => child.contains(key));
+      if (group.children[childIndex]?.immutable) return;
       group.children.splice(childIndex, 1);
       if (group.children.length === 0) {
         this.deleteWorkspace(group.key);
@@ -624,6 +639,13 @@ export class WorkspaceStore extends AbstractStore<WorkspacePrefsSerialized, Work
 
       const finalModels = this.convertSerializedToModels(decoded);
       if (decoded.replace) {
+        if (
+          this.workspaces.some(
+            (workspace) => workspace.immutable || workspace.getAllWorkspaces().some((child) => child.immutable)
+          )
+        ) {
+          return false;
+        }
         this.workspaces = finalModels;
         const current = decoded.current || _.first(finalModels).key;
         await this.setActiveWorkspace(current);
@@ -731,6 +753,7 @@ export class WorkspaceStore extends AbstractStore<WorkspacePrefsSerialized, Work
 
   @action cloneWorkspace(name: string, key: string) {
     const entry = this.getTopLevelWorkspace(key);
+    if (entry?.immutable || this.getWorkspace(key)?.immutable) return;
     if (entry instanceof WorkspaceGroup) {
       name = this.getSafeWorkspaceName(name);
       const group = entry.clone({
@@ -774,6 +797,7 @@ export class WorkspaceStore extends AbstractStore<WorkspacePrefsSerialized, Work
 
   @action renameWorkspace(name: string, key: string) {
     const workspace = this.getTopLevelWorkspace(key) || this.getWorkspace(key);
+    if (!workspace || workspace.immutable) return;
     const parent = workspace.parentId ? this.getTopLevelWorkspace(workspace.parentId) : null;
     name =
       parent instanceof WorkspaceGroup
@@ -791,7 +815,7 @@ export class WorkspaceStore extends AbstractStore<WorkspacePrefsSerialized, Work
   @action
   async newWorkspaceInGroup(groupKey: string, name: string) {
     const group = this.getTopLevelWorkspace(groupKey);
-    if (!(group instanceof WorkspaceGroup)) {
+    if (!(group instanceof WorkspaceGroup) || group.immutable) {
       return;
     }
 
@@ -812,7 +836,7 @@ export class WorkspaceStore extends AbstractStore<WorkspacePrefsSerialized, Work
   async convertWorkspaceToGroup(key: string) {
     const index = this.workspaces.findIndex((workspace) => workspace.key === key || workspace.name === key);
     const workspace = this.workspaces[index];
-    if (!workspace || workspace instanceof WorkspaceGroup) {
+    if (!workspace || workspace instanceof WorkspaceGroup || workspace.immutable) {
       return;
     }
 
@@ -829,7 +853,12 @@ export class WorkspaceStore extends AbstractStore<WorkspacePrefsSerialized, Work
   async collapseWorkspaceGroup(key: string) {
     const index = this.workspaces.findIndex((workspace) => workspace.key === key || workspace.name === key);
     const group = this.workspaces[index];
-    if (!(group instanceof WorkspaceGroup) || group.children.length !== 1) {
+    if (
+      !(group instanceof WorkspaceGroup) ||
+      group.immutable ||
+      group.children.length !== 1 ||
+      group.children[0].immutable
+    ) {
       return;
     }
 

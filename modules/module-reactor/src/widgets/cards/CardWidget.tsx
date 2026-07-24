@@ -11,6 +11,7 @@ import { themed } from '../../stores/themes/reactor-theme-fragment';
 import { getScrollableCSS } from '../panel/panel/PanelWidget';
 import { SurfaceDepth, SurfaceWidget } from '../surfaces/SurfaceWidget';
 import { getReactorBorderRadius, ReactorSizeProvider, Size, useReactorSize } from '../../hooks/useReactorSize';
+import { REACTOR_MOBILE_MEDIA_QUERY } from '../../hooks/useReactorViewportMode';
 
 export interface CardWidgetProps {
   btns?: PanelBtn[];
@@ -31,6 +32,13 @@ export interface CardWidgetProps {
 }
 
 namespace S {
+  export const HoverContainer = styled.div`
+    display: flex;
+    flex: 1;
+    flex-direction: column;
+    min-width: 0;
+  `;
+
   export const Container = styled(SurfaceWidget)<{ $size: Size }>`
     display: flex;
     flex-direction: column;
@@ -83,7 +91,20 @@ namespace S {
     ${(p) => getScrollableCSS(p.theme)};
   `;
 
-  export const Buttons = styled.div`
+  export const Buttons = styled.div<{ $visible: boolean }>`
+    display: flex;
+    align-items: center;
+    opacity: ${(p) => (p.$visible ? 1 : 0)};
+    pointer-events: ${(p) => (p.$visible ? 'auto' : 'none')};
+    transition: opacity 0.15s ease-out;
+
+    ${REACTOR_MOBILE_MEDIA_QUERY} {
+      opacity: 1;
+      pointer-events: auto;
+    }
+  `;
+
+  export const ButtonWrapper = styled.div`
     display: flex;
     align-items: center;
   `;
@@ -94,6 +115,10 @@ namespace S {
 }
 
 class CardWidgetInternal extends React.Component<CardWidgetProps & { resolvedSize: Size }> {
+  state = {
+    hovered: false
+  };
+
   getLoader() {
     if (!this.props.loader) {
       return null;
@@ -135,48 +160,57 @@ class CardWidgetInternal extends React.Component<CardWidgetProps & { resolvedSiz
 
   render() {
     return (
-      <S.Container
-        className={this.props.className}
-        depth={this.props.depth}
-        selected={this.props.selected}
-        $size={this.props.resolvedSize}
+      <S.HoverContainer
+        onMouseEnter={() => this.setState({ hovered: true })}
+        onMouseLeave={() => this.setState({ hovered: false })}
       >
-        <S.Top $size={this.props.resolvedSize}>
-          <S.Info>
-            {this.getTitle()}
-            {this.getSubHeading()}
-          </S.Info>
-          <S.Buttons>
-            {this.props.btns?.map((btn, index) => {
-              return <S.Button key={btn.label || `${index}`} {...btn} />;
+        <S.Container
+          className={this.props.className}
+          depth={this.props.depth}
+          selected={this.props.selected}
+          $size={this.props.resolvedSize}
+        >
+          <S.Top $size={this.props.resolvedSize}>
+            <S.Info>
+              {this.getTitle()}
+              {this.getSubHeading()}
+            </S.Info>
+            <S.Buttons $visible={this.state.hovered}>
+              {this.props.btns?.map((btn, index) => {
+                return (
+                  <S.ButtonWrapper key={btn.label || `${index}`} onClick={(event) => event.stopPropagation()}>
+                    <S.Button {...btn} />
+                  </S.ButtonWrapper>
+                );
+              })}
+            </S.Buttons>
+          </S.Top>
+          <>
+            {this.props.sections.map((section) => {
+              if (!section) {
+                return null;
+              }
+              return (
+                <Observer
+                  key={section.key}
+                  render={() => {
+                    const content = section.content();
+                    if (!content) {
+                      return null;
+                    }
+                    return (
+                      <S.Content grow={section.grow ?? true} $size={this.props.resolvedSize}>
+                        {content}
+                      </S.Content>
+                    );
+                  }}
+                />
+              );
             })}
-          </S.Buttons>
-        </S.Top>
-        <>
-          {this.props.sections.map((section) => {
-            if (!section) {
-              return null;
-            }
-            return (
-              <Observer
-                key={section.key}
-                render={() => {
-                  const content = section.content();
-                  if (!content) {
-                    return null;
-                  }
-                  return (
-                    <S.Content grow={section.grow ?? true} $size={this.props.resolvedSize}>
-                      {content}
-                    </S.Content>
-                  );
-                }}
-              />
-            );
-          })}
-        </>
-        {this.getLoader()}
-      </S.Container>
+          </>
+          {this.getLoader()}
+        </S.Container>
+      </S.HoverContainer>
     );
   }
 }

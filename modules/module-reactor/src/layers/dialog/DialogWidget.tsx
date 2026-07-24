@@ -10,11 +10,14 @@ import { ComboBoxItem } from '../../stores/combo/ComboBoxDirectives';
 import { ComboBoxStore } from '../../stores/combo/ComboBoxStore';
 import { DialogButtonStyle } from '../../stores/DialogStore';
 import { AttentionWrapperWidget } from '../../widgets/guide/AttentionWrapperWidget';
-import ReactMarkdown from 'react-markdown';
 import { ReactorComponentType } from '../../stores/guide/selections/common';
 import { PanelButtonWidget } from '../../widgets/forms/PanelButtonWidget';
-import rehypeExternalLinks from 'rehype-external-links';
-import { REACTOR_MOBILE_MEDIA_QUERY } from '../../hooks/useReactorViewportMode';
+import {
+  REACTOR_MOBILE_MEDIA_QUERY,
+  ReactorViewportMode,
+  useReactorViewportMode
+} from '../../hooks/useReactorViewportMode';
+import { MarkdownWidget } from '../../widgets/markdown/MarkdownWidget';
 
 export interface DialogWidgetProps {
   title: string;
@@ -40,7 +43,7 @@ namespace S {
 
     ${REACTOR_MOBILE_MEDIA_QUERY} {
       box-sizing: border-box;
-      width: calc(100vw - 28px);
+      width: 100%;
       min-width: 0;
       max-height: calc(100vh - 28px);
       padding: 18px;
@@ -114,22 +117,86 @@ namespace S {
     }
   `;
 
-  export const Markdown = themed.div`
-    a {
-      color: ${(p) => p.theme.guide.accent};
-      text-decoration: none;
-      white-space: nowrap;
+  export const MobileOverlay = themed.div`
+    position: absolute;
+    inset: 0;
+    display: flex;
+    align-items: flex-end;
+    justify-content: center;
+    padding: 14px;
+    box-sizing: border-box;
+    background: rgba(0, 0, 0, 0.35);
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+  `;
+
+  export const MobilePanel = themed.div<{ highlight: boolean }>`
+    width: 100%;
+    max-width: calc(100vw - 28px);
+    max-height: calc(100vh - 28px);
+    min-height: 0;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    background: ${(p) => p.theme.combobox.background};
+    border: solid ${(p) => (p.highlight ? '2px' : '1px')} ${(p) => (p.highlight ? p.theme.guide.accent : p.theme.combobox.border)};
+    border-radius: 10px;
+    box-shadow: 0 0 20px ${(p) => p.theme.combobox.shadowColor};
+
+    *::-webkit-scrollbar {
+      width: 10px;
+      height: 10px;
+      padding-left: 3px;
     }
-
-    p{
-      margin-bottom: 10px;
-
-      &:last-of-type{
-        margin-bottom: 0;
-      }
+    *::-webkit-scrollbar-thumb {
+      background: rgba(255, 255, 255, 0.2);
+      border-radius: 10px;
+      border-left: solid 2px ${(p) => p.theme.combobox.background};
+      border-top-left-radius: 15px;
+      border-bottom-left-radius: 15px;
+    }
+    *::-webkit-scrollbar-corner {
+      background: transparent;
     }
   `;
 }
+
+interface DialogPanelWidgetProps {
+  selected: object | null;
+  forwardRef: React.RefObject<HTMLDivElement>;
+  children: React.ReactNode;
+}
+
+const DialogPanelWidget: React.FC<DialogPanelWidgetProps> = (props) => {
+  const viewportMode = useReactorViewportMode();
+  const preventLayerDismissal = (event: React.MouseEvent) => {
+    event.stopPropagation();
+  };
+
+  if (viewportMode === ReactorViewportMode.MOBILE) {
+    return (
+      <S.MobileOverlay>
+        <S.MobilePanel
+          ref={props.forwardRef}
+          highlight={!!props.selected}
+          onContextMenu={(event) => {
+            event.stopPropagation();
+            event.preventDefault();
+          }}
+          onMouseDown={preventLayerDismissal}
+        >
+          {props.children}
+        </S.MobilePanel>
+      </S.MobileOverlay>
+    );
+  }
+
+  return (
+    <FloatingPanelWidget highlight={!!props.selected} forwardRef={props.forwardRef} center={true}>
+      {props.children}
+    </FloatingPanelWidget>
+  );
+};
 
 export class DialogWidget extends React.Component<React.PropsWithChildren<DialogWidgetProps>> {
   @inject(ComboBoxStore)
@@ -155,7 +222,7 @@ export class DialogWidget extends React.Component<React.PropsWithChildren<Dialog
         }}
         activated={(selected) => {
           return (
-            <FloatingPanelWidget highlight={!!selected} forwardRef={this.ref} center={true}>
+            <DialogPanelWidget selected={selected} forwardRef={this.ref}>
               <S.Container
                 className={this.props.className}
                 onSubmit={(e) => {
@@ -183,13 +250,7 @@ export class DialogWidget extends React.Component<React.PropsWithChildren<Dialog
                   {this.props.desc?.split('\n').map((line, index) => {
                     return <p key={`line_${index}`}>{line}</p>;
                   })}
-                  {this.props.markdown ? (
-                    <S.Markdown>
-                      <ReactMarkdown rehypePlugins={[[rehypeExternalLinks, { target: '_blank' }]]}>
-                        {this.props.markdown}
-                      </ReactMarkdown>
-                    </S.Markdown>
-                  ) : null}
+                  {this.props.markdown ? <MarkdownWidget markdown={this.props.markdown} /> : null}
                 </S.Desc>
                 <S.Content>{this.props.children}</S.Content>
                 <S.Bottom>
@@ -203,7 +264,7 @@ export class DialogWidget extends React.Component<React.PropsWithChildren<Dialog
                   })}
                 </S.Bottom>
               </S.Container>
-            </FloatingPanelWidget>
+            </DialogPanelWidget>
           );
         }}
       />

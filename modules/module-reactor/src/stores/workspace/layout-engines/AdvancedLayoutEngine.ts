@@ -232,6 +232,18 @@ export class AdvancedLayoutEngine extends AbstractLayoutEngine {
   }
 
   addModels<T extends WorkspaceModel[]>(models: T, options: AddModelsOptions = {}): T {
+    if (this.store.getActiveWorkspace()?.immutable) {
+      models.forEach((model) => {
+        const existing = this.findExistingMatchingModel(model);
+        if (existing) {
+          this.makeModelVisible(existing);
+        } else {
+          this.store.addModelInWindow(model, { width: 400, height: 400 });
+        }
+      });
+      return models;
+    }
+
     // first check for hints
     if (options.hint === WorkspaceHint.COUPLED) {
       const tabs = this.ensureTabs(models.length);

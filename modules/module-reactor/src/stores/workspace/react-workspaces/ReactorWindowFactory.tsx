@@ -10,8 +10,15 @@ import { styled } from '../../themes/reactor-theme-fragment';
 import { WORKSPACE_PANEL_RADIUS } from '../../../widgets/workspace/workspacePanelChrome';
 
 export class ReactorWindowModel extends FloatingWindowModel {
+  private static MAXIMIZE_INSET = 20;
+
   @observable
   accessor pinned: boolean;
+
+  @observable
+  accessor maximized: boolean;
+
+  private restoreBounds: { left: number; top: number; width: number; height: number } | null;
 
   /**
    * true = it's not coupled to a tray (aka a global window)
@@ -26,6 +33,44 @@ export class ReactorWindowModel extends FloatingWindowModel {
       height: 400
     });
     this.pinned = false;
+    this.maximized = false;
+    this.restoreBounds = null;
+  }
+
+  toggleMaximized() {
+    if (this.maximized) {
+      const bounds = this.restoreBounds;
+      this.maximized = false;
+      this.restoreBounds = null;
+      this.setDraggable(true);
+
+      if (bounds) {
+        this.dimension.update(bounds);
+      }
+      return;
+    }
+
+    const parentDimensions = this.parent?.r_dimensions;
+    if (!parentDimensions) {
+      return;
+    }
+
+    this.restoreBounds = {
+      left: this.position.left,
+      top: this.position.top,
+      width: this.size.width,
+      height: this.size.height
+    };
+
+    const inset = ReactorWindowModel.MAXIMIZE_INSET;
+    this.maximized = true;
+    this.setDraggable(false);
+    this.dimension.update({
+      left: parentDimensions.position.left + inset,
+      top: parentDimensions.position.top + inset,
+      width: Math.max(0, parentDimensions.size.width - inset * 2),
+      height: Math.max(0, parentDimensions.size.height - inset * 2)
+    });
   }
 }
 

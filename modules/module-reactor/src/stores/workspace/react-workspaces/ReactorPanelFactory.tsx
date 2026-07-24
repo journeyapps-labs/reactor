@@ -37,6 +37,11 @@ export interface AbstractReactorPanelFactoryOptions {
   category?: string;
   type: string;
   isMultiple: boolean;
+  /**
+   * Whether the panel renders its titlebar when displayed outside a tab.
+   * @default true
+   */
+  renderTitlebar?: boolean;
   padding?: boolean;
   /**
    * Panel can be serialized to URL when active
@@ -68,6 +73,7 @@ export abstract class ReactorPanelFactory<T extends ReactorPanelModel = ReactorP
     this.options = {
       ...options,
       color: options.color || '#fff',
+      renderTitlebar: options.renderTitlebar ?? true,
       allowManualCreation: options.allowManualCreation == null ? true : options.allowManualCreation
     };
   }
@@ -149,6 +155,9 @@ export abstract class ReactorPanelFactory<T extends ReactorPanelModel = ReactorP
   // !--------------- RENDERING TITLEBAR ---------------
 
   renderTitleBar(event: RenderTitleBarEvent<T>): React.JSX.Element {
+    if (!this.options.renderTitlebar) {
+      return null;
+    }
     return (
       <Observer
         render={() => {
@@ -172,7 +181,10 @@ export abstract class ReactorPanelFactory<T extends ReactorPanelModel = ReactorP
     return null;
   }
 
-  renderWindowTitle(event: FloatingWindowSubRendererEvent<T>): any {
+  renderWindowTitle(event: FloatingWindowSubRendererEvent<T>): React.ReactNode {
+    if (!this.options.renderTitlebar) {
+      return null;
+    }
     return (
       <Observer
         render={() => {

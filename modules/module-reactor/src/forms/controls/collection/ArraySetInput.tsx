@@ -15,7 +15,7 @@ import { useForceUpdate } from '../../../hooks/useForceUpdate';
 import { LoadingPanelWidget } from '../../../widgets/panel/panel/LoadingPanelWidget';
 import { PanelButtonMode, PanelButtonWidget } from '../../../widgets/forms/PanelButtonWidget';
 import { Btn } from '../../../definitions/common';
-import { SurfaceWidget } from '../../../widgets/surfaces/SurfaceWidget';
+import { SurfaceWidget, useSurfaceBorderColor } from '../../../widgets/surfaces/SurfaceWidget';
 
 export interface ArraySetInputOptions<T> extends FormInputOptions<{ [key: string]: T }> {
   generate: (key: string) => FormInput;
@@ -136,7 +136,7 @@ export const ArraySetInputWidget: React.FC<ArraySetInputWidgetProps> = (props) =
 
   return (
     <S.Container>
-      <S.Entries scroll={props.input.options.layout.scrollLength}>
+      <S.Entries>
         {Array.from(input.entries.keys()).map((key) => {
           return (
             <ArraySetInputEntryWidget
@@ -174,13 +174,19 @@ export const ArraySetInputEntryWidget: React.FC<
 > = (props) => {
   return (
     <S.Entry>
-      <S.EntryTop>
+      <ArraySetEntryTop>
         <S.EntryLabel>{props.label}</S.EntryLabel>
         <PanelButtonWidget icon="close" mode={PanelButtonMode.LINK} action={props.remove} />
-      </S.EntryTop>
+      </ArraySetEntryTop>
       <S.Display>{props.input.renderControl({ inline: true })}</S.Display>
     </S.Entry>
   );
+};
+
+const ArraySetEntryTop: React.FC<React.PropsWithChildren> = (props) => {
+  const borderColor = useSurfaceBorderColor();
+
+  return <S.EntryTop $borderColor={borderColor}>{props.children}</S.EntryTop>;
 };
 
 namespace S {
@@ -192,29 +198,29 @@ namespace S {
     padding: 10px;
   `;
 
-  export const Entries = styled.div<{ scroll: number }>`
+  export const Entries = styled.div`
     margin-bottom: 5px;
     display: flex;
     flex-direction: column;
     row-gap: 8px;
-    overflow: auto;
-    ${(p) => (p.scroll ? `max-height: ${p.scroll}px` : '')};
   `;
 
   export const EntryLabel = styled.div`
     flex-grow: 1;
     color: ${(p) => p.theme.forms.groupLabelForeground};
     font-size: 12px;
+    font-weight: 700;
   `;
 
   export const Entry = styled(SurfaceWidget)`
+    flex-shrink: 0;
     overflow: hidden;
   `;
 
-  export const EntryTop = styled.div`
+  export const EntryTop = styled.div<{ $borderColor?: string }>`
     display: flex;
     align-items: center;
-    background: ${(p) => p.theme.forms.groupBorder};
+    border-bottom: solid 1px ${(p) => p.$borderColor};
     padding-left: 5px;
   `;
 }
