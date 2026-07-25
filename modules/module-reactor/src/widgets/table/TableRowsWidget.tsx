@@ -5,7 +5,7 @@ import * as _ from 'lodash';
 import { themed } from '../../stores/themes/reactor-theme-fragment';
 import { MousePosition } from '../../layers/combo/SmartPositionWidget';
 import { useLongPressContextMenu } from '../../hooks/useLongPressContextMenu';
-import { Size } from '../../hooks/useReactorSize';
+import { size, Size } from '../../hooks/useReactorSize';
 
 export interface TableRowsWidgetProps<T extends TableRow = TableRow> {
   rows: T[];
@@ -24,8 +24,8 @@ namespace S {
   `;
 
   export const Cell = styled.td<{ $size: Size }>`
-    padding: ${(p) => (p.$size === Size.SMALL ? '8px 10px' : p.$size === Size.LARGE ? '12px 14px' : '10px 12px')};
-    font-size: ${(p) => (p.$size === Size.SMALL ? '14px' : p.$size === Size.LARGE ? '16px' : '15px')};
+    padding: ${(p) => size(p, ['8px 10px', '10px 12px', '12px 14px'])};
+    font-size: ${(p) => size(p, ['14px', '15px', '16px'])};
   `;
 
   export const Max = styled.div``;

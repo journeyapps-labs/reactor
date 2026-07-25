@@ -5,7 +5,7 @@ import { GuideWorkflow } from './GuideWorkflow';
 import { makeObservable, observable, reaction } from 'mobx';
 import { AbstractStore, AbstractStoreListener } from '../AbstractStore';
 import * as React from 'react';
-import { AnchoredOverlayPlacement, AnchoredOverlayStore } from '../overlay/AnchoredOverlayStore';
+import { AnchoredOverlayPlacement, AnchoredOverlayRecord, AnchoredOverlayStore } from '../overlay/AnchoredOverlayStore';
 import { GuideTooltipContentWidget } from '../../layers/guide/GuideTooltipWidget';
 
 export interface SelectIdentifier {
@@ -71,18 +71,21 @@ export class GuideStore extends AbstractStore<{}, GuideStoreListener> {
       () =>
         Object.values(this.selections)
           .filter((selection) => !!selection.rect && !!selection.tooltip)
-          .map((selection) => ({
-            id: `guide-${selection.id}`,
-            source: 'guide',
-            bounds: selection.rect,
-            placement: AnchoredOverlayPlacement.AUTO,
-            clickThrough: true,
-            render: ({ above }) =>
-              React.createElement(GuideTooltipContentWidget, {
-                selection,
-                arrowAbove: !above
+          .map(
+            (selection) =>
+              new AnchoredOverlayRecord({
+                id: `guide-${selection.id}`,
+                source: 'guide',
+                bounds: selection.rect,
+                placement: AnchoredOverlayPlacement.AUTO,
+                clickThrough: true,
+                render: ({ above }) =>
+                  React.createElement(GuideTooltipContentWidget, {
+                    selection,
+                    arrowAbove: !above
+                  })
               })
-          })),
+          ),
       (overlays) => {
         this.anchoredOverlayStore.replaceSource('guide', overlays);
       },

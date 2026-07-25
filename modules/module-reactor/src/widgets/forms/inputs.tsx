@@ -1,18 +1,18 @@
 import * as React from 'react';
 import { themed } from '../../stores/themes/reactor-theme-fragment';
-import { Size, useReactorSize } from '../../hooks/useReactorSize';
+import { size, Size, useReactorSize } from '../../hooks/useReactorSize';
 
 const StyledInput = themed.input<{ $size: Size }>`
   outline: none;
   color: ${(p) => p.theme.forms.inputForeground};
   background: ${(p) => p.theme.forms.inputBackground};
   border: solid 1px ${(p) => p.theme.forms.inputBorder};
-  padding: ${(p) => (p.$size === Size.SMALL ? '5px 10px' : p.$size === Size.LARGE ? '9px 16px' : '7px 13px')};
+  padding: ${(p) => size(p, ['5px 10px', '7px 13px', '9px 16px'])};
   width: 100%;
   box-sizing: border-box;
-  font-size: ${(p) => (p.$size === Size.SMALL ? '13px' : p.$size === Size.LARGE ? '17px' : '15px')};
-  line-height: ${(p) => (p.$size === Size.SMALL ? '18px' : p.$size === Size.LARGE ? '24px' : '21px')};
-  border-radius: ${(p) => (p.$size === Size.SMALL ? '3px' : p.$size === Size.LARGE ? '7px' : '5px')};
+  font-size: ${(p) => size(p, ['13px', '15px', '17px'])};
+  line-height: ${(p) => size(p, ['18px', '21px', '24px'])};
+  border-radius: ${(p) => size(p, ['3px', '5px', '7px'])};
 `;
 
 export type InputProps = Omit<React.InputHTMLAttributes<HTMLInputElement>, 'size'> & { size?: Size };

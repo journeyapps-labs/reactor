@@ -7,17 +7,20 @@ export enum Size {
   LARGE = 'large'
 }
 
-export const getReactorBorderRadius = (size: Size): number => {
-  if (size === Size.SMALL) {
-    return 6;
-  }
+export type ReactorSizeSource = Size | { $size?: Size; size?: unknown };
 
-  if (size === Size.LARGE) {
-    return 10;
+export const size = <T,>(source: ReactorSizeSource, values: readonly [T, T, T]): T => {
+  const resolvedSize = typeof source === 'string' ? source : (source.$size ?? source.size);
+  if (resolvedSize === Size.SMALL) {
+    return values[0];
   }
-
-  return 8;
+  if (resolvedSize === Size.LARGE) {
+    return values[2];
+  }
+  return values[1];
 };
+
+export const getReactorBorderRadius = (resolvedSize: Size): number => size(resolvedSize, [6, 8, 10]);
 
 export const ReactorSizeContext = React.createContext<Size | undefined>(undefined);
 

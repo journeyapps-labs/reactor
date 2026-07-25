@@ -1,6 +1,7 @@
-import { observable } from 'mobx';
+import { computed, observable } from 'mobx';
 import { v4 } from 'uuid';
 import * as React from 'react';
+import { BaseObserver } from '@journeyapps-labs/common-utils';
 import { AbstractStore } from '../AbstractStore';
 
 export enum AnchoredOverlayPlacement {
@@ -25,8 +26,8 @@ export interface AnchoredOverlayRenderContext {
   above: boolean;
 }
 
-export interface AnchoredOverlayRecord {
-  id: string;
+export interface AnchoredOverlayOptions {
+  id?: string;
   source: string;
   bounds: AnchoredOverlayBounds;
   placement: AnchoredOverlayPlacement;
@@ -34,57 +35,91 @@ export interface AnchoredOverlayRecord {
   render: (context: AnchoredOverlayRenderContext) => React.ReactNode;
 }
 
-export type AnchoredOverlayOptions = Omit<AnchoredOverlayRecord, 'id'> & { id?: string };
+export interface AnchoredOverlayRecordListener {
+  hidden: () => any;
+}
+
+export class AnchoredOverlayRecord extends BaseObserver<AnchoredOverlayRecordListener> {
+  constructor(protected options: AnchoredOverlayOptions) {
+    super();
+    this.options = observable({
+      ...options,
+      id: options.id || v4()
+    });
+  }
+
+  get id() {
+    return this.options.id;
+  }
+
+  get source() {
+    return this.options.source;
+  }
+
+  get bounds() {
+    return this.options.bounds;
+  }
+
+  get placement() {
+    return this.options.placement;
+  }
+
+  get clickThrough() {
+    return this.options.clickThrough;
+  }
+
+  get render() {
+    return this.options.render;
+  }
+
+  update(options: Partial<Omit<AnchoredOverlayOptions, 'id' | 'source'>>) {
+    Object.assign(this.options, options);
+  }
+
+  hide() {
+    this.iterateListeners((listener) => listener.hidden?.());
+  }
+}
 
 export class AnchoredOverlayStore extends AbstractStore {
   @observable
-  accessor overlays: Map<string, AnchoredOverlayRecord>;
+  protected accessor _overlays: Set<AnchoredOverlayRecord>;
 
   constructor() {
     super({ name: 'ANCHORED_OVERLAY_STORE' });
-    this.overlays = observable.map<string, AnchoredOverlayRecord>();
+    this._overlays = new Set();
   }
 
-  show(options: AnchoredOverlayOptions): string {
-    const id = options.id || v4();
-    this.overlays.set(id, { ...options, id });
-    return id;
+  @computed
+  get overlays() {
+    return Array.from(this._overlays.values());
   }
 
-  update(id: string, options: Partial<Omit<AnchoredOverlayRecord, 'id'>>) {
-    const overlay = this.overlays.get(id);
-    if (!overlay) {
-      return;
-    }
-    this.overlays.set(id, { ...overlay, ...options, id });
-  }
-
-  hide(id: string) {
-    this.overlays.delete(id);
-  }
-
-  replaceSource(source: string, records: AnchoredOverlayOptions[]) {
-    for (const [id, overlay] of this.overlays.entries()) {
-      if (overlay.source === source) {
-        this.overlays.delete(id);
+  show<T extends AnchoredOverlayRecord>(overlay: T): T {
+    const disposeListener = overlay.registerListener({
+      hidden: () => {
+        disposeListener();
+        this._overlays.delete(overlay);
       }
-    }
-    records.forEach((record) => this.show(record));
+    });
+    this._overlays.add(overlay);
+    return overlay;
+  }
+
+  replaceSource(source: string, records: AnchoredOverlayRecord[]) {
+    this.overlays.filter((overlay) => overlay.source === source).forEach((overlay) => overlay.hide());
+    records.forEach((overlay) => this.show(overlay));
   }
 
   clearSource(source: string) {
     this.replaceSource(source, []);
   }
 
-  getOverlays() {
-    return Array.from(this.overlays.values());
-  }
-
   hasOverlays() {
-    return this.overlays.size > 0;
+    return this._overlays.size > 0;
   }
 
   isClickThrough() {
-    return this.getOverlays().every((overlay) => overlay.clickThrough);
+    return this.overlays.every((overlay) => overlay.clickThrough);
   }
 }

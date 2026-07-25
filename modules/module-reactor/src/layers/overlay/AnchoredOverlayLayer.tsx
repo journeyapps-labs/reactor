@@ -97,7 +97,7 @@ export class AnchoredOverlayLayer extends LayerDirective {
       <Observer
         render={() => (
           <>
-            {this.overlayStore.getOverlays().map((overlay) => (
+            {this.overlayStore.overlays.map((overlay) => (
               <AnchoredOverlayWidget key={overlay.id} overlay={overlay} />
             ))}
           </>

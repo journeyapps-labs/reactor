@@ -9,7 +9,7 @@ import { SimpleComboBoxDirective } from '../../stores/combo2/directives/simple/S
 import { SearchStore } from '../../stores/SearchStore';
 import { ComboBoxItem } from '../../stores/combo/ComboBoxDirectives';
 import { getTransparentColor } from '@journeyapps-labs/lib-reactor-utils';
-import { getReactorBorderRadius, Size, useReactorSize } from '../../hooks/useReactorSize';
+import { size, getReactorBorderRadius, Size, useReactorSize } from '../../hooks/useReactorSize';
 
 export interface SearchWidgetProps {
   searchChanged: (search: string) => any;
@@ -37,7 +37,7 @@ namespace S {
   export const IconRight = themed.div<{ $size: Size }>`
     color: ${(p) => p.theme.panels.searchForeground};
     opacity: 0.58;
-    padding: ${(p) => (p.$size === Size.SMALL ? '5px' : p.$size === Size.LARGE ? '9px' : '7px')};
+    padding: ${(p) => size(p, ['5px', '7px', '9px'])};
     cursor: pointer;
 
     &:hover{
@@ -64,18 +64,18 @@ namespace S {
         p.design === SearchWidgetDesign.FORM ? p.theme.forms.inputForeground : p.theme.panels.searchForeground,
         0.1
       )};
-    ${(p) => p.rounded && `border-radius: ${p.$size === Size.LARGE ? 12 : p.$size === Size.MEDIUM ? 10 : 8}px;`}
+    ${(p) => p.rounded && `border-radius: ${size(p, [8, 10, 12])}px;`}
   `;
 
   export const Input = themed.input<{ design: SearchWidgetDesign; $size: Size }>`
     width: 100%;
-    padding-left: ${(p) => (p.$size === Size.SMALL ? SEARCH_ICON_WIDTH : p.$size === Size.LARGE ? 42 : 36)}px;
+    padding-left: ${(p) => size(p, [SEARCH_ICON_WIDTH, 36, 42])}px;
     background: transparent;
     border: none;
     outline: none;
-    font-size: ${(p) => (p.$size === Size.SMALL ? '13px' : p.$size === Size.LARGE ? '17px' : '15px')};
+    font-size: ${(p) => size(p, ['13px', '15px', '17px'])};
     vertical-align: middle;
-    line-height: ${(p) => (p.$size === Size.SMALL ? '23px' : p.$size === Size.LARGE ? '31px' : '27px')};
+    line-height: ${(p) => size(p, ['23px', '27px', '31px'])};
     color: ${(p) =>
       p.design === SearchWidgetDesign.FORM ? p.theme.forms.inputForeground : p.theme.panels.searchForeground};
 
@@ -89,12 +89,12 @@ namespace S {
   export const Icon = themed.div<{ $size: Size }>`
     position: absolute;
     pointer-events: none;
-    left: ${(p) => (p.$size === Size.SMALL ? '6px' : p.$size === Size.LARGE ? '10px' : '8px')};
+    left: ${(p) => size(p, ['6px', '8px', '10px'])};
     top: 50%;
     transform: translateY(-50%);
     color: ${(p) => p.theme.panels.searchForeground};
     opacity: 0.5;
-    font-size: ${(p) => (p.$size === Size.SMALL ? '13px' : p.$size === Size.LARGE ? '17px' : '15px')};
+    font-size: ${(p) => size(p, ['13px', '15px', '17px'])};
   `;
 }
 

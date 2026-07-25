@@ -5,13 +5,13 @@ import { themed } from '../../stores/themes/reactor-theme-fragment';
 import { observer } from 'mobx-react';
 import styled from '@emotion/styled';
 import { ReactorTooltipWidget, TooltipPosition } from '../info/tooltips';
-import { getReactorBorderRadius, Size, useReactorSize } from '../../hooks/useReactorSize';
+import { size, getReactorBorderRadius, Size, useReactorSize } from '../../hooks/useReactorSize';
 
 namespace S {
   export const ButtonContainer = themed.div<{ $size: Size }>`
       background: ${(p) => p.theme.table.pills};
-      padding: ${(p) => (p.$size === Size.SMALL ? '1px 6px' : p.$size === Size.LARGE ? '4px 10px' : '2px 8px')};
-      font-size: ${(p) => (p.$size === Size.SMALL ? '13px' : p.$size === Size.LARGE ? '15px' : '14px')};
+      padding: ${(p) => size(p, ['1px 6px', '2px 8px', '4px 10px'])};
+      font-size: ${(p) => size(p, ['13px', '14px', '15px'])};
       color: ${(p) => p.theme.text.primary};
       border-radius: ${(p) => getReactorBorderRadius(p.$size)}px;
       opacity: 0.4;

@@ -2,6 +2,7 @@ import * as React from 'react';
 import { observer } from 'mobx-react';
 import {
   AnchoredOverlayPlacement,
+  AnchoredOverlayRecord,
   AnchoredOverlayStore,
   CardWidget,
   FloatingPanelWidget,
@@ -20,54 +21,54 @@ export interface PlaygroundOverlaysPanelWidgetProps {
 
 export const PlaygroundOverlaysPanelWidget: React.FC<PlaygroundOverlaysPanelWidgetProps> = observer(() => {
   const anchorRef = React.useRef<HTMLDivElement>(null);
-  const [overlayId, setOverlayId] = React.useState<string>();
+  const [overlay, setOverlay] = React.useState<AnchoredOverlayRecord>();
   const overlayStore = ioc.get(AnchoredOverlayStore);
 
   useDimensionObserver(
     {
       element: anchorRef,
       changed: () => {
-        if (overlayId && anchorRef.current) {
-          overlayStore.update(overlayId, { bounds: getAnchoredOverlayBounds(anchorRef.current) });
+        if (overlay && anchorRef.current) {
+          overlay.update({ bounds: getAnchoredOverlayBounds(anchorRef.current) });
         }
       },
-      enabled: !!overlayId
+      enabled: !!overlay
     },
-    [overlayId]
+    [overlay]
   );
 
   React.useEffect(() => {
     return () => {
-      if (overlayId) {
-        overlayStore.hide(overlayId);
-      }
+      overlay?.hide();
     };
-  }, [overlayId, overlayStore]);
+  }, [overlay]);
 
   const toggleOverlay = () => {
-    if (overlayId) {
-      overlayStore.hide(overlayId);
-      setOverlayId(undefined);
+    if (overlay) {
+      overlay.hide();
+      setOverlay(undefined);
       return;
     }
     if (!anchorRef.current) {
       return;
     }
-    const id = overlayStore.show({
-      source: 'playground.overlay-store',
-      bounds: getAnchoredOverlayBounds(anchorRef.current),
-      placement: AnchoredOverlayPlacement.AUTO,
-      clickThrough: true,
-      render: ({ above }) => (
-        <FloatingPanelWidget center={false} highlight={true}>
-          <S.Overlay>
-            <S.OverlayTitle>Anchored overlay</S.OverlayTitle>
-            <S.OverlayText>Rendered by AnchoredOverlayStore {above ? 'above' : 'below'} the target.</S.OverlayText>
-          </S.Overlay>
-        </FloatingPanelWidget>
-      )
-    });
-    setOverlayId(id);
+    const record = overlayStore.show(
+      new AnchoredOverlayRecord({
+        source: 'playground.overlay-store',
+        bounds: getAnchoredOverlayBounds(anchorRef.current),
+        placement: AnchoredOverlayPlacement.AUTO,
+        clickThrough: true,
+        render: ({ above }) => (
+          <FloatingPanelWidget center={false} highlight={true}>
+            <S.Overlay>
+              <S.OverlayTitle>Anchored overlay</S.OverlayTitle>
+              <S.OverlayText>Rendered by AnchoredOverlayStore {above ? 'above' : 'below'} the target.</S.OverlayText>
+            </S.Overlay>
+          </FloatingPanelWidget>
+        )
+      })
+    );
+    setOverlay(record);
   };
 
   return (
@@ -82,8 +83,8 @@ export const PlaygroundOverlaysPanelWidget: React.FC<PlaygroundOverlaysPanelWidg
               <S.Demo>
                 <PanelButtonWidget
                   forwardRef={anchorRef}
-                  label={overlayId ? 'Hide overlay' : 'Show overlay'}
-                  icon={overlayId ? 'eye-slash' : 'eye'}
+                  label={overlay ? 'Hide overlay' : 'Show overlay'}
+                  icon={overlay ? 'eye-slash' : 'eye'}
                   mode={PanelButtonMode.NORMAL}
                   action={toggleOverlay}
                 />

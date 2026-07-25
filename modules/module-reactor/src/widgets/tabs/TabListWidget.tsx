@@ -5,7 +5,7 @@ import { MouseEvent } from 'react';
 import { TabBadgeWidget } from './TabBadgeWidget';
 import { ReactorIcon } from '../icons/IconWidget';
 import { MousePosition } from '../../layers/combo/SmartPositionWidget';
-import { Size } from '../../hooks/useReactorSize';
+import { size, Size } from '../../hooks/useReactorSize';
 
 export interface TabDirective {
   key: string;
@@ -77,7 +77,7 @@ namespace S {
     position: relative;
     box-sizing: border-box;
     width: ${(p) => (p.vertical ? '100%' : 'auto')};
-    padding: ${(p) => (p.size === Size.SMALL ? '4px 5px' : p.size === Size.LARGE ? '8px 6px' : '6px 5px')};
+    padding: ${(p) => size(p, ['4px 5px', '6px 5px', '8px 6px'])};
     user-select: none;
     overflow-x: ${(p) => (p.vertical ? 'hidden' : 'auto')};
     overflow-y: ${(p) => (p.vertical ? 'auto' : 'hidden')};

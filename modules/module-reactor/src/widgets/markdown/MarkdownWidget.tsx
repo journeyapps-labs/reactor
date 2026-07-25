@@ -2,7 +2,7 @@ import * as React from 'react';
 import ReactMarkdown from 'react-markdown';
 import rehypeExternalLinks from 'rehype-external-links';
 import { themed } from '../../stores/themes/reactor-theme-fragment';
-import { Size, useReactorSize } from '../../hooks/useReactorSize';
+import { size, Size, useReactorSize } from '../../hooks/useReactorSize';
 
 export interface MarkdownWidgetProps {
   markdown: string;
@@ -12,8 +12,8 @@ export interface MarkdownWidgetProps {
 
 const MarkdownContainer = themed.div<{ $size: Size }>`
   color: ${(p) => p.theme.text.primary};
-  font-size: ${(p) => (p.$size === Size.SMALL ? '13px' : p.$size === Size.LARGE ? '17px' : '15px')};
-  line-height: ${(p) => (p.$size === Size.SMALL ? '18px' : p.$size === Size.LARGE ? '24px' : '21px')};
+  font-size: ${(p) => size(p, ['13px', '15px', '17px'])};
+  line-height: ${(p) => size(p, ['18px', '21px', '24px'])};
 
   a {
     color: ${(p) => p.theme.guide.accent};
@@ -22,7 +22,7 @@ const MarkdownContainer = themed.div<{ $size: Size }>`
   }
 
   p {
-    margin: 0 0 ${(p) => (p.$size === Size.SMALL ? '8px' : p.$size === Size.LARGE ? '12px' : '10px')};
+    margin: 0 0 ${(p) => size(p, ['8px', '10px', '12px'])};
 
     &:last-of-type {
       margin-bottom: 0;
@@ -31,12 +31,12 @@ const MarkdownContainer = themed.div<{ $size: Size }>`
 
   ul,
   ol {
-    margin: 0 0 ${(p) => (p.$size === Size.SMALL ? '8px' : p.$size === Size.LARGE ? '12px' : '10px')};
-    padding-left: ${(p) => (p.$size === Size.SMALL ? '18px' : p.$size === Size.LARGE ? '24px' : '21px')};
+    margin: 0 0 ${(p) => size(p, ['8px', '10px', '12px'])};
+    padding-left: ${(p) => size(p, ['18px', '21px', '24px'])};
   }
 
   li {
-    margin: ${(p) => (p.$size === Size.SMALL ? '2px' : p.$size === Size.LARGE ? '4px' : '3px')} 0;
+    margin: ${(p) => size(p, ['2px', '3px', '4px'])} 0;
   }
 `;
 

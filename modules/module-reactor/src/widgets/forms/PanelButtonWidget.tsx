@@ -9,7 +9,7 @@ import { IconWidget } from '../icons/IconWidget';
 import { ioc } from '../../inversify.config';
 import { ThemeStore } from '../../stores/themes/ThemeStore';
 import { ReactorTooltipWidget, setupTooltipProps, TooltipPosition } from '../info/tooltips';
-import { getReactorBorderRadius, Size, useReactorSize } from '../../hooks/useReactorSize';
+import { size, getReactorBorderRadius, Size, useReactorSize } from '../../hooks/useReactorSize';
 
 namespace S {
   export const getMode = (p: { mode: PanelButtonMode; theme: GetTheme<typeof theme> }) => {
@@ -23,7 +23,7 @@ namespace S {
   };
 
   export const ButtonLabel = styled.div<{ mode: PanelButtonMode; $size: Size }>`
-    font-size: ${(p) => (p.$size === Size.SMALL ? '14px' : p.$size === Size.LARGE ? '17px' : '15px')};
+    font-size: ${(p) => size(p, ['14px', '15px', '17px'])};
     user-select: none;
     white-space: nowrap;
   `;
@@ -36,15 +36,15 @@ namespace S {
   }>`
     background: ${(p) => getMode(p).background};
     display: inline-flex;
-    column-gap: ${(p) => (p.$size === Size.LARGE ? '12px' : '10px')};
+    column-gap: ${(p) => size(p, ['10px', '10px', '12px'])};
     justify-content: space-between;
     align-items: center;
-    padding: ${(p) => (p.$size === Size.SMALL ? '4px 10px' : p.$size === Size.LARGE ? '8px 18px' : '6px 14px')};
+    padding: ${(p) => size(p, ['4px 10px', '6px 14px', '8px 18px'])};
     border: solid 1px ${(p) => (p.selected ? p.theme.guide.accent : getMode(p).border)};
     border-radius: ${(p) => getReactorBorderRadius(p.$size)}px;
     color: ${(p) => getMode(p).color};
     box-sizing: border-box;
-    height: ${(p) => (p.$size === Size.SMALL ? '28px' : p.$size === Size.LARGE ? '42px' : '34px')};
+    height: ${(p) => size(p, ['28px', '34px', '42px'])};
     cursor: ${(props) => (props.disabled ? 'default' : 'pointer')};
 
     &:hover {
@@ -60,7 +60,7 @@ namespace S {
   export const Icon = styled(IconWidget)<{ iconColor: string; disabled: boolean; mode: PanelButtonMode; $size: Size }>`
     color: ${(p) => (p.disabled ? p.iconColor : p.iconColor || getMode(p).icon)};
     ${(props) => (props.disabled ? 'opacity: .3' : '')};
-    max-height: ${(p) => (p.$size === Size.SMALL ? '16px' : p.$size === Size.LARGE ? '22px' : '18px')};
+    max-height: ${(p) => size(p, ['16px', '18px', '22px'])};
   `;
 }
 

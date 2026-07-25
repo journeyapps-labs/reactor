@@ -5,7 +5,7 @@ import { themed } from '../../stores/themes/reactor-theme-fragment';
 import { useAttention } from '../guide/AttentionWrapperWidget';
 import { ButtonComponentSelection, ReactorComponentType } from '../../stores/guide/selections/common';
 import { css } from '@emotion/react';
-import { Size, useReactorSize } from '../../hooks/useReactorSize';
+import { size, Size, useReactorSize } from '../../hooks/useReactorSize';
 
 export interface CheckboxLabelWidgetProps extends CheckboxWidgetProps {
   label: string;
@@ -31,8 +31,8 @@ namespace S {
   `;
 
   export const Label = styled.div<{ $size: Size }>`
-    font-size: ${(p) => (p.$size === Size.SMALL ? '13px' : p.$size === Size.LARGE ? '17px' : '15px')};
-    margin-left: ${(p) => (p.$size === Size.LARGE ? '7px' : '5px')};
+    font-size: ${(p) => size(p, ['13px', '15px', '17px'])};
+    margin-left: ${(p) => size(p, ['5px', '5px', '7px'])};
     cursor: pointer;
     user-select: none;
   `;

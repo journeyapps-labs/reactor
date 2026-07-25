@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { themed } from '../../stores/themes/reactor-theme-fragment';
-import { Size, useReactorSize } from '../../hooks/useReactorSize';
+import { size, Size, useReactorSize } from '../../hooks/useReactorSize';
 
 export interface CheckboxWidgetProps {
   checked: boolean;
@@ -14,7 +14,7 @@ namespace S {
     color: ${(props) => (props.checked ? props.theme.forms.checkboxChecked : props.theme.forms.checkbox)};
     cursor: pointer;
     user-select: none;
-    font-size: ${(props) => (props.$size === Size.SMALL ? '14px' : props.$size === Size.LARGE ? '19px' : '16px')};
+    font-size: ${(props) => size(props, ['14px', '16px', '19px'])};
   `;
 }
 

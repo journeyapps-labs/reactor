@@ -5,7 +5,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { styled } from '../../stores/themes/reactor-theme-fragment';
 import { getTransparentColor } from '@journeyapps-labs/lib-reactor-utils';
 import { MousePosition } from '../../layers/combo/SmartPositionWidget';
-import { Size } from '../../hooks/useReactorSize';
+import { size, Size } from '../../hooks/useReactorSize';
 
 export interface TableRowsGroupWidgetProps<T extends TableRow = TableRow> {
   rows: T[];
@@ -28,7 +28,7 @@ namespace S {
   `;
 
   export const Container = styled.div<{ $size: Size }>`
-    padding: ${(p) => (p.$size === Size.SMALL ? '5px 10px' : p.$size === Size.LARGE ? '8px 14px' : '6px 12px')};
+    padding: ${(p) => size(p, ['5px 10px', '6px 12px', '8px 14px'])};
     display: flex;
     cursor: pointer;
     background: ${(p) => p.theme.table.groupBackground || p.theme.table.columnBackground};

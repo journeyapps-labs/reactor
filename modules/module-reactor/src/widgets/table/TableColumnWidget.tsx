@@ -1,7 +1,7 @@
 import * as React from 'react';
 import styled from '@emotion/styled';
 import { TableColumn } from './TableWidget';
-import { Size } from '../../hooks/useReactorSize';
+import { size, Size } from '../../hooks/useReactorSize';
 
 export interface TableColumnWidgetProps {
   column: TableColumn;
@@ -11,8 +11,8 @@ export interface TableColumnWidgetProps {
 namespace S {
   export const Container = styled.th<{ shrink: boolean; $size: Size }>`
     text-align: left;
-    padding: ${(p) => (p.$size === Size.SMALL ? '4px 8px' : p.$size === Size.LARGE ? '7px 12px' : '5px 10px')};
-    font-size: ${(p) => (p.$size === Size.SMALL ? '13px' : p.$size === Size.LARGE ? '15px' : '14px')};
+    padding: ${(p) => size(p, ['4px 8px', '5px 10px', '7px 12px'])};
+    font-size: ${(p) => size(p, ['13px', '14px', '15px'])};
     ${(p) => (p.shrink ? `width: 1%` : '')};
   `;
 }

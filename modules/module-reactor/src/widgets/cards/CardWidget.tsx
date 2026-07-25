@@ -10,7 +10,7 @@ import { ReadOnlyMetadataWidgetProps } from '../meta/ReadOnlyMetadataWidget';
 import { themed } from '../../stores/themes/reactor-theme-fragment';
 import { getScrollableCSS } from '../panel/panel/PanelWidget';
 import { SurfaceDepth, SurfaceWidget } from '../surfaces/SurfaceWidget';
-import { getReactorBorderRadius, ReactorSizeProvider, Size, useReactorSize } from '../../hooks/useReactorSize';
+import { size, getReactorBorderRadius, ReactorSizeProvider, Size, useReactorSize } from '../../hooks/useReactorSize';
 import { REACTOR_MOBILE_MEDIA_QUERY } from '../../hooks/useReactorViewportMode';
 
 export interface CardWidgetProps {
@@ -40,8 +40,8 @@ namespace S {
   `;
 
   export const LoadingBar = styled(FooterLoaderWidget)<{ $size: Size }>`
-    border-bottom-left-radius: ${(p) => (p.$size === Size.LARGE ? '10px' : p.$size === Size.MEDIUM ? '8px' : '5px')};
-    border-bottom-right-radius: ${(p) => (p.$size === Size.LARGE ? '10px' : p.$size === Size.MEDIUM ? '8px' : '5px')};
+    border-bottom-left-radius: ${(p) => size(p, [5, 8, 10])}px;
+    border-bottom-right-radius: ${(p) => size(p, [5, 8, 10])}px;
     overflow: hidden;
   `;
 
@@ -56,7 +56,7 @@ namespace S {
 
   export const Top = styled.div<{ $size: Size }>`
     display: flex;
-    padding: ${(p) => (p.$size === Size.SMALL ? '10px' : p.$size === Size.LARGE ? '16px' : '12px')};
+    padding: ${(p) => size(p, ['10px', '12px', '16px'])};
   `;
 
   export const Info = styled.div`
@@ -64,13 +64,13 @@ namespace S {
   `;
 
   export const Title = themed.div<{ $size: Size }>`
-    font-size: ${(p) => (p.$size === Size.SMALL ? '14px' : p.$size === Size.LARGE ? '18px' : '16px')};
+    font-size: ${(p) => size(p, ['14px', '16px', '18px'])};
     font-weight: bold;
     color: ${(p) => p.theme.cards.foreground};
   `;
 
   export const Subtitle = themed.div<{ color?: string; $size: Size }>`
-    font-size: ${(p) => (p.$size === Size.SMALL ? '12px' : p.$size === Size.LARGE ? '15px' : '13px')};
+    font-size: ${(p) => size(p, ['12px', '13px', '15px'])};
     color: ${(p) => p.color || p.theme.cards.foreground};
   `;
 
@@ -78,7 +78,7 @@ namespace S {
     flex-grow: ${(p) => (p.grow ? 1 : 0)};
     border-top: solid 1px;
     border-color: inherit;
-    padding: ${(p) => (p.$size === Size.SMALL ? '10px' : p.$size === Size.LARGE ? '16px' : '12px')};
+    padding: ${(p) => size(p, ['10px', '12px', '16px'])};
     min-width: 0;
     overflow-x: auto;
     ${(p) => getScrollableCSS(p.theme)};

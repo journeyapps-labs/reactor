@@ -6,7 +6,7 @@ import { TabItemWidgetProps } from './TabListWidget';
 import { Fonts } from '../../fonts';
 import { MousePosition } from '../../layers/combo/SmartPositionWidget';
 import { useLongPressContextMenu } from '../../hooks/useLongPressContextMenu';
-import { Size } from '../../hooks/useReactorSize';
+import { size, Size } from '../../hooks/useReactorSize';
 
 namespace S {
   export const Tab = styled.div<{
@@ -19,17 +19,17 @@ namespace S {
   }>`
     width: ${(p) => (p.vertical ? '100%' : 'auto')};
     box-sizing: border-box;
-    padding: ${(p) => (p.size === Size.SMALL ? '2px 10px' : p.size === Size.LARGE ? '7px 17px' : '4px 13px')};
+    padding: ${(p) => size(p, ['2px 10px', '4px 13px', '7px 17px'])};
     color: ${(p) => p.theme.combobox.text};
     cursor: ${(p) => (p.disabled ? 'not-allowed' : 'pointer')};
     opacity: ${(p) => (p.disabled ? 0.34 : p.attention || p.selected ? 1 : 0.62)};
     background: transparent;
     font-family: ${Fonts.PRIMARY};
-    font-size: ${(p) => (p.size === Size.SMALL ? '13px' : p.size === Size.LARGE ? '17px' : '15px')};
-    line-height: ${(p) => (p.size === Size.SMALL ? '15px' : 'normal')};
+    font-size: ${(p) => size(p, ['13px', '15px', '17px'])};
+    line-height: ${(p) => size(p, ['15px', 'normal', 'normal'])};
     white-space: nowrap;
     border: 0;
-    border-radius: ${(p) => (p.size === Size.SMALL ? '5px' : p.size === Size.LARGE ? '8px' : '6px')};
+    border-radius: ${(p) => size(p, ['5px', '6px', '8px'])};
     outline: ${(p) => (p.attention ? p.theme.guide.accent : `transparent`)} solid 1px;
     outline-offset: -1px;
     &:hover {

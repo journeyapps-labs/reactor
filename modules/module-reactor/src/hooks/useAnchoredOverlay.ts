@@ -4,6 +4,7 @@ import { ioc } from '../inversify.config';
 import {
   AnchoredOverlayBounds,
   AnchoredOverlayOptions,
+  AnchoredOverlayRecord,
   AnchoredOverlayStore
 } from '../stores/overlay/AnchoredOverlayStore';
 import { useDimensionObserver } from './useDimensionObserver';
@@ -30,13 +31,13 @@ export const useAnchoredOverlay = (options: UseAnchoredOverlayOptions) => {
   const localRef = useRef<HTMLElement>(null);
   const forwardRef = options.forwardRef || localRef;
   const overlayStore = ioc.get(AnchoredOverlayStore);
-  const idRef = useRef<string>(undefined);
+  const overlayRef = useRef<AnchoredOverlayRecord>(undefined);
 
   const update = React.useCallback(() => {
-    if (idRef.current && forwardRef.current) {
-      overlayStore.update(idRef.current, { bounds: getAnchoredOverlayBounds(forwardRef.current) });
+    if (overlayRef.current && forwardRef.current) {
+      overlayRef.current.update({ bounds: getAnchoredOverlayBounds(forwardRef.current) });
     }
-  }, [forwardRef, overlayStore]);
+  }, [forwardRef]);
 
   useDimensionObserver(
     {
@@ -52,18 +53,21 @@ export const useAnchoredOverlay = (options: UseAnchoredOverlayOptions) => {
       return;
     }
 
-    idRef.current = overlayStore.show({
-      source: options.source,
-      bounds: getAnchoredOverlayBounds(forwardRef.current),
-      placement: options.placement,
-      clickThrough: options.clickThrough,
-      render: options.render
-    });
+    overlayRef.current = overlayStore.show(
+      new AnchoredOverlayRecord({
+        id: options.id,
+        source: options.source,
+        bounds: getAnchoredOverlayBounds(forwardRef.current),
+        placement: options.placement,
+        clickThrough: options.clickThrough,
+        render: options.render
+      })
+    );
 
     return () => {
-      if (idRef.current) {
-        overlayStore.hide(idRef.current);
-        idRef.current = undefined;
+      if (overlayRef.current) {
+        overlayRef.current.hide();
+        overlayRef.current = undefined;
       }
     };
   }, [

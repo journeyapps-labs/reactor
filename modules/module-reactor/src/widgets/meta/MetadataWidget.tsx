@@ -5,7 +5,7 @@ import { getColorWithAlphaOptions } from '@journeyapps-labs/lib-reactor-utils';
 import { styled } from '../../stores/themes/reactor-theme-fragment';
 import { ReactorTooltipWidget, setupTooltipProps, TooltipPosition } from '../info/tooltips';
 import type { EntityLabel } from '../../entities/components/meta/EntityDescriberComponent';
-import { getReactorBorderRadius, Size, useReactorSize } from '../../hooks/useReactorSize';
+import { size, getReactorBorderRadius, Size, useReactorSize } from '../../hooks/useReactorSize';
 
 export interface MetadataWidgetProps extends EntityLabel {
   className?: any;
@@ -25,7 +25,7 @@ namespace S {
   }>`
     display: flex;
     align-items: center;
-    font-size: ${(p) => (p.$size === Size.SMALL ? '12px' : p.$size === Size.LARGE ? '14px' : '13px')};
+    font-size: ${(p) => size(p, ['12px', '13px', '14px'])};
     color: ${(p) => p.foreground || p.theme.meta.foreground};
     opacity: ${(p) => (p.active ? 1.0 : 0.6)};
     cursor: ${(p) => p.$cursor ?? 'auto'};
@@ -37,7 +37,7 @@ namespace S {
           })
         : p.theme.meta.background};
     border-radius: ${(p) => getReactorBorderRadius(p.$size)}px;
-    padding: ${(p) => (p.$size === Size.SMALL ? '2px 10px' : p.$size === Size.LARGE ? '5px 14px' : '3px 12px')};
+    padding: ${(p) => size(p, ['2px 10px', '3px 12px', '5px 14px'])};
 
     &:hover {
       opacity: 1;
@@ -47,7 +47,7 @@ namespace S {
   export const MetaKey = styled.div<{ active: boolean; $size: Size }>`
     opacity: ${(p) => (p.active ? 1.0 : 0.5)};
     font-weight: ${(p) => (p.active ? 'bold' : 'normal')};
-    padding-right: ${(p) => (p.$size === Size.LARGE ? '7px' : '5px')};
+    padding-right: ${(p) => size(p, ['5px', '5px', '7px'])};
     white-space: nowrap;
   `;
 
@@ -58,7 +58,7 @@ namespace S {
   export const MetaIcon = styled(IconWidget)<{ color: string; $size: Size }>`
     color: ${(p) => p.color || p.theme.meta.foreground};
     font-weight: bold;
-    margin-left: ${(p) => (p.$size === Size.LARGE ? '7px' : '5px')};
+    margin-left: ${(p) => size(p, ['5px', '5px', '7px'])};
   `;
 }
 
