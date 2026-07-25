@@ -1,8 +1,6 @@
 import * as monaco from 'monaco-editor';
-// Monaco exposes this at runtime, but the package's .d.ts for this entrypoint is empty.
-// @ts-expect-error missing Monaco contribution export types
-import { getWorker } from 'monaco-editor/esm/vs/language/json/monaco.contribution.js';
-import type { json as MonacoJson } from 'monaco-editor/esm/vs/editor/editor.main.js';
+import { getWorker } from 'monaco-editor/languages/features/json/register';
+import type * as MonacoJson from 'monaco-editor/languages/features/json/register';
 import * as _ from 'lodash';
 
 export type MonacoJsonPathSegment = string | number;

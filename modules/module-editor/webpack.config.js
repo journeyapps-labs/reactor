@@ -1,6 +1,19 @@
 const path = require('path');
 const { patchExportedLibrary } = require('@journeyapps-labs/lib-reactor-builder');
 module.exports = (webpack) => {
+  const monacoCompatibilityAliases = {
+    'monaco-editor/esm/vs/editor/editor.worker.ts': path.join(
+      __dirname,
+      'node_modules',
+      'monaco-editor',
+      'esm',
+      'vs',
+      'editor',
+      'editor.worker.js'
+    ),
+    'monaco-editor/esm': path.join(__dirname, 'node_modules', 'monaco-editor', 'esm')
+  };
+
   webpack = patchExportedLibrary({
     w: webpack,
     module: 'monaco-editor',
@@ -38,14 +51,21 @@ module.exports = (webpack) => {
     {
       entry: {
         // Package each language's worker and give these filenames in `getWorkerUrl`
-        'editor.worker': 'monaco-editor/esm/vs/editor/editor.worker.js',
-        'json.worker': 'monaco-editor/esm/vs/language/json/json.worker',
+        'editor.worker': 'monaco-editor/editor/editor.worker',
+        'json.worker': 'monaco-editor/languages/features/json/json.worker',
         'yaml.worker': 'monaco-yaml/yaml.worker'
       },
       output: {
         globalObject: 'self',
         filename: '[name].bundle.js',
         path: webpack.output.path
+      },
+      resolve: {
+        ...webpack.resolve,
+        alias: {
+          ...webpack.resolve.alias,
+          ...monacoCompatibilityAliases
+        }
       }
     },
     {
@@ -55,7 +75,7 @@ module.exports = (webpack) => {
         alias: {
           ...webpack.resolve.alias,
           'lru-cache': path.join(__dirname, 'node_modules', 'lru-cache'),
-          'monaco-editor/esm': 'monaco-editor/esm',
+          ...monacoCompatibilityAliases,
           'monaco-editor$': path.join(__dirname, 'monaco-patch.js')
         }
       },

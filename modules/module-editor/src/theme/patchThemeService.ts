@@ -1,6 +1,6 @@
-import { StandaloneServices } from 'monaco-editor/esm/vs/editor/standalone/browser/standaloneServices';
-import { IConfigurationService } from 'monaco-editor/esm/vs/platform/configuration/common/configuration';
-import { IThemeService } from 'monaco-editor/esm/vs/platform/theme/common/themeService';
+import { StandaloneServices } from 'monaco-editor/editor/standalone/browser/standaloneServices';
+import { IConfigurationService } from 'monaco-editor/platform/configuration/common/configuration';
+import { IThemeService } from 'monaco-editor/platform/theme/common/themeService';
 
 interface ITokenStyle {
   readonly foreground?: number;

@@ -1,10 +1,10 @@
 import { EditorModule } from './EditorModule';
 
-require('monaco-editor/esm/vs/language/json/monaco.contribution');
-require('monaco-editor/esm/vs/basic-languages/javascript/javascript.contribution');
+require('monaco-editor/languages/features/json/register');
+require('monaco-editor/languages/definitions/javascript/register');
 
-import { StandaloneServices } from 'monaco-editor/esm/vs/editor/standalone/browser/standaloneServices';
-import { ICodeEditorService } from 'monaco-editor/esm/vs/editor/browser/services/codeEditorService';
+import { StandaloneServices } from 'monaco-editor/editor/standalone/browser/standaloneServices';
+import { ICodeEditorService } from 'monaco-editor/editor/browser/services/codeEditorService';
 
 // Since packaging is done by you, you need
 // to instruct the editor how you named the

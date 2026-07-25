@@ -1,5 +1,5 @@
 import * as _ from 'lodash';
-import { MenuRegistry } from 'monaco-editor/esm/vs/platform/actions/common/actions.js';
+import { MenuRegistry } from 'monaco-editor/platform/actions/common/actions';
 import { KeyCodeChord, MonacoStoreAction } from './definitions';
 import { MonacoEditorType, MonacoStore } from '../MonacoStore';
 import { AbstractStore, CMDPalletStore } from '@journeyapps-labs/reactor-mod';

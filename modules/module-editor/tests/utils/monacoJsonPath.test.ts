@@ -3,8 +3,8 @@
  */
 import { afterAll, afterEach, beforeAll, describe, expect, it, vi } from 'vitest';
 import * as monaco from 'monaco-editor';
-import 'monaco-editor/esm/vs/language/json/monaco.contribution';
-import { JSONWorker } from 'monaco-editor/esm/vs/language/json/jsonWorker.js';
+import 'monaco-editor/languages/features/json/register';
+import { JSONWorker } from 'monaco-editor/languages/features/json/jsonWorker';
 import {
   getMonacoJsonPathLocation,
   getMonacoJsonPathLocationFromDocument,
@@ -45,7 +45,7 @@ const createJsonWorker = (model: monaco.editor.ITextModel) => {
     },
     {
       languageId: 'json',
-      languageSettings: monaco.languages.json.jsonDefaults.diagnosticsOptions
+      languageSettings: monaco.json.jsonDefaults.diagnosticsOptions
     }
   );
 };
@@ -144,7 +144,7 @@ describe('monacoJsonPath', () => {
     const model = createJsonModel();
     models.push(model);
     const worker = createJsonWorker(model);
-    vi.spyOn(monaco.languages.json, 'getWorker').mockResolvedValue(async () => worker);
+    vi.spyOn(monaco.json, 'getWorker').mockResolvedValue(async () => worker);
 
     const location = await getMonacoJsonPathLocation({
       model,

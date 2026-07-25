@@ -7,8 +7,8 @@ import { loadWASM } from 'onigasm';
 import { Registry } from 'monaco-textmate';
 import { wireTmGrammars } from 'monaco-editor-textmate';
 import { GrammerMapping, GrammerMappingEntry, GrammerMappingType, MonacoLanguages } from '../languages/languages';
-import { StandaloneServices } from 'monaco-editor/esm/vs/editor/standalone/browser/standaloneServices';
-import { IThemeService } from 'monaco-editor/esm/vs/platform/theme/common/themeService';
+import { StandaloneServices } from 'monaco-editor/editor/standalone/browser/standaloneServices';
+import { IThemeService } from 'monaco-editor/platform/theme/common/themeService';
 import { AbstractStore, AbstractStoreListener } from '@journeyapps-labs/reactor-mod';
 
 export interface MonacoEditorType extends monaco.editor.IStandaloneCodeEditor {

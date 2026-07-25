@@ -1,7 +1,7 @@
 import { keyType, Shortcut, ShortcutChord } from '@journeyapps-labs/reactor-mod';
 import { MonacoShortcutHandler } from './MonacoShortcutHandler';
 import { MonacoMap } from './MonacoShortcutMap';
-import { KeyCodeChord } from 'monaco-editor/esm/vs/base/common/keybindings.js';
+import { KeyCodeChord } from 'monaco-editor/base/common/keybindings';
 import { MonacoStoreAction } from '../stores/keybindings/definitions';
 
 export class MonacoShortcut extends Shortcut<MonacoShortcutHandler> {

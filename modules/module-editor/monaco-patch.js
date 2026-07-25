@@ -1,6 +1,6 @@
-export * from 'monaco-editor/esm/vs/editor/edcore.main';
+export * from 'monaco-editor/editor';
+import 'monaco-editor/features/register.all';
 
-// edcore doesn't contain these by default, but they _used_ to be included
-export * as json from 'monaco-editor/esm/vs/language/json/monaco.contribution';
-export * as html from 'monaco-editor/esm/vs/language/html/monaco.contribution';
-export * as css from 'monaco-editor/esm/vs/language/css/monaco.contribution';
+export * as json from 'monaco-editor/languages/features/json/register';
+export * as html from 'monaco-editor/languages/features/html/register';
+export * as css from 'monaco-editor/languages/features/css/register';
