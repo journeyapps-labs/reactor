@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { themed } from '../../stores/themes/reactor-theme-fragment';
-import { size, Size, useReactorSize } from '../../hooks/useReactorSize';
+import { getReactorControlBorderRadius, size, Size, useReactorSize } from '../../hooks/useReactorSize';
 
 const StyledInput = themed.input<{ $size: Size }>`
   outline: none;
@@ -12,7 +12,12 @@ const StyledInput = themed.input<{ $size: Size }>`
   box-sizing: border-box;
   font-size: ${(p) => size(p, ['13px', '15px', '17px'])};
   line-height: ${(p) => size(p, ['18px', '21px', '24px'])};
-  border-radius: ${(p) => size(p, ['3px', '5px', '7px'])};
+  border-radius: ${(p) => getReactorControlBorderRadius(p.$size)}px;
+
+  &::placeholder {
+    color: ${(p) => p.theme.forms.inputForeground};
+    opacity: 0.45;
+  }
 `;
 
 export type InputProps = Omit<React.InputHTMLAttributes<HTMLInputElement>, 'size'> & { size?: Size };

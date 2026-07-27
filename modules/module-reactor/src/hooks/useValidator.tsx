@@ -1,27 +1,29 @@
-import { autorun } from 'mobx';
-import { useEffect, useState } from 'react';
+import { autorun, observable, runInAction } from 'mobx';
+import { useEffect, useLayoutEffect, useState } from 'react';
 import { ActionValidationState, ValidationResult, Validator } from '../actions/validators/ActionValidator';
 
 export interface UseValidatorProps {
   validator?: Validator;
 }
 
+const allowed = (): ValidationResult => ({
+  type: ActionValidationState.ALLOWED
+});
+
 export const useValidator = (props: UseValidatorProps) => {
-  const [validationResult, setValidationResult] = useState<ValidationResult>({
-    type: ActionValidationState.ALLOWED
-  });
+  const [validator] = useState(() => observable.box<Validator | undefined>(props.validator, { deep: false }));
+  const [validationResult, setValidationResult] = useState<ValidationResult>(() => props.validator?.() || allowed());
+
+  useLayoutEffect(() => {
+    runInAction(() => validator.set(props.validator));
+  }, [props.validator, validator]);
 
   useEffect(() => {
-    if (props?.validator) {
-      const disposer1 = autorun(() => {
-        const result = props.validator();
-        setValidationResult(result);
-      });
-      return () => {
-        disposer1();
-      };
-    }
-  }, [props.validator]);
+    return autorun(() => {
+      setValidationResult(validator.get()?.() || allowed());
+    });
+  }, [validator]);
+
   return {
     validationResult
   };

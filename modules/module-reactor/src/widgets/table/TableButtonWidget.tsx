@@ -5,7 +5,7 @@ import { themed } from '../../stores/themes/reactor-theme-fragment';
 import { observer } from 'mobx-react';
 import styled from '@emotion/styled';
 import { ReactorTooltipWidget, TooltipPosition } from '../info/tooltips';
-import { size, getReactorBorderRadius, Size, useReactorSize } from '../../hooks/useReactorSize';
+import { size, getReactorControlBorderRadius, Size, useReactorSize } from '../../hooks/useReactorSize';
 
 namespace S {
   export const ButtonContainer = themed.div<{ $size: Size }>`
@@ -13,7 +13,7 @@ namespace S {
       padding: ${(p) => size(p, ['1px 6px', '2px 8px', '4px 10px'])};
       font-size: ${(p) => size(p, ['13px', '14px', '15px'])};
       color: ${(p) => p.theme.text.primary};
-      border-radius: ${(p) => getReactorBorderRadius(p.$size)}px;
+      border-radius: ${(p) => getReactorControlBorderRadius(p.$size)}px;
       opacity: 0.4;
       cursor: pointer;
       &:hover{

@@ -24,6 +24,7 @@ export class TextInput extends AbstractTextInput<
         type={this.options.inputType || TextInputType.TEXT}
         autoComplete="off"
         name={this.name}
+        placeholder={this.placeholder}
         value={this.value || ''}
         onChange={(event) => {
           this.setValue(event.target.value);

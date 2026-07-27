@@ -70,6 +70,7 @@ export class NumberInput extends FormInput<
               type="text"
               autoComplete="off"
               name={this.name}
+              placeholder={this.placeholder}
               value={this.interemediateValue || ''}
               onChange={(event) => {
                 this.setIntermediate(event.target.value);

@@ -9,7 +9,7 @@ import { IconWidget } from '../icons/IconWidget';
 import { ioc } from '../../inversify.config';
 import { ThemeStore } from '../../stores/themes/ThemeStore';
 import { ReactorTooltipWidget, setupTooltipProps, TooltipPosition } from '../info/tooltips';
-import { size, getReactorBorderRadius, Size, useReactorSize } from '../../hooks/useReactorSize';
+import { size, getReactorControlBorderRadius, Size, useReactorSize } from '../../hooks/useReactorSize';
 import { ButtonValidationIndicatorWidget } from '../buttons/ButtonValidationIndicatorWidget';
 import { ActionValidationState } from '../../actions/validators/ActionValidator';
 
@@ -43,7 +43,7 @@ namespace S {
     align-items: center;
     padding: ${(p) => size(p, ['4px 10px', '6px 14px', '8px 18px'])};
     border: solid 1px ${(p) => (p.selected ? p.theme.guide.accent : getMode(p).border)};
-    border-radius: ${(p) => getReactorBorderRadius(p.$size)}px;
+    border-radius: ${(p) => getReactorControlBorderRadius(p.$size)}px;
     color: ${(p) => getMode(p).color};
     box-sizing: border-box;
     position: relative;

@@ -22,6 +22,8 @@ export const size = <T,>(source: ReactorSizeSource, values: readonly [T, T, T]):
 
 export const getReactorBorderRadius = (resolvedSize: Size): number => size(resolvedSize, [6, 8, 10]);
 
+export const getReactorControlBorderRadius = (resolvedSize: Size): number => size(resolvedSize, [3, 5, 7]);
+
 export const ReactorSizeContext = React.createContext<Size | undefined>(undefined);
 
 export interface ReactorSizeProviderProps {

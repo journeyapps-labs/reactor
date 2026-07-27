@@ -21,6 +21,7 @@ export const setupWorkspaces = () => {
       ['playground.cards', 'Cards'],
       ['playground.surfaces', 'Surfaces'],
       ['playground.tabs', 'Tabs'],
+      ['playground.actions', 'Actions'],
       ['playground.buttons', 'Buttons'],
       ['playground.editors', 'Editors'],
       ['playground.tables', 'Tables'],

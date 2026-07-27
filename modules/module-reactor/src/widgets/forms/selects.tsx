@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { themed } from '../../stores/themes/reactor-theme-fragment';
-import { size, Size, useReactorSize } from '../../hooks/useReactorSize';
+import { getReactorControlBorderRadius, size, Size, useReactorSize } from '../../hooks/useReactorSize';
 
 const StyledSelect = themed.select<{ $size: Size }>`
   outline: none;
@@ -11,7 +11,7 @@ const StyledSelect = themed.select<{ $size: Size }>`
   width: 100%;
   box-sizing: border-box;
   font-size: ${(p) => size(p, ['13px', '15px', '17px'])};
-  border-radius: ${(p) => size(p, ['3px', '5px', '7px'])};
+  border-radius: ${(p) => getReactorControlBorderRadius(p.$size)}px;
 `;
 
 export type SelectProps = Omit<React.SelectHTMLAttributes<HTMLSelectElement>, 'size'> & { size?: Size };

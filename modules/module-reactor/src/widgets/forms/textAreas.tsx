@@ -1,13 +1,13 @@
 import { themed } from '../../stores/themes/reactor-theme-fragment';
 import { Fonts } from '../../fonts';
 import * as React from 'react';
-import { size, Size, useReactorSize } from '../../hooks/useReactorSize';
+import { getReactorControlBorderRadius, size, Size, useReactorSize } from '../../hooks/useReactorSize';
 
 const StyledTextArea = themed.textarea<{ $size: Size }>`
     font-family: ${Fonts.PRIMARY};
     outline: none;
     border: solid 1px ${(p) => p.theme.forms.inputBorder};
-    border-radius: ${(p) => size(p, ['3px', '5px', '7px'])};
+    border-radius: ${(p) => getReactorControlBorderRadius(p.$size)}px;
     color: ${(p) => p.theme.forms.inputForeground};
     background: ${(p) => p.theme.forms.inputBackground};
     padding: ${(p) => size(p, ['5px 10px', '7px 13px', '9px 16px'])};
@@ -15,6 +15,11 @@ const StyledTextArea = themed.textarea<{ $size: Size }>`
     resize: vertical;
     box-sizing: border-box;
     font-size: ${(p) => size(p, ['13px', '15px', '17px'])};
+
+    &::placeholder {
+      color: ${(p) => p.theme.forms.inputForeground};
+      opacity: 0.45;
+    }
 `;
 
 export type TextAreaProps = React.TextareaHTMLAttributes<HTMLTextAreaElement> & { size?: Size };

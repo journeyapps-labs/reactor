@@ -1,5 +1,5 @@
 import { Container } from '@journeyapps-labs/common-ioc';
-import { AbstractReactorModule, GuideStore, UXStore, WorkspaceStore } from '@journeyapps-labs/reactor-mod';
+import { AbstractReactorModule, ActionStore, GuideStore, UXStore, WorkspaceStore } from '@journeyapps-labs/reactor-mod';
 import { DemoBodyWidget } from './BodyWidget';
 import { setupWorkspaces } from './setupWorkspaces';
 import { PlaygroundPanelFactory } from './panels/PlaygroundPanelFactory';
@@ -16,6 +16,8 @@ import { PlaygroundDragDropPanelWidget } from './panels/PlaygroundDragDropPanelW
 import { PlaygroundOverlaysPanelWidget } from './panels/PlaygroundOverlaysPanelWidget';
 import { PlaygroundGuidePanelWidget } from './panels/PlaygroundGuidePanelWidget';
 import { PlaygroundGuideWorkflow } from './guides/PlaygroundGuideWorkflow';
+import { PlaygroundActionsPanelWidget } from './panels/PlaygroundActionsPanelWidget';
+import { PlaygroundValidationAction } from './actions/PlaygroundValidationAction';
 
 export class ReactorPlaygroundModule extends AbstractReactorModule {
   constructor() {
@@ -27,6 +29,9 @@ export class ReactorPlaygroundModule extends AbstractReactorModule {
   register(ioc: Container) {
     const workspaceStore = ioc.get(WorkspaceStore);
     const guideStore = ioc.get(GuideStore);
+    const actionStore = ioc.get(ActionStore);
+
+    actionStore.registerAction(new PlaygroundValidationAction());
 
     workspaceStore.registerFactory(
       new PlaygroundPanelFactory({
@@ -91,6 +96,14 @@ export class ReactorPlaygroundModule extends AbstractReactorModule {
         name: 'Tabs',
         icon: 'folder',
         widget: PlaygroundTabsPanelWidget
+      })
+    );
+    workspaceStore.registerFactory(
+      new PlaygroundPanelFactory({
+        type: 'playground.actions',
+        name: 'Actions',
+        icon: 'wand-magic-sparkles',
+        widget: PlaygroundActionsPanelWidget
       })
     );
     workspaceStore.registerFactory(

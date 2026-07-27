@@ -15,6 +15,7 @@ export interface FormInputOptions<T = any> {
    * Expressed as markdown
    */
   tooltip?: string;
+  placeholder?: string;
   value?: T;
   visible?: boolean;
   disabled?: boolean;
@@ -94,6 +95,10 @@ export abstract class FormInput<T extends FormInputGenerics = FormInputGenerics>
 
   get label() {
     return this.options.label;
+  }
+
+  get placeholder() {
+    return this.options.placeholder ?? this.label;
   }
 
   validate() {

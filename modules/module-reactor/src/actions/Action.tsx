@@ -10,7 +10,7 @@ import * as React from 'react';
 import { ShortcutChord } from '../stores/shortcuts/Shortcut';
 import { ComboBoxItem } from '../stores/combo/ComboBoxDirectives';
 import * as _ from 'lodash';
-import { ActionButtonControl, ActionButtonWidget, EventType } from '../controls/ActionButtonControl';
+import { ActionButtonControl, EventType } from '../controls/ActionButtonControl';
 import { ActionMetaWidget } from './ActionMetaWidget';
 import { activateWithValidation } from '../hooks/useValidator';
 import { BaseObserver } from '@journeyapps-labs/common-utils';
@@ -217,12 +217,8 @@ export abstract class Action<
   }
 
   representAsIcon(extraData: Partial<T['EVENT']> = {}): Btn {
-    const data = this.representAsButton(extraData, true);
-    if (!data) {
-      return null;
-    }
     return {
-      ...data,
+      ...this.representAsButton(extraData),
       label: null
     };
   }
@@ -236,17 +232,10 @@ export abstract class Action<
    *
    * The button carries a live validation function, so consumers that render a
    * Btn directly get the same dynamic enabled/disabled behavior as action
-   * controls. The second argument is retained for compatibility and is used
-   * by representAsIcon to omit hidden actions.
+   * controls.
    */
-  representAsButton(extraData: Partial<T['EVENT']> = {}, validate: boolean = false): Btn {
+  representAsButton(extraData: Partial<T['EVENT']> = {}): Btn {
     const validator = () => this.validate(extraData);
-    if (validate) {
-      const validation = validator();
-      if (validation.type === ActionValidationState.HIDDEN) {
-        return null;
-      }
-    }
     return this.createButton(extraData, validator);
   }
 
@@ -271,19 +260,8 @@ export abstract class Action<
     };
   }
 
-  renderAsButton(
-    render: (btn: Btn, result: ValidationResult) => React.JSX.Element,
-    extraData: Partial<T['EVENT']> = {}
-  ): React.JSX.Element {
-    const validator = () => this.validate(extraData);
-    return (
-      <ActionButtonWidget
-        validator={validator}
-        render={(result) => {
-          return render(this.createButton(extraData, validator), result);
-        }}
-      />
-    );
+  renderAsButton(render: (btn: Btn) => React.JSX.Element, extraData: Partial<T['EVENT']> = {}): React.JSX.Element {
+    return render(this.representAsButton(extraData));
   }
 
   getTypeDisplayName() {

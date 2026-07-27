@@ -9,7 +9,7 @@ import { SimpleComboBoxDirective } from '../../stores/combo2/directives/simple/S
 import { SearchStore } from '../../stores/SearchStore';
 import { ComboBoxItem } from '../../stores/combo/ComboBoxDirectives';
 import { getTransparentColor } from '@journeyapps-labs/lib-reactor-utils';
-import { size, getReactorBorderRadius, Size, useReactorSize } from '../../hooks/useReactorSize';
+import { size, getReactorControlBorderRadius, Size, useReactorSize } from '../../hooks/useReactorSize';
 
 export interface SearchWidgetProps {
   searchChanged: (search: string) => any;
@@ -58,7 +58,7 @@ namespace S {
     position: relative;
     background: ${(p) =>
       p.design === SearchWidgetDesign.FORM ? p.theme.forms.inputBackground : p.theme.panels.searchBackground};
-    border-radius: ${(p) => getReactorBorderRadius(p.$size)}px;
+    border-radius: ${(p) => getReactorControlBorderRadius(p.$size)}px;
     border: solid 1px ${(p) =>
       getTransparentColor(
         p.design === SearchWidgetDesign.FORM ? p.theme.forms.inputForeground : p.theme.panels.searchForeground,
