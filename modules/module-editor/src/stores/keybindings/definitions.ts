@@ -20,7 +20,6 @@ export interface KeyCodeChord {
   altKey: boolean;
   metaKey: boolean;
   keyCode: number;
-  equals: (item: KeyCodeChord) => boolean;
 }
 
 export interface Keybinding {

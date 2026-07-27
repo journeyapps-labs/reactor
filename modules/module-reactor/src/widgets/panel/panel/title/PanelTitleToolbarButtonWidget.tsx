@@ -9,8 +9,9 @@ import { useButton } from '../../../../hooks/useButton';
 import { observer } from 'mobx-react';
 import { ThemeStore } from '../../../../stores/themes/ThemeStore';
 import { ioc } from '../../../../inversify.config';
-import { ValidationResult } from '../../../../actions/validators/ActionValidator';
+import { ActionValidationState, ValidationResult } from '../../../../actions/validators/ActionValidator';
 import { REACTOR_MOBILE_MEDIA_QUERY } from '../../../../hooks/useReactorViewportMode';
+import { ButtonValidationIndicatorWidget } from '../../../buttons/ButtonValidationIndicatorWidget';
 
 export interface PanelTitleToolbarButtonProps extends Btn {
   enabled?: boolean;
@@ -31,6 +32,7 @@ namespace S {
     white-space: nowrap;
     border: solid 1px transparent;
     height: ${BUTTON_HEIGHT}px;
+    position: relative;
 
     ${REACTOR_MOBILE_MEDIA_QUERY} {
       height: 32px;
@@ -93,10 +95,13 @@ namespace S {
 }
 
 export const PanelTitleToolbarButtonWidget: React.FC<PanelTitleToolbarButtonProps> = observer((props) => {
-  let { onClick, attention, icon, ref, validationResult, border } = useButton({
+  let { onClick, attention, icon, ref, validationResult, border, tooltip } = useButton({
     btn: props
   });
   const themeValues = ioc.get(ThemeStore).getCurrentTheme(theme);
+  if (validationResult.type === ActionValidationState.HIDDEN) {
+    return null;
+  }
   let color = 'transparent';
   if (!!attention) {
     color = themeValues.guide.accent;
@@ -115,6 +120,7 @@ export const PanelTitleToolbarButtonWidget: React.FC<PanelTitleToolbarButtonProp
         attention={!!attention}
         onClick={onClick}
       >
+        <ButtonValidationIndicatorWidget validationResult={validationResult} />
         <S.Label>{props.label}</S.Label>
         {icon ? <S.ButtonIcon {...icon} /> : null}
       </S.ButtonWithLabel>
@@ -128,10 +134,12 @@ export const PanelTitleToolbarButtonWidget: React.FC<PanelTitleToolbarButtonProp
       onClick={onClick}
       {...setupTooltipProps({
         ...props,
+        tooltip,
         tooltipPos: TooltipPosition.BOTTOM_RIGHT
       })}
       enabled={props.enabled}
     >
+      <ButtonValidationIndicatorWidget validationResult={validationResult} />
       {icon ? <S.ButtonIcon {...icon} /> : null}
     </S.Button>
   );

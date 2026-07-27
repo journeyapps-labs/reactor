@@ -4,16 +4,15 @@ import { VisorStore } from '../stores/visor/VisorStore';
 import { inject } from '../inversify.config';
 import { LoadingDirectiveState, VisorLoadingDirective } from '../stores/visor/VisorLoadingDirective';
 import { DialogStore } from '../stores/DialogStore';
-import { ActionValidator, PassiveActionValidationState, ValidationResult } from './validators/ActionValidator';
+import { ActionValidator, ActionValidationState, ValidationResult, Validator } from './validators/ActionValidator';
 import { Btn } from '../definitions/common';
 import * as React from 'react';
 import { ShortcutChord } from '../stores/shortcuts/Shortcut';
 import { ComboBoxItem } from '../stores/combo/ComboBoxDirectives';
 import * as _ from 'lodash';
-import { ActionValidatorContext, Validator } from './validators/ActionValidatorContext';
 import { ActionButtonControl, ActionButtonWidget, EventType } from '../controls/ActionButtonControl';
 import { ActionMetaWidget } from './ActionMetaWidget';
-import { processCallbackWithValidation } from '../hooks/useValidator';
+import { activateWithValidation } from '../hooks/useValidator';
 import { BaseObserver } from '@journeyapps-labs/common-utils';
 import { Logger } from '@journeyapps-labs/common-logger';
 import { createLogger } from '../core/logging';
@@ -101,7 +100,6 @@ export abstract class Action<
 > extends BaseObserver<L> {
   options: T['OPTIONS'];
 
-  private singletonValidationContext: ActionValidatorContext;
   protected logger: Logger;
 
   @inject(VisorStore)
@@ -119,7 +117,6 @@ export abstract class Action<
       hotkeys: options.hotkeys || []
     };
     this.logger = createLogger(options.name);
-    this.singletonValidationContext = null;
   }
 
   setActionStore(store: ActionStore) {
@@ -130,18 +127,24 @@ export abstract class Action<
     return this.options.id;
   }
 
-  generateValidationContext() {
-    return new ActionValidatorContext(this);
-  }
+  validate(event: Partial<T['EVENT']> = {}): ValidationResult {
+    const results = (this.options.validators || []).map((validator) => validator.validate(event));
+    const priority = [
+      ActionValidationState.HIDDEN,
+      ActionValidationState.DISABLED,
+      ActionValidationState.BLOCKED,
+      ActionValidationState.PENDING,
+      ActionValidationState.ALLOWED
+    ];
 
-  /**
-   * @deprecated rather use generateValidationContext and dispose afterwards
-   */
-  validatePassively(): PassiveActionValidationState {
-    if (!this.singletonValidationContext) {
-      this.singletonValidationContext = this.generateValidationContext();
+    for (const state of priority) {
+      const result = results.find((candidate) => candidate?.type === state);
+      if (result) {
+        return result;
+      }
     }
-    return this.singletonValidationContext.validatePassively();
+
+    return { type: ActionValidationState.ALLOWED };
   }
 
   getExclusiveExecutionLock(event?: { allowed?: (e: Partial<T['EVENT']>) => boolean }): () => any {
@@ -184,7 +187,8 @@ export abstract class Action<
   representAsComboBoxItem(
     options: { installAction: boolean; eventData?: Partial<T['EVENT']> } = { installAction: false }
   ): ActionComboBoxItem<this> {
-    const validator = this.generateValidationContext();
+    const eventData = options.eventData || {};
+    const validation = this.validate(eventData);
     const action = {
       icon: this.options.icon,
       color: 'orange',
@@ -192,21 +196,21 @@ export abstract class Action<
       key: this.options.name,
       actionObject: this,
       group: this.group,
-      disabled: validator.validatePassively() === PassiveActionValidationState.DISABLED,
-      right: <ActionMetaWidget action={this} />
+      disabled: validation.type === ActionValidationState.DISABLED || validation.type === ActionValidationState.PENDING,
+      right: <ActionMetaWidget action={this} eventData={eventData} />
     } as ActionComboBoxItem<this>;
-    if (validator.validatePassively() === PassiveActionValidationState.DISALLOWED) {
+    if (validation.type === ActionValidationState.HIDDEN) {
       return null;
     }
     if (options.installAction) {
       action.action = (e) => {
-        return processCallbackWithValidation(() => {
+        return activateWithValidation(this.validate(eventData), () => {
           return this.fireAction({
             source: ActionSource.RIGHT_CLICK,
             position: e,
             ...(options?.eventData || {})
           } as T['EVENT']);
-        }, validator.validate());
+        });
       };
     }
     return action;
@@ -230,16 +234,16 @@ export abstract class Action<
   /**
    * Create a button representation of this action.
    *
-   * The button carries a live validation context, so consumers that render a
+   * The button carries a live validation function, so consumers that render a
    * Btn directly get the same dynamic enabled/disabled behavior as action
    * controls. The second argument is retained for compatibility and is used
-   * by representAsIcon to omit disallowed actions.
+   * by representAsIcon to omit hidden actions.
    */
   representAsButton(extraData: Partial<T['EVENT']> = {}, validate: boolean = false): Btn {
-    const validator = this.generateValidationContext();
+    const validator = () => this.validate(extraData);
     if (validate) {
-      const validation = validator.validatePassively();
-      if (validation === PassiveActionValidationState.DISALLOWED) {
+      const validation = validator();
+      if (validation.type === ActionValidationState.HIDDEN) {
         return null;
       }
     }
@@ -271,10 +275,11 @@ export abstract class Action<
     render: (btn: Btn, result: ValidationResult) => React.JSX.Element,
     extraData: Partial<T['EVENT']> = {}
   ): React.JSX.Element {
+    const validator = () => this.validate(extraData);
     return (
       <ActionButtonWidget
-        action={this}
-        render={(result, validator) => {
+        validator={validator}
+        render={(result) => {
           return render(this.createButton(extraData, validator), result);
         }}
       />
@@ -314,7 +319,12 @@ export abstract class Action<
    * Action will-fire events and returns true if the action can fire
    */
   protected async _preflightChecks(event: T['EVENT']) {
-    if (this.validatePassively() !== PassiveActionValidationState.ALLOWED) {
+    const validation = this.validate(event);
+    if (validation.type === ActionValidationState.BLOCKED) {
+      await validation.onActivate();
+      return false;
+    }
+    if (validation.type !== ActionValidationState.ALLOWED) {
       return false;
     }
 

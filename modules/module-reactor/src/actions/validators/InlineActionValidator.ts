@@ -1,19 +1,11 @@
-import { ActionValidator, PassiveActionValidationState, ValidationResult } from './ActionValidator';
+import { ActionValidator, ValidationResult } from './ActionValidator';
 
-/**
- * @deprecated use InlineActionValidator2
- */
-export class InlineActionValidator extends ActionValidator {
-  protected validateFn: () => PassiveActionValidationState;
-
-  constructor(validateFn: () => PassiveActionValidationState) {
+export class InlineActionValidator<Event = unknown> extends ActionValidator<Event> {
+  constructor(protected validateFn: (event?: Partial<Event>) => ValidationResult) {
     super();
-    this.validateFn = validateFn;
   }
 
-  validate(): ValidationResult {
-    return {
-      type: this.validateFn()
-    };
+  validate(event?: Partial<Event>): ValidationResult {
+    return this.validateFn(event);
   }
 }

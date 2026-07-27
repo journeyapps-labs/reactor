@@ -10,14 +10,6 @@ const ButtonTheme = {
 
 export const theme = new ThemeFragment({
   structure: {
-    plan: {
-      label: 'Journey Plan',
-      colors: {
-        background: 'Background color',
-        border: 'Border color for plan notifications',
-        foreground: 'Text color'
-      }
-    },
     canvas: {
       label: 'Canvas',
       colors: {

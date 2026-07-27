@@ -72,7 +72,7 @@ export class DescendantLoadingEntityProviderComponent<Parent, Descendant> extend
             <TreeBadgeWidget
               icon="exclamation-triangle"
               background={currentTheme.status.failed}
-              iconColor={currentTheme.status.failedForeground}
+              foreground={currentTheme.status.failedForeground}
               tooltip="Refresh failed. Click to view error."
               action={() => {
                 this.notificationStore.showNotification({

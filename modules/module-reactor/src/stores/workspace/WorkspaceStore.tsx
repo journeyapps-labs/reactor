@@ -15,7 +15,7 @@ import { AbstractStore, AbstractStoreListener } from '../AbstractStore';
 import queryString from 'query-string';
 import { DialogStore } from '../DialogStore';
 import { MimeTypes, readFileAsText, selectFile } from '@journeyapps-labs/lib-reactor-utils';
-import { PassiveActionValidationState } from '../../actions/validators/ActionValidator';
+import { ActionValidationState } from '../../actions/validators/ActionValidator';
 import { ReactorPanelModel } from './react-workspaces/ReactorPanelModel';
 import { ReactorPanelFactory } from './react-workspaces/ReactorPanelFactory';
 import { ReactorTabFactoryModel } from './react-workspaces/ReactorTabFactory';
@@ -300,9 +300,7 @@ export class WorkspaceStore extends AbstractStore<WorkspacePrefsSerialized, Work
 
       if (opts.validateFactories && factory.options.validators) {
         if (
-          factory.options.validators.some(
-            (validation) => validation.validate().type == PassiveActionValidationState.DISALLOWED
-          )
+          factory.options.validators.some((validation) => validation.validate().type == ActionValidationState.HIDDEN)
         ) {
           return false;
         }

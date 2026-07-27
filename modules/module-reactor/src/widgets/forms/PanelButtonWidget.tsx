@@ -10,6 +10,8 @@ import { ioc } from '../../inversify.config';
 import { ThemeStore } from '../../stores/themes/ThemeStore';
 import { ReactorTooltipWidget, setupTooltipProps, TooltipPosition } from '../info/tooltips';
 import { size, getReactorBorderRadius, Size, useReactorSize } from '../../hooks/useReactorSize';
+import { ButtonValidationIndicatorWidget } from '../buttons/ButtonValidationIndicatorWidget';
+import { ActionValidationState } from '../../actions/validators/ActionValidator';
 
 namespace S {
   export const getMode = (p: { mode: PanelButtonMode; theme: GetTheme<typeof theme> }) => {
@@ -44,6 +46,7 @@ namespace S {
     border-radius: ${(p) => getReactorBorderRadius(p.$size)}px;
     color: ${(p) => getMode(p).color};
     box-sizing: border-box;
+    position: relative;
     height: ${(p) => size(p, ['28px', '34px', '42px'])};
     cursor: ${(props) => (props.disabled ? 'default' : 'pointer')};
 
@@ -83,8 +86,12 @@ export const PanelButtonWidget: React.FC<
 > = observer((props) => {
   const size = useReactorSize(props.size);
   const ref = props.forwardRef || useRef(null);
-  const { onClick, icon, attention, disabled, tooltip } = useButton({ btn: props, forwardRef: ref });
+  const { onClick, icon, attention, disabled, tooltip, validationResult } = useButton({ btn: props, forwardRef: ref });
   const _theme = ioc.get(ThemeStore).getCurrentTheme(theme);
+
+  if (validationResult.type === ActionValidationState.HIDDEN) {
+    return null;
+  }
 
   // if it's just the icon showing, use the text color instead
   let iconColor = icon?.color;
@@ -109,6 +116,7 @@ export const PanelButtonWidget: React.FC<
           onClick(event);
         }}
       >
+        <ButtonValidationIndicatorWidget validationResult={validationResult} />
         {props.label ? (
           <S.ButtonLabel mode={props.mode} $size={size}>
             {props.label}

@@ -8,6 +8,8 @@ import { getTransparentColor } from '@journeyapps-labs/lib-reactor-utils';
 import { useButton } from '../../hooks/useButton';
 import { ReactorTooltipWidget, setupTooltipProps, TooltipPosition } from '../info/tooltips';
 import { REACTOR_MOBILE_MEDIA_QUERY } from '../../hooks/useReactorViewportMode';
+import { ButtonValidationIndicatorWidget } from '../buttons/ButtonValidationIndicatorWidget';
+import { ActionValidationState } from '../../actions/validators/ActionValidator';
 
 export interface FloatingPanelButtonWidgetProps {
   btn: Btn;
@@ -34,6 +36,7 @@ namespace S {
     pointer-events: all;
     opacity: ${(p) => (p.disabled ? 0.5 : 1)};
     column-gap: 10px;
+    position: relative;
 
     &:hover {
       border-color: ${(p) => p.theme.combobox.text};
@@ -64,7 +67,13 @@ namespace S {
 
 export const FloatingPanelButtonWidget: React.FC<FloatingPanelButtonWidgetProps> = (props) => {
   const ref = useRef<HTMLDivElement>(null);
-  const { icon, attention, onClick, tooltip } = useButton({ btn: props.btn, forwardRef: ref });
+  const { icon, attention, onClick, tooltip, disabled, validationResult } = useButton({
+    btn: props.btn,
+    forwardRef: ref
+  });
+  if (validationResult.type === ActionValidationState.HIDDEN) {
+    return null;
+  }
   const label = props.btn.label || props.btn.tooltip;
   return (
     <ReactorTooltipWidget tooltip={tooltip} tooltipPos={TooltipPosition.BOTTOM}>
@@ -74,9 +83,10 @@ export const FloatingPanelButtonWidget: React.FC<FloatingPanelButtonWidgetProps>
         {...setupTooltipProps({ tooltip: tooltip, tooltipPos: TooltipPosition.BOTTOM })}
         ref={ref}
         className={props.className}
-        disabled={props.btn.disabled}
+        disabled={disabled}
         onClick={onClick}
       >
+        <ButtonValidationIndicatorWidget validationResult={validationResult} />
         {label ? <S.Label>{label}</S.Label> : null}
         {icon ? (
           <S.Icon>

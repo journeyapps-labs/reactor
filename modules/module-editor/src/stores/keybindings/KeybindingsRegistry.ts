@@ -38,6 +38,9 @@ export abstract class CommandBindings extends BaseObserver<CommandBindingsListen
 
   deleteKeybinding(binding: Keybinding) {
     const index = this.custom.findIndex((c) => compareChords(c, binding));
+    if (index === -1) {
+      return;
+    }
     this.custom.splice(index, 1);
     this.updated();
   }

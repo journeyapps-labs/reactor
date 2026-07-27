@@ -4,11 +4,6 @@ import { Themes } from '../ThemeStore';
 export const DarkTheme = theme.addThemeValues({
   name: Themes.REACTOR,
   values: {
-    plan: {
-      background: '#00945b',
-      foreground: 'white',
-      border: '#b90a73'
-    },
     canvas: {
       background: '#1a2028',
       grid: '#232a34'

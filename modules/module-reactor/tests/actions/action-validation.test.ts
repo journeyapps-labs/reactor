@@ -1,0 +1,146 @@
+import { describe, expect, it, vi } from 'vitest';
+import {
+  Action,
+  ActionEvent,
+  ActionValidator,
+  ActionValidationState,
+  activateWithValidation,
+  ValidationResult
+} from '../../src';
+
+interface TestActionEvent extends ActionEvent {
+  targetEntity?: { allowed: boolean };
+}
+
+class TargetValidator extends ActionValidator<TestActionEvent> {
+  validate(event?: Partial<TestActionEvent>): ValidationResult {
+    return event?.targetEntity?.allowed
+      ? { type: ActionValidationState.ALLOWED }
+      : {
+          type: ActionValidationState.DISABLED,
+          message: 'Not permitted'
+        };
+  }
+}
+
+class StaticValidator extends ActionValidator<TestActionEvent> {
+  constructor(private readonly result: ValidationResult) {
+    super();
+  }
+
+  validate(): ValidationResult {
+    return this.result;
+  }
+}
+
+class TestAction extends Action<{ EVENT: TestActionEvent }> {
+  constructor(validators: ActionValidator<TestActionEvent>[] = []) {
+    super({
+      id: 'TEST_ACTION',
+      name: 'Test action',
+      icon: 'check',
+      validators
+    });
+  }
+
+  checkPreflight(event: TestActionEvent) {
+    return this._preflightChecks(event);
+  }
+
+  protected async fireEvent(): Promise<true> {
+    return true;
+  }
+}
+
+const event = (allowed: boolean): TestActionEvent => ({
+  id: 'TEST_ACTION',
+  source: undefined,
+  targetEntity: { allowed },
+  getStatus: () => undefined
+});
+
+describe('action validation', () => {
+  it('allows actions without validators', () => {
+    expect(new TestAction().validate()).toEqual({ type: ActionValidationState.ALLOWED });
+  });
+
+  it('passes event data to validators', () => {
+    const action = new TestAction([new TargetValidator()]);
+
+    expect(action.validate(event(true)).type).toBe(ActionValidationState.ALLOWED);
+    expect(action.validate(event(false))).toEqual({
+      type: ActionValidationState.DISABLED,
+      message: 'Not permitted'
+    });
+  });
+
+  it('uses hidden before disabled before allowed', () => {
+    const action = new TestAction([
+      new StaticValidator({ type: ActionValidationState.ALLOWED }),
+      new StaticValidator({
+        type: ActionValidationState.DISABLED,
+        message: 'Unavailable'
+      }),
+      new StaticValidator({ type: ActionValidationState.HIDDEN })
+    ]);
+
+    expect(action.validate()).toEqual({ type: ActionValidationState.HIDDEN });
+  });
+
+  it('uses disabled before blocked before pending', () => {
+    const action = new TestAction([
+      new StaticValidator({ type: ActionValidationState.PENDING }),
+      new StaticValidator({
+        type: ActionValidationState.BLOCKED,
+        onActivate: vi.fn()
+      }),
+      new StaticValidator({ type: ActionValidationState.DISABLED })
+    ]);
+
+    expect(action.validate()).toEqual({ type: ActionValidationState.DISABLED });
+  });
+
+  it('activates remediation without executing a blocked action', async () => {
+    const onActivate = vi.fn();
+    const execute = vi.fn();
+
+    await activateWithValidation(
+      {
+        type: ActionValidationState.BLOCKED,
+        message: 'Upgrade required',
+        onActivate
+      },
+      execute
+    );
+
+    expect(onActivate).toHaveBeenCalledOnce();
+    expect(execute).not.toHaveBeenCalled();
+  });
+
+  it('activates remediation when preflight becomes blocked', async () => {
+    const onActivate = vi.fn();
+    const action = new TestAction([
+      new StaticValidator({
+        type: ActionValidationState.BLOCKED,
+        onActivate
+      })
+    ]);
+
+    await expect(action.checkPreflight(event(true))).resolves.toBe(false);
+    expect(onActivate).toHaveBeenCalledOnce();
+  });
+
+  it('binds button validation to its event data', () => {
+    const action = new TestAction([new TargetValidator()]);
+
+    expect(action.representAsButton(event(true)).validator().type).toBe(ActionValidationState.ALLOWED);
+    expect(action.representAsButton(event(false)).validator().type).toBe(ActionValidationState.DISABLED);
+  });
+
+  it('uses the completed event during preflight', async () => {
+    const action = new TestAction([new TargetValidator()]);
+
+    await expect(action.checkPreflight(event(true))).resolves.toBe(true);
+    await expect(action.checkPreflight(event(false))).resolves.toBe(false);
+  });
+});

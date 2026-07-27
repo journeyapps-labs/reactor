@@ -20,7 +20,7 @@ import { ReactorPanelFactory } from '../../../../stores/workspace/react-workspac
 import { ActionSource } from '../../../../actions/Action';
 import { ReactorEntities } from '../../../../entities-reactor/ReactorEntities';
 import { useButton } from '../../../../hooks/useButton';
-import { PassiveActionValidationState } from '../../../../actions/validators/ActionValidator';
+import { ActionValidationState } from '../../../../actions/validators/ActionValidator';
 import { WorkspaceTabModel } from '@projectstorm/react-workspaces-model-tabs';
 import { WORKSPACE_PANEL_RADIUS } from '../../../workspace/workspacePanelChrome';
 import { ReactorTooltipWidget, TooltipPosition } from '../../../info/tooltips';
@@ -103,7 +103,7 @@ namespace S {
 const PanelIconButton: React.FC<{ btn: Btn; highlight: boolean }> = ({ btn, highlight }) => {
   const { onClick, disabled, ref, validationResult } = useButton({ btn });
 
-  if (validationResult?.type === PassiveActionValidationState.DISALLOWED) {
+  if (validationResult?.type === ActionValidationState.HIDDEN) {
     return null;
   }
 

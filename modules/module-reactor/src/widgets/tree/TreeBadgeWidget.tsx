@@ -1,10 +1,11 @@
 import * as React from 'react';
-import { IconWidget, ReactorIcon } from '../icons/IconWidget';
+import { IconWidget } from '../icons/IconWidget';
 import { ButtonAction } from '../../definitions/common';
 import styled from '@emotion/styled';
 import { getDarkenedColor } from '@journeyapps-labs/lib-reactor-utils';
 import { REACTOR_MOBILE_MEDIA_QUERY } from '../../hooks/useReactorViewportMode';
 import { ReactorTooltipWidget, TooltipPosition } from '../info/tooltips';
+import type { ValidationIndicator } from '../../actions/validators/ActionValidator';
 
 namespace S {
   export const Symbol = styled.div<{ color?: string; foreground: string }>`
@@ -38,23 +39,18 @@ namespace S {
   `;
 }
 
-export interface TreeBadgeWidgetProps {
-  background?: string;
-  iconColor?: string;
-  tooltip?: string;
-  icon?: ReactorIcon;
-  value?: string;
+export interface TreeBadgeWidgetProps extends ValidationIndicator {
   action?: ButtonAction;
 }
 
 export const TreeBadgeWidget: React.FC<TreeBadgeWidgetProps> = (props) => {
-  const { background, iconColor, icon, value, tooltip, action } = props;
+  const { background, foreground, icon, value, tooltip, action } = props;
   return (
     <ReactorTooltipWidget tooltip={tooltip} tooltipPos={TooltipPosition.LEFT}>
       <S.Symbol
         key={`${tooltip}-${icon || value}`}
         color={background}
-        foreground={iconColor || '#fff'}
+        foreground={foreground || '#fff'}
         aria-label={tooltip}
         onClick={(event) => {
           event.stopPropagation();

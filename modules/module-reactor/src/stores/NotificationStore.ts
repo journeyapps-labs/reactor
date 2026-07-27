@@ -8,7 +8,6 @@ export enum NotificationType {
   INFO = 'info',
   SUCCESS = 'success',
   SPECIAL = 'special',
-  INSERT_COIN = 'insert-coin',
   VALIDATION = 'validation'
 }
 

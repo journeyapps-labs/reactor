@@ -1,51 +1,67 @@
-import { BaseObserver } from '@journeyapps-labs/common-utils';
-import { observable } from 'mobx';
+import type { ReactorIcon } from '../../widgets/icons/IconWidget';
 
-export enum PassiveActionValidationState {
+export enum ActionValidationState {
   ALLOWED = 'allowed',
+  /**
+   * Validation has not completed yet
+   */
+  PENDING = 'pending',
   /**
    * Show in the UI but disable
    */
   DISABLED = 'disabled',
   /**
+   * Prevent execution but allow activation of a remediation flow
+   */
+  BLOCKED = 'blocked',
+  /**
    * Hide from the UI completely
    */
-  DISALLOWED = 'disallowed'
+  HIDDEN = 'hidden'
 }
 
-export enum ValidationDisabledReason {
-  PLAN_LIMITS = 'plan_limits',
-  PLAN_SETTING = 'plan_setting',
-  AUTH = 'auth'
+export interface ValidationIndicator {
+  icon?: ReactorIcon;
+  value?: string;
+  background?: string;
+  foreground?: string;
+  tooltip?: string;
 }
 
 export interface ValidationResultAllowed {
-  type: PassiveActionValidationState.ALLOWED;
+  type: ActionValidationState.ALLOWED;
 }
 
-export interface ValidationResultDisallowed {
-  type: PassiveActionValidationState.DISALLOWED;
+export interface ValidationResultPending {
+  type: ActionValidationState.PENDING;
+  message?: string;
+}
+
+export interface ValidationResultHidden {
+  type: ActionValidationState.HIDDEN;
 }
 
 export interface ValidationResultDisabled {
-  type: PassiveActionValidationState.DISABLED;
-  reason?: ValidationDisabledReason;
+  type: ActionValidationState.DISABLED;
+  message?: string;
 }
 
-export type ValidationResult = ValidationResultAllowed | ValidationResultDisallowed | ValidationResultDisabled;
-
-export interface ActionValidatorListener {
-  validationInProgress: () => any;
+export interface ValidationResultBlocked {
+  type: ActionValidationState.BLOCKED;
+  message?: string;
+  indicator?: ValidationIndicator;
+  onActivate: () => void | Promise<void>;
 }
 
-export abstract class ActionValidator extends BaseObserver<ActionValidatorListener> {
-  @observable
-  accessor busy: boolean;
+export type ValidationResult =
+  | ValidationResultAllowed
+  | ValidationResultPending
+  | ValidationResultHidden
+  | ValidationResultDisabled
+  | ValidationResultBlocked;
 
-  constructor() {
-    super();
-    this.busy = false;
-  }
+export type Validator = () => ValidationResult;
 
-  abstract validate(): ValidationResult;
+export abstract class ActionValidator<Event = unknown> {
+  abstract validate(event?: Partial<Event>): ValidationResult;
 }

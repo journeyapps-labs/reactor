@@ -1,14 +1,11 @@
 import * as React from 'react';
-import { useState } from 'react';
 import { ButtonControl } from './ButtonControl';
 import { RepresentAsControlOptions } from './AbstractControl';
 import type { Action } from '../actions/Action';
-import { PassiveActionValidationState, ValidationResult } from '../actions/validators/ActionValidator';
-import { ActionValidatorContext } from '../actions/validators/ActionValidatorContext';
-import { Btn } from '../definitions/common';
+import { ActionValidationState, ValidationResult, Validator } from '../actions/validators/ActionValidator';
 import { observer } from 'mobx-react';
 
-export type EventType<T> = T extends Action<infer TResult> ? TResult['EVENT'] : never;
+export type EventType<T> = T extends Action<any, infer TGenerics, any> ? TGenerics['EVENT'] : never;
 
 export type E = EventType<Action>;
 
@@ -24,32 +21,26 @@ export class ActionButtonControl<T extends Action> extends ButtonControl {
     });
   }
 
-  representAsBtn(): Btn {
-    return {
-      ...super.representAsBtn(),
-      validator: this.options2.action.generateValidationContext()
-    };
-  }
-
   representAsControl(options: RepresentAsControlOptions): React.JSX.Element {
-    return <ActionButtonWidget action={this.options2.action} render={() => super.representAsControl(options)} />;
+    return (
+      <ActionButtonWidget
+        validator={() => this.options2.action.validate(this.options2.getEventData?.() || {})}
+        render={() => super.representAsControl(options)}
+      />
+    );
   }
 }
 
-export interface ActionButtonWidgetProps<T extends Action> {
-  action: T;
-  render: (result: ValidationResult, validator: ActionValidatorContext) => React.JSX.Element;
+export interface ActionButtonWidgetProps {
+  validator: Validator;
+  render: (result: ValidationResult, validator: Validator) => React.JSX.Element;
 }
 
-export const ActionButtonWidget = observer(<T extends Action>(props: ActionButtonWidgetProps<T>) => {
-  const [context] = useState(() => {
-    return props.action.generateValidationContext();
-  });
-
-  const result = context.validate();
-  if (result.type === PassiveActionValidationState.DISALLOWED) {
+export const ActionButtonWidget = observer((props: ActionButtonWidgetProps) => {
+  const result = props.validator();
+  if (result.type === ActionValidationState.HIDDEN) {
     return null;
   }
 
-  return props.render(result, context);
+  return props.render(result, props.validator);
 });
