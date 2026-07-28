@@ -1,6 +1,12 @@
 import { LogLevel, Logger } from '@journeyapps-labs/common-logger';
+import { ENV } from '../env';
 
-export const REACTOR_DEFAULT_LOG_LEVEL = LogLevel.INFO;
+export const resolveReactorLogLevel = (level = ENV.REACTOR_LOG_LEVEL): LogLevel => {
+  const normalized = level?.toUpperCase() as LogLevel | undefined;
+  return normalized && Object.values(LogLevel).includes(normalized) ? normalized : LogLevel.INFO;
+};
+
+export const REACTOR_DEFAULT_LOG_LEVEL = resolveReactorLogLevel();
 
 const LOGGER_WORDS: Record<string, string> = {
   CMD: 'Command',

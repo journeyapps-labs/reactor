@@ -19,6 +19,7 @@ const sidebars: SidebarsConfig = {
   gettingStartedSidebar: [
     'getting-started/introduction',
     'getting-started/local-development',
+    'getting-started/reactor-server',
     'getting-started/exploring-the-sandbox',
     'getting-started/first-module'
   ],
