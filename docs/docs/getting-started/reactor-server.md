@@ -25,6 +25,7 @@ Every module package has a `reactor.config.json` next to its `package.json`:
 - `loader` can optionally provide a loading-screen fragment and background color.
 
 Only declare values that are safe to send to the browser. Secrets such as service credentials must never appear in `env`.
+The server throws during startup when a loaded module declares an environment variable that was not provided to `loadModules`.
 
 ## Create an Express server
 
@@ -48,7 +49,7 @@ const modules = loadModules({
   env: {
     MODULES: process.env.MODULES!.split(','),
     EXAMPLE_API_URL: process.env.EXAMPLE_API_URL,
-    REACTOR_LOG_LEVEL: process.env.REACTOR_LOG_LEVEL
+    REACTOR_LOG_LEVEL: process.env.REACTOR_LOG_LEVEL || 'INFO'
   }
 });
 
@@ -99,7 +100,7 @@ export const ENV = window.process.env as ExampleEnv;
 | `MODULES` | Application server | Comma-separated module directories or package names. Convert it to an array before calling `loadModules`. |
 | `PORT` | Demo server convention | HTTP port. The Reactor server library does not choose a port itself. |
 | `NODE_ENV` | Reactor server | Added automatically to the browser environment by `createBaseIndexMiddleware`. |
-| `REACTOR_LOG_LEVEL` | Reactor core module | Default browser root logger level. Accepts `OFF`, `ERROR`, `WARN`, `INFO`, or `DEBUG`; invalid or missing values fall back to `INFO`. |
+| `REACTOR_LOG_LEVEL` | Reactor core module | Default browser root logger level. Accepts `OFF`, `ERROR`, `WARN`, `INFO`, or `DEBUG`. Supply `INFO` as the server default; invalid values also fall back to `INFO` in the browser. |
 
 Each application module may declare additional variables in its own `reactor.config.json`.
 

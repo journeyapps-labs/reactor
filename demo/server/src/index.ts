@@ -21,7 +21,7 @@ const PORT = parseInt(process.env.PORT || '9527');
 const MODULES = loadModules({
   env: {
     MODULES: process.env.MODULES.split(','),
-    REACTOR_LOG_LEVEL: process.env.REACTOR_LOG_LEVEL
+    REACTOR_LOG_LEVEL: process.env.REACTOR_LOG_LEVEL || 'INFO'
   }
 });
 
