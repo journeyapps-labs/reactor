@@ -21,6 +21,9 @@ export const ActionMetaWidget: React.FC<ActionMetaWidgetProps> = (props) => {
   if (validationResult.type === ActionValidationState.BLOCKED && validationResult.indicator) {
     return <TreeBadgeWidget {...validationResult.indicator} />;
   }
+  if (validationResult.type === ActionValidationState.DISABLED && validationResult.message) {
+    return <TreeBadgeWidget icon="ban" foreground="currentColor" tooltip={validationResult.message} />;
+  }
   if (validationResult.type === ActionValidationState.ALLOWED) {
     return <ActionShortcutPillsWidget action={props.action} />;
   }

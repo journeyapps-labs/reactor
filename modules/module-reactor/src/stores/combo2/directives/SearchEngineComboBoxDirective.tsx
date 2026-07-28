@@ -69,6 +69,9 @@ export class SearchEngineComboBoxDirective<
   }
 
   selectItem(item: T) {
+    if (item.disabled) {
+      return;
+    }
     this.setSelected([item]);
   }
 

@@ -50,6 +50,7 @@ export interface EntityPickOptions<T extends any = any> {
   filter?: (entity: T) => boolean;
   parent?: any;
   autoSelectedIsolatedEntity?: boolean;
+  transformItem?: (entity: T, item: EntityComboBoxItem<T>) => EntityComboBoxItem<T>;
 }
 
 export type ShowContextMenuForEntityOptions = Pick<SimpleComboBoxDirectiveOptions, 'hideSearch'> & {
@@ -302,6 +303,11 @@ export abstract class EntityDefinition<T extends any = any> {
         [entityActionFocus]: entity
       } as Record<CoupledActionFocusOption, T> as CoupledActionEvent;
     }
+    if (a instanceof EntityAction) {
+      return {
+        targetEntity: entity
+      } as CoupledActionEvent;
+    }
     if (a instanceof ParameterizedAction) {
       const matchingParameter = (a.options as ParameterizedActionOptions).params?.find(
         (p) => p instanceof ProviderActionParameter && p.options.type == this.type
@@ -311,11 +317,6 @@ export abstract class EntityDefinition<T extends any = any> {
           entities: { [matchingParameter.options.name]: entity }
         } as ParameterizedActionEvent;
       }
-    }
-    if (a instanceof EntityAction) {
-      return {
-        targetEntity: entity
-      } as CoupledActionEvent;
     }
     return {};
   }

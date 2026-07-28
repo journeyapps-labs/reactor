@@ -14,6 +14,7 @@ export interface EntitySearchResolveOptions<T = any> {
   filter?: (entity: T) => boolean;
   parent?: any;
   autoSelectedIsolatedEntity?: boolean;
+  transformItem?: (entity: T, item: EntityComboBoxItem<T>) => EntityComboBoxItem<T>;
 }
 
 export class EntitySearchBank<T = any> extends ComponentBank<EntitySearchEngineComponent<T>> {
@@ -28,7 +29,9 @@ export class EntitySearchBank<T = any> extends ComponentBank<EntitySearchEngineC
       const res = await engine.autoSelectIsolatedItem({
         value: null
       });
-      if (res) {
+      const item = res ? engineComponents[0].definition.getAsComboBoxItem(res) : null;
+      const transformedItem = item ? options.transformItem?.(res, item) || item : null;
+      if (res && options.filter?.(res) !== false && !transformedItem.disabled) {
         return res;
       }
     }
@@ -41,7 +44,8 @@ export class EntitySearchBank<T = any> extends ComponentBank<EntitySearchEngineC
     const setupDirective = (component: EntitySearchEngineComponent<T>) => {
       const directive = component.getComboBoxDirective({
         position: options.event,
-        filter: options.filter
+        filter: options.filter,
+        transformItem: options.transformItem
       });
 
       if (options.parent) {

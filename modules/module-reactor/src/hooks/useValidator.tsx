@@ -37,7 +37,10 @@ export async function activateWithValidation<T>(
     await validationResult.onActivate();
     return;
   }
-  if (validationResult.type !== ActionValidationState.ALLOWED) {
+  if (
+    validationResult.type !== ActionValidationState.ALLOWED &&
+    validationResult.type !== ActionValidationState.DEFERRED
+  ) {
     return;
   }
   return activate();

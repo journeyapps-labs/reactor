@@ -12,7 +12,6 @@ import { ComboBoxItem } from '../stores/combo/ComboBoxDirectives';
 import * as _ from 'lodash';
 import { ActionButtonControl, EventType } from '../controls/ActionButtonControl';
 import { ActionMetaWidget } from './ActionMetaWidget';
-import { activateWithValidation } from '../hooks/useValidator';
 import { BaseObserver } from '@journeyapps-labs/common-utils';
 import { Logger } from '@journeyapps-labs/common-logger';
 import { createLogger, formatLoggerName } from '../core/logging';
@@ -135,6 +134,7 @@ export abstract class Action<
       ActionValidationState.DISABLED,
       ActionValidationState.BLOCKED,
       ActionValidationState.PENDING,
+      ActionValidationState.DEFERRED,
       ActionValidationState.ALLOWED
     ];
 
@@ -209,13 +209,11 @@ export abstract class Action<
     }
     if (options.installAction) {
       action.action = (e) => {
-        return activateWithValidation(this.validate(eventData), () => {
-          return this.fireAction({
-            source: ActionSource.RIGHT_CLICK,
-            position: e,
-            ...(options?.eventData || {})
-          } as T['EVENT']);
-        });
+        return this.fireAction({
+          source: ActionSource.RIGHT_CLICK,
+          position: e,
+          ...(options?.eventData || {})
+        } as T['EVENT']);
       };
     }
     return action;

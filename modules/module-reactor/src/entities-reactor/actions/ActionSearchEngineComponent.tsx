@@ -13,7 +13,7 @@ import {
 import { Action } from '../../actions/Action';
 import { ActionValidationState } from '../../actions/validators/ActionValidator';
 import * as React from 'react';
-import { activateWithValidation, useValidator } from '../../hooks/useValidator';
+import { useValidator } from '../../hooks/useValidator';
 import { ioc } from '../../inversify.config';
 import { System } from '../../core/System';
 import { EntitySearchResultEntry } from '../../entities/components/search/EntitySearchEngineComponent';
@@ -62,9 +62,7 @@ export class CmdPaletteActionSearchEngine extends CMDPalletEntitySearchEngine<Ac
   }
 
   async handleSelection(entry: CMDPalletEntitySearchEngineEntry<Action>): Promise<any> {
-    return activateWithValidation(entry.entity.validate(), () => {
-      return super.handleSelection(entry);
-    });
+    return super.handleSelection(entry);
   }
 
   getWidget(entry: EntitySearchResultEntry<Action>, event: CMDPalletGenerateResultWidgetEvent): React.JSX.Element {

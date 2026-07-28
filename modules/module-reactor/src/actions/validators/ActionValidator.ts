@@ -3,6 +3,11 @@ import type { ReactorIcon } from '../../widgets/icons/IconWidget';
 export enum ActionValidationState {
   ALLOWED = 'allowed',
   /**
+   * Validation requires action parameters that have not been resolved yet.
+   * Deferred validation must not prevent a parameterized action from being launched.
+   */
+  DEFERRED = 'deferred',
+  /**
    * Validation has not completed yet
    */
   PENDING = 'pending',
@@ -32,6 +37,11 @@ export interface ValidationResultAllowed {
   type: ActionValidationState.ALLOWED;
 }
 
+export interface ValidationResultDeferred {
+  type: ActionValidationState.DEFERRED;
+  message?: string;
+}
+
 export interface ValidationResultPending {
   type: ActionValidationState.PENDING;
   message?: string;
@@ -55,6 +65,7 @@ export interface ValidationResultBlocked {
 
 export type ValidationResult =
   | ValidationResultAllowed
+  | ValidationResultDeferred
   | ValidationResultPending
   | ValidationResultHidden
   | ValidationResultDisabled

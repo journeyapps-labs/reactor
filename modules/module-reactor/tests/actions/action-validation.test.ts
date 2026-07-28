@@ -5,6 +5,8 @@ import {
   ActionValidator,
   ActionValidationState,
   activateWithValidation,
+  EntityAction,
+  EntityDefinition,
   ValidationResult
 } from '../../src';
 
@@ -14,6 +16,9 @@ interface TestActionEvent extends ActionEvent {
 
 class TargetValidator extends ActionValidator<TestActionEvent> {
   validate(event?: Partial<TestActionEvent>): ValidationResult {
+    if (!event?.targetEntity) {
+      return { type: ActionValidationState.DEFERRED };
+    }
     return event?.targetEntity?.allowed
       ? { type: ActionValidationState.ALLOWED }
       : {
@@ -52,6 +57,30 @@ class TestAction extends Action<{ EVENT: TestActionEvent }> {
   }
 }
 
+class TestEntityAction extends EntityAction<{ id: string }> {
+  constructor() {
+    super({ id: 'ENTITY_ACTION', name: 'Entity action', icon: 'check', target: 'test-entity' });
+  }
+
+  protected async fireEvent(): Promise<true> {
+    return true;
+  }
+}
+
+class TestEntityDefinition extends EntityDefinition<{ id: string }> {
+  constructor() {
+    super({ type: 'test-entity', label: 'Test entity', category: 'Test', icon: 'cube', iconColor: 'blue' });
+  }
+
+  getEntityUID(entity: { id: string }) {
+    return entity.id;
+  }
+
+  matchEntity(entity: unknown): boolean {
+    return !!entity;
+  }
+}
+
 const event = (allowed: boolean): TestActionEvent => ({
   id: 'TEST_ACTION',
   source: undefined,
@@ -71,6 +100,21 @@ describe('action validation', () => {
     expect(action.validate(event(false))).toEqual({
       type: ActionValidationState.DISABLED,
       message: 'Not permitted'
+    });
+  });
+
+  it('keeps actions with deferred validation available for parameter collection', () => {
+    const action = new TestAction([new TargetValidator()]);
+
+    expect(action.validate()).toEqual({ type: ActionValidationState.DEFERRED });
+    expect(action.representAsComboBoxItem().disabled).toBe(false);
+  });
+
+  it('threads a contextual entity into entity action validation', () => {
+    const entity = { id: 'entity-1' };
+
+    expect(new TestEntityDefinition().getActionEventDataForEntity(entity, new TestEntityAction())).toEqual({
+      targetEntity: entity
     });
   });
 
@@ -115,6 +159,14 @@ describe('action validation', () => {
 
     expect(onActivate).toHaveBeenCalledOnce();
     expect(execute).not.toHaveBeenCalled();
+  });
+
+  it('allows deferred validation to proceed to parameter collection', async () => {
+    const execute = vi.fn();
+
+    await activateWithValidation({ type: ActionValidationState.DEFERRED }, execute);
+
+    expect(execute).toHaveBeenCalledOnce();
   });
 
   it('activates remediation when preflight becomes blocked', async () => {

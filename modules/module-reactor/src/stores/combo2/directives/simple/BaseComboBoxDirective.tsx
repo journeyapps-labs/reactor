@@ -38,6 +38,9 @@ export class BaseComboBoxDirective<
 
   selectItem(key: string) {
     const found = this.options.items.find((i) => i.key === key);
+    if (found?.disabled) {
+      return;
+    }
     this.setSelected([found]);
   }
 
