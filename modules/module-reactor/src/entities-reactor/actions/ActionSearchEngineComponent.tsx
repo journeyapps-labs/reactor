@@ -11,9 +11,9 @@ import {
   CommandPalletEntryWidgetWrapped
 } from '../../cmd-pallet/CMDPalletEntitySearchEngine';
 import { Action } from '../../actions/Action';
-import { PassiveActionValidationState } from '../../actions/validators/ActionValidator';
+import { ActionValidationState } from '../../actions/validators/ActionValidator';
 import * as React from 'react';
-import { processCallbackWithValidation, useValidator } from '../../hooks/useValidator';
+import { activateWithValidation, useValidator } from '../../hooks/useValidator';
 import { ioc } from '../../inversify.config';
 import { System } from '../../core/System';
 import { EntitySearchResultEntry } from '../../entities/components/search/EntitySearchEngineComponent';
@@ -31,7 +31,7 @@ export class ActionSearchEngineComponent extends SimpleEntitySearchEngineCompone
           .get(ActionStore)
           .getActions()
           .filter((action) => {
-            return action.validatePassively() !== PassiveActionValidationState.DISALLOWED;
+            return action.validate().type !== ActionValidationState.HIDDEN;
           });
       }
     });
@@ -62,9 +62,9 @@ export class CmdPaletteActionSearchEngine extends CMDPalletEntitySearchEngine<Ac
   }
 
   async handleSelection(entry: CMDPalletEntitySearchEngineEntry<Action>): Promise<any> {
-    return processCallbackWithValidation(() => {
+    return activateWithValidation(entry.entity.validate(), () => {
       return super.handleSelection(entry);
-    }, entry.entity.generateValidationContext().validate());
+    });
   }
 
   getWidget(entry: EntitySearchResultEntry<Action>, event: CMDPalletGenerateResultWidgetEvent): React.JSX.Element {
@@ -94,12 +94,12 @@ export interface ActionCmdPaletteEntryWidgetProps {
 }
 
 export const ActionCmdPaletteEntryWidget: React.FC<ActionCmdPaletteEntryWidgetProps> = (props) => {
-  const validatorContext = useMemo(() => {
-    return props.entry.entity.generateValidationContext();
+  const validator = useMemo(() => {
+    return () => props.entry.entity.validate();
   }, []);
 
   const { validationResult } = useValidator({
-    validator: validatorContext
+    validator
   });
   const system = ioc.get(System);
   const def = system.definitions.get(props.entry.entity.options.category?.entityType);
@@ -107,7 +107,10 @@ export const ActionCmdPaletteEntryWidget: React.FC<ActionCmdPaletteEntryWidgetPr
 
   return (
     <CommandPalletEntryWidgetWrapped
-      disabled={validationResult.type === PassiveActionValidationState.DISABLED}
+      disabled={
+        validationResult.type === ActionValidationState.DISABLED ||
+        validationResult.type === ActionValidationState.PENDING
+      }
       definition={props.component.definition}
       entry={props.entry}
       event={props.event}

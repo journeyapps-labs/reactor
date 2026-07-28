@@ -140,7 +140,7 @@ export class HeaderWorkspaceSubMenuWidget extends React.Component<HeaderWorkspac
 
   addWorkspace = async () => {
     const workspace = this.getDisplayedWorkspace();
-    if (!workspace || workspace.getChildren().length === 0) {
+    if (!workspace || !workspace.mutable || workspace.getChildren().length === 0) {
       return;
     }
 
@@ -172,14 +172,18 @@ export class HeaderWorkspaceSubMenuWidget extends React.Component<HeaderWorkspac
         workspaceStore: this.workspaceStore,
         dialogStore: this.dialogStore
       }),
-      {
-        ...ResetWorkspacesAction.get().representAsComboBoxItem(),
-        group: 'reset'
-      },
-      {
-        ...ImportWorkspaceAction.get().representAsComboBoxItem(),
-        group: 'actions'
-      },
+      ...(!workspace.mutable
+        ? []
+        : [
+            {
+              ...ResetWorkspacesAction.get().representAsComboBoxItem(),
+              group: 'reset'
+            },
+            {
+              ...ImportWorkspaceAction.get().representAsComboBoxItem(),
+              group: 'actions'
+            }
+          ]),
       {
         ...ExportWorkspacesAction.get().representAsComboBoxItem(),
         group: 'actions',
@@ -248,7 +252,7 @@ export class HeaderWorkspaceSubMenuWidget extends React.Component<HeaderWorkspac
           >
             {this.props.pinned ? <FontAwesomeIcon icon="thumbtack" /> : <S.UnpinnedIcon icon="thumbtack" />}
           </S.IconButton>
-          {AdvancedWorkspacePreference.enabled() ? (
+          {workspace?.mutable ? (
             <S.IconButton onClick={this.addWorkspace} title="Create nested workspace">
               <FontAwesomeIcon icon="plus" />
             </S.IconButton>

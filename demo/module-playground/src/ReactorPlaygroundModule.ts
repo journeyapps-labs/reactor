@@ -1,5 +1,5 @@
 import { Container } from '@journeyapps-labs/common-ioc';
-import { AbstractReactorModule, UXStore, WorkspaceStore } from '@journeyapps-labs/reactor-mod';
+import { AbstractReactorModule, ActionStore, GuideStore, UXStore, WorkspaceStore } from '@journeyapps-labs/reactor-mod';
 import { DemoBodyWidget } from './BodyWidget';
 import { setupWorkspaces } from './setupWorkspaces';
 import { PlaygroundPanelFactory } from './panels/PlaygroundPanelFactory';
@@ -13,6 +13,11 @@ import { PlaygroundEditorsPanelWidget } from './panels/PlaygroundEditorsPanelWid
 import { PlaygroundTablesPanelWidget } from './panels/PlaygroundTablesPanelWidget';
 import { PlaygroundTreeSearchPanelWidget } from './panels/tree/PlaygroundTreeSearchPanelWidget';
 import { PlaygroundDragDropPanelWidget } from './panels/PlaygroundDragDropPanelWidget';
+import { PlaygroundOverlaysPanelWidget } from './panels/PlaygroundOverlaysPanelWidget';
+import { PlaygroundGuidePanelWidget } from './panels/PlaygroundGuidePanelWidget';
+import { PlaygroundGuideWorkflow } from './guides/PlaygroundGuideWorkflow';
+import { PlaygroundActionsPanelWidget } from './panels/PlaygroundActionsPanelWidget';
+import { PlaygroundValidationAction } from './actions/PlaygroundValidationAction';
 
 export class ReactorPlaygroundModule extends AbstractReactorModule {
   constructor() {
@@ -23,6 +28,10 @@ export class ReactorPlaygroundModule extends AbstractReactorModule {
 
   register(ioc: Container) {
     const workspaceStore = ioc.get(WorkspaceStore);
+    const guideStore = ioc.get(GuideStore);
+    const actionStore = ioc.get(ActionStore);
+
+    actionStore.registerAction(new PlaygroundValidationAction());
 
     workspaceStore.registerFactory(
       new PlaygroundPanelFactory({
@@ -32,6 +41,23 @@ export class ReactorPlaygroundModule extends AbstractReactorModule {
         widget: PlaygroundDialogsComboboxesPanelWidget
       })
     );
+    workspaceStore.registerFactory(
+      new PlaygroundPanelFactory({
+        type: 'playground.overlays',
+        name: 'Overlays',
+        icon: 'layer-group',
+        widget: PlaygroundOverlaysPanelWidget
+      })
+    );
+    workspaceStore.registerFactory(
+      new PlaygroundPanelFactory({
+        type: 'playground.guide',
+        name: 'Guide',
+        icon: 'map-signs',
+        widget: PlaygroundGuidePanelWidget
+      })
+    );
+    guideStore.registerGuideWorkflow(new PlaygroundGuideWorkflow());
     workspaceStore.registerFactory(
       new PlaygroundPanelFactory({
         type: 'playground.tree-search',
@@ -70,6 +96,14 @@ export class ReactorPlaygroundModule extends AbstractReactorModule {
         name: 'Tabs',
         icon: 'folder',
         widget: PlaygroundTabsPanelWidget
+      })
+    );
+    workspaceStore.registerFactory(
+      new PlaygroundPanelFactory({
+        type: 'playground.actions',
+        name: 'Actions',
+        icon: 'wand-magic-sparkles',
+        widget: PlaygroundActionsPanelWidget
       })
     );
     workspaceStore.registerFactory(

@@ -10,6 +10,7 @@ import { CreateWorkspaceAction } from '../../actions/builtin-actions/workspace/C
 import { styled } from '../../stores/themes/reactor-theme-fragment';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { showWorkspaceContextMenu } from '../workspace/showWorkspaceContextMenu';
+import { Size } from '../../hooks/useReactorSize';
 
 namespace S {
   export const Container = styled.div`
@@ -90,6 +91,7 @@ export class HeaderWorkspaceMenuWidget extends React.Component<HeaderWorkspaceMe
     return (
       <S.Container>
         <TabSelectionKeyboardWidget
+          size={Size.MEDIUM}
           tabSelected={this.selectWorkspace}
           tabRightClick={this.getWorkspaceContextMenu}
           selected={this.workspaceStore.currentTopWorkspace || this.workspaceStore.currentModel}

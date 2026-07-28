@@ -7,11 +7,6 @@ import { System } from '../../../core/System';
 theme.addThemeValues({
   name: Themes.REACTOR_LIGHT,
   values: {
-    plan: {
-      background: '#00945b',
-      foreground: 'white',
-      border: '#c5306e'
-    },
     canvas: {
       background: '#f2f4f7',
       grid: '#dde2e8'

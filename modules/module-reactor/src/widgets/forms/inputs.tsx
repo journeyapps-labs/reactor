@@ -1,13 +1,29 @@
+import * as React from 'react';
 import { themed } from '../../stores/themes/reactor-theme-fragment';
+import { getReactorControlBorderRadius, size, Size, useReactorSize } from '../../hooks/useReactorSize';
 
-export const Input = themed.input`
+const StyledInput = themed.input<{ $size: Size }>`
   outline: none;
   color: ${(p) => p.theme.forms.inputForeground};
   background: ${(p) => p.theme.forms.inputBackground};
   border: solid 1px ${(p) => p.theme.forms.inputBorder};
-  padding: 5px 10px;
+  padding: ${(p) => size(p, ['5px 10px', '7px 13px', '9px 16px'])};
   width: 100%;
   box-sizing: border-box;
-  font-size: 13px;
-  border-radius: 3px;
+  font-size: ${(p) => size(p, ['13px', '15px', '17px'])};
+  line-height: ${(p) => size(p, ['18px', '21px', '24px'])};
+  border-radius: ${(p) => getReactorControlBorderRadius(p.$size)}px;
+
+  &::placeholder {
+    color: ${(p) => p.theme.forms.inputForeground};
+    opacity: 0.45;
+  }
 `;
+
+export type InputProps = Omit<React.InputHTMLAttributes<HTMLInputElement>, 'size'> & { size?: Size };
+
+export const Input: React.FC<InputProps> = (props) => {
+  const { size: requestedSize, ...inputProps } = props;
+  const size = useReactorSize(requestedSize);
+  return <StyledInput {...inputProps} $size={size} />;
+};

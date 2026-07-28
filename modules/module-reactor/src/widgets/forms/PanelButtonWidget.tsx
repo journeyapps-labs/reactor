@@ -8,7 +8,10 @@ import { styled, theme } from '../../stores/themes/reactor-theme-fragment';
 import { IconWidget } from '../icons/IconWidget';
 import { ioc } from '../../inversify.config';
 import { ThemeStore } from '../../stores/themes/ThemeStore';
-import { setupTooltipProps, TooltipPosition } from '../info/tooltips';
+import { ReactorTooltipWidget, setupTooltipProps, TooltipPosition } from '../info/tooltips';
+import { size, getReactorControlBorderRadius, Size, useReactorSize } from '../../hooks/useReactorSize';
+import { ButtonValidationIndicatorWidget } from '../buttons/ButtonValidationIndicatorWidget';
+import { ActionValidationState } from '../../actions/validators/ActionValidator';
 
 namespace S {
   export const getMode = (p: { mode: PanelButtonMode; theme: GetTheme<typeof theme> }) => {
@@ -21,24 +24,30 @@ namespace S {
     return p.theme.buttonPrimary;
   };
 
-  export const ButtonLabel = styled.div<{ mode: PanelButtonMode }>`
-    font-size: 14px;
+  export const ButtonLabel = styled.div<{ mode: PanelButtonMode; $size: Size }>`
+    font-size: ${(p) => size(p, ['14px', '15px', '17px'])};
     user-select: none;
     white-space: nowrap;
   `;
 
-  export const ButtonContainer = styled.div<{ disabled?: boolean; mode: PanelButtonMode; selected: boolean }>`
+  export const ButtonContainer = styled.div<{
+    disabled?: boolean;
+    mode: PanelButtonMode;
+    selected: boolean;
+    $size: Size;
+  }>`
     background: ${(p) => getMode(p).background};
     display: inline-flex;
-    column-gap: 10px;
+    column-gap: ${(p) => size(p, ['10px', '10px', '12px'])};
     justify-content: space-between;
     align-items: center;
-    padding: 4px 10px;
+    padding: ${(p) => size(p, ['4px 10px', '6px 14px', '8px 18px'])};
     border: solid 1px ${(p) => (p.selected ? p.theme.guide.accent : getMode(p).border)};
-    border-radius: 3px;
+    border-radius: ${(p) => getReactorControlBorderRadius(p.$size)}px;
     color: ${(p) => getMode(p).color};
     box-sizing: border-box;
-    height: 28px;
+    position: relative;
+    height: ${(p) => size(p, ['28px', '34px', '42px'])};
     cursor: ${(props) => (props.disabled ? 'default' : 'pointer')};
 
     &:hover {
@@ -51,10 +60,10 @@ namespace S {
     }
   `;
 
-  export const Icon = styled(IconWidget)<{ iconColor: string; disabled: boolean; mode: PanelButtonMode }>`
+  export const Icon = styled(IconWidget)<{ iconColor: string; disabled: boolean; mode: PanelButtonMode; $size: Size }>`
     color: ${(p) => (p.disabled ? p.iconColor : p.iconColor || getMode(p).icon)};
     ${(props) => (props.disabled ? 'opacity: .3' : '')};
-    max-height: 16px;
+    max-height: ${(p) => size(p, ['16px', '18px', '22px'])};
   `;
 }
 
@@ -72,11 +81,17 @@ export enum PanelButtonMode {
 export const PanelButtonWidget: React.FC<
   PanelBtn & {
     className?: string;
+    size?: Size;
   }
 > = observer((props) => {
+  const size = useReactorSize(props.size);
   const ref = props.forwardRef || useRef(null);
-  const { onClick, icon, attention, disabled, tooltip } = useButton({ btn: props, forwardRef: ref });
+  const { onClick, icon, attention, disabled, tooltip, validationResult } = useButton({ btn: props, forwardRef: ref });
   const _theme = ioc.get(ThemeStore).getCurrentTheme(theme);
+
+  if (validationResult.type === ActionValidationState.HIDDEN) {
+    return null;
+  }
 
   // if it's just the icon showing, use the text color instead
   let iconColor = icon?.color;
@@ -88,21 +103,35 @@ export const PanelButtonWidget: React.FC<
   }
 
   return (
-    <S.ButtonContainer
-      ref={ref}
-      selected={!!attention}
-      mode={!disabled ? props.mode : null}
-      disabled={disabled}
-      className={props.className}
-      {...setupTooltipProps({ tooltip: tooltip, tooltipPos: props.tooltipPos || TooltipPosition.BOTTOM })}
-      onClick={(event) => {
-        onClick(event);
-      }}
-    >
-      {props.label ? <S.ButtonLabel mode={props.mode}>{props.label}</S.ButtonLabel> : null}
-      {icon ? (
-        <S.Icon mode={props.mode} {...icon} disabled={disabled} iconColor={iconColor || props.iconColor} />
-      ) : null}
-    </S.ButtonContainer>
+    <ReactorTooltipWidget tooltip={tooltip} tooltipPos={props.tooltipPos || TooltipPosition.BOTTOM}>
+      <S.ButtonContainer
+        ref={ref}
+        selected={!!attention}
+        mode={!disabled ? props.mode : null}
+        disabled={disabled}
+        $size={size}
+        className={props.className}
+        {...setupTooltipProps({ tooltip })}
+        onClick={(event) => {
+          onClick(event);
+        }}
+      >
+        <ButtonValidationIndicatorWidget validationResult={validationResult} />
+        {props.label ? (
+          <S.ButtonLabel mode={props.mode} $size={size}>
+            {props.label}
+          </S.ButtonLabel>
+        ) : null}
+        {icon ? (
+          <S.Icon
+            mode={props.mode}
+            {...icon}
+            disabled={disabled}
+            iconColor={iconColor || props.iconColor}
+            $size={size}
+          />
+        ) : null}
+      </S.ButtonContainer>
+    </ReactorTooltipWidget>
   );
 });

@@ -2,6 +2,7 @@ import * as React from 'react';
 import { PanelTitleWidget } from './title/PanelTitleWidget';
 import { WorkspaceModelFactoryEvent } from '@projectstorm/react-workspaces-core';
 import { FloatingWindowModel } from '@projectstorm/react-workspaces-model-floating-window';
+import { ReactorWindowModel } from '../../../stores/workspace/react-workspaces/ReactorWindowFactory';
 import { ioc } from '../../../inversify.config';
 import { observer } from 'mobx-react';
 import { Btn } from '../../../definitions/common';
@@ -10,7 +11,6 @@ import { ReactorIcon } from '../../icons/IconWidget';
 import { ReactorPanelFactory } from '../../../stores/workspace/react-workspaces/ReactorPanelFactory';
 import { ReactorPanelModel } from '../../../stores/workspace/react-workspaces/ReactorPanelModel';
 import { WorkspaceStore } from '../../../stores/workspace/WorkspaceStore';
-import { ReactorWindowModel } from '../../../stores/workspace/react-workspaces/ReactorWindowFactory';
 import { System } from '../../../core/System';
 import { ReactorEntities } from '../../../entities-reactor/ReactorEntities';
 
@@ -21,13 +21,13 @@ export interface SmartPanelTitleWidgetProps {
   color: string;
   name: string;
   btns?: (Btn & { highlight?: boolean })[];
-  fullscreen?: boolean;
   factory: ReactorPanelFactory;
 }
 
 @observer
 export class SmartPanelTitleWidget extends React.Component<SmartPanelTitleWidgetProps> {
   getCloseButton(): Btn {
+    const workspaceStore = ioc.get(WorkspaceStore);
     if (this.props.event.model.parent instanceof FloatingWindowModel) {
       return {
         icon: 'times',
@@ -36,6 +36,10 @@ export class SmartPanelTitleWidget extends React.Component<SmartPanelTitleWidget
           this.props.event.model.parent.delete();
         }
       };
+    }
+
+    if (!workspaceStore.getActiveWorkspace()?.mutable) {
+      return null;
     }
 
     return {
@@ -47,11 +51,18 @@ export class SmartPanelTitleWidget extends React.Component<SmartPanelTitleWidget
     };
   }
 
-  getButtons() {
-    if (this.props.event.model.parent instanceof ReactorWindowModel) {
-      if (this.props.event.model.parent.standalone) {
-        return [...(this.props.btns || []), this.getCloseButton()];
-      }
+  getButtons(): (Btn & { highlight?: boolean })[] {
+    if (this.props.event.model.parent instanceof FloatingWindowModel) {
+      const window = this.props.event.model.parent as ReactorWindowModel;
+      const btns: (Btn & { highlight?: boolean })[] = [...(this.props.btns || [])];
+      btns.push({
+        icon: window.maximized ? 'window-restore' : 'window-maximize',
+        tooltip: window.maximized ? 'Restore window' : 'Maximize window',
+        action: () => window.toggleMaximized()
+      });
+      const closeButton = this.getCloseButton();
+      if (closeButton) btns.push(closeButton);
+      return btns;
     }
 
     let btns: Btn[] = [].concat(this.props.btns || []);
@@ -70,7 +81,8 @@ export class SmartPanelTitleWidget extends React.Component<SmartPanelTitleWidget
       });
 
       if (!workspaceStore.fullscreenModel) {
-        btns.push(this.getCloseButton());
+        const closeButton = this.getCloseButton();
+        if (closeButton) btns.push(closeButton);
       }
     }
     return btns;

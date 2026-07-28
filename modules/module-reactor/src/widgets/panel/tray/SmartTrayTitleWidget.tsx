@@ -7,6 +7,8 @@ import { observer } from 'mobx-react';
 import { TrayTitleWidget } from './TrayTitleWidget';
 import { ReactorPanelFactory } from '../../../stores/workspace/react-workspaces/ReactorPanelFactory';
 import { ReactorPanelModel } from '../../../stores/workspace/react-workspaces/ReactorPanelModel';
+import { ioc } from '../../../inversify.config';
+import { WorkspaceStore } from '../../../stores/workspace/WorkspaceStore';
 
 export interface SmartTrayTitleWidgetProps {
   model: WorkspaceTrayModel;
@@ -65,6 +67,7 @@ export class SmartTrayTitleWidget extends React.Component<SmartTrayTitleWidgetPr
   }
 
   getCloseButton(): Btn {
+    if (!ioc.get(WorkspaceStore).getActiveWorkspace()?.mutable) return null;
     return {
       icon: 'times',
       action: () => {
@@ -77,12 +80,17 @@ export class SmartTrayTitleWidget extends React.Component<SmartTrayTitleWidgetPr
     if (!AdvancedWorkspacePreference.enabled()) {
       return null;
     }
+    const immutable = !ioc.get(WorkspaceStore).getActiveWorkspace()?.mutable;
     return (
       <TrayTitleWidget
         collapse={() => {
           this.props.model.setMode(WorkspaceTrayMode.COLLAPSED);
         }}
-        btns={[...this.getOtherButtons(), ...this.getMinimizeButtons(), this.getCloseButton()]}
+        btns={
+          immutable
+            ? []
+            : [...this.getOtherButtons(), ...this.getMinimizeButtons(), this.getCloseButton()].filter(Boolean)
+        }
       />
     );
   }

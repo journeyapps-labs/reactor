@@ -10,6 +10,7 @@ export class TextAreaInput extends AbstractTextInput {
         data-1p-ignore="true"
         autoComplete="off"
         name={this.name}
+        placeholder={this.placeholder}
         value={this.value || ''}
         onChange={(event) => {
           this.setValue(event.target.value);

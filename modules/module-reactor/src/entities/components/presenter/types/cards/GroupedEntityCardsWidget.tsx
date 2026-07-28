@@ -5,7 +5,6 @@ import { SearchEvent } from '@journeyapps-labs/lib-reactor-search';
 import { EntityCardsPresenterContext } from './EntityCardsPresenterComponent';
 import { CardWidget } from '../../../../../widgets/cards/CardWidget';
 import { themed } from '../../../../../stores/themes/reactor-theme-fragment';
-import { EntityCardWidget } from './EntityCardWidget';
 import { REACTOR_MOBILE_MEDIA_QUERY } from '../../../../../hooks/useReactorViewportMode';
 
 export interface GroupedEntityCardsWidgetProps<T> {
@@ -73,12 +72,12 @@ export const GroupedEntityCardsWidget = observer(function <T>(props: GroupedEnti
                     <S.Grid>
                       {entities.map((entity) => {
                         return (
-                          <EntityCardWidget
-                            key={`${group}-${props.presenterContext.definition.getEntityUID(entity)}`}
-                            entity={entity}
-                            presenterContext={props.presenterContext}
-                            searchEvent={props.searchEvent}
-                          />
+                          <React.Fragment key={`${group}-${props.presenterContext.definition.getEntityUID(entity)}`}>
+                            {props.presenterContext.renderCard({
+                              entity,
+                              searchEvent: props.searchEvent
+                            })}
+                          </React.Fragment>
                         );
                       })}
                     </S.Grid>

@@ -6,7 +6,7 @@ import { ReactorEntities } from '../../../entities-reactor/ReactorEntities';
 import { EntityActionParams } from '../../parameterized/ParameterizedAction';
 import { ProviderActionParameter } from '../../parameterized/params/ProviderActionParameter';
 import { ActionStore } from '../../../stores/actions/ActionStore';
-import { PassiveActionValidationState } from '../../validators/ActionValidator';
+import { ActionValidationState } from '../../validators/ActionValidator';
 
 export class AddPanelWorkspaceAction extends EntityAction<ReactorPanelFactory> {
   static ID = 'ADD_WORKSPACE_PANEL';
@@ -38,9 +38,7 @@ export class AddPanelWorkspaceAction extends EntityAction<ReactorPanelFactory> {
     if (!event.targetEntity.options.allowManualCreation) {
       return false;
     }
-    if (
-      event.targetEntity.options.validators?.some((v) => v.validate()?.type !== PassiveActionValidationState.ALLOWED)
-    ) {
+    if (event.targetEntity.options.validators?.some((v) => v.validate()?.type !== ActionValidationState.ALLOWED)) {
       return false;
     }
     this.workspaceStore.addModel(event.targetEntity.generateModel());

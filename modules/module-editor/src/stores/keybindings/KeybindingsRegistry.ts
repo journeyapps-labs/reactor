@@ -1,5 +1,5 @@
-import { KeybindingsRegistry as K2 } from 'monaco-editor/esm/vs/platform/keybinding/common/keybindingsRegistry.js';
-import { EditorContextKeys } from 'monaco-editor/esm/vs/editor/common/editorContextKeys.js';
+import { KeybindingsRegistry as K2 } from 'monaco-editor/platform/keybinding/common/keybindingsRegistry';
+import { EditorContextKeys } from 'monaco-editor/editor/common/editorContextKeys';
 import { ContextKey, Keybinding } from './definitions';
 import * as _ from 'lodash';
 import { compareChords } from './utils';
@@ -38,6 +38,9 @@ export abstract class CommandBindings extends BaseObserver<CommandBindingsListen
 
   deleteKeybinding(binding: Keybinding) {
     const index = this.custom.findIndex((c) => compareChords(c, binding));
+    if (index === -1) {
+      return;
+    }
     this.custom.splice(index, 1);
     this.updated();
   }

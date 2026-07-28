@@ -304,6 +304,8 @@ export class HeaderWidget extends React.Component<HeaderWidgetProps, HeaderWidge
 
   render() {
     const pinnedSubMenu = WorkspaceSubMenuPinnedPreference.pinned();
+    const activeTopWorkspace = this.workspaceStore.getActiveTopWorkspace();
+    const hasPinnedSubMenu = pinnedSubMenu && !!activeTopWorkspace?.getChildren().length;
     const subMenuWorkspaceKey = pinnedSubMenu ? undefined : this.state.hoveredWorkspaceGroupKey || undefined;
     const hoveredWorkspaceIsActive = this.state.hoveredWorkspaceGroupKey === this.workspaceStore.currentTopWorkspace;
     const subMenuOffsetLeft = pinnedSubMenu
@@ -319,7 +321,7 @@ export class HeaderWidget extends React.Component<HeaderWidgetProps, HeaderWidge
         onMouseEnter={this.cancelClearHoveredWorkspaceGroup}
         onMouseLeave={pinnedSubMenu ? undefined : this.scheduleClearHoveredWorkspaceGroup}
       >
-        <S.Header hasSubbar={pinnedSubMenu} shadow={!AdvancedWorkspacePreference.enabled()}>
+        <S.Header hasSubbar={hasPinnedSubMenu} shadow={!AdvancedWorkspacePreference.enabled()}>
           <S.Logo
             onMouseDown={() => {
               this.setState({ logoClickStarted: true });

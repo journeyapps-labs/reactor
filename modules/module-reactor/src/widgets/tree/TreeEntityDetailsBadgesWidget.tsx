@@ -23,7 +23,7 @@ export const TreeEntityDetailsBadgesWidget: React.FC<TreeEntityDetailsBadgesWidg
           key={tag}
           value={tag.charAt(0).toUpperCase()}
           background={currentTheme.cards.tagBackground}
-          iconColor={currentTheme.cards.tagLabelForeground}
+          foreground={currentTheme.cards.tagLabelForeground}
           tooltip={tag}
         />
       ))}
@@ -41,7 +41,7 @@ export const TreeEntityDetailsBadgesWidget: React.FC<TreeEntityDetailsBadgesWidg
             key={getTreeEntityMetadataKey(item)}
             icon={item.showIcon === false ? null : item.icon?.name || 'list'}
             background={color}
-            iconColor={getDarkenedColor(color, 0.7)}
+            foreground={getDarkenedColor(color, 0.7)}
             tooltip={`${item.label}: ${item.value}`}
           />
         );

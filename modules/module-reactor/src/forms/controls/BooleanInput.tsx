@@ -53,7 +53,8 @@ export const BooleanInputWrapperWidget: React.FC<BooleanInputWrapperWidgetProps>
     <S.Container disabled={input.options.disabled}>
       {(input.control as BooleanControl).representAsCheckbox({
         label: input.options.label,
-        disabled: input.options.disabled
+        disabled: input.options.disabled,
+        size: input.options.size
       })}
       {input.options.desc ? <S.Desc>{input.options.desc}</S.Desc> : null}
     </S.Container>

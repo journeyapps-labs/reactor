@@ -47,11 +47,8 @@ export class AbstractMediaPanelModel<T extends AbstractMedia = AbstractMedia> ex
 export abstract class AbstractMediaPanelFactory<
   T extends AbstractMediaPanelModel
 > extends ReactorPanelFactory<AbstractMediaPanelModel> {
-  constructor(
-    options: Omit<AbstractReactorPanelFactoryOptions, 'category' | 'fullscreen' | 'isMultiple' | 'allowManualCreation'>
-  ) {
+  constructor(options: Omit<AbstractReactorPanelFactoryOptions, 'category' | 'isMultiple' | 'allowManualCreation'>) {
     super({
-      fullscreen: true,
       isMultiple: true,
       category: ReactorEntityCategories.CORE,
       allowManualCreation: false,

@@ -64,6 +64,7 @@ export const EntityCardWidget = observer(function <T>(props: EntityCardWidgetPro
       }}
     >
       <S.Card
+        btns={presenterContext.getCardButtons(entity)}
         selected={selected}
         title={<EntityCardTitleWidget description={description} titleMatch={titleMatch} />}
         subHeading={description.complexName}

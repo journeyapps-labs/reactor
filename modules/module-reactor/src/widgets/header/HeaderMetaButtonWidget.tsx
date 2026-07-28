@@ -6,6 +6,7 @@ import { IconWidget } from '../icons/IconWidget';
 import { AttentionWrapperWidget } from '../guide/AttentionWrapperWidget';
 import { observer } from 'mobx-react';
 import { ButtonComponentSelection, ReactorComponentType } from '../../stores/guide/selections/common';
+import { ReactorTooltipWidget, TooltipPosition } from '../info/tooltips';
 
 namespace S {
   export const MetaButton = styled.div<{ selected: boolean }>`
@@ -45,19 +46,20 @@ export const MetaButton = observer<React.FC<{ btn: Btn }>>(({ btn }) => {
       type={ReactorComponentType.HEADER_BUTTON}
       activated={(selected) => {
         return (
-          <S.MetaButton
-            ref={ref}
-            selected={!!selected}
-            onClick={(event) => {
-              event.persist();
-              btn.action(event);
-            }}
-            key={tooltip}
-            aria-label={tooltip}
-            data-balloon-pos="down"
-          >
-            <S.Icon icon={btn.icon} />
-          </S.MetaButton>
+          <ReactorTooltipWidget tooltip={tooltip} tooltipPos={TooltipPosition.BOTTOM}>
+            <S.MetaButton
+              ref={ref}
+              selected={!!selected}
+              onClick={(event) => {
+                event.persist();
+                btn.action(event);
+              }}
+              key={tooltip}
+              aria-label={tooltip}
+            >
+              <S.Icon icon={btn.icon} />
+            </S.MetaButton>
+          </ReactorTooltipWidget>
         );
       }}
     />

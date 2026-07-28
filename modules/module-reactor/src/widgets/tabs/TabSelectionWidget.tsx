@@ -4,6 +4,7 @@ import { TabWidget } from './TabWidget';
 import { TabBounds, TabDirective, TabListWidget, TabSelectionWidgetProps } from './TabListWidget';
 import { styled, themed } from '../../stores/themes/reactor-theme-fragment';
 import { IconWidget } from '../icons/IconWidget';
+import { Size, useReactorSize } from '../../hooks/useReactorSize';
 
 namespace S {
   export const SelectedBackground = themed.div<{ bounds?: TabBounds }>`
@@ -64,6 +65,7 @@ export interface TabWidgetWrapperProps {
   tabSelected: () => any;
   tabRightClick: (event: MouseEvent) => any;
   compact?: boolean;
+  size?: Size;
   vertical?: boolean;
   tabMouseEnter?: (event: MouseEvent) => any;
   tabMouseLeave?: (event: MouseEvent) => any;
@@ -76,6 +78,7 @@ export const TabWidgetWrapper: React.FC<TabWidgetWrapperProps> = ({
   tabSelected,
   tabRightClick,
   compact,
+  size,
   vertical,
   tabMouseEnter,
   tabMouseLeave
@@ -102,6 +105,7 @@ export const TabWidgetWrapper: React.FC<TabWidgetWrapperProps> = ({
       customContent={content}
       disabled={tab.disabled}
       compact={compact}
+      size={size}
       vertical={vertical}
       onMouseEnter={tabMouseEnter}
       onMouseLeave={tabMouseLeave}
@@ -110,9 +114,15 @@ export const TabWidgetWrapper: React.FC<TabWidgetWrapperProps> = ({
 };
 
 export const TabSelectionWidget: React.FC<TabSelectionWidgetProps> = (props) => {
+  const size = useReactorSize(
+    props.size ?? (props.compact ? Size.SMALL : undefined),
+    props.compact ? Size.SMALL : Size.MEDIUM
+  );
+
   return (
     <TabListWidget
       {...props}
+      size={size}
       selectedBackgroundGenerator={(bounds) => <S.SelectedBackground bounds={bounds} />}
       tabItemGenerator={(tab: TabDirective, ref: React.RefObject<HTMLDivElement>) => {
         return (
@@ -134,6 +144,7 @@ export const TabSelectionWidget: React.FC<TabSelectionWidgetProps> = (props) => 
               tab.tabMouseLeave?.(event, tab);
             }}
             compact={props.compact}
+            size={size}
             vertical={props.vertical}
           />
         );

@@ -42,16 +42,18 @@ export const showWorkspaceContextMenu = async (options: ShowWorkspaceContextMenu
     ];
   }
 
-  items.push(
-    {
-      ...ResetWorkspacesAction.get().representAsComboBoxItem(),
-      group: 'reset'
-    },
-    {
-      ...ImportWorkspaceAction.get().representAsComboBoxItem(),
-      group: 'actions'
-    }
-  );
+  if (options.workspace.mutable) {
+    items.push(
+      {
+        ...ResetWorkspacesAction.get().representAsComboBoxItem(),
+        group: 'reset'
+      },
+      {
+        ...ImportWorkspaceAction.get().representAsComboBoxItem(),
+        group: 'actions'
+      }
+    );
+  }
 
   const selection = await options.comboBoxStore.showComboBox(items, options.position);
   if (selection?.action) {

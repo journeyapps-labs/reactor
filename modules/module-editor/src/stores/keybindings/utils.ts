@@ -1,14 +1,19 @@
 import { Keybinding } from './definitions';
+import * as _ from 'lodash';
 
-export const compareChords = (a: Keybinding, b: Keybinding) => {
+const comparableChords = (keybinding: Keybinding) => {
+  return keybinding.chords.map(({ ctrlKey, shiftKey, altKey, metaKey, keyCode }) => ({
+    ctrlKey,
+    shiftKey,
+    altKey,
+    metaKey,
+    keyCode
+  }));
+};
+
+export const compareChords = (a: Keybinding, b: Keybinding): boolean => {
   if (!a.chords || !b.chords) {
-    return;
+    return false;
   }
-  if (a.chords.length !== b.chords.length) {
-    return;
-  }
-
-  return !a.chords.some((aPart, index) => {
-    return !aPart.equals(b.chords[index]);
-  });
+  return _.isEqual(comparableChords(a), comparableChords(b));
 };

@@ -12,7 +12,7 @@ import {
   UIItemsDirective,
   UISearchEngineDirective
 } from './ComboBoxDirectives';
-import { PassiveActionValidationState } from '../../actions/validators/ActionValidator';
+import { ActionValidationState } from '../../actions/validators/ActionValidator';
 import { BaseObserver } from '@journeyapps-labs/common-utils';
 
 export interface ComboBoxOptions {
@@ -100,7 +100,7 @@ export class ComboBoxStore extends BaseObserver<ComboBoxStoreListener> {
   async showComboBoxFromActions<T extends Action>(actions: T[], position?: MousePosition): Promise<T> {
     let item = await this.showComboBox(
       actions
-        .filter((a) => a.validatePassively() !== PassiveActionValidationState.DISALLOWED)
+        .filter((a) => a.validate().type !== ActionValidationState.HIDDEN)
         .map((action) => {
           return action.representAsComboBoxItem();
         }),

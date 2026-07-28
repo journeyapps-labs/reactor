@@ -115,6 +115,7 @@ export const TabWidget: React.FC<TabWidgetProps> = observer((props) => {
 
   const closeTab = (event) => {
     event.stopPropagation();
+    if (!ioc.get(WorkspaceStore).getActiveWorkspace()?.mutable) return;
     props.model.delete();
     props.engine.normalize();
   };
@@ -145,6 +146,7 @@ export const TabWidget: React.FC<TabWidgetProps> = observer((props) => {
 
   const showContextMenu = React.useCallback(
     async (position: MousePosition) => {
+      if (!ioc.get(WorkspaceStore).getActiveWorkspace()?.mutable) return;
       const items: ComboBoxItem[] = [
         {
           key: 'close',

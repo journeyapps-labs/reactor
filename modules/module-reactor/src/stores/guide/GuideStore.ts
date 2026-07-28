@@ -2,8 +2,11 @@ import { WorkspaceStore } from '../workspace/WorkspaceStore';
 import * as _ from 'lodash';
 import { ComponentSelection } from './selections/ComponentSelection';
 import { GuideWorkflow } from './GuideWorkflow';
-import { makeObservable, observable } from 'mobx';
+import { makeObservable, observable, reaction } from 'mobx';
 import { AbstractStore, AbstractStoreListener } from '../AbstractStore';
+import * as React from 'react';
+import { AnchoredOverlayPlacement, AnchoredOverlayRecord, AnchoredOverlayStore } from '../overlay/AnchoredOverlayStore';
+import { GuideTooltipContentWidget } from '../../layers/guide/GuideTooltipWidget';
 
 export interface SelectIdentifier {
   panelFactoryType?: string;
@@ -23,6 +26,7 @@ export interface VisibleComponentIdentifier<
 
 export interface GuideStoreParams {
   workspaceStore: WorkspaceStore;
+  anchoredOverlayStore: AnchoredOverlayStore;
 }
 
 export interface GuideStoreListener extends AbstractStoreListener {
@@ -33,6 +37,7 @@ export class GuideStore extends AbstractStore<{}, GuideStoreListener> {
   visibleComponents: { [id: string]: VisibleComponentIdentifier };
 
   workspaceStore: WorkspaceStore;
+  anchoredOverlayStore: AnchoredOverlayStore;
   guideWorkflows: GuideWorkflow[];
 
   @observable
@@ -57,10 +62,37 @@ export class GuideStore extends AbstractStore<{}, GuideStoreListener> {
     this.visibleComponents = {};
     this.selectionDirectives = {};
     this.workspaceStore = params.workspaceStore;
+    this.anchoredOverlayStore = params.anchoredOverlayStore;
     this.guideWorkflows = [];
     this.currentGuide = null;
     this.workspaceListener = null;
     this.selections = {};
+    reaction(
+      () =>
+        Object.values(this.selections)
+          .filter((selection) => !!selection.rect && !!selection.tooltip)
+          .map(
+            (selection) =>
+              new AnchoredOverlayRecord({
+                id: `guide-${selection.id}`,
+                source: 'guide',
+                bounds: selection.rect,
+                placement: AnchoredOverlayPlacement.AUTO,
+                clickThrough: true,
+                render: ({ above }) =>
+                  React.createElement(GuideTooltipContentWidget, {
+                    selection,
+                    arrowAbove: !above
+                  })
+              })
+          ),
+      (overlays) => {
+        this.anchoredOverlayStore.replaceSource('guide', overlays);
+      },
+      {
+        fireImmediately: true
+      }
+    );
   }
 
   getCurrentGuide<T extends GuideWorkflow>(): T {

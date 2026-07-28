@@ -219,7 +219,8 @@ export const ComboBoxItemWidget: React.FC<React.PropsWithChildren<ComboBoxItemWi
     element: rowRef,
     changed: (dimensions) => {
       props.gotDimensions?.(dimensions);
-    }
+    },
+    enabled: !!props.gotDimensions
   });
 
   return (

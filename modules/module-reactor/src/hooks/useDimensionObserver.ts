@@ -11,28 +11,33 @@ export interface Dimensions {
 export interface UseDimensionObserverOptions {
   changed: (dimensions: Dimensions) => any;
   element: React.RefObject<HTMLElement>;
+  enabled?: boolean;
 }
 
 export const useDimensionObserver = (props: UseDimensionObserverOptions, bust: any[] = []) => {
   const [dimensions, setDimensions] = useState<Dimensions>(null);
 
   let check = useCallback(() => {
-    if (!props.element.current) {
+    if (props.enabled === false || !props.element.current) {
       return;
     }
     let dims = _.pick(props.element.current.getBoundingClientRect(), ['x', 'y', 'width', 'height']);
     if (!_.isEqual(dims, dimensions)) {
       setDimensions(dims);
     }
-  }, [dimensions]);
+  }, [dimensions, props.element, props.enabled]);
 
   useEffect(() => {
-    if (dimensions) {
+    if (dimensions && props.enabled !== false) {
       props.changed(dimensions);
     }
-  }, [dimensions, ...bust]);
+  }, [dimensions, props.enabled, ...bust]);
 
   useLayoutEffect(() => {
+    if (props.enabled === false) {
+      return;
+    }
+
     check();
     let interval = setInterval(() => {
       check();
@@ -41,5 +46,5 @@ export const useDimensionObserver = (props: UseDimensionObserverOptions, bust: a
     return () => {
       clearInterval(interval);
     };
-  }, [props.element, dimensions]);
+  }, [props.element, props.enabled, dimensions]);
 };

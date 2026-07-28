@@ -8,7 +8,7 @@ import {
 import { styled } from '../../../stores/themes/reactor-theme-fragment';
 import * as React from 'react';
 import { useEffect } from 'react';
-import { SurfaceWidget } from '../../../widgets/surfaces/SurfaceWidget';
+import { SurfaceWidget, useSurfaceBorderColor } from '../../../widgets/surfaces/SurfaceWidget';
 
 export interface GroupInputOptions<T extends {}> extends FormInputOptions<T> {
   inputs?: FormInput[];
@@ -132,10 +132,16 @@ export const GroupWidget: React.FC<GroupWidgetProps> = (props) => {
   }
   return (
     <S.Entry>
-      <S.EntryTop>{props.input.label}</S.EntryTop>
+      <GroupEntryTop>{props.input.label}</GroupEntryTop>
       <S.Display>{props.input.renderControl({ inline: false })}</S.Display>
     </S.Entry>
   );
+};
+
+const GroupEntryTop: React.FC<React.PropsWithChildren> = (props) => {
+  const borderColor = useSurfaceBorderColor();
+
+  return <S.EntryTop $borderColor={borderColor}>{props.children}</S.EntryTop>;
 };
 
 namespace S {
@@ -156,14 +162,16 @@ namespace S {
 
   export const Entry = styled(SurfaceWidget)`
     margin-bottom: 3px;
+    flex-shrink: 0;
     overflow: hidden;
   `;
 
-  export const EntryTop = styled.div`
+  export const EntryTop = styled.div<{ $borderColor?: string }>`
     display: flex;
     align-items: center;
-    background: ${(p) => p.theme.forms.groupBorder};
+    border-bottom: solid 1px ${(p) => p.$borderColor};
     color: ${(p) => p.theme.forms.groupLabelForeground};
+    font-weight: 700;
     padding: 4px;
     padding-left: 10px;
   `;

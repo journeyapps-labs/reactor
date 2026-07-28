@@ -81,9 +81,6 @@ export class NotificationWidget extends React.Component<NotificationWidgetProps>
     if (this.props.notification.type === NotificationType.SPECIAL) {
       return 'mediumpurple';
     }
-    if (this.props.notification.type === NotificationType.INSERT_COIN) {
-      return this.themeStore.getCurrentTheme(theme).plan.border;
-    }
     if (this.props.notification.type === NotificationType.SUCCESS) {
       return this.themeStore.getCurrentTheme(theme).status.success;
     }

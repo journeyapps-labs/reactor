@@ -33,6 +33,7 @@ export class DemoFormModel extends ColumnsFormModel {
         name: 'title',
         label: 'Title',
         desc: 'Type: TextInput',
+        placeholder: 'Enter a title',
         value: 'Demo item',
         inputType: TextInputType.TEXT,
         required: true
@@ -45,6 +46,7 @@ export class DemoFormModel extends ColumnsFormModel {
         name: 'description',
         label: 'Description',
         desc: 'Type: TextAreaInput',
+        placeholder: 'Describe the item',
         value: 'Used for testing form rendering and dialog integration.'
       }),
       0
@@ -66,6 +68,7 @@ export class DemoFormModel extends ColumnsFormModel {
         name: 'priority',
         label: 'Priority',
         desc: 'Type: NumberInput',
+        placeholder: 'Enter a priority from 1 to 5',
         value: 2,
         min: 1,
         max: 5,
@@ -88,6 +91,7 @@ export class DemoFormModel extends ColumnsFormModel {
             name: 'summary',
             label: 'Summary',
             desc: 'Type: TextInput',
+            placeholder: 'Enter a summary',
             value: 'Nested summary'
           }),
           new BooleanInput({
@@ -167,7 +171,8 @@ export class DemoFormModel extends ColumnsFormModel {
           return new TextInput({
             name: 'note',
             label: 'Note',
-            desc: 'Type: TextInput'
+            desc: 'Type: TextInput',
+            placeholder: 'Enter a note'
           });
         }
       }),

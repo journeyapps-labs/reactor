@@ -71,9 +71,15 @@ export class PanelWidget extends React.Component<React.PropsWithChildren<PanelWi
   }
 
   getContent(selected: boolean) {
-    const rounded = !(this.props.event.model.parent instanceof WorkspaceTabModel);
+    const parent = this.props.event.model.parent;
+    const rounded = !(parent instanceof WorkspaceTabModel);
+    const hasTitlebar =
+      (this.props.event as WorkspaceModelFactoryEvent<ReactorPanelModel> & { renderTitlebar?: boolean })
+        .renderTitlebar ??
+      this.props.factory.options.renderTitlebar ??
+      true;
     return (
-      <S.Container ref={this.ref} attention={selected} $rounded={rounded}>
+      <S.Container ref={this.ref} $attention={selected} $rounded={rounded} $hasTitlebar={hasTitlebar}>
         <Observer render={() => this.props.factory.generateToolbar(this.props.event)} />
         {this.props.padding ? (
           <S.PanelScrolled ref={this.ref}>{this.props.children}</S.PanelScrolled>
@@ -132,18 +138,25 @@ export const getScrollableCSS = (t: GetTheme<typeof theme>) => {
 };
 
 namespace S {
-  export const Container = themed.div<{ attention: boolean; $rounded: boolean }>`
+  export const Container = themed.div<{ $attention: boolean; $rounded: boolean; $hasTitlebar: boolean }>`
     width: 100%;
     height: 100%;
     min-height: 0;
     display: flex;
     flex-direction: column;
     overflow: hidden;
-    border-radius: ${(p) => (p.$rounded ? `0 0 ${WORKSPACE_PANEL_RADIUS}px ${WORKSPACE_PANEL_RADIUS}px` : '0')};
+    border-radius: ${(p) => {
+      if (!p.$rounded) {
+        return '0';
+      }
+      return p.$hasTitlebar
+        ? `0 0 ${WORKSPACE_PANEL_RADIUS}px ${WORKSPACE_PANEL_RADIUS}px`
+        : `${WORKSPACE_PANEL_RADIUS}px`;
+    }};
     background: ${(p) => p.theme.panels.background};
     box-sizing: border-box;
-    ${(p) => (p.attention ? `border: solid 1px ${p.theme.guide.accent}` : ``)};
-    ${(p) => (p.attention ? `box-shadow: 0 0 20px 0px inset ${getTransparentColor(p.theme.guide.accent, 0.2)}` : ``)};
+    ${(p) => (p.$attention ? `border: solid 1px ${p.theme.guide.accent}` : ``)};
+    ${(p) => (p.$attention ? `box-shadow: 0 0 20px 0px inset ${getTransparentColor(p.theme.guide.accent, 0.2)}` : ``)};
   `;
 
   export const PanelNormal = themed.div`

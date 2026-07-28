@@ -1,5 +1,5 @@
 import { IconName } from '@fortawesome/fontawesome-svg-core';
-import { Validator } from '../actions/validators/ActionValidatorContext';
+import { Validator } from '../actions/validators/ActionValidator';
 import { MousePosition } from '../layers/combo/SmartPositionWidget';
 import { ReactorIcon } from '../widgets/icons/IconWidget';
 import { TooltipProps } from '../widgets/info/tooltips';

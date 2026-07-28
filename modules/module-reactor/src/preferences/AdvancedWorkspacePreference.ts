@@ -30,7 +30,7 @@ export class AdvancedWorkspacePreference extends BooleanSetting {
   recompute() {
     const workspaceStore = ioc.get(WorkspaceStore);
     workspaceStore.switchLayoutEngine(this.checked);
-    workspaceStore.engine.setLocked(!this.checked);
+    workspaceStore.engine.setLocked(!workspaceStore.getActiveWorkspace()?.mutable);
   }
 
   deserialize(data) {

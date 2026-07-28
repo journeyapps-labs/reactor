@@ -3,7 +3,6 @@ import { Btn } from '../../../../definitions/common';
 import { inject, ioc } from '../../../../inversify.config';
 import { WorkspaceCollectionModel, WorkspaceNodeModel } from '@projectstorm/react-workspaces-core';
 import { WorkspaceStore } from '../../../../stores/workspace/WorkspaceStore';
-import { AdvancedWorkspacePreference } from '../../../../preferences/AdvancedWorkspacePreference';
 import { observer } from 'mobx-react';
 import { AttentionWrapperWidget } from '../../../guide/AttentionWrapperWidget';
 import { PanelTitleIconSimpleWidget, PanelTitleIconWidget } from './PanelTitleIconWidget';
@@ -16,13 +15,15 @@ import { styled } from '../../../../stores/themes/reactor-theme-fragment';
 import { System } from '../../../../core/System';
 import { IconWidget, ReactorIcon } from '../../../icons/IconWidget';
 import { FloatingWindowModel } from '@projectstorm/react-workspaces-model-floating-window';
+import { ReactorWindowModel } from '../../../../stores/workspace/react-workspaces/ReactorWindowFactory';
 import { ReactorPanelFactory } from '../../../../stores/workspace/react-workspaces/ReactorPanelFactory';
 import { ActionSource } from '../../../../actions/Action';
 import { ReactorEntities } from '../../../../entities-reactor/ReactorEntities';
 import { useButton } from '../../../../hooks/useButton';
-import { PassiveActionValidationState } from '../../../../actions/validators/ActionValidator';
+import { ActionValidationState } from '../../../../actions/validators/ActionValidator';
 import { WorkspaceTabModel } from '@projectstorm/react-workspaces-model-tabs';
 import { WORKSPACE_PANEL_RADIUS } from '../../../workspace/workspacePanelChrome';
+import { ReactorTooltipWidget, TooltipPosition } from '../../../info/tooltips';
 import { ContextMenuTriggerWidget } from '../../../context-menu/ContextMenuTriggerWidget';
 
 export interface PanelTitleWidgetProps {
@@ -102,7 +103,7 @@ namespace S {
 const PanelIconButton: React.FC<{ btn: Btn; highlight: boolean }> = ({ btn, highlight }) => {
   const { onClick, disabled, ref, validationResult } = useButton({ btn });
 
-  if (validationResult?.type === PassiveActionValidationState.DISALLOWED) {
+  if (validationResult?.type === ActionValidationState.HIDDEN) {
     return null;
   }
 
@@ -115,19 +116,20 @@ const PanelIconButton: React.FC<{ btn: Btn; highlight: boolean }> = ({ btn, high
       type={ReactorComponentType.PANEL_MICRO_BUTTON}
       activated={(selected) => {
         return (
-          <S.Button
-            ref={ref}
-            highlight={highlight && !disabled}
-            selected={!!selected}
-            aria-label={btn.tooltip || btn.label}
-            data-balloon-pos="left"
-            onClick={(event) => {
-              event.persist();
-              onClick(event);
-            }}
-          >
-            <S.PanelMicroButtonIcon highlight={highlight && !disabled} icon={btn.icon} />
-          </S.Button>
+          <ReactorTooltipWidget tooltip={btn.tooltip || btn.label} tooltipPos={TooltipPosition.LEFT}>
+            <S.Button
+              ref={ref}
+              highlight={highlight && !disabled}
+              selected={!!selected}
+              aria-label={btn.tooltip || btn.label}
+              onClick={(event) => {
+                event.persist();
+                onClick(event);
+              }}
+            >
+              <S.PanelMicroButtonIcon highlight={highlight && !disabled} icon={btn.icon} />
+            </S.Button>
+          </ReactorTooltipWidget>
         );
       }}
     />
@@ -145,7 +147,7 @@ export class PanelTitleWidget extends React.Component<PanelTitleWidgetProps> {
 
   getIconWrapped() {
     const { model } = this.props;
-    if (model && AdvancedWorkspacePreference.enabled()) {
+    if (model && ioc.get(WorkspaceStore).getActiveWorkspace()?.mutable) {
       return (
         <div
           onClick={async (event) => {
@@ -171,7 +173,7 @@ export class PanelTitleWidget extends React.Component<PanelTitleWidgetProps> {
   }
 
   getIcon() {
-    if (!AdvancedWorkspacePreference.enabled()) {
+    if (!ioc.get(WorkspaceStore).getActiveWorkspace()?.mutable) {
       return (
         <S.SimpleIcon>
           <PanelTitleIconSimpleWidget color={this.props.color} icon={this.props.icon} icon2={this.props.icon2} />
@@ -192,7 +194,11 @@ export class PanelTitleWidget extends React.Component<PanelTitleWidgetProps> {
       <WorkspaceModelContext.Provider value={model}>
         <S.Title
           onDoubleClick={() => {
-            if (!model || model.parent instanceof FloatingWindowModel) {
+            if (!model) {
+              return;
+            }
+            if (model.parent instanceof FloatingWindowModel) {
+              (model.parent as ReactorWindowModel).toggleMaximized();
               return;
             }
             const workspaceStore = ioc.get(WorkspaceStore);
@@ -205,7 +211,7 @@ export class PanelTitleWidget extends React.Component<PanelTitleWidgetProps> {
           attention={model?.grabAttention}
           $rounded={rounded}
           onContextMenu={async (position) => {
-            if (model && AdvancedWorkspacePreference.enabled()) {
+            if (model && ioc.get(WorkspaceStore).getActiveWorkspace()?.mutable) {
               await this.comboBoxStore.show(
                 new SimpleComboBoxDirective({
                   event: position,

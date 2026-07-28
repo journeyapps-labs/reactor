@@ -9,7 +9,7 @@ import { WorkspaceStore } from '../../stores/workspace/WorkspaceStore';
 import { SimpleEntitySearchEngineComponent } from '../../entities/components/search/SimpleEntitySearchEngineComponent';
 import { AddPanelWorkspaceAction } from '../../actions/builtin-actions/workspace/AddPanelWorkspaceAction';
 import { EntityActionHandlerComponent } from '../../entities/components/handler/EntityActionHandlerComponent';
-import { PassiveActionValidationState } from '../../actions/validators/ActionValidator';
+import { ActionValidationState } from '../../actions/validators/ActionValidator';
 import { GroupingOptionValue } from '../../entities/components/presenter/AbstractPresenterContext';
 
 export class PanelEntityDefinition extends EntityDefinition<ReactorPanelFactory> {
@@ -56,8 +56,9 @@ export class PanelEntityDefinition extends EntityDefinition<ReactorPanelFactory>
           const hasBlockingValidation = (entity.options.validators || []).some((validator) => {
             const validation = validator.validate();
             return (
-              validation.type === PassiveActionValidationState.DISABLED ||
-              validation.type === PassiveActionValidationState.DISALLOWED
+              validation.type === ActionValidationState.DISABLED ||
+              validation.type === ActionValidationState.PENDING ||
+              validation.type === ActionValidationState.HIDDEN
             );
           });
           const selectable = entity.options.allowManualCreation !== false && !hasBlockingValidation;

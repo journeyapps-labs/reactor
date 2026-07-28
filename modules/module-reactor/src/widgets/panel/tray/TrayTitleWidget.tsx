@@ -6,6 +6,7 @@ import { inject } from '../../../inversify.config';
 import { IconWidget } from '../../icons/IconWidget';
 import { observer } from 'mobx-react';
 import { TAB_BAR_HEIGHT } from '../../../stores/workspace/react-workspaces/ReactorTabFactory';
+import { ReactorTooltipWidget, TooltipPosition } from '../../info/tooltips';
 
 export interface TrayTitleWidgetProps {
   btns?: Btn[];
@@ -58,17 +59,17 @@ export class TrayTitleWidget extends React.Component<TrayTitleWidgetProps> {
 
   btn(p: Btn, index) {
     return (
-      <S.Button
-        aria-label={p.tooltip}
-        data-balloon-pos="left"
-        key={p.tooltip || index}
-        onClick={(event) => {
-          event.persist();
-          p.action && p.action(event);
-        }}
-      >
-        <IconWidget icon={p.icon} />
-      </S.Button>
+      <ReactorTooltipWidget tooltip={p.tooltip} tooltipPos={TooltipPosition.LEFT}>
+        <S.Button
+          key={p.tooltip || index}
+          onClick={(event) => {
+            event.persist();
+            p.action && p.action(event);
+          }}
+        >
+          <IconWidget icon={p.icon} />
+        </S.Button>
+      </ReactorTooltipWidget>
     );
   }
 

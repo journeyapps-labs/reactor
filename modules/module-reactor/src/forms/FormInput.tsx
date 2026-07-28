@@ -4,6 +4,7 @@ import { InputContainerWidget } from '../widgets/forms/InputContainerWidget';
 import styled from '@emotion/styled';
 import { useForceUpdate } from '../hooks/useForceUpdate';
 import { BaseObserver } from '@journeyapps-labs/common-utils';
+import { Size } from '../hooks/useReactorSize';
 
 export interface FormInputOptions<T = any> {
   label: string;
@@ -14,9 +15,13 @@ export interface FormInputOptions<T = any> {
    * Expressed as markdown
    */
   tooltip?: string;
+  placeholder?: string;
   value?: T;
   visible?: boolean;
   disabled?: boolean;
+  /** Keep the input invalid while allowing a nested control to render the validation message. */
+  hideError?: boolean;
+  size?: Size;
 }
 
 export interface FormInputRenderOptions {
@@ -92,6 +97,10 @@ export abstract class FormInput<T extends FormInputGenerics = FormInputGenerics>
     return this.options.label;
   }
 
+  get placeholder() {
+    return this.options.placeholder ?? this.label;
+  }
+
   validate() {
     if (this.options.required && this.value == null) {
       this.setError('Required');
@@ -155,7 +164,7 @@ export const FormInputWidget: React.FC<FormInputWidgetProps> = (props) => {
       disabled={props.input.options.disabled}
       desc={props.input.options.desc}
       tooltip={props.input.options.tooltip}
-      error={props.input.error}
+      error={props.input.options.hideError ? null : props.input.error}
       label={props.input.label}
     >
       {props.children()}

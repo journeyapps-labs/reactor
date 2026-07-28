@@ -14,7 +14,6 @@ export * from './actions/parameterized/params/TextActionParameter';
 export * from './actions/parameterized/params/SimpleComboActionParameter';
 export * from './actions/validators/ActionValidator';
 export * from './actions/validators/InlineActionValidator';
-export * from './actions/validators/InlineActionValidator2';
 export * from './actions/builtin-actions/ResetPreferencesAction';
 export * from './actions/builtin-actions/ChangeThemeAction';
 export * from './actions/builtin-actions/workspace/ResetWorkspacesAction';
@@ -72,6 +71,8 @@ export * from './hooks/useWidthObserver';
 export * from './hooks/useTheme';
 export * from './widgets/tree/TreeEntityDisplayMode';
 export * from './hooks/useReactorViewportMode';
+export * from './hooks/useReactorSize';
+export * from './hooks/useAnchoredOverlay';
 
 export * from './search/SearchEngine';
 
@@ -142,6 +143,7 @@ export * from './stores/themes/reactor-theme-fragment';
 
 export * from './stores/layer/LayerDirective';
 export * from './stores/layer/LayerManager';
+export * from './stores/overlay/AnchoredOverlayStore';
 export * from './stores/layer/LayerDirectiveWidget';
 export * from './stores/guide/GuideWorkflow';
 export * from './stores/guide/GuideStore';
@@ -167,7 +169,6 @@ export * from './core/AbstractReactorModule';
 export * from './core/ReactorKernel';
 
 export * from './actions/validators/ActionValidator';
-export * from './actions/validators/InlineActionValidator';
 
 export * from './entities-reactor/ReactorEntities';
 

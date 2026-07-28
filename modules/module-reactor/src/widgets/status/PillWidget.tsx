@@ -1,7 +1,7 @@
 import * as React from 'react';
 import styled from '@emotion/styled';
 import { IconWidget, ReactorIcon } from '../icons/IconWidget';
-import { setupTooltipProps } from '../info/tooltips';
+import { ReactorTooltipWidget, setupTooltipProps } from '../info/tooltips';
 import { ContextMenuTriggerWidget } from '../context-menu/ContextMenuTriggerWidget';
 import { MousePosition } from '../../layers/combo/SmartPositionWidget';
 
@@ -60,27 +60,29 @@ namespace S {
 
 export const PillWidget: React.FC<PillWidgetProps> = (props) => {
   return (
-    <S.Container
-      $cursor={!!props.action}
-      onClick={(event) => {
-        props.action?.(event);
-      }}
-      onContextMenu={(position) => {
-        props.rightClick?.(position);
-      }}
-      className={props.className}
-      color={props.color || 'rgb(150,150,150)'}
-      {...setupTooltipProps({ tooltip: props.tooltip })}
-    >
-      <S.Label hasIcon={!!props.meta} background={props.labelBackground} color={props.labelColor}>
-        {props.label}
-      </S.Label>
-      {props.meta ? (
-        <S.Meta>
-          {props.meta.icon ? <IconWidget icon={props.meta.icon} /> : null}
-          {props.meta.label ? <S.MetaLabel>{props.meta.label}</S.MetaLabel> : null}
-        </S.Meta>
-      ) : null}
-    </S.Container>
+    <ReactorTooltipWidget tooltip={props.tooltip}>
+      <S.Container
+        $cursor={!!props.action}
+        onClick={(event) => {
+          props.action?.(event);
+        }}
+        onContextMenu={(position) => {
+          props.rightClick?.(position);
+        }}
+        className={props.className}
+        color={props.color || 'rgb(150,150,150)'}
+        {...setupTooltipProps({ tooltip: props.tooltip })}
+      >
+        <S.Label hasIcon={!!props.meta} background={props.labelBackground} color={props.labelColor}>
+          {props.label}
+        </S.Label>
+        {props.meta ? (
+          <S.Meta>
+            {props.meta.icon ? <IconWidget icon={props.meta.icon} /> : null}
+            {props.meta.label ? <S.MetaLabel>{props.meta.label}</S.MetaLabel> : null}
+          </S.Meta>
+        ) : null}
+      </S.Container>
+    </ReactorTooltipWidget>
   );
 };

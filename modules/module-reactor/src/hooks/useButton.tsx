@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
-import { PassiveActionValidationState } from '../actions/validators/ActionValidator';
+import { ActionValidationState } from '../actions/validators/ActionValidator';
 import { Btn } from '../definitions/common';
 
 import { MousePosition } from '../layers/combo/SmartPositionWidget';
@@ -9,7 +9,7 @@ import { ThemeStore } from '../stores/themes/ThemeStore';
 import { theme } from '../stores/themes/reactor-theme-fragment';
 import { useAttention } from '../widgets/guide/AttentionWrapperWidget';
 import { ReactorIcon } from '../widgets/icons/IconWidget';
-import { processCallbackWithValidation, useValidator } from './useValidator';
+import { activateWithValidation, useValidator } from './useValidator';
 import { ioc } from '../inversify.config';
 
 export interface UseButtonProps {
@@ -23,13 +23,17 @@ export const useButton = (props: UseButtonProps) => {
   const { validationResult } = useValidator({ validator: props.btn.validator });
 
   let disabled = props.btn.disabled ?? false;
-  if (validationResult.type !== PassiveActionValidationState.ALLOWED) {
+  if (
+    validationResult.type === ActionValidationState.DISABLED ||
+    validationResult.type === ActionValidationState.PENDING ||
+    validationResult.type === ActionValidationState.HIDDEN
+  ) {
     disabled = true;
   }
 
   let action = useCallback(
     async (event: MousePosition) => {
-      await processCallbackWithValidation(async () => {
+      await activateWithValidation(validationResult, async () => {
         if (loading || disabled) {
           return;
         }
@@ -45,9 +49,9 @@ export const useButton = (props: UseButtonProps) => {
             setLoading(false);
           }
         }
-      }, validationResult);
+      });
     },
-    [props.btn.action, loading, validationResult]
+    [props.btn.action, loading, disabled, validationResult]
   );
 
   const selected = useAttention<ButtonComponentSelection>({
@@ -92,8 +96,12 @@ export const useButton = (props: UseButtonProps) => {
 
   // tooltips
   let tooltip = props.btn.tooltip;
-  if (validationResult.type === PassiveActionValidationState.DISABLED) {
-    tooltip = validationResult.reason;
+  if (
+    validationResult.type === ActionValidationState.DISABLED ||
+    validationResult.type === ActionValidationState.PENDING ||
+    validationResult.type === ActionValidationState.BLOCKED
+  ) {
+    tooltip = validationResult.message || tooltip;
   }
 
   return {

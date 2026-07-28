@@ -1,11 +1,11 @@
 import * as React from 'react';
 import styled from '@emotion/styled';
-import { css, Global } from '@emotion/react';
 import { ComboBoxStore } from '../../stores/combo/ComboBoxStore';
 import { inject } from '../../inversify.config';
 import { Btn } from '../../definitions/common';
 import { IconWidget } from '../icons/IconWidget';
 import { ContextMenuTriggerWidget } from '../context-menu/ContextMenuTriggerWidget';
+import { ReactorTooltipWidget, TooltipPosition } from '../info/tooltips';
 
 export interface HeaderButtonWidgetProps {
   btn: Btn;
@@ -58,43 +58,35 @@ export class HeaderButtonWidget extends React.Component<HeaderButtonWidgetProps>
   accessor uxStore: ComboBoxStore;
 
   render() {
-    const name = `tooltip-entity-btn-${this.props.btn.tooltip}`;
     return (
-      <S.Container
-        vertical={this.props.vertical}
-        aria-label={this.props.btn.tooltip}
-        data-balloon-pos={this.props.vertical ? 'right' : 'down'}
-        className={name}
+      <ReactorTooltipWidget
+        tooltip={this.props.btn.tooltip}
+        tooltipPos={this.props.vertical ? TooltipPosition.RIGHT : TooltipPosition.BOTTOM}
       >
-        <Global
-          styles={css`
-            .${name} {
-              --balloon-color: ${this.props.badgeColor};
-            }
-          `}
-        />
-        <S.Btn
-          onContextMenu={async (position) => {
-            const selection = await this.uxStore.showComboBox(
-              [{ title: 'Delete', key: 'delete', children: [] }],
-              position
-            );
-            if (selection) {
-              this.props.remove();
-            }
-          }}
-          draggable={true}
-          ref={this.props.btn.forwardRef}
-          color={this.props.badgeColor || 'transparent'}
-          onClick={(event) => {
-            event.persist();
-            this.props.btn.action(event);
-          }}
-        >
-          {/*{this.props.badgeColor && <S.Badge color={this.props.badgeColor} />}*/}
-          <IconWidget icon={this.props.btn.icon} />
-        </S.Btn>
-      </S.Container>
+        <S.Container vertical={this.props.vertical}>
+          <S.Btn
+            onContextMenu={async (position) => {
+              const selection = await this.uxStore.showComboBox(
+                [{ title: 'Delete', key: 'delete', children: [] }],
+                position
+              );
+              if (selection) {
+                this.props.remove();
+              }
+            }}
+            draggable={true}
+            ref={this.props.btn.forwardRef}
+            color={this.props.badgeColor || 'transparent'}
+            onClick={(event) => {
+              event.persist();
+              this.props.btn.action(event);
+            }}
+          >
+            {/*{this.props.badgeColor && <S.Badge color={this.props.badgeColor} />}*/}
+            <IconWidget icon={this.props.btn.icon} />
+          </S.Btn>
+        </S.Container>
+      </ReactorTooltipWidget>
     );
   }
 }

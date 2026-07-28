@@ -4,14 +4,16 @@ import { Btn } from '../../definitions/common';
 import { themed } from '../../stores/themes/reactor-theme-fragment';
 import { observer } from 'mobx-react';
 import styled from '@emotion/styled';
+import { ReactorTooltipWidget, TooltipPosition } from '../info/tooltips';
+import { size, getReactorControlBorderRadius, Size, useReactorSize } from '../../hooks/useReactorSize';
 
 namespace S {
-  export const ButtonContainer = themed.div`
+  export const ButtonContainer = themed.div<{ $size: Size }>`
       background: ${(p) => p.theme.table.pills};
-      padding: 1px 6px;
-      font-size: 13px;
+      padding: ${(p) => size(p, ['1px 6px', '2px 8px', '4px 10px'])};
+      font-size: ${(p) => size(p, ['13px', '14px', '15px'])};
       color: ${(p) => p.theme.text.primary};
-      border-radius: 3px;
+      border-radius: ${(p) => getReactorControlBorderRadius(p.$size)}px;
       opacity: 0.4;
       cursor: pointer;
       &:hover{
@@ -31,29 +33,28 @@ namespace S {
   `;
 }
 
-export const TableButtonWidget: React.FC<Btn & { className? }> = observer((props) => {
+export const TableButtonWidget: React.FC<Btn & { className?; size?: Size }> = observer((props) => {
+  const size = useReactorSize(props.size);
   const controls = useSubmit(props);
   return (
-    <S.ButtonContainer
-      className={props.className}
-      {...(props.tooltip
-        ? {
-            'aria-label': props.tooltip,
-            'data-balloon-pos': props.tooltipPos || 'up'
-          }
-        : {})}
-      onClick={(event) => {
-        event.persist();
-        event.stopPropagation();
-        controls.action(event);
-      }}
-    >
-      <S.ButtonLabel>{props.label}</S.ButtonLabel>
-      {props.icon ? (
-        <S.ButtonIcon hasLabel={!!props.label}>
-          <ButtonWidgetIcon icon={props.icon} loading={controls.blocking} />
-        </S.ButtonIcon>
-      ) : null}
-    </S.ButtonContainer>
+    <ReactorTooltipWidget tooltip={props.tooltip} tooltipPos={props.tooltipPos || TooltipPosition.TOP}>
+      <S.ButtonContainer
+        $size={size}
+        className={props.className}
+        {...(props.tooltip ? { 'aria-label': props.tooltip } : {})}
+        onClick={(event) => {
+          event.persist();
+          event.stopPropagation();
+          controls.action(event);
+        }}
+      >
+        <S.ButtonLabel>{props.label}</S.ButtonLabel>
+        {props.icon ? (
+          <S.ButtonIcon hasLabel={!!props.label}>
+            <ButtonWidgetIcon icon={props.icon} loading={controls.blocking} />
+          </S.ButtonIcon>
+        ) : null}
+      </S.ButtonContainer>
+    </ReactorTooltipWidget>
   );
 });

@@ -6,7 +6,7 @@ import { AttentionWrapperWidget } from '../guide/AttentionWrapperWidget';
 import { useRef } from 'react';
 import { ButtonComponentSelection, ReactorComponentType } from '../../stores/guide/selections/common';
 import { styled, themed } from '../../stores/themes/reactor-theme-fragment';
-import { setupTooltipProps } from '../info/tooltips';
+import { ReactorTooltipWidget, setupTooltipProps } from '../info/tooltips';
 
 namespace S {
   export const ButtonLabel = styled.div`
@@ -59,24 +59,26 @@ export const FooterButtonWidget: React.FC<Btn & { className?: string }> = observ
       forwardRef={ref}
       activated={(selection) => {
         return (
-          <S.ButtonContainer
-            attention={!!selection}
-            ref={ref}
-            className={props.className}
-            {...setupTooltipProps(props)}
-            onClick={(event) => {
-              event.persist();
-              event.stopPropagation();
-              controls.action(event);
-            }}
-          >
-            {props.icon ? (
-              <S.ButtonIcon>
-                <ButtonWidgetIcon icon={props.icon} loading={controls.blocking} />
-              </S.ButtonIcon>
-            ) : null}
-            <S.ButtonLabel>{props.label}</S.ButtonLabel>
-          </S.ButtonContainer>
+          <ReactorTooltipWidget tooltip={props.tooltip}>
+            <S.ButtonContainer
+              attention={!!selection}
+              ref={ref}
+              className={props.className}
+              {...setupTooltipProps(props)}
+              onClick={(event) => {
+                event.persist();
+                event.stopPropagation();
+                controls.action(event);
+              }}
+            >
+              {props.icon ? (
+                <S.ButtonIcon>
+                  <ButtonWidgetIcon icon={props.icon} loading={controls.blocking} />
+                </S.ButtonIcon>
+              ) : null}
+              <S.ButtonLabel>{props.label}</S.ButtonLabel>
+            </S.ButtonContainer>
+          </ReactorTooltipWidget>
         );
       }}
       type={ReactorComponentType.FOOTER_BUTTON}

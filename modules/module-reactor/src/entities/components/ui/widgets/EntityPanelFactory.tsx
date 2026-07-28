@@ -166,7 +166,6 @@ export class EntityPanelFactory<T> extends ReactorPanelFactory<EntityPanelModel<
       color: component.options.iconColor || component.definition.iconColor,
       allowManualCreation: true,
       category: component.definition.category,
-      fullscreen: false,
       isMultiple: true
     });
   }

@@ -12,10 +12,12 @@ import { CheckboxWidget } from '../widgets/forms/CheckboxWidget';
 import { Btn } from '../definitions/common';
 import { AbstractValueControl } from './AbstractValueControl';
 import { Switch } from '../widgets/forms/Switch';
+import { Size } from '../hooks/useReactorSize';
 
 export interface RepresentAsCheckboxOptions {
   label?: string;
   disabled?: boolean;
+  size?: Size;
 }
 
 export class BooleanControl extends AbstractValueControl<boolean> {
@@ -60,6 +62,7 @@ export interface BooleanControlWidgetProps {
   checkbox?: boolean;
   label?: string;
   disabled?: boolean;
+  size?: Size;
 }
 
 export const BooleanControlWidget: React.FC<BooleanControlWidgetProps> = (props) => {
@@ -76,6 +79,7 @@ export const BooleanControlWidget: React.FC<BooleanControlWidgetProps> = (props)
   if (props.checkbox && props.label) {
     return (
       <CheckboxLabelWidget
+        size={props.size}
         disabled={props.disabled}
         checked={props.control.value}
         onChange={(value) => {
@@ -89,6 +93,7 @@ export const BooleanControlWidget: React.FC<BooleanControlWidgetProps> = (props)
   if (props.checkbox) {
     return (
       <CheckboxWidget
+        size={props.size}
         checked={props.control.value}
         onChange={(value) => {
           props.control.value = value;
@@ -99,6 +104,7 @@ export const BooleanControlWidget: React.FC<BooleanControlWidgetProps> = (props)
 
   return (
     <Switch
+      size={props.size}
       disabled={props.disabled}
       onChange={(checked) => {
         props.control.value = checked;

@@ -68,14 +68,16 @@ namespace S {
 }
 
 export const MobilePanelScreenWidget: React.FC<MobilePanelScreenWidgetProps> = (props) => {
+  const showTitle = props.showTitle !== false && (props.screen.factory.options.renderTitlebar ?? true);
   const event = {
     engine: props.engine,
-    model: props.screen.model
+    model: props.screen.model,
+    renderTitlebar: showTitle
   } as any;
 
   return (
     <S.Container>
-      {props.showTitle !== false ? (
+      {showTitle ? (
         <S.PanelHeader>
           <S.PanelTitle>{props.screen.title}</S.PanelTitle>
           {props.workspaceStore.fullscreenModel ? (

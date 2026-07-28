@@ -156,7 +156,7 @@ export const MobileWorkspaceWidget: React.FC<MobileWorkspaceWidgetProps> = obser
           })}
         </S.ScreenNav>
       ) : null}
-      <S.Content>{renderScreen(workspaceStore, activeScreen, screens.length <= 1)}</S.Content>
+      <S.Content>{renderScreen(workspaceStore, activeScreen, false)}</S.Content>
     </S.Container>
   );
 });

@@ -1,5 +1,6 @@
 import { ParameterizedAction, ParameterizedActionEvent } from './parameterized/ParameterizedAction';
 import { ActionStore } from '../stores/actions/ActionStore';
+import { ValidationResult } from './validators/ActionValidator';
 
 export interface CurriedActionOptions {
   entities?: { [key: string]: any };
@@ -27,6 +28,20 @@ export class CurriedAction extends ParameterizedAction {
   protected fireEvent(event: ParameterizedActionEvent): Promise<any> {
     // DO NOTHING
     return;
+  }
+
+  validate(event: Partial<ParameterizedActionEvent> = {}): ValidationResult {
+    return this.action.validate({
+      ...event,
+      params: {
+        ...(event.params || {}),
+        ...(this.params || {})
+      },
+      entities: {
+        ...(event.entities || {}),
+        ...(this.entities || {})
+      }
+    });
   }
 
   fireAction(event: ParameterizedActionEvent): Promise<any> {

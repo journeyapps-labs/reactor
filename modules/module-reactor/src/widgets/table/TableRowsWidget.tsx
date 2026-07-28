@@ -5,11 +5,13 @@ import * as _ from 'lodash';
 import { themed } from '../../stores/themes/reactor-theme-fragment';
 import { MousePosition } from '../../layers/combo/SmartPositionWidget';
 import { useLongPressContextMenu } from '../../hooks/useLongPressContextMenu';
+import { size, Size } from '../../hooks/useReactorSize';
 
 export interface TableRowsWidgetProps<T extends TableRow = TableRow> {
   rows: T[];
   cols: TableColumn[];
   onContextMenu: (event: MousePosition, row: T) => any;
+  size: Size;
 }
 
 namespace S {
@@ -21,9 +23,9 @@ namespace S {
     }
   `;
 
-  export const Cell = styled.td`
-    padding: 8px 10px;
-    font-size: 14px;
+  export const Cell = styled.td<{ $size: Size }>`
+    padding: ${(p) => size(p, ['8px 10px', '10px 12px', '12px 14px'])};
+    font-size: ${(p) => size(p, ['14px', '15px', '16px'])};
   `;
 
   export const Max = styled.div``;
@@ -76,7 +78,11 @@ export class TableRowsWidget<T extends TableRow = TableRow> extends React.Compon
           return (
             <TableRowContextMenu onContextMenu={this.props.onContextMenu} row={row} key={row.key}>
               {_.map(this.props.cols, (col) => {
-                return <S.Cell key={col.key}>{this.getCell(col, row)}</S.Cell>;
+                return (
+                  <S.Cell key={col.key} $size={this.props.size}>
+                    {this.getCell(col, row)}
+                  </S.Cell>
+                );
               })}
             </TableRowContextMenu>
           );

@@ -13,7 +13,7 @@ import { CMDPalletLayer } from '../../layers/command-pallet/CMDPalletLayer';
 import { DialogLayer } from '../../layers/dialog/DialogLayer';
 import { DialogLayer2 } from '../../layers/dialog2/DialogLayer2';
 import { KeyCommandDialogLayer } from '../../layers/keys-dialog/KeyCommandDialogLayer';
-import { GuideLayer } from '../../layers/guide/GuideLayer';
+import { AnchoredOverlayLayer } from '../../layers/overlay/AnchoredOverlayLayer';
 import { NotificationLayer } from '../../layers/notifications/NotificationLayer';
 import { Fonts } from '../../fonts';
 import { REACTOR_MOBILE_MEDIA_QUERY } from '../../hooks/useReactorViewportMode';
@@ -31,7 +31,7 @@ export const RawBodyWidget: React.FC<React.PropsWithChildren<RawBodyWidgetProps>
       new DialogLayer(),
       new DialogLayer2(),
       new KeyCommandDialogLayer(),
-      new GuideLayer(),
+      new AnchoredOverlayLayer(),
       new NotificationLayer()
     ].forEach((l) => l.install());
   }, []);
@@ -40,13 +40,6 @@ export const RawBodyWidget: React.FC<React.PropsWithChildren<RawBodyWidgetProps>
   return (
     <>
       <Global styles={S.globalStyles} />
-      <Global
-        styles={css`
-          .tooltip-red {
-            --balloon-color: ${themeStore.getCurrentTheme(theme).status.failed};
-          }
-        `}
-      />
       <ThemeProvider theme={toJS(themeStore.getCurrentTheme())}>
         {props.children}
         <LayersWidget />
@@ -107,13 +100,6 @@ namespace S {
       width: 100%;
       position: fixed;
       font-family: ${Fonts.PRIMARY};
-    }
-    [aria-label][data-balloon-pos]:before {
-      z-index: 2;
-    }
-
-    [aria-label][data-balloon-pos]:after {
-      z-index: 2;
     }
   `;
 }
