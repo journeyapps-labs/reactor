@@ -1,3 +1,3 @@
 # module-playground
 
-Playground workspace module with tabbed demo panels (dialogs, comboboxes, forms, cards, buttons, editors).
+Playground workspace module with panels covering actions, validation, dialogs, comboboxes, forms, cards, surfaces, tabs, tables, trees, overlays, guides, drag and drop, buttons, and editors.
