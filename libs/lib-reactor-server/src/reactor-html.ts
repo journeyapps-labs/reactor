@@ -26,7 +26,7 @@ export const createModuleLoaderContentTransformer = ($: CheerioAPI, modules: Rea
       // get all the reactor module classes
       const module_classes = ${JSON.stringify(module_names_window)}.map(m => {
         if(!window[m]){
-          console.error('Module: ' + m +' was not loaded correctly.');
+          throw new Error('Reactor module "' + m + '" was not loaded correctly.');
         }
         return window[m].default;
       });

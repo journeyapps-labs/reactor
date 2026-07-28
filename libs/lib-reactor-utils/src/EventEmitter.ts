@@ -1,5 +1,8 @@
 import { Disposable } from './Disposable';
 import * as uuid from 'uuid';
+import { getUtilsLogger } from './logging';
+
+const logger = getUtilsLogger('Events');
 
 export type SubscriberCallback<E> = (event: E) => void;
 export type Subscriber<E> = {
@@ -38,7 +41,7 @@ export class EventEmitter<E> implements Disposable {
       try {
         subscriber.handler(event);
       } catch (err) {
-        console.error(err);
+        logger.error('Event subscriber failed', subscriber.id, err);
       }
     });
   }

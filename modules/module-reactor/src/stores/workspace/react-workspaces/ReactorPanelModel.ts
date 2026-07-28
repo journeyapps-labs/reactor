@@ -47,7 +47,7 @@ export class ReactorPanelModel<L extends WorkspaceModelListener = WorkspaceModel
                   this.triggerSerialize();
                 }
               } catch (ex) {
-                console.warn(`issue serializing panel: ${this.type}`, ex);
+                ioc.get(WorkspaceStore).logger.error('Failed to serialize panel state', this.type, ex);
               }
             },
             { name: `PANEL:${type}:serializer` }

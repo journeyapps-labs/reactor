@@ -6,6 +6,7 @@ import { ShortcutHandler, ShortcutHandlerAction, ShortcutHandlerSerialized } fro
 import { observable } from 'mobx';
 import { MimeTypes, readFileAsText, selectFile } from '@journeyapps-labs/lib-reactor-utils';
 import { DialogStore } from '../DialogStore';
+import { AbstractStore } from '../AbstractStore';
 
 export interface PossibleShortcutAction extends ShortcutHandlerAction {
   shortcuts: Shortcut[];
@@ -23,7 +24,7 @@ export interface ShortcutsSerialized {
   };
 }
 
-export class ShortcutStore {
+export class ShortcutStore extends AbstractStore {
   handlers: ShortcutHandler[];
 
   @observable
@@ -33,6 +34,7 @@ export class ShortcutStore {
   accessor dialogStore: DialogStore;
 
   constructor() {
+    super({ name: 'SHORTCUT_STORE' });
     this.handlers = [];
     this.showKeyCommandDialog = null;
   }
@@ -55,7 +57,7 @@ export class ShortcutStore {
       await this.save();
       return true;
     } catch (ex) {
-      console.error(ex);
+      this.logger.error('Failed to import shortcuts', ex);
       await this.dialogStore.showErrorDialog({
         title: 'Failed to import workspaces',
         message:

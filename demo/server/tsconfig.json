@@ -29,6 +29,9 @@
     },
     {
       "path": "../../modules/module-reactor"
+    },
+    {
+      "path": "../../modules/module-reactor-debug"
     }
   ]
 }

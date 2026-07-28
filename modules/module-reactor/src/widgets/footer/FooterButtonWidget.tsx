@@ -28,7 +28,7 @@ namespace S {
     }
   `;
 
-  export const ButtonContainer = themed.div<{ attention: boolean }>`
+  export const ButtonContainer = themed.div<{ $attention: boolean }>`
     cursor: pointer;
     user-select: none;
     align-self: stretch;
@@ -36,11 +36,11 @@ namespace S {
     align-items: center;
     border: solid 1px transparent;
     border-left: solid 1px ${(p) => p.theme.panels.trayBackground};
-    ${(p) => (p.attention ? `border: solid 1px ${p.theme.guide.accent}` : ``)};
+    ${(p) => (p.$attention ? `border: solid 1px ${p.theme.guide.accent}` : ``)};
     padding-left: 15px;
     padding-right: 15px;
     color: ${(p) => p.theme.text.secondary};
-    opacity: ${(p) => (p.attention ? 1 : 0.6)};
+    opacity: ${(p) => (p.$attention ? 1 : 0.6)};
 
     &:hover{
       opacity: 1.0;
@@ -61,7 +61,7 @@ export const FooterButtonWidget: React.FC<Btn & { className?: string }> = observ
         return (
           <ReactorTooltipWidget tooltip={props.tooltip}>
             <S.ButtonContainer
-              attention={!!selection}
+              $attention={!!selection}
               ref={ref}
               className={props.className}
               {...setupTooltipProps(props)}

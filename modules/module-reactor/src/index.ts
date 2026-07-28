@@ -87,7 +87,6 @@ export * from './panels/empty/EmptyPanelWorkspaceFactory';
 export * from './panels/empty/EmptyReactorPanelModel';
 export * from './panels/settings/user-settings/UserSettingsWidget';
 export * from './panels/settings/IndividualSettingsWidget';
-
 export * from './setup/setup-preferences';
 export * from './media-engine/MediaEngine';
 export * from './media-engine/AbstractMediaType';
@@ -105,6 +104,8 @@ export * from './inversify.config';
 export * from './layers/command-pallet/CommandPalletEntryWidget';
 
 export * from './stores/AbstractStore';
+export * from './stores/AbstractPersistedStore';
+export * from './stores/logging/LoggerStore';
 export * from './stores/UXStore';
 export * from './stores/PrefsStore';
 export * from './stores/combo/ComboBoxStore';

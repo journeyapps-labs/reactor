@@ -52,7 +52,7 @@ export abstract class ShortcutHandler<
   }
 
   async reset() {
-    this.logger.debug(`resetting shortcuts to defaults`);
+    this.logger.debug('Resetting shortcuts to defaults');
     this.dispose();
     this.getPossibleActions().forEach((s) => {
       s.defaultKeybindings.forEach((d) => {
@@ -85,7 +85,7 @@ export abstract class ShortcutHandler<
 
   v2Patch(data: ShortcutHandlerSerialized) {
     if (!data.shortcutsV2) {
-      this.logger.warn(`Running shortcut migration`);
+      this.logger.info('Migrating legacy shortcuts');
       let actions = _.chain(data.shortcuts)
         .groupBy((s) => {
           return s.action;
@@ -93,7 +93,7 @@ export abstract class ShortcutHandler<
         .pickBy((p, action_id) => {
           const actionMeta = this.getMetaForAction(action_id);
           if (!actionMeta) {
-            this.logger.warn(`Shortcut migration: ${action_id} no longer exists, ignoring.`);
+            this.logger.warn('Ignoring shortcut for an action that no longer exists', action_id);
             return;
           }
 
@@ -113,7 +113,7 @@ export abstract class ShortcutHandler<
   @action async deserialize(data: ShortcutHandlerSerialized) {
     this.dispose();
     data = this.v2Patch(data);
-    this.logger.debug(`deserializing [${_.keys(data.shortcutsV2).length}] shortcuts`);
+    this.logger.debug('Restoring shortcuts', _.keys(data.shortcutsV2).length, 'customized actions');
 
     this.getPossibleActions().forEach((s) => {
       if (data.shortcutsV2[s.id]) {

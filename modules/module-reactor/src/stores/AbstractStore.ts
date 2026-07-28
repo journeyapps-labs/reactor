@@ -1,67 +1,38 @@
-import { AbstractSerializer } from './serializers/AbstractSerializer';
 import { AbstractSetting } from '../settings/AbstractSetting';
 import { observable } from 'mobx';
-import { Logger } from '@journeyapps-labs/common-logger';
+import { Log, Logger } from '@journeyapps-labs/common-logger';
 import { BaseObserver } from '@journeyapps-labs/common-utils';
 import { createLogger } from '../core/logging';
 
-export interface AbstractStoreOptions<T> {
+export interface AbstractStoreOptions {
   name: string;
-  serializer?: AbstractSerializer<T>;
-  listenToExternalChanges?: boolean;
 }
 
 export interface AbstractStoreListener {
   initialized: () => any;
-  deserialized: () => any;
 }
 
-export class AbstractStore<T = any, L extends AbstractStoreListener = AbstractStoreListener> extends BaseObserver<L> {
-  private serializationListener;
+export class AbstractStore<L extends AbstractStoreListener = AbstractStoreListener> extends BaseObserver<L> {
   private _controls: Set<AbstractSetting>;
-  protected logger: Logger;
+  private initialization?: Promise<void>;
+  logger: Logger;
 
   @observable
   accessor initialized: boolean;
 
-  constructor(protected options: AbstractStoreOptions<T>) {
+  constructor(protected options: AbstractStoreOptions) {
     super();
     this.initialized = false;
     this.logger = createLogger(`STORE:${options.name}`);
     this._controls = new Set();
-    this.bootstrapSerializer();
   }
 
-  private bootstrapSerializer() {
-    if (this.options.listenToExternalChanges && this.options.serializer) {
-      this.serializationListener?.();
-      this.serializationListener = this.options.serializer.registerListener({
-        gotExternalChanges: () => {
-          this.runDeserialization();
-        }
-      });
-    }
+  get name() {
+    return this.options.name;
   }
 
-  protected serialize(): T {
-    return null;
-  }
-
-  protected async deserialize(data: T): Promise<any> {
-    // do nothing
-  }
-
-  public async runDeserialization() {
-    if (!this.options.serializer) {
-      return;
-    }
-    const data = await this.options.serializer.deserialize();
-    if (data) {
-      await this.deserialize(data);
-      this.iterateListeners((cb) => cb.deserialized?.());
-      return true;
-    }
-    return false;
+  setLogger(logger: Logger) {
+    this.logger = logger;
   }
 
   async waitForReady() {
@@ -80,12 +51,20 @@ export class AbstractStore<T = any, L extends AbstractStoreListener = AbstractSt
 
   protected async _init() {}
 
-  public async init(): Promise<boolean> {
-    const res = await this.runDeserialization();
-    await this._init();
-    this.initialized = true;
-    this.iterateListeners((cb) => cb.initialized?.());
-    return res;
+  public init(): Promise<void> {
+    this.initialization ??= (async () => {
+      this.logger.debug(Log.dim('Initializing…'));
+      try {
+        await this._init();
+        this.initialized = true;
+        this.iterateListeners((listener) => listener.initialized?.());
+        this.logger.debug(Log.bold(Log.green('Ready')));
+      } catch (error) {
+        this.logger.error(Log.bold(Log.red('Initialization failed')), error);
+        throw error;
+      }
+    })();
+    return this.initialization;
   }
 
   protected addControl<T extends AbstractSetting>(control: T): T {
@@ -95,23 +74,5 @@ export class AbstractStore<T = any, L extends AbstractStoreListener = AbstractSt
 
   getControls(): AbstractSetting[] {
     return Array.from(this._controls.values());
-  }
-
-  updateOptions(options: Omit<AbstractStoreOptions<T>, 'name'>) {
-    // run disposers
-    this.options.serializer?.dispose?.();
-    this.options = {
-      ...this.options,
-      ...options
-    };
-    this.bootstrapSerializer();
-  }
-
-  public async save() {
-    const payload = this.serialize();
-    if (!payload) {
-      return;
-    }
-    await this.options.serializer.serialize(this.serialize());
   }
 }

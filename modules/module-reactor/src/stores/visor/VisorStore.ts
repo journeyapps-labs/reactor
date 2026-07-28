@@ -2,8 +2,9 @@ import { autorun, makeObservable, observable } from 'mobx';
 import * as _ from 'lodash';
 import { LoadingDirectiveState, VisorLoadingDirective } from './VisorLoadingDirective';
 import { VisorMetadata } from './VisorMetadata';
+import { AbstractStore } from '../AbstractStore';
 
-export class VisorStore {
+export class VisorStore extends AbstractStore {
   private timeout: any;
 
   @observable
@@ -13,6 +14,7 @@ export class VisorStore {
   accessor activeMetaData: VisorMetadata[];
 
   constructor() {
+    super({ name: 'VISOR_STORE' });
     this.loadingDirectives = new Map<string, VisorLoadingDirective>();
     this.activeMetaData = [];
   }
@@ -49,7 +51,7 @@ export class VisorStore {
     return this.activeMetaData.find((f) => f.options.key === key) || null;
   }
 
-  init() {
+  protected async _init() {
     for (let metadata of this.activeMetaData) {
       metadata.init();
     }

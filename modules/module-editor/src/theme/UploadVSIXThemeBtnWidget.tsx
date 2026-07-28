@@ -5,6 +5,8 @@ import * as path from 'path';
 import JSZip from 'jszip';
 import * as json5 from 'json5';
 import { VSIXTheme, VSIXPackage } from './theme-utils';
+import { MonacoThemeStore } from '../stores/MonacoThemeStore';
+import { Log } from '@journeyapps-labs/common-logger';
 
 export interface EditorThemePreferencesWidgetProps {
   gotTheme: (theme: VSIXTheme) => any;
@@ -20,6 +22,9 @@ const SUPPORTED_EXTENSIONS = [
 export class UploadVSIXThemeBtnWidget extends React.Component<EditorThemePreferencesWidgetProps> {
   @inject(ComboBoxStore)
   accessor comboBoxStore: ComboBoxStore;
+
+  @inject(MonacoThemeStore)
+  accessor themeStore: MonacoThemeStore;
 
   constructor(props: EditorThemePreferencesWidgetProps) {
     super(props);
@@ -73,7 +78,7 @@ export class UploadVSIXThemeBtnWidget extends React.Component<EditorThemePrefere
 
       this.props.gotTheme(themeObject);
     } catch (ex) {
-      console.error(ex);
+      this.themeStore.logger.error('Failed to import VS Code theme package', Log.bold(Log.cyan(file.name)), ex);
       return;
     }
   }

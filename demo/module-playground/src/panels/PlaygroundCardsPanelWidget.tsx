@@ -9,14 +9,17 @@ import {
   StatusCardState,
   StatusCardWidget,
   SurfaceWidget,
+  ioc,
   styled
 } from '@journeyapps-labs/reactor-mod';
+import { PlaygroundStore } from '../stores/PlaygroundStore';
 
 export interface PlaygroundCardsPanelWidgetProps {
   model: ReactorPanelModel;
 }
 
 export const PlaygroundCardsPanelWidget: React.FC<PlaygroundCardsPanelWidgetProps> = observer(() => {
+  const logger = ioc.get(PlaygroundStore).logger.childLogger('Cards');
   return (
     <S.Container>
       <CardWidget
@@ -83,9 +86,7 @@ export const PlaygroundCardsPanelWidget: React.FC<PlaygroundCardsPanelWidgetProp
                       value="Clickable"
                       color="green"
                       tooltip="MetadataWidget with click handler"
-                      onClick={() => {
-                        console.log('metadata clicked');
-                      }}
+                      onClick={() => logger.info('Interactive metadata clicked')}
                     />
                   </S.Row>
                 </>

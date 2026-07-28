@@ -108,10 +108,7 @@ export class CronEditorAdvance extends React.Component<CronEditorAdvanceWidgetPr
       if (val.search('undefined') === -1) {
         return val;
       }
-    } catch (error) {
-      // Ignore error, user input can generate some errors
-      console.warn(error);
-    }
+    } catch {}
     return '';
   }
 

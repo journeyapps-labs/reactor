@@ -58,11 +58,11 @@ export interface TreeLeafWidgetProps extends TreeLeafWidgetCommonProps {
 
 namespace S {
   export const Top = themed(ContextMenuTriggerWidget)<{
-    selected: boolean;
-    deactivated: boolean;
-    attention: boolean;
-    dropzoneHint: boolean;
-    dropzoneHover: boolean;
+    $selected: boolean;
+    $deactivated: boolean;
+    $attention: boolean;
+    $dropzoneHint: boolean;
+    $dropzoneHover: boolean;
   }>`
 
     display: flex;
@@ -75,15 +75,15 @@ namespace S {
     user-select: none;
     cursor: pointer;
     border: solid 1px transparent;
-    background: ${(p) => (p.selected ? p.theme.trees.selectedBackground : 'transparent')};
+    background: ${(p) => (p.$selected ? p.theme.trees.selectedBackground : 'transparent')};
     border-radius: 5px;
     margin-bottom: 1px;
-    color: ${(p) => (p.selected ? p.theme.trees.labelColor : getTransparentColor(p.theme.trees.labelColor, 0.76))};
-    opacity: ${(p) => (p.deactivated ? 0.3 : 1)};
+    color: ${(p) => (p.$selected ? p.theme.trees.labelColor : getTransparentColor(p.theme.trees.labelColor, 0.76))};
+    opacity: ${(p) => (p.$deactivated ? 0.3 : 1)};
 
-    ${(p) => (p.attention ? `border-color: ${p.theme.guide.accent};` : ``)};
-    ${(p) => (p.dropzoneHint ? `border-color: ${p.theme.dnd.hintColor};` : '')}
-    ${(p) => (p.dropzoneHover ? `background: ${p.theme.dnd.hoverColor};` : '')};
+    ${(p) => (p.$attention ? `border-color: ${p.theme.guide.accent};` : ``)};
+    ${(p) => (p.$dropzoneHint ? `border-color: ${p.theme.dnd.hintColor};` : '')}
+    ${(p) => (p.$dropzoneHover ? `background: ${p.theme.dnd.hoverColor};` : '')};
 
     &:hover {
       color: ${(p) => p.theme.trees.labelColor};
@@ -244,10 +244,10 @@ export const TreeLeafWidget: React.FC<TreeLeafWidgetProps> = (props) => {
       activated={(selected) => (
         <S.Top
           title={props.tooltip}
-          dropzoneHover={props.dropZoneHover}
-          dropzoneHint={props.dropZoneHint}
-          attention={!!selected}
-          deactivated={props.deactivated}
+          $dropzoneHover={!!props.dropZoneHover}
+          $dropzoneHint={!!props.dropZoneHint}
+          $attention={!!selected}
+          $deactivated={!!props.deactivated}
           onClick={(event) => {
             if (props.normalClick) {
               event.stopPropagation();
@@ -258,7 +258,7 @@ export const TreeLeafWidget: React.FC<TreeLeafWidgetProps> = (props) => {
           onMouseEnter={(event) => props.mouseOver?.(event, true)}
           onMouseLeave={(event) => props.mouseOver?.(event, false)}
           ref={forwardRef}
-          selected={props.selected}
+          $selected={!!props.selected}
         >
           <S.TopLeft depth={depth}>
             {getPlayIcon()}

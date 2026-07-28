@@ -134,7 +134,7 @@ export class UXStore extends AbstractStore {
     this.darkIcon = dark;
   }
 
-  async init(): Promise<boolean> {
+  protected async _init() {
     this.addMetaItem(ReactorMetaIconButtons.SETTING, {
       ...ChangeThemeAction.get().representAsComboBoxItem({
         installAction: true
@@ -158,7 +158,6 @@ export class UXStore extends AbstractStore {
     };
     matcher.addListener(applyFavIcon);
     applyFavIcon();
-    return super.init();
   }
 
   setRootComponent(component: React.ComponentClass | React.FunctionComponent) {

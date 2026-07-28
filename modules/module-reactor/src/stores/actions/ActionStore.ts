@@ -6,8 +6,9 @@ import { ParameterizedAction } from '../../actions/parameterized/ParameterizedAc
 import { ProviderActionParameter } from '../../actions/parameterized/params/ProviderActionParameter';
 import { ComboBoxStore2 } from '../combo2/ComboBoxStore2';
 import { MousePosition } from '../../layers/combo/SmartPositionWidget';
-import { BaseObserver } from '@journeyapps-labs/common-utils';
 import { ActionSource } from '../../actions/ActionSource';
+import { AbstractStore, AbstractStoreListener } from '../AbstractStore';
+import { Log } from '@journeyapps-labs/common-logger';
 
 export interface BaseActionSelectionParameters {
   event?: MousePosition;
@@ -20,19 +21,19 @@ export interface ActionStoreOptions {
   comboBoxStore2: ComboBoxStore2;
 }
 
-export interface ActionStoreListener {
+export interface ActionStoreListener extends AbstractStoreListener {
   actionFired?: (event: { action: Action; event: Partial<ActionEvent> }) => void;
   actionWillFire?: (event: { action: Action; event: Partial<ActionEvent> }) => Promise<any>;
 }
 
-export class ActionStore extends BaseObserver<ActionStoreListener> {
+export class ActionStore extends AbstractStore<ActionStoreListener> {
   @observable
   accessor actions: { [name: string]: Action };
 
   private actionListeners: Map<string, () => any>;
 
-  constructor(private options: ActionStoreOptions) {
-    super();
+  constructor(_options: ActionStoreOptions) {
+    super({ name: 'ACTION_STORE' });
     this.actions = {};
     this.actionListeners = new Map();
   }
@@ -42,12 +43,14 @@ export class ActionStore extends BaseObserver<ActionStoreListener> {
   }
 
   unregisterAction(action: Action) {
+    this.logger.debug(Log.dim('Unregistering action'), Log.bold(Log.cyan(action.options.id)));
     this.actionListeners.get(action.options.id)?.();
     this.actionListeners.delete(action.options.id);
     delete this.actions[action.options.name];
   }
 
   registerAction(action: Action) {
+    this.logger.debug(Log.dim('Registering action'), Log.bold(Log.cyan(action.options.id)));
     action.setActionStore(this);
     if (this.actions[action.options.name]) {
       throw new Error(`An action with name ${action.options.name} already exists`);

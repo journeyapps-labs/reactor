@@ -13,6 +13,7 @@ import { MonacoMapInverted } from './MonacoShortcutMap';
 import { MonacoKeybindingStore } from '../stores/keybindings/MonacoKeybindingStore';
 import { Keybinding } from '../stores/keybindings/definitions';
 import { action } from 'mobx';
+import { Log } from '@journeyapps-labs/common-logger';
 
 export interface MonacoShortcutHandlerOptions {
   keybindingStore: MonacoKeybindingStore;
@@ -51,7 +52,7 @@ export class MonacoShortcutHandler extends ShortcutHandler<MonacoShortcut> {
   getMetaForAction(id: string): ShortcutHandlerAction<MonacoShortcutHandler> {
     const action = this.store.getActionFromID(id);
     if (!action) {
-      this.logger.info(`could not find action ${id}`);
+      this.logger.warn('Monaco action was not found while restoring shortcuts', Log.bold(Log.yellow(id)));
       return null;
     }
     return {
@@ -109,7 +110,7 @@ export class MonacoShortcutHandler extends ShortcutHandler<MonacoShortcut> {
     if (entry.keyCode) {
       const code = MonacoMapInverted[`${entry.keyCode}`];
       if (!code) {
-        console.log('unknown code', entry.keyCode);
+        this.logger.warn('Monaco key code has no Reactor shortcut mapping', Log.bold(Log.yellow(entry.keyCode)));
       } else {
         items.push({
           key: code,

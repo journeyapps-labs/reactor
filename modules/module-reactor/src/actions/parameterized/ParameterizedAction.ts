@@ -58,7 +58,7 @@ export abstract class ParameterizedAction<
     );
 
     if (event.canceled) {
-      this.logger.debug('Event was canceled when collecting params');
+      this.logger.debug('Execution canceled while collecting action parameters');
       return;
     }
 

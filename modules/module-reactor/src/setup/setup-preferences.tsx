@@ -1,4 +1,3 @@
-import { ioc } from '../inversify.config';
 import { PrefsCatgories, PrefsStore } from '../stores/PrefsStore';
 import { BooleanSetting } from '../settings/BooleanSetting';
 import { ToolbarPosition, ToolbarPreference } from '../settings/ToolbarPreference';
@@ -21,10 +20,7 @@ export enum CorePreferences {
   RIGHT_TOOLBAR = '/toolbars/right'
 }
 
-export const setupPrefs = () => {
-  const prefsStore = ioc.get(PrefsStore);
-  const uxStore = ioc.get(UXStore);
-
+export const setupPrefs = (prefsStore: PrefsStore, uxStore: UXStore) => {
   prefsStore.registerPreference(new ToolbarPreference(ToolbarPosition.HEADER_RIGHT));
   prefsStore.registerPreference(new ToolbarPreference(ToolbarPosition.LEFT));
   prefsStore.registerPreference(new ToolbarPreference(ToolbarPosition.RIGHT));

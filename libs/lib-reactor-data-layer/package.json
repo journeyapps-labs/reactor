@@ -17,6 +17,7 @@
     "test": "vitest run"
   },
   "dependencies": {
+    "@journeyapps-labs/common-logger": "1.1.1",
     "@journeyapps-labs/lib-reactor-search": "workspace:*",
     "@journeyapps-labs/lib-reactor-utils": "workspace:*",
     "@journeyapps-labs/common-utils": "^1.0.2",

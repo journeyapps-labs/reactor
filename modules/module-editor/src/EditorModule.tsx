@@ -6,9 +6,10 @@ import {
   ShortcutStore,
   System,
   ThemeStore,
-  WorkspaceStore
+  WorkspaceStore,
+  ReactorModuleInitEvent,
+  ReactorModuleRegisterEvent
 } from '@journeyapps-labs/reactor-mod';
-import { Container } from '@journeyapps-labs/common-ioc';
 import { MonacoStore } from './stores/MonacoStore';
 import { MonacoShortcutHandler } from './shortcuts/MonacoShortcutHandler';
 import { MonacoCommandPalletSearchEngine } from './MonacoCommandPalletSearchEngine';
@@ -32,7 +33,8 @@ export class EditorModule extends AbstractReactorModule {
     });
   }
 
-  register(ioc: Container) {
+  register(event: ReactorModuleRegisterEvent) {
+    const { ioc } = event;
     const prefsStore = ioc.get(PrefsStore);
     const themeStore = ioc.get(ThemeStore);
     const cmdPalletStore = ioc.get(CMDPalletStore);
@@ -58,10 +60,10 @@ export class EditorModule extends AbstractReactorModule {
     });
 
     // register stores
-    system.addStore(MonacoStore, monacoStore);
-    system.addStore(MonacoSystemThemeStore, monacoSystemThemeStore);
-    system.addStore(MonacoThemeStore, monacoThemeStore);
-    system.addStore(MonacoKeybindingStore, monacoKeybindingsStore);
+    event.registerStore(MonacoStore, monacoStore);
+    event.registerStore(MonacoSystemThemeStore, monacoSystemThemeStore);
+    event.registerStore(MonacoThemeStore, monacoThemeStore);
+    event.registerStore(MonacoKeybindingStore, monacoKeybindingsStore);
 
     ioc.get(ShortcutStore).registerHandler(handler);
     cmdPalletStore.registerSearchEngine(commandPallet);
@@ -91,9 +93,7 @@ export class EditorModule extends AbstractReactorModule {
     patchThemeService();
   }
 
-  async init(ioc: Container): Promise<any> {
-    ioc.get(MonacoStore).init();
-    ioc.get(MonacoThemeStore).init();
-    ioc.get(MonacoKeybindingStore).init();
+  async init(event: ReactorModuleInitEvent): Promise<any> {
+    // Registered stores are initialized by the Reactor boot process.
   }
 }

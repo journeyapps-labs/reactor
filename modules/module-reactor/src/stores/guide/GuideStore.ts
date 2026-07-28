@@ -7,6 +7,7 @@ import { AbstractStore, AbstractStoreListener } from '../AbstractStore';
 import * as React from 'react';
 import { AnchoredOverlayPlacement, AnchoredOverlayRecord, AnchoredOverlayStore } from '../overlay/AnchoredOverlayStore';
 import { GuideTooltipContentWidget } from '../../layers/guide/GuideTooltipWidget';
+import { Log } from '@journeyapps-labs/common-logger';
 
 export interface SelectIdentifier {
   panelFactoryType?: string;
@@ -33,7 +34,7 @@ export interface GuideStoreListener extends AbstractStoreListener {
   guideActivated: (event: { guide: GuideWorkflow }) => any;
 }
 
-export class GuideStore extends AbstractStore<{}, GuideStoreListener> {
+export class GuideStore extends AbstractStore<GuideStoreListener> {
   visibleComponents: { [id: string]: VisibleComponentIdentifier };
 
   workspaceStore: WorkspaceStore;
@@ -103,7 +104,6 @@ export class GuideStore extends AbstractStore<{}, GuideStoreListener> {
     if (!this.visibleComponents[id]) {
       return false;
     }
-    this.logger.debug(`Unregistering ${this.visibleComponents[id]?.type}`);
     this.selections[id]?.dispose();
     delete this.visibleComponents[id];
   }
@@ -113,13 +113,21 @@ export class GuideStore extends AbstractStore<{}, GuideStoreListener> {
       return;
     }
     this.visibleComponents[component.id] = component;
-    this.logger.debug(`Registering ${component.type}`, component.selection);
 
+    let resolvedSelections = 0;
     for (let id in this.selections) {
       const selection = this.selections[id];
       if (selection.matches(component)) {
+        resolvedSelections += 1;
         component.generate(selection);
       }
+    }
+    if (resolvedSelections > 0) {
+      this.logger.debug(
+        Log.green('Resolved pending selection'),
+        Log.bold(Log.purple(component.type)),
+        component.selection
+      );
     }
   }
 
@@ -133,9 +141,16 @@ export class GuideStore extends AbstractStore<{}, GuideStoreListener> {
 
   registerGuideWorkflow(guide: GuideWorkflow) {
     guide.setGuideStore(this);
+    this.logger.debug(
+      Log.dim('Registered workflow'),
+      Log.bold(Log.cyan(guide.options.label)),
+      Log.gray(guide.options.id),
+      Log.dim(`${guide.steps.length} steps`)
+    );
     this.workspaceListener = guide.registerListener({
       activated: () => {
         this.currentGuide = guide;
+        this.logger.info(Log.green('Activated workflow'), Log.bold(Log.cyan(guide.options.label)));
         this.iterateListeners((cb) =>
           cb.guideActivated?.({
             guide: guide
@@ -144,6 +159,7 @@ export class GuideStore extends AbstractStore<{}, GuideStoreListener> {
       },
       deActivated: () => {
         this.currentGuide = null;
+        this.logger.info(Log.dim('Deactivated workflow'), Log.bold(Log.cyan(guide.options.label)));
       }
     });
     this.guideWorkflows.push(guide);
@@ -151,16 +167,28 @@ export class GuideStore extends AbstractStore<{}, GuideStoreListener> {
 
   select(identifier: ComponentSelection) {
     this.selections[identifier.id] = identifier;
-    let found = false;
+    this.logger.debug(
+      Log.dim('Selecting component'),
+      Log.bold(Log.purple(identifier.options.type)),
+      identifier.options.identifier || {}
+    );
+    let matches = 0;
     for (let id in this.visibleComponents) {
       const vis = this.visibleComponents[id];
       if (identifier.matches(vis)) {
-        found = true;
+        matches += 1;
         vis.generate(identifier);
       }
     }
-    if (!found) {
-      this.logger.debug('Could not find: ', identifier.options.type);
+    if (matches > 0) {
+      this.logger.debug(Log.green(`Matched ${matches} visible component${matches === 1 ? '' : 's'}`));
+    } else {
+      this.logger.debug(
+        Log.yellow('Selection pending; no visible component matched'),
+        Log.bold(Log.purple(identifier.options.type)),
+        identifier.options.identifier || {},
+        Log.dim(`${Object.keys(this.visibleComponents).length} visible components inspected`)
+      );
     }
 
     identifier.registerListener({

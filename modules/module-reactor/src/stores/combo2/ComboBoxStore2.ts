@@ -1,17 +1,17 @@
-import { BaseObserver } from '@journeyapps-labs/common-utils';
 import { ComboBoxDirective } from './ComboBoxDirective';
 import { observable } from 'mobx';
+import { AbstractStore, AbstractStoreListener } from '../AbstractStore';
 
-export interface ComboBoxStore2Listener {
+export interface ComboBoxStore2Listener extends AbstractStoreListener {
   directiveAdded: (directive: ComboBoxDirective) => any;
 }
 
-export class ComboBoxStore2 extends BaseObserver<ComboBoxStore2Listener> {
+export class ComboBoxStore2 extends AbstractStore<ComboBoxStore2Listener> {
   @observable
   accessor directives: Set<ComboBoxDirective>;
 
   constructor() {
-    super();
+    super({ name: 'COMBO_BOX_STORE_2' });
     this.directives = observable.set<ComboBoxDirective>() as unknown as Set<ComboBoxDirective>;
   }
 

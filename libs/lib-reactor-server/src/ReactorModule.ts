@@ -1,6 +1,8 @@
 import { ReactorModuleConfig } from './ReactorConfig';
 import * as fs from 'fs';
 import * as path from 'path';
+import { reactorServerLogger } from './logging';
+import { Log } from '@journeyapps-labs/common-logger';
 
 export interface ReactorModuleOptions {
   directory: string;
@@ -10,7 +12,7 @@ export interface ReactorModuleOptions {
 export class ReactorModule {
   protected confFile: string;
   protected conf?: ReactorModuleConfig;
-  protected confPackage?: { name: string };
+  protected confPackage?: { name: string; version: string };
   protected fragment: string | null;
 
   constructor(public options: ReactorModuleOptions) {
@@ -35,7 +37,7 @@ export class ReactorModule {
     return this.config.name;
   }
 
-  get packageJson(): { name: string } {
+  get packageJson(): { name: string; version: string } {
     return this.confPackage;
   }
 
@@ -70,13 +72,20 @@ export const loadModules = (options: { env: { MODULES: string[] } & { [key: stri
       // this should be the directory that contains the reactor config file
       directory = path.resolve(path.dirname(require.resolve(m, { paths: [process.cwd()] })), '..');
     }
-    console.info(`Loaded module: ${directory}`);
-
-    return new ReactorModule({
+    const module = new ReactorModule({
       resolveGlobalEnv: (key) => {
         return options.env[key] as string;
       },
       directory: directory
     });
+    reactorServerLogger.info(
+      Log.green('Loaded module'),
+      Log.bold(Log.cyan(module.name)),
+      Log.purple(`${module.packageJson.name}@${module.packageJson.version}`),
+      Log.gray(`slug: ${module.config.slug}`),
+      Log.dim(directory)
+    );
+    reactorServerLogger.debug(Log.dim('Module environment'), Log.bold(module.name), module.config.env);
+    return module;
   });
 };

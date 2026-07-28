@@ -22,6 +22,7 @@ import {
 } from '@journeyapps-labs/reactor-mod';
 import { TodoEntities, TodoModel, TodoStore } from '@journeyapps-labs/reactor-mod-todos';
 import { DemoFormModel } from '../forms/DemoFormModel';
+import { PlaygroundStore } from '../stores/PlaygroundStore';
 
 export interface PlaygroundDialogsComboboxesPanelWidgetProps {
   model: ReactorPanelModel;
@@ -106,6 +107,7 @@ export const PlaygroundDialogsComboboxesPanelWidget: React.FC<PlaygroundDialogsC
     const dialogStore2 = ioc.get(DialogStore2);
     const comboBoxStore2 = ioc.get(ComboBoxStore2);
     const notificationStore = ioc.get(NotificationStore);
+    const logger = ioc.get(PlaygroundStore).logger.childLogger('Dialogs');
 
     const runMessageDialog = async () => {
       await dialogStore.showMessageDialog({
@@ -143,9 +145,7 @@ export const PlaygroundDialogsComboboxesPanelWidget: React.FC<PlaygroundDialogsC
       const directive = new FormDialogDirective({
         title: 'Demo form dialog',
         form: new DemoFormModel(),
-        handler: async (form) => {
-          console.log('Demo form submitted', form.value());
-        }
+        handler: async (form) => logger.info('Demo form submitted', form.value())
       });
 
       await dialogStore2.showDialog(directive);

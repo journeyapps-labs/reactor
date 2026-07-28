@@ -20,7 +20,8 @@
   },
   "dependencies": {
     "@emotion/styled": "^11.14.1",
-    "@journeyapps-labs/common-ioc": "^1.0.1",
+    "@journeyapps-labs/common-ioc": "^1.0.2",
+    "@journeyapps-labs/common-logger": "1.1.1",
     "@journeyapps-labs/common-utils": "^1.0.2",
     "@journeyapps-labs/lib-reactor-search": "workspace:*",
     "@journeyapps-labs/lib-reactor-utils": "workspace:*",
