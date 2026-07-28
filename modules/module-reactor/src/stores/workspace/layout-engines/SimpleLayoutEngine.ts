@@ -10,7 +10,7 @@ export class SimpleLayoutEngine extends AbstractLayoutEngine {
   affinityCheckers: Set<AffinityChecker>;
 
   constructor() {
-    super();
+    super('Simple layout');
     this.affinityCheckers = new Set();
   }
 

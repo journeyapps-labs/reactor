@@ -1,7 +1,8 @@
-import { Container } from '@journeyapps-labs/common-ioc';
 import {
   AbstractReactorModule,
   RawBodyWidget,
+  ReactorModuleInitEvent,
+  ReactorModuleRegisterEvent,
   UXStore,
   WorkspaceModel,
   WorkspaceStore
@@ -14,8 +15,11 @@ export class ReactorCustomLayout extends AbstractReactorModule {
     });
   }
 
-  register(ioc: Container) {
+  register({ ioc }: ReactorModuleRegisterEvent) {
     const workspaceStore = ioc.get(WorkspaceStore);
+    const uxStore = ioc.get<UXStore>(UXStore);
+    uxStore.setRootComponent(RawBodyWidget);
+
     workspaceStore.registerWorkspaceGenerator({
       generateAdvancedWorkspace: async () => {
         return new WorkspaceModel({
@@ -34,8 +38,5 @@ export class ReactorCustomLayout extends AbstractReactorModule {
     });
   }
 
-  async init(ioc: Container): Promise<any> {
-    const uxStore = ioc.get<UXStore>(UXStore);
-    uxStore.setRootComponent(RawBodyWidget);
-  }
+  async init(_event: ReactorModuleInitEvent): Promise<any> {}
 }

@@ -29,7 +29,7 @@ export interface BatchStoreListener extends AbstractStoreListener {
   finishedFiringBatchActions: () => any;
 }
 
-export class BatchStore extends AbstractStore<any, BatchStoreListener> {
+export class BatchStore extends AbstractStore<BatchStoreListener> {
   @observable
   accessor selections: EncodedEntity[];
 

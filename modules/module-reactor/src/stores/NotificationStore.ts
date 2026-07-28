@@ -2,6 +2,7 @@ import { observable, toJS } from 'mobx';
 import * as uuid from 'uuid';
 import * as _ from 'lodash';
 import { Btn } from '../definitions/common';
+import { AbstractStore } from './AbstractStore';
 
 export enum NotificationType {
   ERROR = 'error',
@@ -33,11 +34,12 @@ export interface NotificationDirective {
   _handle: any;
 }
 
-export class NotificationStore {
+export class NotificationStore extends AbstractStore {
   @observable
   accessor notifications: NotificationDirective[];
 
   constructor() {
+    super({ name: 'NOTIFICATION_STORE' });
     this.notifications = [];
   }
 
@@ -71,6 +73,7 @@ export class NotificationStore {
 
   showNotification(payload: Notification): NotificationDirective {
     const notification = this.normalizeNotification(payload);
+    this.logger.debug('Showing notification', notification.type, notification.title);
 
     const directive: NotificationDirective = {
       id: uuid.v4(),

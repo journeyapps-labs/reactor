@@ -6,7 +6,7 @@ import { ComboBoxItem } from './combo/ComboBoxDirectives';
 import { FormModel } from '../forms/FormModel';
 import { InputDialogType } from '../layers/dialog/InputDialogWidget';
 import * as React from 'react';
-import { BaseObserver } from '@journeyapps-labs/common-utils';
+import { AbstractStore, AbstractStoreListener } from './AbstractStore';
 
 export enum DialogType {
   MESSAGE = 'message',
@@ -104,16 +104,16 @@ export interface DialogHideEvent {
   val?: any;
 }
 
-export interface DialogListener {
+export interface DialogListener extends AbstractStoreListener {
   dialogWillHide: (event: DialogHideEvent) => any;
 }
 
-export class DialogStore extends BaseObserver<DialogListener> {
+export class DialogStore extends AbstractStore<DialogListener> {
   @observable
   accessor directives: DialogDirective[];
 
   constructor() {
-    super();
+    super({ name: 'DIALOG_STORE' });
     this.directives = [];
   }
 
@@ -194,6 +194,7 @@ export class DialogStore extends BaseObserver<DialogListener> {
   }
 
   showCustomDialog(options: CustomDialogOptions) {
+    this.logger.debug('Showing custom dialog', options.title);
     return new Promise((resolve) => {
       this.directives.push({
         ...options,
@@ -215,6 +216,7 @@ export class DialogStore extends BaseObserver<DialogListener> {
   }
 
   showErrorDialog(options: CommonDialogOptions) {
+    this.logger.debug('Showing error dialog', options.title);
     return new Promise((resolve) => {
       this.directives.push({
         ...options,

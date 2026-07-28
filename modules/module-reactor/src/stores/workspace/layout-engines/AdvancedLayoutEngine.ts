@@ -17,6 +17,10 @@ interface AdvancedWorkspaceLayout {
 }
 
 export class AdvancedLayoutEngine extends AbstractLayoutEngine {
+  constructor() {
+    super('Advanced layout');
+  }
+
   getTrays(): WorkspaceTrayModel[] {
     return _.filter(this.store.flatten(this.store.getRoot()), (model) => {
       return model instanceof WorkspaceTrayModel;

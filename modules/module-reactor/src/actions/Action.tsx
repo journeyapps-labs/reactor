@@ -15,7 +15,7 @@ import { ActionMetaWidget } from './ActionMetaWidget';
 import { activateWithValidation } from '../hooks/useValidator';
 import { BaseObserver } from '@journeyapps-labs/common-utils';
 import { Logger } from '@journeyapps-labs/common-logger';
-import { createLogger } from '../core/logging';
+import { createLogger, formatLoggerName } from '../core/logging';
 import { ActionStore } from '../stores/actions/ActionStore';
 import { ActionSource } from './ActionSource';
 
@@ -121,6 +121,7 @@ export abstract class Action<
 
   setActionStore(store: ActionStore) {
     this.actionStore = store;
+    this.logger = store.logger.childLogger(formatLoggerName(this.options.id));
   }
 
   get id() {
@@ -148,7 +149,7 @@ export abstract class Action<
   }
 
   getExclusiveExecutionLock(event?: { allowed?: (e: Partial<T['EVENT']>) => boolean }): () => any {
-    this.logger.debug('Getting exclusivity lock');
+    this.logger.debug('Acquiring exclusive execution lock');
     const listener = this.actionStore.registerListener({
       actionWillFire: async (globalEvent) => {
         // we allow some actions to fire
@@ -158,21 +159,25 @@ export abstract class Action<
 
         // now we check this specific action
         if (this.options.id !== globalEvent.action.options.id) {
-          globalEvent.action.logger.debug('is not allowed to execute');
+          globalEvent.action.logger.debug('Execution canceled by exclusive lock', {
+            lockOwner: this.options.id
+          });
           globalEvent.event.canceled = true;
           return;
         }
 
         // now we allow the dev check if this should fire, probably based on the parameters
         if (event?.allowed && !event.allowed(globalEvent.event as Partial<T['EVENT']>)) {
-          globalEvent.action.logger.debug('params are not what we are looking for');
+          globalEvent.action.logger.debug('Execution canceled because the event did not match the lock predicate', {
+            lockOwner: this.options.id
+          });
           globalEvent.event.canceled = true;
           return;
         }
       }
     });
     return () => {
-      this.logger.debug('Releasing exclusivity lock');
+      this.logger.debug('Releasing exclusive execution lock');
       listener();
     };
   }
@@ -314,7 +319,7 @@ export abstract class Action<
 
     // was the event canceled
     if (event.canceled) {
-      this.logger.debug('Canceled');
+      this.logger.debug('Execution canceled by a willFire listener', { source: event.source });
       this.iterateListeners((cb) =>
         cb.cancelled?.({
           payload: event
@@ -335,10 +340,17 @@ export abstract class Action<
       event.getStatus().complete();
       return result;
     } catch (ex) {
-      console.error(ex);
+      this.logger.error(
+        'Action execution failed',
+        {
+          action: this.options.id,
+          source: event.source
+        },
+        ex
+      );
       this.dialogStore.showErrorDialog({
         title: `Action: ${this.options.name} failed`,
-        message: 'Check the console for more information.'
+        message: 'Check the action logs for more information.'
       });
       event.getStatus().failed();
       throw ex;

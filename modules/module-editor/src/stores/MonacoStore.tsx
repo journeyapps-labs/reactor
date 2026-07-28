@@ -32,7 +32,7 @@ export interface MonacoStoreListener extends AbstractStoreListener {
   gotEditor: (editor: MonacoEditorType) => any;
 }
 
-export class MonacoStore extends AbstractStore<void, MonacoStoreListener> {
+export class MonacoStore extends AbstractStore<MonacoStoreListener> {
   editors: { [id: string]: MonacoEditorType };
   focusedEditor: MonacoEditorType;
   languages: GrammerMappingType;
@@ -59,7 +59,7 @@ export class MonacoStore extends AbstractStore<void, MonacoStoreListener> {
   getLanguage(languageID: MonacoLanguages) {
     const lang = _.find(this.languages, { monaco: languageID });
     if (!lang) {
-      console.error(`could not find language with ID: ${languageID}`);
+      this.logger.error('Could not find Monaco language', languageID);
     }
     return lang;
   }
@@ -68,7 +68,7 @@ export class MonacoStore extends AbstractStore<void, MonacoStoreListener> {
     return _.findKey(this.languages, { monaco: languageID });
   }
 
-  async init(): Promise<boolean> {
+  protected async _init(): Promise<void> {
     // setup json
     await loadWASM(require('onigasm/lib/onigasm.wasm'));
     const registry = new Registry({
@@ -79,7 +79,7 @@ export class MonacoStore extends AbstractStore<void, MonacoStoreListener> {
             content: await (await fetch(this.languages[scopeName].url)).text()
           };
         }
-        console.error('Could not find mapping for textmate scope: ', scopeName);
+        this.logger.error('Could not find TextMate scope mapping', scopeName);
       }
     });
 
@@ -116,7 +116,6 @@ export class MonacoStore extends AbstractStore<void, MonacoStoreListener> {
       }
     } as any;
     await wireTmGrammars(monaco, registry, grammars, mockEditor);
-    return true;
   }
 
   async createHeadlessEditorInstance(): Promise<{ editor: MonacoEditorType; dispose: () => any }> {

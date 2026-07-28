@@ -81,6 +81,7 @@ export abstract class EntityDefinition<T extends any = any> {
   private exposerComponents: ComponentBank<DescendantEntityProviderComponent<T, any>>;
 
   private additionalActionIds: string[];
+  private warnedMissingDescriber = false;
 
   constructor(protected options: EntityDefinitionOptions) {
     this.describers = new EntityDescriberBank<T>(this);
@@ -186,7 +187,10 @@ export abstract class EntityDefinition<T extends any = any> {
     if (preferred) {
       return preferred.describeEntity(t);
     }
-    console.warn(`No describer found for entity of type [${this.type}], falling back to default`);
+    if (!this.warnedMissingDescriber) {
+      this.warnedMissingDescriber = true;
+      this.system.logger.warn('No entity describer registered; using the default description', this.type);
+    }
     return {
       icon: this.icon,
       simpleName: this.getEntityUID(t)

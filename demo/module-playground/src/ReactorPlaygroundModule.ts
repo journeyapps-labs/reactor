@@ -1,5 +1,12 @@
-import { Container } from '@journeyapps-labs/common-ioc';
-import { AbstractReactorModule, ActionStore, GuideStore, UXStore, WorkspaceStore } from '@journeyapps-labs/reactor-mod';
+import {
+  AbstractReactorModule,
+  ActionStore,
+  GuideStore,
+  ReactorModuleInitEvent,
+  ReactorModuleRegisterEvent,
+  UXStore,
+  WorkspaceStore
+} from '@journeyapps-labs/reactor-mod';
 import { DemoBodyWidget } from './BodyWidget';
 import { setupWorkspaces } from './setupWorkspaces';
 import { PlaygroundPanelFactory } from './panels/PlaygroundPanelFactory';
@@ -18,6 +25,7 @@ import { PlaygroundGuidePanelWidget } from './panels/PlaygroundGuidePanelWidget'
 import { PlaygroundGuideWorkflow } from './guides/PlaygroundGuideWorkflow';
 import { PlaygroundActionsPanelWidget } from './panels/PlaygroundActionsPanelWidget';
 import { PlaygroundValidationAction } from './actions/PlaygroundValidationAction';
+import { PlaygroundStore } from './stores/PlaygroundStore';
 
 export class ReactorPlaygroundModule extends AbstractReactorModule {
   constructor() {
@@ -26,10 +34,20 @@ export class ReactorPlaygroundModule extends AbstractReactorModule {
     });
   }
 
-  register(ioc: Container) {
+  register(event: ReactorModuleRegisterEvent) {
+    const { ioc } = event;
     const workspaceStore = ioc.get(WorkspaceStore);
     const guideStore = ioc.get(GuideStore);
     const actionStore = ioc.get(ActionStore);
+    const uxStore = ioc.get<UXStore>(UXStore);
+    const playgroundStore = new PlaygroundStore();
+
+    event.registerStore(PlaygroundStore, playgroundStore);
+
+    uxStore.primaryHeader = {
+      label: 'Reactor Demo'
+    };
+    uxStore.setRootComponent(DemoBodyWidget);
 
     actionStore.registerAction(new PlaygroundValidationAction());
 
@@ -142,11 +160,5 @@ export class ReactorPlaygroundModule extends AbstractReactorModule {
     setupWorkspaces();
   }
 
-  async init(ioc: Container): Promise<any> {
-    const uxStore = ioc.get<UXStore>(UXStore);
-    uxStore.primaryHeader = {
-      label: 'Reactor Demo'
-    };
-    uxStore.setRootComponent(DemoBodyWidget);
-  }
+  async init(_event: ReactorModuleInitEvent): Promise<any> {}
 }

@@ -1,8 +1,6 @@
-import { Logger } from '@journeyapps-labs/common-logger';
+import { getUtilsLogger } from './logging';
 
-const logger = new Logger({
-  name: 'RETRY_HANDLER'
-});
+const logger = getUtilsLogger('Retries');
 
 export const retryWithBackoff = async <T>(
   handler: () => Promise<T>,
@@ -16,13 +14,13 @@ export const retryWithBackoff = async <T>(
     try {
       return await handler();
     } catch (err) {
-      if (hint) {
+      if (hint && attempt < attempts) {
         logger.debug(`${hint} failed on attempt ${attempt}`, err);
       }
 
       if (attempt >= attempts) {
         if (hint) {
-          logger.error(`${hint} failed, backing off`, err);
+          logger.error(`${hint} failed after ${attempts} attempts`, err);
         }
         throw err;
       }

@@ -77,15 +77,15 @@ namespace S {
     flex-grow: 1;
   `;
 
-  export const Title = styled(ContextMenuTriggerWidget)<{ attention: boolean; $rounded: boolean }>`
+  export const Title = styled(ContextMenuTriggerWidget)<{ $attention: boolean; $rounded: boolean }>`
     width: 100%;
     display: flex;
     min-height: 30px;
     flex-shrink: 0;
-    background: ${(p) => (p.attention ? 'black' : p.theme.panels.titleBackground)};
+    background: ${(p) => (p.$attention ? 'black' : p.theme.panels.titleBackground)};
     border-radius: ${(p) => (p.$rounded ? `${WORKSPACE_PANEL_RADIUS}px ${WORKSPACE_PANEL_RADIUS}px 0 0` : '0')};
     overflow: hidden;
-    ${(p) => (p.attention ? `border: solid 1px ${p.theme.guide.accent}; border-bottom: none` : '')};
+    ${(p) => (p.$attention ? `border: solid 1px ${p.theme.guide.accent}; border-bottom: none` : '')};
     box-sizing: border-box;
   `;
 
@@ -208,7 +208,7 @@ export class PanelTitleWidget extends React.Component<PanelTitleWidgetProps> {
               workspaceStore.setFullscreenModel(model);
             }
           }}
-          attention={model?.grabAttention}
+          $attention={!!model?.grabAttention}
           $rounded={rounded}
           onContextMenu={async (position) => {
             if (model && ioc.get(WorkspaceStore).getActiveWorkspace()?.mutable) {

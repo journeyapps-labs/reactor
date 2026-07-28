@@ -34,7 +34,7 @@ export interface ThemeStoreListener extends AbstractStoreListener {
   themeChanged: () => any;
 }
 
-export class ThemeStore extends AbstractStore<any, ThemeStoreListener> {
+export class ThemeStore extends AbstractStore<ThemeStoreListener> {
   protected themes: Map<string, Theme>;
   protected _fragments: Set<ThemeFragment>;
   public selectedTheme: EntitySetting<Theme>;

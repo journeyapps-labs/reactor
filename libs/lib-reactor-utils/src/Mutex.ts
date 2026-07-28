@@ -1,3 +1,7 @@
+import { getUtilsLogger } from './logging';
+
+const logger = getUtilsLogger('Mutex');
+
 export type PromiseFunction<T> = (context: MutexContext) => Promise<T>;
 export type SharedPromiseFunction<T> = (context: SharedMutexContext) => Promise<T>;
 
@@ -120,7 +124,7 @@ export class Mutex implements MutexContext {
       if (DEBUG_MUTEX) {
         const stack = new Error().stack;
         timeout = setTimeout(() => {
-          console.warn('Mutex not released in 10 seconds\n', stack);
+          logger.warn('Lock has not been released after 10 seconds', exclusive ? 'exclusive' : 'shared', stack);
         }, 10000);
       }
       return await promiseFn(context);

@@ -46,21 +46,21 @@ namespace S {
     }
   `;
 
-  export const Item = themed.div<{ selected: boolean; attention: boolean }>`
+  export const Item = themed.div<{ selected: boolean; $attention: boolean }>`
     ${shared};
     color: ${(p) => (p.selected ? p.theme.combobox.textSelected : p.theme.combobox.text)};
     border-radius: ${(p) => (p.selected ? 4 : 0)}px;
     background: ${(p) => (p.selected ? p.theme.combobox.backgroundSelected : 'transparent')};
-    ${(p) => (p.attention ? `border: solid 1px ${p.theme.guide.accent}` : ``)};
+    ${(p) => (p.$attention ? `border: solid 1px ${p.theme.guide.accent}` : ``)};
   `;
 
-  export const Link = themed.a<{ selected: boolean; attention: boolean }>`
+  export const Link = themed.a<{ selected: boolean; $attention: boolean }>`
     ${shared};
     color: ${(p) => (p.selected ? p.theme.combobox.textSelected : p.theme.combobox.text)};
     border-radius: ${(p) => (p.selected ? 4 : 0)}px;
     background: ${(p) => (p.selected ? p.theme.combobox.backgroundSelected : 'transparent')};
     text-decoration: none;
-    ${(p) => (p.attention ? `border: solid 1px ${p.theme.guide.accent}` : ``)};
+    ${(p) => (p.$attention ? `border: solid 1px ${p.theme.guide.accent}` : ``)};
   `;
 
   export const Icon = themed.div<{ color: string; selected: boolean }>`
@@ -179,7 +179,7 @@ const ComboBoxItemRow: React.FC<RowProps> = (props) => {
   if (props.item.download) {
     return (
       <S.Link
-        attention={props.attention}
+        $attention={props.attention}
         onClick={onClick}
         onMouseOver={props.onMouseOver}
         download={props.item.download.name}
@@ -196,7 +196,7 @@ const ComboBoxItemRow: React.FC<RowProps> = (props) => {
 
   return (
     <S.Item
-      attention={props.attention}
+      $attention={props.attention}
       onClick={onClick}
       onMouseOver={props.onMouseOver}
       ref={props.rowRef}

@@ -66,7 +66,7 @@ class PositionObserver {
         }
       }
     } catch (ex) {
-      console.error('Failed to get position of tracking element in PositionObserver');
+      ioc.get(GuideStore).logger.error('Failed to measure a guide target', ex);
     }
   }
 
@@ -151,7 +151,11 @@ export const useAttention = <V extends object = object, T extends ComponentSelec
               updateBounds();
             },
             () => {
-              console.log('Failed to get element', props);
+              ioc.get(GuideStore).logger.warn('Guide target did not become available', {
+                type: props.type,
+                selection: props.selection,
+                panel: context?.type || null
+              });
             }
           );
 

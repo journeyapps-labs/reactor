@@ -8,10 +8,13 @@ import { ActionStore } from '../stores/actions/ActionStore';
 import { ComboBoxStore2 } from '../stores/combo2/ComboBoxStore2';
 import { Action } from '../actions/Action';
 import { BaseObserver } from '@journeyapps-labs/common-utils';
+import { Logger } from '@journeyapps-labs/common-logger';
+import { createLogger } from './logging';
 
 export interface SystemOptions {
-  actionStore: ActionStore;
-  comboBoxStore2: ComboBoxStore2;
+  actionStore?: ActionStore;
+  comboBoxStore2?: ComboBoxStore2;
+  logger?: Logger;
 }
 
 export interface SystemListener {
@@ -26,8 +29,11 @@ export class System extends BaseObserver<SystemListener> {
   // providers
   definitions: Map<string, EntityDefinition>;
   stores: Set<AbstractStore>;
-  constructor(protected options: SystemOptions) {
+  readonly logger: Logger;
+
+  constructor(protected options: SystemOptions = {}) {
     super();
+    this.logger = options.logger ?? createLogger('SYSTEM');
     this.stores = new Set();
     this.definitions = new Map();
     this.ideName = 'Reactor';
@@ -50,6 +56,10 @@ export class System extends BaseObserver<SystemListener> {
 
   getStores(): AbstractStore[] {
     return Array.from(this.stores.values());
+  }
+
+  async initStores() {
+    await Promise.all(this.getStores().map((store) => store.init()));
   }
 
   //!--------------- ENTITIES ---------------------

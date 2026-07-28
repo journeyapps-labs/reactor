@@ -5,12 +5,15 @@ import {
   createBaseIndexMiddleware,
   createModuleLoaderContentTransformer,
   loadModules,
+  reactorServerLogger,
   serveModules
 } from '@journeyapps-labs/lib-reactor-server';
 import { join } from 'path';
+import { Log } from '@journeyapps-labs/common-logger';
 
 const app = express();
 const server = http.createServer(app);
+const logger = reactorServerLogger.childLogger('Demo');
 
 let path = require.resolve('@journeyapps-labs/lib-reactor-server');
 
@@ -54,9 +57,9 @@ const serveIndex = () => {
   app.get('/', serveIndexMiddleware as any);
 
   server.listen(PORT, () => {
-    console.info(`server listening on port ${PORT}`);
+    logger.info(Log.green('Listening'), 'on port', Log.bold(Log.cyan(PORT)));
   });
 })().catch((err) => {
-  console.error('something went wrong booting system', err);
+  logger.error('Failed to boot demo server', err);
   process.exit(1);
 });

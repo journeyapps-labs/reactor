@@ -1,17 +1,31 @@
-import { Container } from '@journeyapps-labs/common-ioc';
+import { Container, Newable } from '@journeyapps-labs/common-ioc';
+import { Logger } from '@journeyapps-labs/common-logger';
+import { AbstractStore } from '../stores/AbstractStore';
+import { createLogger } from './logging';
 
 export interface AbstractReactorModuleOptions {
   name: string;
 }
 
+export interface ReactorModuleRegisterEvent {
+  ioc: Container;
+  registerStore: <T extends AbstractStore>(symbol: Newable<T>, store: T) => T;
+}
+
+export interface ReactorModuleInitEvent {
+  ioc: Container;
+}
+
 export abstract class AbstractReactorModule {
   options: AbstractReactorModuleOptions;
+  readonly logger: Logger;
 
   constructor(options: AbstractReactorModuleOptions) {
     this.options = options;
+    this.logger = createLogger(options.name);
   }
 
-  abstract register(ioc: Container);
+  abstract register(event: ReactorModuleRegisterEvent);
 
-  abstract init(ioc: Container): Promise<any>;
+  abstract init(event: ReactorModuleInitEvent): Promise<any>;
 }

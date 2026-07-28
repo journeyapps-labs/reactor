@@ -1,4 +1,3 @@
-import { Container } from '@journeyapps-labs/common-ioc';
 import {
   AbstractReactorModule,
   ActionStore,
@@ -7,7 +6,9 @@ import {
   VisorStore,
   WorkspaceGroup,
   WorkspaceModel,
-  WorkspaceStore
+  WorkspaceStore,
+  ReactorModuleInitEvent,
+  ReactorModuleRegisterEvent
 } from '@journeyapps-labs/reactor-mod';
 import { TodoStore } from './stores/TodoStore';
 import { TodoModel } from './models/TodoModel';
@@ -34,13 +35,14 @@ export class ReactorTodosModule extends AbstractReactorModule {
     });
   }
 
-  register(ioc: Container) {
+  register(event: ReactorModuleRegisterEvent) {
+    const { ioc } = event;
     const system = ioc.get(System);
     const visorStore = ioc.get(VisorStore);
     const actionStore = ioc.get(ActionStore);
     const workspaceStore = ioc.get(WorkspaceStore);
 
-    ioc.bind(TodoStore).toConstantValue(new TodoStore());
+    event.registerStore(TodoStore, new TodoStore());
 
     system.registerDefinition(new TodoDefinition());
     system.registerDefinition(new TodoNoteDefinition());
@@ -86,7 +88,7 @@ export class ReactorTodosModule extends AbstractReactorModule {
     });
   }
 
-  async init(ioc: Container): Promise<any> {
+  async init({ ioc }: ReactorModuleInitEvent): Promise<any> {
     const uxStore = ioc.get<UXStore>(UXStore);
     const todoStore = ioc.get(TodoStore);
     uxStore.primaryLogo = require('../media/logo.png');

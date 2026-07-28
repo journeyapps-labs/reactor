@@ -57,9 +57,9 @@ namespace S {
     }
   `;
 
-  export const ButtonWithLabel = styled.div<{ attention: boolean; border: string; validation: ValidationResult }>`
+  export const ButtonWithLabel = styled.div<{ $border: string }>`
     ${Common};
-    border-color: ${(p) => p.border};
+    border-color: ${(p) => p.$border};
     padding-left: 6px;
     padding-right: 2px;
     background: ${(p) => p.theme.panels.titleBackground};
@@ -113,13 +113,7 @@ export const PanelTitleToolbarButtonWidget: React.FC<PanelTitleToolbarButtonProp
 
   if (props.label) {
     return (
-      <S.ButtonWithLabel
-        validation={validationResult}
-        border={color}
-        ref={ref}
-        attention={!!attention}
-        onClick={onClick}
-      >
+      <S.ButtonWithLabel $border={color} ref={ref} onClick={onClick}>
         <ButtonValidationIndicatorWidget validationResult={validationResult} />
         <S.Label>{props.label}</S.Label>
         {icon ? <S.ButtonIcon {...icon} /> : null}

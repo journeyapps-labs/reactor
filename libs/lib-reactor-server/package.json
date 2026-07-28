@@ -17,6 +17,7 @@
     "build": "../node_modules/.bin/tsc --build"
   },
   "dependencies": {
+    "@journeyapps-labs/common-logger": "1.1.1",
     "@journeyapps-labs/lib-reactor-utils": "workspace:*",
     "cheerio": "^1.2.0",
     "express": "^5.2.1",

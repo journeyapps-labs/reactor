@@ -38,7 +38,7 @@ export class CoupledEntityDropZone extends AbstractEntityDropZone {
     super();
     this.definition = this.system.getDefinitionForEntity(entity);
     if (!this.definition) {
-      console.error(`Cannot find definition for entity: `, entity);
+      throw new Error(`Cannot create a coupled drop zone without an entity definition`);
     }
     this.coupledActions = this.actionStore
       .getActions()

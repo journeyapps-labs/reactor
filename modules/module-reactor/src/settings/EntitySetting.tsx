@@ -52,7 +52,7 @@ export class EntitySetting<I> extends AbstractUserSetting<EntityControl<I>, Enti
         this.control.value = entity;
       }
     } catch (ex) {
-      console.log(`failed to deserialize preference ${this.options.name}`);
+      this.logger.warn('Could not restore entity preference; retaining the default value', this.options.name, ex);
     }
   }
 

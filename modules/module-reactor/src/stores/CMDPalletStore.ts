@@ -5,6 +5,7 @@ import { ioc } from '../inversify.config';
 import * as _ from 'lodash';
 import { keyType, ShortcutChord } from './shortcuts/Shortcut';
 import { ActionStore } from './actions/ActionStore';
+import { AbstractStore } from './AbstractStore';
 
 export interface CMDPalletSearchEngineCategory {
   engines: CMDPalletSearchEngine[];
@@ -36,7 +37,7 @@ export class OpenCMDPalletAction extends Action {
 /**
  * Store for working with and managing the command palette
  */
-export class CMDPalletStore {
+export class CMDPalletStore extends AbstractStore {
   protected categories: { [key: string]: CMDPalletSearchEngineCategory };
 
   @observable
@@ -45,6 +46,7 @@ export class CMDPalletStore {
   static EVERYTHING = 'Everything';
 
   constructor() {
+    super({ name: 'CMD_PALLET_STORE' });
     this.categories = {};
     this.show = null;
     this.registerCategory({
@@ -69,7 +71,7 @@ export class CMDPalletStore {
   getSearchEngines(category: string): CMDPalletSearchEngine[] {
     const cat = _.find(this.categories, { name: category });
     if (!cat) {
-      console.error('cant find cmd pallet category, ', category);
+      this.logger.warn('Command palette category was not found', category);
       return [];
     }
     return _.orderBy(cat.engines, (e) => e.options.priority || 0).reverse();
@@ -97,7 +99,7 @@ export class CMDPalletStore {
     });
   }
 
-  init() {
+  protected async _init() {
     this.generateActions().forEach((action) => {
       ioc.get(ActionStore).registerAction(action);
     });

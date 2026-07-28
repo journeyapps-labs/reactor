@@ -3,6 +3,7 @@ import { WorkspaceStore } from '../WorkspaceStore';
 import * as _ from 'lodash';
 import { ReactorPanelFactory } from '../react-workspaces/ReactorPanelFactory';
 import { ReactorPanelModel } from '../react-workspaces/ReactorPanelModel';
+import { Logger } from '@journeyapps-labs/common-logger';
 
 export enum WorkspaceHint {
   COUPLED = 'COUPLED',
@@ -17,9 +18,13 @@ export interface AddModelsOptions {
 
 export abstract class AbstractLayoutEngine {
   store: WorkspaceStore;
+  logger: Logger;
+
+  protected constructor(private readonly loggerName: string) {}
 
   setWorkspaceStore(store: WorkspaceStore) {
     this.store = store;
+    this.logger = store.logger.childLogger(this.loggerName);
   }
 
   findExistingMatchingModel(input: WorkspaceModel): WorkspaceModel | null {
@@ -32,7 +37,10 @@ export abstract class AbstractLayoutEngine {
 
     const factory = this.store.engine.getFactory<ReactorPanelFactory>(input);
     if (!(factory instanceof ReactorPanelFactory)) {
-      console.log(`factory of type[${input.type}] is not an instance of [AbstractReactorPanelFactory]`);
+      this.logger.warn('Panel factory does not support Reactor model matching', {
+        modelType: input.type,
+        factory: (factory as any)?.constructor?.name
+      });
       return null;
     }
 

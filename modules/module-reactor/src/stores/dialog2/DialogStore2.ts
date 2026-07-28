@@ -1,11 +1,13 @@
 import { computed, observable } from 'mobx';
 import { AbstractDialogDirective } from './AbstractDialogDirective';
+import { AbstractStore } from '../AbstractStore';
 
-export class DialogStore2 {
+export class DialogStore2 extends AbstractStore {
   @observable
   protected accessor _directives: Set<AbstractDialogDirective>;
 
   constructor() {
+    super({ name: 'DIALOG_STORE_2' });
     this._directives = new Set();
   }
 

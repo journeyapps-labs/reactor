@@ -1,8 +1,9 @@
 import { TodoModel } from '../models/TodoModel';
 import { computed, observable } from 'mobx';
 import { TodoNoteModel } from '../models/TodoNoteModel';
+import { AbstractStore } from '@journeyapps-labs/reactor-mod';
 
-export class TodoStore {
+export class TodoStore extends AbstractStore {
   @observable
   protected accessor _rootTodos: Set<TodoModel>;
 
@@ -13,6 +14,7 @@ export class TodoStore {
   accessor simulateLoadNotesError: boolean;
 
   constructor() {
+    super({ name: 'TODO_STORE' });
     this._rootTodos = new Set<TodoModel>();
     this.activeTodo = null;
     this.simulateLoadNotesError = false;

@@ -1,5 +1,5 @@
 import * as React from 'react';
-import styled from '@emotion/styled';
+import { styled } from '../../stores/themes/reactor-theme-fragment';
 import { IconWidget, ReactorIcon } from '../icons/IconWidget';
 import { ReactorTooltipWidget, setupTooltipProps } from '../info/tooltips';
 import { ContextMenuTriggerWidget } from '../context-menu/ContextMenuTriggerWidget';
@@ -23,9 +23,9 @@ export interface PillWidgetProps {
 namespace S {
   const RADIUS = 3;
 
-  export const Container = styled(ContextMenuTriggerWidget)<{ color: string; $cursor: boolean }>`
+  export const Container = styled(ContextMenuTriggerWidget)<{ $color: string; $cursor: boolean }>`
     border-radius: ${RADIUS}px;
-    background: ${(p) => p.color};
+    background: ${(p) => p.$color};
     overflow: hidden;
     font-size: 12px;
     display: flex;
@@ -70,7 +70,7 @@ export const PillWidget: React.FC<PillWidgetProps> = (props) => {
           props.rightClick?.(position);
         }}
         className={props.className}
-        color={props.color || 'rgb(150,150,150)'}
+        $color={props.color || 'rgb(150,150,150)'}
         {...setupTooltipProps({ tooltip: props.tooltip })}
       >
         <S.Label hasIcon={!!props.meta} background={props.labelBackground} color={props.labelColor}>

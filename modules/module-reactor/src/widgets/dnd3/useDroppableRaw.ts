@@ -1,5 +1,7 @@
 import * as React from 'react';
 import { useEffect, useRef } from 'react';
+import { ioc } from '../../inversify.config';
+import { DNDStore } from '../../stores/dnd/DNDStore';
 
 export interface UseDroppableRawOptions<T extends { [key: string]: any } = {}> {
   dropped?: (event: { files: File[]; entities: T; event: DragEvent }) => any;
@@ -45,13 +47,13 @@ export const useDroppableRaw = <T extends { [key: string]: string } = {}>(
 
       try {
         event.preventDefault();
-        props.dropped?.({
+        await props.dropped?.({
           files,
           entities: res,
           event
         });
       } catch (ex) {
-        console.warn(`Failed to deserialize draggable object`, ex);
+        ioc.get(DNDStore).logger.warn('Failed to process dropped data', Array.from(event.dataTransfer.types), ex);
       }
     };
 

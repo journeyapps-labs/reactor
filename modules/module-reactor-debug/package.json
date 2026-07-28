@@ -1,0 +1,32 @@
+{
+  "name": "@journeyapps-labs/reactor-mod-debug",
+  "version": "0.1.0",
+  "publishConfig": {
+    "registry": "https://registry.npmjs.org/",
+    "access": "public"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/journeyapps-labs/reactor.git"
+  },
+  "author": "JOURNEYAPPS",
+  "license": "Apache-2.0",
+  "main": "./dist/index.js",
+  "typings": "./dist/@types/index",
+  "scripts": {
+    "build:module": "reactor build .",
+    "watch:module": "pnpm build:module --watch"
+  },
+  "dependencies": {
+    "@journeyapps-labs/common-logger": "1.1.1",
+    "@journeyapps-labs/lib-reactor-search": "workspace:*",
+    "@journeyapps-labs/reactor-mod": "workspace:*",
+    "@projectstorm/react-workspaces-core": "4.3.2",
+    "mobx-react": "^9.2.2",
+    "react": "19.2.8"
+  },
+  "devDependencies": {
+    "@journeyapps-labs/lib-reactor-builder": "workspace:*",
+    "@types/react": "19.2.17"
+  }
+}

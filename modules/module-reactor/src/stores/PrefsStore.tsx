@@ -1,7 +1,7 @@
 import { action, observable } from 'mobx';
 import * as _ from 'lodash';
 import { AbstractInteractiveSetting } from '../settings/AbstractInteractiveSetting';
-import { AbstractStore } from './AbstractStore';
+import { AbstractPersistedStore } from './AbstractPersistedStore';
 import { LocalStorageSerializer } from './serializers/LocalStorageSerializer';
 import { AbstractSetting } from '../settings/AbstractSetting';
 
@@ -23,7 +23,7 @@ export enum PrefsCatgories {
   THEMES = 'themes'
 }
 
-export class PrefsStore extends AbstractStore<PrefsSerialized> {
+export class PrefsStore extends AbstractPersistedStore<PrefsSerialized> {
   @observable
   protected accessor controls: { [key: string]: AbstractSetting };
 
@@ -81,7 +81,7 @@ export class PrefsStore extends AbstractStore<PrefsSerialized> {
         {}
       )
     };
-    this.logger.debug('Saving prefs payload', prefs);
+    this.logger.debug('Serializing preferences', Object.keys(prefs.controls).length, 'controls');
     return prefs;
   }
 
@@ -99,19 +99,16 @@ export class PrefsStore extends AbstractStore<PrefsSerialized> {
       try {
         await control.reset();
       } catch (ex) {
-        this.logger.error('could not reset preferences', ex);
+        this.logger.error('Failed to reset preference', control.options.key, ex);
       }
     }
     await this.save();
   }
 
-  async init() {
-    await super.init();
-
+  protected async _initPersisted() {
     // initialize all the preferences
     _.forEach(this.controls, (preference) => {
       preference.init();
     });
-    return true;
   }
 }

@@ -45,9 +45,9 @@ export const PinnableZoneWidget: React.FC<PinnableZoneWidgetProps> = observer((p
   return (
     <S.Container
       className={props.className}
-      vertical={props.vertical}
-      dropzoneHint={hint}
-      dropzoneHover={hover}
+      $vertical={props.vertical}
+      $dropzoneHint={hint}
+      $dropzoneHover={hover}
       ref={ref}
     >
       {children}
@@ -55,7 +55,7 @@ export const PinnableZoneWidget: React.FC<PinnableZoneWidgetProps> = observer((p
   );
 });
 namespace S {
-  export const Container = styled.div<{ dropzoneHint: boolean; dropzoneHover: boolean; vertical: boolean }>`
+  export const Container = styled.div<{ $dropzoneHint: boolean; $dropzoneHover: boolean; $vertical: boolean }>`
     height: 100%;
     box-sizing: border-box;
     border: solid 1px transparent;
@@ -63,8 +63,8 @@ namespace S {
     display: flex;
     border-radius: 5px;
     padding: 2px;
-    flex-direction: ${(p) => (p.vertical ? 'column' : 'row')};
-    ${(p) => (p.dropzoneHint ? `border-color: ${p.theme.dnd.hintColor};` : '')};
-    ${(p) => (p.dropzoneHover ? `background: ${getTransparentColor(p.theme.dnd.hoverColor, 0.5)};` : '')};
+    flex-direction: ${(p) => (p.$vertical ? 'column' : 'row')};
+    ${(p) => (p.$dropzoneHint ? `border-color: ${p.theme.dnd.hintColor};` : '')};
+    ${(p) => (p.$dropzoneHover ? `background: ${getTransparentColor(p.theme.dnd.hoverColor, 0.5)};` : '')};
   `;
 }

@@ -1,6 +1,7 @@
 import { Collection } from './Collection';
 import { autorun, computed, IReactionDisposer, makeObservable, observable } from 'mobx';
 import * as _ from 'lodash';
+import { dataLayerLogger } from './logging';
 
 export interface LifecycleModel<Serialized> {
   key: string;
@@ -30,10 +31,10 @@ export class LifecycleCollection<Serialized, Model extends LifecycleModel<Serial
     this._items = new Map();
     this.reaction = autorun(
       () => {
-        const items = options.collection.items.reduce((prev, cur) => {
+        const items = options.collection.items.reduce((prev, cur, index) => {
           const key = options.getKeyForSerialized(cur);
           if (!key) {
-            console.error(`Missing key for lifecycle item, check that the 'get key()' accessor is implemented.`);
+            dataLayerLogger.error('Lifecycle item was skipped because it has no key', { index });
             return prev;
           }
           prev[options.getKeyForSerialized(cur)] = cur;

@@ -28,35 +28,38 @@ namespace S {
     left: 100%;
   `;
 
-  export const BreadCrumbContainer = styled.div<
-    BreadCrumbWidgetProps & { attention: boolean; crumbBackgroundColor: string }
-  >`
+  export const BreadCrumbContainer = styled.div<{
+    $attention: boolean;
+    $backgroundColor: string;
+    $crumbBackgroundColor: string;
+    $disabled: boolean;
+  }>`
     padding: 8px 8px 8px 28px;
     position: relative;
     color: ${(p) => p.theme.button.color};
-    cursor: ${(p) => (p.disabled ? 'default' : 'pointer')};
+    cursor: ${(p) => (p.$disabled ? 'default' : 'pointer')};
     user-select: none;
-    background-color: ${(p) => p.crumbBackgroundColor};
+    background-color: ${(p) => p.$crumbBackgroundColor};
     font-size: 15px;
     line-height: 25px;
     white-space: nowrap;
     &:before {
       ${(p) => BREAD_CRUMB_SHARED_CSS}
-      border-left: 15px solid ${(p) => p.backgroundColor};
+      border-left: 15px solid ${(p) => p.$backgroundColor};
       z-index: 1;
     }
 
     &:after {
       ${(p) => BREAD_CRUMB_SHARED_CSS}
-      border-left: 15px solid ${(p) => p.crumbBackgroundColor};
+      border-left: 15px solid ${(p) => p.$crumbBackgroundColor};
       margin-left: -1px;
       z-index: 2;
     }
   `;
 
-  export const BreadCrumbContent = styled.div<{ attention: boolean; disabled: boolean; selected: boolean }>`
+  export const BreadCrumbContent = styled.div<{ $attention: boolean; $disabled: boolean; $selected: boolean }>`
     padding: 5px;
-    opacity: ${(p) => (p.attention || p.selected ? 1 : p.disabled ? 0.2 : 0.6)};
+    opacity: ${(p) => (p.$attention || p.$selected ? 1 : p.$disabled ? 0.2 : 0.6)};
   `;
 }
 
@@ -96,11 +99,10 @@ export const BreadCrumbWidget: React.FC<BreadCrumbWidgetProps> = (props) => {
 
   return (
     <S.BreadCrumbContainer
-      {...props}
-      crumbBackgroundColor={crumbBackgroundColor}
-      attention={!!selected}
-      key="test"
-      selected={props.selected}
+      $attention={!!selected}
+      $backgroundColor={props.backgroundColor}
+      $crumbBackgroundColor={crumbBackgroundColor}
+      $disabled={!!props.disabled}
       onClick={(event) => {
         if (props.disabled) {
           return;
@@ -110,7 +112,7 @@ export const BreadCrumbWidget: React.FC<BreadCrumbWidgetProps> = (props) => {
       }}
       ref={props.forwardRef}
     >
-      <S.BreadCrumbContent selected={props.selected} attention={!!selected} disabled={props.disabled}>
+      <S.BreadCrumbContent $selected={props.selected} $attention={!!selected} $disabled={!!props.disabled}>
         {props.label}
       </S.BreadCrumbContent>
     </S.BreadCrumbContainer>

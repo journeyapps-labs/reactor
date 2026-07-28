@@ -1,5 +1,9 @@
-import { Container } from '@journeyapps-labs/common-ioc';
-import { AbstractReactorModule, System } from '@journeyapps-labs/reactor-mod';
+import {
+  AbstractReactorModule,
+  ReactorModuleInitEvent,
+  ReactorModuleRegisterEvent,
+  System
+} from '@journeyapps-labs/reactor-mod';
 import { StressTestEntityDefinition } from './entities/StressTestEntityDefinition';
 
 export class ReactorStressTestModule extends AbstractReactorModule {
@@ -9,11 +13,11 @@ export class ReactorStressTestModule extends AbstractReactorModule {
     });
   }
 
-  register(ioc: Container) {
+  register({ ioc }: ReactorModuleRegisterEvent) {
     const system = ioc.get(System);
 
     system.registerDefinition(new StressTestEntityDefinition());
   }
 
-  async init(ioc: Container): Promise<any> {}
+  async init(_event: ReactorModuleInitEvent): Promise<any> {}
 }

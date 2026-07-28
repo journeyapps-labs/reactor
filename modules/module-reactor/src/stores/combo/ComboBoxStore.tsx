@@ -13,7 +13,7 @@ import {
   UISearchEngineDirective
 } from './ComboBoxDirectives';
 import { ActionValidationState } from '../../actions/validators/ActionValidator';
-import { BaseObserver } from '@journeyapps-labs/common-utils';
+import { AbstractStore, AbstractStoreListener } from '../AbstractStore';
 
 export interface ComboBoxOptions {
   title?: string;
@@ -25,7 +25,7 @@ export interface ComboBoxItemSelectedEvent {
   preventDefault: () => any;
 }
 
-export interface ComboBoxStoreListener {
+export interface ComboBoxStoreListener extends AbstractStoreListener {
   itemsSelected?: (event: ComboBoxItemSelectedEvent) => any;
   itemsShown?: () => any;
 }
@@ -33,7 +33,7 @@ export interface ComboBoxStoreListener {
 /**
  * @deprecated
  */
-export class ComboBoxStore extends BaseObserver<ComboBoxStoreListener> {
+export class ComboBoxStore extends AbstractStore<ComboBoxStoreListener> {
   @observable.shallow
   accessor directive: UIDirective;
 
@@ -41,7 +41,7 @@ export class ComboBoxStore extends BaseObserver<ComboBoxStoreListener> {
   accessor showConfigurator: boolean;
 
   constructor() {
-    super();
+    super({ name: 'COMBO_BOX_STORE' });
     this.directive = null;
     this.showConfigurator = false;
   }

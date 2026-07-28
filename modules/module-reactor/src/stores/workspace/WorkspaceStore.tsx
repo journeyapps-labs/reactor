@@ -8,10 +8,11 @@ import {
   WorkspaceNodeModel
 } from '@projectstorm/react-workspaces-core';
 import { action, autorun, IReactionDisposer, observable } from 'mobx';
+import { Log } from '@journeyapps-labs/common-logger';
 
 import { inject, ioc } from '../../inversify.config';
 import { AbstractLayoutEngine, AddModelsOptions } from './layout-engines/AbstractLayoutEngine';
-import { AbstractStore, AbstractStoreListener } from '../AbstractStore';
+import { AbstractPersistedStore, AbstractPersistedStoreListener } from '../AbstractPersistedStore';
 import queryString from 'query-string';
 import { DialogStore } from '../DialogStore';
 import { MimeTypes, readFileAsText, selectFile } from '@journeyapps-labs/lib-reactor-utils';
@@ -43,7 +44,7 @@ export type WorkspaceEntry = WorkspaceModel | WorkspaceGroup;
 export type GeneratedIDEWorkspace = WorkspaceModel;
 export type GeneratedWorkspaceEntry = WorkspaceEntry;
 
-export interface WorkspaceStoreListener extends AbstractStoreListener {
+export interface WorkspaceStoreListener extends AbstractPersistedStoreListener {
   workspaceActivated: (workspace: IDEWorkspace) => any;
   workspaceGenerated: (model: GeneratedWorkspaceEntry) => any;
   reset?: () => any;
@@ -65,7 +66,7 @@ export type WorkspaceGenerator =
       generateSimpleWorkspace?: WorkspaceGeneratorCallback;
     };
 
-export class WorkspaceStore extends AbstractStore<WorkspacePrefsSerialized, WorkspaceStoreListener> {
+export class WorkspaceStore extends AbstractPersistedStore<WorkspacePrefsSerialized, WorkspaceStoreListener> {
   @observable
   accessor workspaces: WorkspaceEntry[];
 
@@ -143,10 +144,14 @@ export class WorkspaceStore extends AbstractStore<WorkspacePrefsSerialized, Work
     }
   }
 
-  saveWorkspaceDebounced = _.debounce(() => {
-    this.logger.debug('workspace updated');
-    this.save();
-  }, 1000);
+  saveWorkspaceDebounced = _.debounce(
+    () => {
+      this.logger.debug(Log.dim('Workspace updated'));
+      this.save();
+    },
+    1000,
+    { leading: false, trailing: true }
+  );
 
   generateFullscreenButton(model: StormWorkspaceModel): Btn {
     const isFullscreen = this.fullscreenModel;
@@ -228,7 +233,7 @@ export class WorkspaceStore extends AbstractStore<WorkspacePrefsSerialized, Work
       this.setFullscreenModel(null);
     }
     this.activateWorkspace(key);
-    await this.save();
+    this.saveWorkspaceDebounced();
   }
 
   setWorkspaceLayoutEngine(engine: AbstractLayoutEngine) {
@@ -498,16 +503,14 @@ export class WorkspaceStore extends AbstractStore<WorkspacePrefsSerialized, Work
     }
   }
 
-  async init(): Promise<boolean> {
-    this.currentModel = null;
-    this.currentTopWorkspace = null;
-    const success = await super.init();
-    if (!success) {
+  protected async _initPersisted(deserialized: boolean) {
+    if (!deserialized) {
+      this.currentModel = null;
+      this.currentTopWorkspace = null;
       await this.reset();
     }
 
     this.engine.invalidateLayoutDebounced();
-    return success;
   }
 
   protected serialize(): WorkspacePrefsSerialized {
@@ -526,6 +529,7 @@ export class WorkspaceStore extends AbstractStore<WorkspacePrefsSerialized, Work
       this.currentTopWorkspace = data.currentTop;
       await this.setActiveWorkspace(data.current);
     } catch (ex) {
+      this.logger.warn('Could not restore workspace state; resetting to defaults', ex);
       this.reset();
     }
   }
@@ -548,15 +552,15 @@ export class WorkspaceStore extends AbstractStore<WorkspacePrefsSerialized, Work
           : WorkspaceModel.deserialize(pref, this.engine, () => this.generateRootModel());
       });
     } catch (ex) {
-      console.error('could not reload workspace', ex);
+      this.logger.error('Could not reload workspace', ex);
     }
     return [];
   }
 
   protected patch_v1(data: WorkspacePrefsSerialized) {
+    this.logger.info('Migrating legacy workspace layout');
     const patchCollection = (model) => {
       if (model.type === 'srw-node') {
-        this.logger.info('Detected legacy workspace');
         // old trays -> new trays
         if (!model.expandHorizontal && model.expandVertical) {
           model.type = ReactorTrayModel.NAME;
@@ -595,7 +599,6 @@ export class WorkspaceStore extends AbstractStore<WorkspacePrefsSerialized, Work
       }
       this.workspaces.splice(index, 1);
       this.setActiveWorkspace(_.last(this.workspaces).key);
-      this.save();
       return;
     }
 
@@ -612,7 +615,6 @@ export class WorkspaceStore extends AbstractStore<WorkspacePrefsSerialized, Work
       }
       group.lastActiveChildId = group.children[Math.max(0, childIndex - 1)].key;
       this.setActiveWorkspace(group.lastActiveChildId);
-      this.save();
     }
   }
 
@@ -671,7 +673,7 @@ export class WorkspaceStore extends AbstractStore<WorkspacePrefsSerialized, Work
       await this.save();
       return true;
     } catch (ex) {
-      console.error(ex);
+      this.logger.error('Failed to import workspace', ex);
       await this.dialogStore.showErrorDialog({
         title: 'Failed to import workspaces',
         message:
@@ -762,7 +764,6 @@ export class WorkspaceStore extends AbstractStore<WorkspacePrefsSerialized, Work
       });
       this.workspaces.push(group);
       this.setActiveWorkspace(group.id);
-      this.save();
       return;
     }
     const sourceWorkspace = this.getWorkspace(key);
@@ -777,7 +778,6 @@ export class WorkspaceStore extends AbstractStore<WorkspacePrefsSerialized, Work
       });
       parent.addWorkspace(workspace);
       this.setActiveWorkspace(workspace.key);
-      this.save();
       return;
     }
 
@@ -790,7 +790,6 @@ export class WorkspaceStore extends AbstractStore<WorkspacePrefsSerialized, Work
     });
     this.workspaces.push(workspace);
     this.setActiveWorkspace(workspace.key);
-    this.save();
   }
 
   @action renameWorkspace(name: string, key: string) {
@@ -827,7 +826,6 @@ export class WorkspaceStore extends AbstractStore<WorkspacePrefsSerialized, Work
     });
     group.addWorkspace(workspace);
     await this.setActiveWorkspace(workspace.key);
-    await this.save();
   }
 
   @action
@@ -844,7 +842,6 @@ export class WorkspaceStore extends AbstractStore<WorkspacePrefsSerialized, Work
     });
     this.workspaces.splice(index, 1, group);
     await this.setActiveWorkspace(workspace.key);
-    await this.save();
   }
 
   @action
@@ -866,7 +863,6 @@ export class WorkspaceStore extends AbstractStore<WorkspacePrefsSerialized, Work
     }
     this.workspaces.splice(index, 1, workspace);
     await this.setActiveWorkspace(workspace.key);
-    await this.save();
   }
 
   @action
@@ -882,6 +878,5 @@ export class WorkspaceStore extends AbstractStore<WorkspacePrefsSerialized, Work
       })
     );
     await this.setActiveWorkspace(_.last(this.workspaces).key);
-    await this.save();
   }
 }

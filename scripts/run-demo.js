@@ -9,28 +9,44 @@ const DEMO_DIR = path.join(ROOT, 'demo');
 const SERVER_DIR = path.join(DEMO_DIR, 'server');
 const MODE = process.argv[2] === 'start' ? 'start' : 'watch';
 const CORE_MODULES = ['../../modules/module-reactor', '../../modules/module-editor'];
+const OPTIONAL_MODULES = [
+  {
+    dir: 'module-reactor-debug',
+    path: '../../modules/module-reactor-debug'
+  }
+];
 
 const DEPENDENCIES = {
   'module-playground': ['module-todos']
 };
 
 function getDemoModules() {
-  const dirs = fs
+  const demoModules = fs
     .readdirSync(DEMO_DIR)
     .filter((entry) => entry.startsWith('module-'))
-    .filter((entry) => fs.existsSync(path.join(DEMO_DIR, entry, 'reactor.config.json')));
-
-  return dirs
+    .filter((entry) => fs.existsSync(path.join(DEMO_DIR, entry, 'reactor.config.json')))
     .map((dir) => {
       const configPath = path.join(DEMO_DIR, dir, 'reactor.config.json');
       const config = JSON.parse(fs.readFileSync(configPath, 'utf8'));
       return {
         dir,
+        path: `../${dir}`,
         slug: config.slug || dir,
         name: config.name || dir
       };
-    })
-    .sort((a, b) => a.dir.localeCompare(b.dir));
+    });
+
+  const optionalModules = OPTIONAL_MODULES.map((module) => {
+    const directory = path.resolve(SERVER_DIR, module.path);
+    const config = JSON.parse(fs.readFileSync(path.join(directory, 'reactor.config.json'), 'utf8'));
+    return {
+      ...module,
+      slug: config.slug || module.dir,
+      name: config.name || module.dir
+    };
+  });
+
+  return [...demoModules, ...optionalModules].sort((a, b) => a.dir.localeCompare(b.dir));
 }
 
 function applyDependencies(selectedDirs) {
@@ -92,7 +108,9 @@ async function run() {
     throw new Error('No demo modules found under demo/module-*');
   }
 
-  const defaultDirs = ['module-todos', 'module-playground'].filter((dir) => modules.some((m) => m.dir === dir));
+  const defaultDirs = ['module-reactor-debug', 'module-todos', 'module-playground'].filter((dir) =>
+    modules.some((m) => m.dir === dir)
+  );
 
   const selected = await selectModules(modules, defaultDirs);
   const dependencyResolution = applyDependencies(selected);
@@ -112,7 +130,7 @@ async function run() {
       }
       return a.dir.localeCompare(b.dir);
     })
-    .map((m) => `../${m.dir}`);
+    .map((m) => m.path);
 
   const moduleValue = [...CORE_MODULES, ...orderedSelected].join(',');
 

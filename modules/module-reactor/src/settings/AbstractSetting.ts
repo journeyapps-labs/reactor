@@ -90,14 +90,17 @@ export abstract class AbstractSetting<
    */
   doDeserialize(data: ReturnType<this['doSerialize']>) {
     if (this.options.serializeID != data.serializeID) {
-      this.logger.debug(`serialize ID's differ`);
+      this.logger.debug('Ignoring persisted setting with a different serialization version', {
+        expected: this.options.serializeID,
+        received: data.serializeID
+      });
       return;
     }
     try {
       this.deserialize(data);
       this.deserialized = true;
     } catch (ex) {
-      this.logger.error(`Failed to restore preferences`, ex);
+      this.logger.error('Failed to restore setting', ex);
     }
   }
 

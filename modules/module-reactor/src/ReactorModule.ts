@@ -30,7 +30,11 @@ import { ExportWorkspacesAction } from './actions/builtin-actions/workspace/Expo
 import { ImportWorkspaceAction } from './actions/builtin-actions/workspace/ImportWorkspaceAction';
 import { ImportShortcutsAction } from './actions/builtin-actions/shortcuts/ImportShortcutsAction';
 import { ResetShortcutsAction } from './actions/builtin-actions/shortcuts/ResetShortcutsAction';
-import { AbstractReactorModule } from './core/AbstractReactorModule';
+import {
+  AbstractReactorModule,
+  ReactorModuleInitEvent,
+  ReactorModuleRegisterEvent
+} from './core/AbstractReactorModule';
 import { GuideStore } from './stores/guide/GuideStore';
 import { LayerManager } from './stores/layer/LayerManager';
 import { IDEStatusVisorMetadata } from './visor/IDEStatusVisorMetadata';
@@ -62,7 +66,6 @@ import { SimpleEntitySearchEngineComponent } from './entities/components/search/
 import { KeyboardStore } from './stores/KeyboardStore';
 import { AnchoredOverlayStore } from './stores/overlay/AnchoredOverlayStore';
 import { patchLightThemeEntityColors } from './stores/themes/built-in-themes/light';
-import { Container } from '@journeyapps-labs/common-ioc';
 import { EntityDefinition } from './entities/EntityDefinition';
 import { AbstractStore } from './stores/AbstractStore';
 import { DateFormatVisorMetadata } from './visor/DateFormatVisorMetadata';
@@ -73,6 +76,7 @@ import { WorkspaceEntityDefinition } from './entities-reactor/workspaces/Workspa
 import { ioc } from './inversify.config';
 import { createRoot } from 'react-dom/client';
 import React from 'react';
+import { LoggerStore } from './stores/logging/LoggerStore';
 
 export class ReactorModule extends AbstractReactorModule {
   constructor() {
@@ -117,7 +121,8 @@ export class ReactorModule extends AbstractReactorModule {
     }
   }
 
-  register(ioc: Container) {
+  register(event: ReactorModuleRegisterEvent) {
+    const { ioc } = event;
     const oldComboBoxStore = new ComboBoxStore();
     const comboBoxStore = new ComboBoxStore2();
     const actionStore = new ActionStore({
@@ -125,11 +130,13 @@ export class ReactorModule extends AbstractReactorModule {
     });
     const system = new System({
       actionStore: actionStore,
-      comboBoxStore2: comboBoxStore
+      comboBoxStore2: comboBoxStore,
+      logger: this.logger.childLogger('System')
     });
 
     ioc.bind(System).toConstantValue(system);
-    ioc.bind(ActionStore).toConstantValue(actionStore);
+
+    const loggerStore = new LoggerStore();
 
     const visorStore = new VisorStore();
     const workspaceStore = new WorkspaceStore();
@@ -151,6 +158,8 @@ export class ReactorModule extends AbstractReactorModule {
     const mediaEngine = new MediaEngine(workspaceStore);
     const dialogStore = new DialogStore();
     const dialogStore2 = new DialogStore2();
+    const shortcutStore = new ShortcutStore();
+    const notificationStore = new NotificationStore();
     const searchStore = new SearchStore();
     const batchStore = new BatchStore({
       visorStore: visorStore,
@@ -187,28 +196,30 @@ export class ReactorModule extends AbstractReactorModule {
       }
     });
 
-    system.addStore(GuideStore, guideStore);
-    system.addStore(WorkspaceStore, workspaceStore);
-    system.addStore(PrefsStore, prefsStore);
-    system.addStore(ThemeStore, themeStore);
-    system.addStore(DNDStore, dndStore);
-    system.addStore(UXStore, uxStore);
-    system.addStore(BatchStore, batchStore);
-    system.addStore(SearchStore, searchStore);
-    system.addStore(KeyboardStore, keyboardStore);
-    system.addStore(AnchoredOverlayStore, anchoredOverlayStore);
+    event.registerStore(LoggerStore, loggerStore);
+    event.registerStore(ActionStore, actionStore);
+    event.registerStore(ComboBoxStore, oldComboBoxStore);
+    event.registerStore(ComboBoxStore2, comboBoxStore);
+    event.registerStore(DialogStore, dialogStore);
+    event.registerStore(DialogStore2, dialogStore2);
+    event.registerStore(CMDPalletStore, cmdPaletteStore);
+    event.registerStore(VisorStore, visorStore);
+    event.registerStore(ShortcutStore, shortcutStore);
+    event.registerStore(NotificationStore, notificationStore);
+    event.registerStore(GuideStore, guideStore);
+    event.registerStore(WorkspaceStore, workspaceStore);
+    event.registerStore(PrefsStore, prefsStore);
+    event.registerStore(ThemeStore, themeStore);
+    event.registerStore(DNDStore, dndStore);
+    event.registerStore(UXStore, uxStore);
+    event.registerStore(BatchStore, batchStore);
+    event.registerStore(SearchStore, searchStore);
+    event.registerStore(KeyboardStore, keyboardStore);
+    event.registerStore(AnchoredOverlayStore, anchoredOverlayStore);
 
     themeStore.addThemeFragment(theme);
 
-    ioc.bind(ComboBoxStore).toConstantValue(oldComboBoxStore);
-    ioc.bind(ComboBoxStore2).toConstantValue(comboBoxStore);
-    ioc.bind(DialogStore).toConstantValue(dialogStore);
-    ioc.bind(DialogStore2).toConstantValue(dialogStore2);
-    ioc.bind(CMDPalletStore).toConstantValue(cmdPaletteStore);
-    ioc.bind(VisorStore).toConstantValue(visorStore);
     ioc.bind(MediaEngine).toConstantValue(mediaEngine);
-    ioc.bind(ShortcutStore).toConstantValue(new ShortcutStore());
-    ioc.bind(NotificationStore).toConstantValue(new NotificationStore());
     ioc.bind(LayerManager).toConstantValue(new LayerManager());
 
     actionStore.registerAction(new ChangeThemeAction());
@@ -295,26 +306,16 @@ export class ReactorModule extends AbstractReactorModule {
       name: 'Actions'
     });
 
-    setupPrefs();
+    setupPrefs(prefsStore, uxStore);
   }
 
-  async init(ioc: Container): Promise<any> {
+  async init({ ioc }: ReactorModuleInitEvent): Promise<any> {
     patchLightThemeEntityColors();
 
-    const cmdPaletteStore = ioc.get(CMDPalletStore);
-    const uxStore = ioc.get(UXStore);
-    const prefsStore = ioc.get(PrefsStore);
     const workspaceStore = ioc.get(WorkspaceStore);
-    const visorStore = ioc.get(VisorStore);
 
-    cmdPaletteStore.init();
-    visorStore.init();
-
-    // these purposefully left async
-    Promise.all([workspaceStore.init(), prefsStore.init(), uxStore.init()]).then(() => {
-      this.render();
-      workspaceStore.hydratePanelFromURL();
-    });
+    this.render();
+    workspaceStore.hydratePanelFromURL();
   }
 
   render() {

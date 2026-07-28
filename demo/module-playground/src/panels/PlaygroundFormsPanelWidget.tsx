@@ -11,6 +11,7 @@ import {
   styled
 } from '@journeyapps-labs/reactor-mod';
 import { DemoFormModel } from '../forms/DemoFormModel';
+import { PlaygroundStore } from '../stores/PlaygroundStore';
 
 export interface PlaygroundFormsPanelWidgetProps {
   model: ReactorPanelModel;
@@ -18,15 +19,14 @@ export interface PlaygroundFormsPanelWidgetProps {
 
 export const PlaygroundFormsPanelWidget: React.FC<PlaygroundFormsPanelWidgetProps> = observer(() => {
   const dialogStore2 = ioc.get(DialogStore2);
+  const logger = ioc.get(PlaygroundStore).logger.childLogger('Forms');
   const [inlineForm, setInlineForm] = React.useState(() => new DemoFormModel());
 
   const runFormDialog = async () => {
     const directive = new FormDialogDirective({
       title: 'Demo form dialog',
       form: new DemoFormModel(),
-      handler: async (form) => {
-        console.log('Demo form submitted', form.value());
-      }
+      handler: async (form) => logger.info('Demo form submitted', form.value())
     });
 
     await dialogStore2.showDialog(directive);
