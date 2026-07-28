@@ -27,6 +27,6 @@ The launcher will:
 - Always include core modules:
   - `../../modules/module-reactor`
   - `../../modules/module-editor`
-- Ask you which demo modules to include.
+- Ask you which optional and demo modules to include, including Reactor Debug.
 - Set `MODULES` automatically before starting `demo/server`.
 - Auto-include `module-todos` if `module-playground` is selected (dependency).

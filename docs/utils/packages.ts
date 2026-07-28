@@ -12,6 +12,11 @@ export const packages = [
     name: 'Module Editor'
   },
   {
+    dir: '../modules/module-reactor-debug',
+    id: 'module-reactor-debug',
+    name: 'Module Reactor Debug'
+  },
+  {
     dir: '../libs/lib-reactor-utils',
     id: 'lib-reactor-utils',
     name: 'Lib Reactor Utils'

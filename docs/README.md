@@ -1,41 +1,18 @@
-# Website
+# Reactor documentation
 
-This website is built using [Docusaurus](https://docusaurus.io/), a modern static website generator.
+The documentation site combines a curated Reactor manual with generated package API reference.
 
-## Installation
-
-```bash
-yarn
-```
-
-## Local Development
+From the repository root:
 
 ```bash
-yarn start
+pnpm build:ts
+pnpm --dir docs start
 ```
 
-This command starts a local development server and opens up a browser window. Most changes are reflected live without having to restart the server.
-
-## Build
+Build the static site with:
 
 ```bash
-yarn build
+pnpm --dir docs build
 ```
 
-This command generates static content into the `build` directory and can be served using any static contents hosting service.
-
-## Deployment
-
-Using SSH:
-
-```bash
-USE_SSH=true yarn deploy
-```
-
-Not using SSH:
-
-```bash
-GIT_USER=<Your GitHub username> yarn deploy
-```
-
-If you are using GitHub pages for hosting, this command is a convenient way to build the website and push to the `gh-pages` branch.
+Conceptual documentation lives in `docs/docs`. Generated API pages are produced from package declarations and should not be edited directly.

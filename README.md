@@ -10,7 +10,7 @@ conception we have come to see it as much more than that. Internally, we also us
 feature-rich data browsing software. If you need to build an application with serious capability, Reactor's deeply declarative
 model is almost certainly up to the task.
 
-Docs: [https://journeyapps-labs.github.io/reactor](https://journeyapps-labs.github.io/reactor) (WIP)
+Docs: [https://journeyapps-labs.github.io/reactor](https://journeyapps-labs.github.io/reactor)
 
 News: [https://labs.journeyapps.com/blog/tags/reactor](https://labs.journeyapps.com/blog/tags/reactor)
 
@@ -43,11 +43,12 @@ __Core capabilities:__
 
 ## Run Locally
 
-1. Clone repo!
-2. `pnpm install` in the root directory
-3. `pnpm build` in the root directory
-4. `cd ./demo/server && pnpm watch`
-5. Navigate to [http://localhost:9527](http://localhost:9527)
+1. Clone the repository.
+2. Run `pnpm install` and `pnpm build` from the root directory.
+3. Run `pnpm demo:watch` and select the modules to load.
+4. Navigate to [http://localhost:9527](http://localhost:9527).
+
+See the [Getting Started documentation](./docs/docs/getting-started/introduction.md) for a guided sandbox tour and first-module walkthrough.
 
 ## Release
 

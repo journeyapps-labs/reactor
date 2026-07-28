@@ -18,13 +18,31 @@ const config: Config = {
     ...base_config.themeConfig,
     image: 'img/labs.png',
     navbar: {
-      // @ts-ignore
-      ...base_config.themeConfig.navbar,
       title: 'Reactor',
       logo: {
         alt: 'Labs Logo',
         src: 'img/labs.png'
-      }
+      },
+      items: [
+        {
+          type: 'docSidebar',
+          sidebarId: 'gettingStartedSidebar',
+          position: 'left',
+          label: 'Getting started'
+        },
+        {
+          type: 'docSidebar',
+          sidebarId: 'subsystemsSidebar',
+          position: 'left',
+          label: 'Subsystems'
+        },
+        {
+          type: 'docSidebar',
+          sidebarId: 'tsDocSidebar',
+          position: 'left',
+          label: 'TSDoc'
+        }
+      ]
     }
   }
 };
