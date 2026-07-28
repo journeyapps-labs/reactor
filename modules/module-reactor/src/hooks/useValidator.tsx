@@ -1,6 +1,12 @@
 import { autorun, observable, runInAction } from 'mobx';
 import { useEffect, useLayoutEffect, useState } from 'react';
-import { ActionValidationState, ValidationResult, Validator } from '../actions/validators/ActionValidator';
+import {
+  ActionValidationState,
+  isValidationDisabled,
+  isValidationHidden,
+  ValidationResult,
+  Validator
+} from '../actions/validators/ActionValidator';
 
 export interface UseValidatorProps {
   validator?: Validator;
@@ -25,7 +31,9 @@ export const useValidator = (props: UseValidatorProps) => {
   }, [validator]);
 
   return {
-    validationResult
+    validationResult,
+    disabled: isValidationDisabled(validationResult),
+    hidden: isValidationHidden(validationResult)
   };
 };
 

@@ -73,6 +73,13 @@ export type ValidationResult =
 
 export type Validator = () => ValidationResult;
 
+export const isValidationHidden = (result: ValidationResult) => result.type === ActionValidationState.HIDDEN;
+
+export const isValidationDisabled = (result: ValidationResult) =>
+  result.type === ActionValidationState.DISABLED ||
+  result.type === ActionValidationState.PENDING ||
+  isValidationHidden(result);
+
 export abstract class ActionValidator<Event = unknown> {
   abstract validate(event?: Partial<Event>): ValidationResult;
 }

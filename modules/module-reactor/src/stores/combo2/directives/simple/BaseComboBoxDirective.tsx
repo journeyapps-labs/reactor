@@ -12,6 +12,9 @@ import { ioc } from '../../../../inversify.config';
 import { ComboBoxStore2 } from '../../ComboBoxStore2';
 import { SimpleComboBoxDirective } from './SimpleComboBoxDirective';
 import { ReactorViewportMode, useReactorViewportMode } from '../../../../hooks/useReactorViewportMode';
+import { activateWithValidation } from '../../../../hooks/useValidator';
+import { isValidationHidden } from '../../../../actions/validators/ActionValidator';
+import { observer } from 'mobx-react';
 
 export interface BaseComboBoxDirectiveOptions<T extends ComboBoxItem = ComboBoxItem> extends ComboBoxDirectiveOptions {
   items: T[];
@@ -41,7 +44,12 @@ export class BaseComboBoxDirective<
     if (found?.disabled) {
       return;
     }
-    this.setSelected([found]);
+    const validation = found?.validator?.();
+    if (!validation) {
+      this.setSelected([found]);
+      return;
+    }
+    void activateWithValidation(validation, () => this.setSelected([found]));
   }
 
   setSelected(items: T[]) {
@@ -56,10 +64,8 @@ export class BaseComboBoxDirective<
   }
 
   getAllItems() {
-    if (this.options.sort) {
-      return _.sortBy(this.options.items, (i) => i.title);
-    }
-    return this.options.items;
+    const items = this.options.sort ? _.sortBy(this.options.items, (i) => i.title) : this.options.items;
+    return items.filter((item) => !item.validator || !isValidationHidden(item.validator()));
   }
 
   getItems() {
@@ -83,7 +89,7 @@ export interface BaseComboBoxDirectiveWidgetProps {
   directive: BaseComboBoxDirective;
 }
 
-export const SimpleComboBoxDirectiveWidget: React.FC<BaseComboBoxDirectiveWidgetProps> = (props) => {
+export const SimpleComboBoxDirectiveWidget: React.FC<BaseComboBoxDirectiveWidgetProps> = observer((props) => {
   const forceUpdate = useForceUpdate();
   const viewportMode = useReactorViewportMode();
   const store = ioc.get(ComboBoxStore2);
@@ -183,7 +189,7 @@ export const SimpleComboBoxDirectiveWidget: React.FC<BaseComboBoxDirectiveWidget
       />
     </>
   );
-};
+});
 
 namespace S {
   export const Search = styled(ControlledSearchWidget)`

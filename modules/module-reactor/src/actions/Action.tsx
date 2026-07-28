@@ -194,6 +194,7 @@ export abstract class Action<
   ): ActionComboBoxItem<this> {
     const eventData = options.eventData || {};
     const validation = this.validate(eventData);
+    const validator = () => this.validate(eventData);
     const action = {
       icon: this.options.icon,
       color: 'orange',
@@ -201,7 +202,8 @@ export abstract class Action<
       key: this.options.name,
       actionObject: this,
       group: this.group,
-      disabled: validation.type === ActionValidationState.DISABLED || validation.type === ActionValidationState.PENDING,
+      disabled: false,
+      validator,
       right: <ActionMetaWidget action={this} eventData={eventData} />
     } as ActionComboBoxItem<this>;
     if (validation.type === ActionValidationState.HIDDEN) {

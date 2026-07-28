@@ -18,11 +18,19 @@ export const ActionMetaWidget: React.FC<ActionMetaWidgetProps> = (props) => {
     validator
   });
 
-  if (validationResult.type === ActionValidationState.BLOCKED && validationResult.indicator) {
-    return <TreeBadgeWidget {...validationResult.indicator} />;
+  if (validationResult.type === ActionValidationState.BLOCKED) {
+    if (validationResult.indicator) {
+      return <TreeBadgeWidget {...validationResult.indicator} />;
+    }
+    if (validationResult.message) {
+      return <TreeBadgeWidget icon="info-circle" foreground="currentColor" tooltip={validationResult.message} />;
+    }
   }
   if (validationResult.type === ActionValidationState.DISABLED && validationResult.message) {
     return <TreeBadgeWidget icon="ban" foreground="currentColor" tooltip={validationResult.message} />;
+  }
+  if (validationResult.type === ActionValidationState.PENDING && validationResult.message) {
+    return <TreeBadgeWidget icon="sync-alt" foreground="currentColor" tooltip={validationResult.message} />;
   }
   if (validationResult.type === ActionValidationState.ALLOWED) {
     return <ActionShortcutPillsWidget action={props.action} />;

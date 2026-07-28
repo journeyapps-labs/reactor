@@ -105,9 +105,11 @@ describe('action validation', () => {
 
   it('keeps actions with deferred validation available for parameter collection', () => {
     const action = new TestAction([new TargetValidator()]);
+    const item = action.representAsComboBoxItem();
 
     expect(action.validate()).toEqual({ type: ActionValidationState.DEFERRED });
-    expect(action.representAsComboBoxItem().disabled).toBe(false);
+    expect(item.disabled).toBe(false);
+    expect(item.validator()).toEqual({ type: ActionValidationState.DEFERRED });
   });
 
   it('threads a contextual entity into entity action validation', () => {

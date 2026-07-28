@@ -11,6 +11,7 @@ import { COMBOBOX_ITEM_H_PADDING } from '../../layout';
 import * as _ from 'lodash';
 import { Dimensions, useDimensionObserver } from '../../hooks/useDimensionObserver';
 import { REACTOR_MOBILE_MEDIA_QUERY } from '../../hooks/useReactorViewportMode';
+import { useValidator } from '../../hooks/useValidator';
 
 export interface ComboBoxItemWidgetProps {
   item: ComboBoxItem;
@@ -214,6 +215,11 @@ export const ComboBoxItemWidget: React.FC<React.PropsWithChildren<ComboBoxItemWi
   const localRef = React.useRef<HTMLDivElement>(null);
   const scrolledRef = React.useRef(false);
   const rowRef = props.forwardRef || localRef;
+  const { disabled: validationDisabled, hidden } = useValidator({ validator: props.item.validator });
+  const item = {
+    ...props.item,
+    disabled: props.item.disabled || validationDisabled
+  };
 
   useDimensionObserver({
     element: rowRef,
@@ -222,6 +228,10 @@ export const ComboBoxItemWidget: React.FC<React.PropsWithChildren<ComboBoxItemWi
     },
     enabled: !!props.gotDimensions
   });
+
+  if (hidden) {
+    return null;
+  }
 
   return (
     <AttentionWrapperWidget<ButtonComponentSelection>
@@ -240,7 +250,7 @@ export const ComboBoxItemWidget: React.FC<React.PropsWithChildren<ComboBoxItemWi
 
         return (
           <ComboBoxItemRow
-            item={props.item}
+            item={item}
             selected={props.selected}
             attention={!!attention}
             rowRef={rowRef}

@@ -5,7 +5,7 @@ import { RenderCalloutFunction } from '../../../stores/combo/ComboBoxDirectives'
 import { ParameterizedActionEvent } from '../ParameterizedAction';
 import { EntityDefinition } from '../../../entities/EntityDefinition';
 import { EntityActionParams } from '../ParameterizedAction';
-import { ActionValidationState } from '../../validators/ActionValidator';
+import { isValidationHidden } from '../../validators/ActionValidator';
 import * as React from 'react';
 import { ActionMetaWidget } from '../../ActionMetaWidget';
 
@@ -52,17 +52,14 @@ export class ProviderActionParameter<T> extends AbstractActionParameter<Provider
               return false;
             }
           }
-          return this.action.validate(this.getCandidateEvent(event, entity)).type !== ActionValidationState.HIDDEN;
+          return !isValidationHidden(this.action.validate(this.getCandidateEvent(event, entity)));
         },
         transformItem: (entity, item) => {
           const candidateEvent = this.getCandidateEvent(event, entity);
-          const validation = this.action.validate(candidateEvent);
           return {
             ...item,
-            disabled:
-              validation.type === ActionValidationState.DISABLED ||
-              validation.type === ActionValidationState.PENDING ||
-              validation.type === ActionValidationState.BLOCKED,
+            disabled: false,
+            validator: () => this.action.validate(candidateEvent),
             right: React.createElement(ActionMetaWidget, {
               action: this.action,
               eventData: candidateEvent
