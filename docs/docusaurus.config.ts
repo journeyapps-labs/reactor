@@ -12,6 +12,26 @@ const config: Config = {
   tagline: 'Ambitious app building framework',
   favicon: 'img/favicon.ico',
   ...base_config,
+  headTags: [
+    ...(base_config.headTags ?? []),
+    {
+      tagName: 'script',
+      attributes: {
+        async: 'true',
+        src: 'https://www.googletagmanager.com/gtag/js?id=G-614LCW142G'
+      }
+    },
+    {
+      tagName: 'script',
+      attributes: {},
+      innerHTML: `
+        window.dataLayer = window.dataLayer || [];
+        function gtag(){dataLayer.push(arguments);}
+        gtag('js', new Date());
+        gtag('config', 'G-614LCW142G');
+      `
+    }
+  ],
   plugins: packages.map((p) => generateTSDocPlugin(p)),
   themeConfig: {
     // Replace with your project's social card

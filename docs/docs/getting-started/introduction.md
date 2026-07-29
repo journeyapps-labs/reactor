@@ -7,14 +7,14 @@ hide_title: true
 
 <div className="capability-hero">
   <div className="capability-hero__eyebrow">Application framework</div>
-  <h1>Build ambitious software, not a pile of screens.</h1>
+  <h1>Build ambitious interfaces.</h1>
   <p>
-    Reactor gives complex web applications one runtime for commands, data, persistent workspaces, settings, search,
-    responsive interaction, and progress.
+    Reactor allows you to build increadibly ambitious UI software in a fast, scalable and highly declarative way. Much like its name, the more you throw at Reactor,
+the more powerful it gets.
   </p>
 </div>
 
-Reactor is for web software that behaves more like an IDE or desktop application than a collection of routed pages. It powers large development and administration systems, but also works well for focused tools such as data browsers.
+Reactor is an application framework designed for web software that behaves more like an IDE or desktop application rather than a collection of routed pages. It powers large development and administration systems, but also works well for focused tools such as data browsers.
 
 Instead of independently assembling routing, commands, panels, persistence, settings, search, keyboard behavior, and mobile adaptations, a Reactor application installs **modules** into a shared runtime.
 
