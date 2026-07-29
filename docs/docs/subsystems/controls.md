@@ -5,7 +5,11 @@ description: Adapt values and behavior to buttons, widgets, combo boxes, setting
 
 # Controls
 
-Controls are Reactor's adaptation layer. A control owns one behavior or value and knows how to represent it on the different surfaces where an application needs it. Actions, settings, and forms build on this contract rather than inventing separate buttons, selectors, and menus.
+One control can appear as a button, inline widget, or combo-box item. Actions, settings, and forms use controls so these versions share the same value and behavior.
+
+:::note Mental model
+A control owns the value or behavior. Its button, inline widget, and combo-box items are different views of the same control.
+:::
 
 ## Controls
 
@@ -29,7 +33,7 @@ Common controls include:
 - `ButtonControl`
 - `ActionButtonControl`
 
-`AbstractValueControl` owns a mutable value and emits value-change events. Its renderers are projections of the same control, not independent widgets.
+`AbstractValueControl` owns a mutable value and emits value-change events. All of its renderers use that same value.
 
 ```ts
 const status = new SetControl({
@@ -48,21 +52,25 @@ status.registerListener({
 
 The same instance can render as a selector in a panel, supply a button descriptor to another widget, or generate items for a combo box.
 
+:::warning Common pitfall
+Do not create a separate control instance for every representation when those surfaces are meant to edit the same value. They will drift into independent state.
+:::
+
 ## Action controls
 
 `ActionButtonControl` adapts an event-bound action. The control asks the action for its current button descriptor, so its label, icon, validator, indicator, and activation callback remain consistent.
 
 ```ts
 const control = action.representAsControl({
-  eventData: { targetEntity: project }
+  eventData: { targetEntity: todo }
 });
 ```
 
 The Actions sandbox shows the same action rendered through standard button, icon-only, panel-sized control, compact control, and combo-box item representations.
 
-## Controls as a framework boundary
+## Accept controls in reusable UI
 
-Prefer accepting an `AbstractControl` when a subsystem needs configurable behavior without caring about its concrete UI. The consumer can ask for the appropriate representation:
+Accept an `AbstractControl` when reusable UI needs a value or behavior but should not require one specific widget. The reusable UI can ask for the representation it needs:
 
 ```tsx
 function ToolbarValue({ control }: { control: AbstractControl }) {
@@ -70,7 +78,7 @@ function ToolbarValue({ control }: { control: AbstractControl }) {
 }
 ```
 
-This is why controls are used by settings, form inputs, entity selection, action representations, and presenter configuration. The surrounding system owns layout; the control owns the interaction.
+Settings, forms, entity selection, and actions all use this pattern. The surrounding UI chooses the layout; the control manages the value or behavior.
 
 ## Implementing a control
 
@@ -78,11 +86,24 @@ Implement all three representations even if one is the primary surface. `represe
 
 Keep state and callbacks in the control. Do not make each representation maintain its own selection state. For value controls, update `value` so registered listeners and every active representation observe the same change.
 
+:::tip Pro tip
+Accept `AbstractControl` in reusable components. Callers can supply a different control without changing the component.
+:::
+
 ## Controls in forms and settings
 
 `ControlInput` embeds a control in a form. `AbstractUserSetting` embeds one in the settings system. Both preserve the control as the source of interaction state while adding their own concerns:
 
 - forms add labels, validation, visibility, and submission values;
-- settings add stable keys, defaults, persistence, categories, and readiness.
+- settings add keys for saved data, defaults, categories, and readiness.
 
 See [Forms](./forms.md) for input modeling and [Settings and persistence](./settings-and-persistence.md) for persisted controls.
+
+## Go deeper
+
+<div className="doc-links">
+  <a href="./actions-and-validation">Action controls</a>
+  <a href="./forms">Controls inside forms</a>
+  <a href="./settings-and-persistence">Persisted controls</a>
+  <a href="../runtime/interaction-layers">Combo-box representations</a>
+</div>

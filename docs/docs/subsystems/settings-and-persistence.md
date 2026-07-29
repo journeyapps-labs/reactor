@@ -9,7 +9,7 @@ Reactor separates transient application state, user settings, and persisted stor
 
 ## Settings
 
-`AbstractSetting` owns a stable key, serialization version, readiness state, and update notifications. Interactive settings wrap controls so the same value can appear in the settings panel and elsewhere in the UI.
+`AbstractSetting` owns a key used in saved data, a serialization version, readiness state, and update notifications. Interactive settings wrap controls so the same value can appear in the settings panel and elsewhere in the UI.
 
 Common setting types include:
 
@@ -23,15 +23,23 @@ Register user-facing settings with `PrefsStore`:
 ```ts
 prefsStore.registerPreference(
   new BooleanSetting({
-    key: 'show-archived-projects',
-    name: 'Show archived projects',
-    category: 'Projects',
+    key: 'show-completed-todos',
+    name: 'Show completed todos',
+    category: 'Todos',
     checked: false
   })
 );
 ```
 
 Call `waitForReady()` before using a setting from code that may run during boot. A `serializeID` invalidates persisted data after an incompatible schema change.
+
+:::note Mental model
+A setting saves one user choice. A persisted store saves a larger state model.
+:::
+
+:::warning Common pitfall
+Do not use settings as a general-purpose state store. Selection, loading, and domain data belong in application stores even when they eventually influence a setting.
+:::
 
 ## Persisted stores
 
@@ -47,3 +55,12 @@ Store constructors should still establish usable defaults. Deserialization repla
 Workspace persistence follows the same principle. Layout changes trigger a trailing debounced save so a burst of model updates produces one persisted snapshot.
 
 Themes use the settings system for the selected theme, but their extension model is documented separately in [Themes](./themes.md).
+
+## Go deeper
+
+<div className="doc-links">
+  <a href="./controls">Setting controls</a>
+  <a href="./modules-and-stores">Persisted stores</a>
+  <a href="./workspaces-and-panels">Workspace persistence</a>
+  <a href="../advanced/production-patterns">Saving data for the right user or app</a>
+</div>

@@ -12,17 +12,17 @@ Forms use controls where an existing Reactor interaction should be embedded as a
 ## Create a form model
 
 ```ts
-type ProjectValues = {
+type TodoValues = {
   name: string;
   enabled: boolean;
 };
 
-const form = new FormModel<ProjectValues>();
+const form = new FormModel<TodoValues>();
 
 form.addInput(
   new TextInput({
     name: 'name',
-    label: 'Project name',
+    label: 'Todo name',
     required: true
   })
 );
@@ -71,8 +71,8 @@ Every input has a `value` and optional error. Required inputs validate empty val
 
 ```ts
 new TextInput({
-  name: 'slug',
-  label: 'Project slug',
+  name: 'tag',
+  label: 'Todo tag',
   required: true,
   validator: (value) => /^[a-z0-9-]+$/.test(value) || 'Use lowercase letters, numbers, and hyphens'
 });
@@ -91,7 +91,7 @@ Text and number inputs default their placeholder to the field label when no expl
 ```ts
 new TextInput({
   name: 'title',
-  label: 'Project title'
+  label: 'Todo title'
 });
 ```
 
@@ -125,3 +125,19 @@ For custom layouts, render individual inputs:
 The layout may change, but each `FormInput` should remain the source of value and validation state.
 
 The Playground **Forms** panel demonstrates modeled inputs, grouped fields, errors, default placeholders, and responsive sizing.
+
+:::note Mental model
+A form model owns named values and validation. The rendered fields read from that model.
+:::
+
+:::warning Common pitfall
+Do not rebuild a `FormModel` on every React render. Reuse the same model until the form closes so it does not lose values, errors, or listeners.
+:::
+
+## Go deeper
+
+<div className="doc-links">
+  <a href="./controls">Embed controls</a>
+  <a href="../runtime/interaction-layers">Form-backed dialogs</a>
+  <a href="./ui-system">Responsive form rendering</a>
+</div>

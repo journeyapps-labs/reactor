@@ -7,6 +7,10 @@ title: Exploring the sandbox
 
 The Reactor sandbox is a real application assembled from the demo modules in this repository. It is both a visual catalog and a source-code reference: each panel demonstrates a framework concept using the same APIs an application module uses.
 
+:::note Mental model
+The Todo module demonstrates domain composition. The Playground demonstrates interaction primitives. Read them together: meaning on one side, representation on the other.
+:::
+
 ## Start it
 
 ```bash
@@ -51,3 +55,16 @@ demo/module-todos/src/entities/TodoDefinition.ts
 ```
 
 Start at a module's `register()` method. It acts as a table of contents for everything that module installs.
+
+:::tip Pro tip
+When a Playground panel shows several versions, inspect the shared control, action, or model first. The useful lesson is usually how that object produces several UI representations—not the final JSX alone.
+:::
+
+## Continue from the sandbox
+
+<div className="doc-links">
+  <a href="./first-module">Build a module</a>
+  <a href="../subsystems/entity-definitions">Understand the Todo domain</a>
+  <a href="../advanced/guided-workflows">Inspect the live guide</a>
+  <a href="../runtime/responsive-applications">Test viewport behavior</a>
+</div>

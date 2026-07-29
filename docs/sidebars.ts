@@ -16,26 +16,59 @@ import * as path from 'path';
  Create as many sidebars as you want.
  */
 const sidebars: SidebarsConfig = {
-  gettingStartedSidebar: [
-    'getting-started/introduction',
-    'getting-started/local-development',
-    'getting-started/reactor-server',
-    'getting-started/exploring-the-sandbox',
-    'getting-started/first-module'
-  ],
-  subsystemsSidebar: [
-    'subsystems/application-model',
-    'subsystems/modules-and-stores',
-    'subsystems/actions-and-validation',
-    'subsystems/entity-definitions',
-    'subsystems/search-selection-and-command-palette',
-    'subsystems/controls',
-    'subsystems/forms',
-    'subsystems/workspaces-and-panels',
-    'subsystems/settings-and-persistence',
-    'subsystems/themes',
-    'subsystems/ui-system',
-    'subsystems/logging-and-debugging'
+  manualSidebar: [
+    {
+      type: 'category',
+      label: 'Start',
+      collapsed: false,
+      items: [
+        'getting-started/introduction',
+        'getting-started/architecture',
+        'getting-started/local-development',
+        'getting-started/exploring-the-sandbox',
+        'getting-started/first-module',
+        'getting-started/reactor-server'
+      ]
+    },
+    {
+      type: 'category',
+      label: 'Core concepts',
+      items: [
+        'subsystems/application-model',
+        'subsystems/modules-and-stores',
+        'subsystems/actions-and-validation',
+        'subsystems/entity-definitions',
+        'subsystems/search-selection-and-command-palette',
+        'subsystems/controls',
+        'subsystems/forms',
+        'subsystems/settings-and-persistence',
+        'subsystems/themes',
+        'subsystems/logging-and-debugging'
+      ]
+    },
+    {
+      type: 'category',
+      label: 'Application runtime',
+      items: [
+        'runtime/application-shell',
+        'subsystems/workspaces-and-panels',
+        'runtime/interaction-layers',
+        'runtime/operational-feedback',
+        'runtime/responsive-applications',
+        'subsystems/ui-system'
+      ]
+    },
+    {
+      type: 'category',
+      label: 'Advanced systems',
+      items: [
+        'advanced/guided-workflows',
+        'advanced/media-engine',
+        'advanced/batch-actions',
+        'advanced/data-collections',
+        'advanced/production-patterns'
+      ]
+    }
   ],
   tsDocSidebar: packages.map((p) => generateTSDocSidebarEntry(p, path.join(__dirname, './docs')))
 };

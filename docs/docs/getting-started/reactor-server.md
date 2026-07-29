@@ -7,6 +7,10 @@ title: Reactor server and environment
 
 Reactor modules are browser bundles, but they need a small server to select the modules for an application, serve their bundles, and generate the HTML that boots Reactor. `@journeyapps-labs/lib-reactor-server` provides those building blocks for Express applications.
 
+:::note Mental model
+The server chooses and serves module bundles. The browser installs them. `reactor.config.json` tells both sides how to load a module.
+:::
+
 ## Describe a module
 
 Every module package has a `reactor.config.json` next to its `package.json`:
@@ -26,6 +30,10 @@ Every module package has a `reactor.config.json` next to its `package.json`:
 
 Only declare values that are safe to send to the browser. Secrets such as service credentials must never appear in `env`.
 The server throws during startup when a loaded module declares an environment variable that was not provided to `loadModules`.
+
+:::warning Security boundary
+Every declared module environment value becomes browser-readable configuration. An allowlist prevents accidental exposure only when applications avoid spreading `process.env` into `loadModules`.
+:::
 
 ## Create an Express server
 
@@ -108,3 +116,11 @@ Each application module may declare additional variables in its own `reactor.con
 4. `INFO`.
 
 This lets deployments choose a useful baseline while developers can temporarily isolate or increase logging without restarting the server.
+
+## Go deeper
+
+<div className="doc-links">
+  <a href="./architecture">Browser runtime architecture</a>
+  <a href="../subsystems/modules-and-stores">Module installation</a>
+  <a href="../subsystems/logging-and-debugging">Browser diagnostics</a>
+</div>

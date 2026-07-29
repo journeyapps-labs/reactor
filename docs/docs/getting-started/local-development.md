@@ -5,10 +5,14 @@ title: Local development
 
 # Local development
 
+This guide is for contributing to Reactor itself. To understand how the pieces compose before changing them, read [How Reactor fits together](./architecture.md).
+
 ## Requirements
 
 - A supported Node.js release
 - `pnpm` 11
+
+The repository pins its pnpm version in the root `package.json`.
 
 ## Build the repository
 
@@ -18,6 +22,10 @@ pnpm build
 ```
 
 `pnpm build` compiles TypeScript and builds every Reactor module bundle.
+
+:::tip Pro tip
+Run `pnpm build:ts` while iterating on framework types. Run the complete build before handing off changes that affect module bundling or the server.
+:::
 
 ## Run the demos
 
@@ -59,3 +67,9 @@ For local documentation development:
 ```bash
 pnpm --dir docs start
 ```
+
+The static documentation build also regenerates API Markdown from package declarations.
+
+:::warning Generated content
+Do not edit `docs/docs/generated` directly. Improve exported TSDoc in the owning package and rebuild the site.
+:::

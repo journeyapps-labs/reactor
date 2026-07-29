@@ -22,14 +22,14 @@ This lets modules extend the visual system without adding every product-specific
 A fragment starts by declaring its typed color structure:
 
 ```ts
-export const projectTheme = new ThemeFragment({
+export const todoTheme = new ThemeFragment({
   structure: {
-    project: {
-      label: 'Projects',
+    todo: {
+      label: 'Todos',
       colors: {
-        accent: 'Project accent',
-        background: 'Project surface background',
-        foreground: 'Project surface foreground'
+        accent: 'Todo accent',
+        background: 'Todo surface background',
+        foreground: 'Todo surface foreground'
       }
     }
   }
@@ -43,10 +43,10 @@ The category label and color labels are human-readable definitions. The object k
 Register values independently for each theme:
 
 ```ts
-projectTheme.addThemeValues({
+todoTheme.addThemeValues({
   name: Themes.REACTOR_DARK,
   values: {
-    project: {
+    todo: {
       accent: '#7c5cff',
       background: '#17131f',
       foreground: '#f4efff'
@@ -54,10 +54,10 @@ projectTheme.addThemeValues({
   }
 });
 
-projectTheme.addThemeValues({
+todoTheme.addThemeValues({
   name: Themes.REACTOR_LIGHT,
   values: {
-    project: {
+    todo: {
       accent: '#5639d7',
       background: '#ffffff',
       foreground: '#211b2d'
@@ -69,7 +69,7 @@ projectTheme.addThemeValues({
 Register the fragment with `ThemeStore` during module registration:
 
 ```ts
-event.ioc.get(ThemeStore).addThemeFragment(projectTheme);
+event.ioc.get(ThemeStore).addThemeFragment(todoTheme);
 ```
 
 When an exact theme value is absent, a fragment falls back to its `reactor` values and then its first registered values. A fragment must therefore provide at least one complete set.
@@ -79,12 +79,12 @@ When an exact theme value is absent, a fragment falls back to its `reactor` valu
 Use the fragment's typed styled helper:
 
 ```ts
-const styled = projectTheme.styled();
+const styled = todoTheme.styled();
 
-const ProjectSurface = styled.div`
-  color: ${(props) => props.theme.project.foreground};
-  background: ${(props) => props.theme.project.background};
-  border-color: ${(props) => props.theme.project.accent};
+const TodoSurface = styled.div`
+  color: ${(props) => props.theme.todo.foreground};
+  background: ${(props) => props.theme.todo.background};
+  border-color: ${(props) => props.theme.todo.accent};
 `;
 ```
 
@@ -121,8 +121,22 @@ Fragments can register entity theme overrides for visual details such as entity 
 
 ## Product-specific fragments
 
-Product modules should own product vocabulary. A plans module can define upgrade colors and branded indicators, while Reactor only needs generic concepts such as an action-validation indicator with an icon, background, foreground, and tooltip.
-
-This is the same principle used throughout Reactor: the framework supplies a composable contract; modules supply domain meaning.
+Product modules should own product colors and names. Reactor core defines the fragment shape; application modules provide its values.
 
 The Playground **Cards**, **Surfaces**, **Forms**, **Buttons**, and **Trees** panels are useful for reviewing a theme across widgets and Reactor sizes.
+
+:::note Mental model
+A theme is an identity. A fragment is one module's typed contribution to every supported identity.
+:::
+
+:::warning Common pitfall
+Do not add application-specific colors to Reactor's core fragment merely because a core widget displays them. Let the owning module define a fragment and pass its colors to the widget.
+:::
+
+## Go deeper
+
+<div className="doc-links">
+  <a href="../runtime/application-shell">Application branding</a>
+  <a href="./ui-system">Shared surfaces</a>
+  <a href="./entity-definitions">Entity appearance overrides</a>
+</div>
