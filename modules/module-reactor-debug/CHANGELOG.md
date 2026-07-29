@@ -1,5 +1,12 @@
 # @journeyapps-labs/reactor-mod-debug
 
+## 0.2.1
+
+### Patch Changes
+
+- Updated dependencies [9f3ac40]
+  - @journeyapps-labs/reactor-mod@8.1.0
+
 ## 0.2.0
 
 ### Minor Changes
