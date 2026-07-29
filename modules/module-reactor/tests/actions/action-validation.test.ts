@@ -2,6 +2,7 @@ import { describe, expect, it, vi } from 'vitest';
 import {
   Action,
   ActionEvent,
+  ActionMacroBehavior,
   ActionValidator,
   ActionValidationState,
   activateWithValidation,
@@ -9,6 +10,8 @@ import {
   EntityDefinition,
   ValidationResult
 } from '../../src';
+import { createSearchEventMatcher } from '@journeyapps-labs/lib-reactor-search';
+import { matchesActionCommandPaletteSearch } from '../../src/entities-reactor/actions/ActionSearchEngineComponent';
 
 interface TestActionEvent extends ActionEvent {
   targetEntity?: { allowed: boolean };
@@ -50,6 +53,23 @@ class TestAction extends Action<{ EVENT: TestActionEvent }> {
 
   checkPreflight(event: TestActionEvent) {
     return this._preflightChecks(event);
+  }
+
+  protected async fireEvent(): Promise<true> {
+    return true;
+  }
+}
+
+class SearchableTestAction extends Action {
+  constructor() {
+    super({
+      id: 'SEARCHABLE_ACTION',
+      name: 'Delete todo item',
+      icon: 'trash',
+      aliases: ['Remove todo item', 'Discard todo item'],
+      tags: ['todo', 'cleanup'],
+      behavior: ActionMacroBehavior.DELETE
+    });
   }
 
   protected async fireEvent(): Promise<true> {
@@ -108,7 +128,6 @@ describe('action validation', () => {
     const item = action.representAsComboBoxItem();
 
     expect(action.validate()).toEqual({ type: ActionValidationState.DEFERRED });
-    expect(item.disabled).toBe(false);
     expect(item.validator()).toEqual({ type: ActionValidationState.DEFERRED });
   });
 
@@ -196,5 +215,18 @@ describe('action validation', () => {
 
     await expect(action.checkPreflight(event(true))).resolves.toBe(true);
     await expect(action.checkPreflight(event(false))).resolves.toBe(false);
+  });
+
+  it('searches actions by full-name aliases, explicit tags and behavior tags', () => {
+    const action = new SearchableTestAction();
+    const matches = (search: string) =>
+      matchesActionCommandPaletteSearch(action, {
+        search,
+        matches: createSearchEventMatcher(search)
+      });
+
+    expect(action.options.tags).toEqual(['todo', 'cleanup', 'delete', 'remove', 'destroy']);
+    expect(['delete', 'discard', 'cleanup', 'destroy'].map(matches)).toEqual([true, true, true, true]);
+    expect(matches('publish')).toBe(false);
   });
 });

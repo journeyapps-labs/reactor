@@ -1,10 +1,11 @@
 import { ReactorIcon } from '../../widgets/icons/IconWidget';
 import { MousePosition } from '../../layers/combo/SmartPositionWidget';
-import { SearchResultEntry, SearchEngineInterface } from '@journeyapps-labs/lib-reactor-search';
+import { SearchEventMatch, SearchResultEntry, SearchEngineInterface } from '@journeyapps-labs/lib-reactor-search';
 import type { Validator } from '../../actions/validators/ActionValidator';
 
 export interface ComboBoxItem {
   title: string;
+  titleMatch?: SearchEventMatch;
   key: string;
   children?: ComboBoxItem[];
   icon?: ReactorIcon;

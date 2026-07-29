@@ -9,6 +9,7 @@ export class RenameTodoAction extends EntityAction<TodoModel> {
     super({
       id: RenameTodoAction.ID,
       name: 'Rename todo',
+      tags: ['todo', 'edit'],
       icon: 'pencil',
       target: TodoEntities.TODO_ITEM,
       category: {

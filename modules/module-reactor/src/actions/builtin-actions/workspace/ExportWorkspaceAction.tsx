@@ -14,6 +14,7 @@ export class ExportWorkspaceAction extends EntityAction<IDEWorkspace> {
     super({
       id: 'EXPORT_WORKSPACE',
       name: ExportWorkspaceAction.NAME,
+      tags: ['internal', 'workspace', 'export'],
       icon: 'upload',
       target: ReactorEntities.WORKSPACE
     });

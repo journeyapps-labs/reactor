@@ -11,6 +11,7 @@ export class CopyPanelURLAction extends Action {
     super({
       id: 'COPY_URL',
       name: 'Copy URL',
+      tags: ['internal', 'workspace', 'sharing'],
       icon: 'clipboard'
     });
   }

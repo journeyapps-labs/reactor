@@ -84,6 +84,25 @@ const TOP_LEVEL_ITEMS: ComboBoxItem[] = [
   }
 ];
 
+const COMPACT_NESTED_ITEMS: ComboBoxItem[] = [
+  {
+    key: 'compact-projects',
+    title: 'Projects',
+    children: [
+      { key: 'compact-create-project', title: 'Create project' },
+      { key: 'compact-import-project', title: 'Import project' }
+    ]
+  },
+  {
+    key: 'compact-developers',
+    title: 'Developers',
+    children: [
+      { key: 'compact-create-developer', title: 'Create developer' },
+      { key: 'compact-invite-developer', title: 'Invite developer' }
+    ]
+  }
+];
+
 interface DialogTableRow extends TableRow {
   cells: {
     row: number;
@@ -172,13 +191,24 @@ export const PlaygroundDialogsComboboxesPanelWidget: React.FC<PlaygroundDialogsC
       );
     };
 
-    const runNestedComboDemo = async (position: any) => {
+    const runFlattenedSearchDemo = async (position: any) => {
       await comboBoxStore2.show(
         new SimpleComboBoxDirective({
-          title: 'Nested combobox demo',
-          subtitle: 'Pick a leaf node',
+          title: 'Flattened nested search',
+          subtitle: 'Search for “Americano” or “Cold brew”',
           event: position,
           items: TOP_LEVEL_ITEMS
+        })
+      );
+    };
+
+    const runCompactNestedDemo = async (position: any) => {
+      await comboBoxStore2.show(
+        new SimpleComboBoxDirective({
+          title: 'Compact nested menu',
+          subtitle: 'Four leaf actions do not warrant search',
+          event: position,
+          items: COMPACT_NESTED_ITEMS
         })
       );
     };
@@ -264,25 +294,50 @@ export const PlaygroundDialogsComboboxesPanelWidget: React.FC<PlaygroundDialogsC
 
         <CardWidget
           title="Comboboxes"
-          subHeading="Nested side-by-side combobox demos"
+          subHeading="Hierarchical browsing with threshold-based flattened search"
           sections={[
             {
-              key: 'combo-actions',
+              key: 'flattened-search-demo',
               content: () => {
                 return (
-                  <S.Buttons>
-                    <PanelButtonWidget
-                      label="Open nested combobox"
-                      icon="sitemap"
-                      action={runNestedComboDemo}
-                      mode={PanelButtonMode.PRIMARY}
-                    />
-                    <PanelButtonWidget
-                      label="Open entity context menu"
-                      icon="cube"
-                      action={runEntityContextComboDemo}
-                    />
-                  </S.Buttons>
+                  <S.Demo>
+                    <S.DemoCopy>
+                      <strong>Flattened descendant search</strong>
+                      <span>
+                        The empty menu stays hierarchical. Searching returns leaf results such as “Coffee › Hot ›
+                        Americano”.
+                      </span>
+                    </S.DemoCopy>
+                    <S.Buttons>
+                      <PanelButtonWidget
+                        label="Open flattened search"
+                        icon="search"
+                        action={runFlattenedSearchDemo}
+                        mode={PanelButtonMode.PRIMARY}
+                      />
+                      <PanelButtonWidget
+                        label="Open entity context menu"
+                        icon="cube"
+                        action={runEntityContextComboDemo}
+                      />
+                    </S.Buttons>
+                  </S.Demo>
+                );
+              }
+            },
+            {
+              key: 'compact-hierarchy-demo',
+              content: () => {
+                return (
+                  <S.Demo>
+                    <S.DemoCopy>
+                      <strong>Compact hierarchy</strong>
+                      <span>With only four descendant leaves, the same directive omits the search field.</span>
+                    </S.DemoCopy>
+                    <S.Buttons>
+                      <PanelButtonWidget label="Open compact hierarchy" icon="sitemap" action={runCompactNestedDemo} />
+                    </S.Buttons>
+                  </S.Demo>
                 );
               }
             }
@@ -336,5 +391,22 @@ namespace S {
     display: flex;
     flex-wrap: wrap;
     gap: 8px;
+  `;
+
+  export const Demo = styled.div`
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  `;
+
+  export const DemoCopy = styled.div`
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    color: ${(p) => p.theme.text.secondary};
+
+    strong {
+      color: ${(p) => p.theme.text.primary};
+    }
   `;
 }

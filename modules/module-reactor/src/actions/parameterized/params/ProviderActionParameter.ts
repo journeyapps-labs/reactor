@@ -5,7 +5,6 @@ import { RenderCalloutFunction } from '../../../stores/combo/ComboBoxDirectives'
 import { ParameterizedActionEvent } from '../ParameterizedAction';
 import { EntityDefinition } from '../../../entities/EntityDefinition';
 import { EntityActionParams } from '../ParameterizedAction';
-import { isValidationHidden } from '../../validators/ActionValidator';
 import * as React from 'react';
 import { ActionMetaWidget } from '../../ActionMetaWidget';
 
@@ -43,22 +42,16 @@ export class ProviderActionParameter<T> extends AbstractActionParameter<Provider
         event: event.position,
         autoSelectedIsolatedEntity: this.options.autoSelectIsolatedItem,
         filter: (entity) => {
-          let definition = ioc.get(System).getDefinitionForEntity(entity);
+          const definition = ioc.get(System).getDefinitionForEntity(entity);
           if (definition && !definition.isActionAllowedForEntity(this.action, entity)) {
             return false;
           }
-          if (this.options.filter) {
-            if (!this.options.filter(entity)) {
-              return false;
-            }
-          }
-          return !isValidationHidden(this.action.validate(this.getCandidateEvent(event, entity)));
+          return this.options.filter?.(entity) ?? true;
         },
         transformItem: (entity, item) => {
           const candidateEvent = this.getCandidateEvent(event, entity);
           return {
             ...item,
-            disabled: false,
             validator: () => this.action.validate(candidateEvent),
             right: React.createElement(ActionMetaWidget, {
               action: this.action,

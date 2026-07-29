@@ -2,6 +2,7 @@ import { SimpleEntitySearchEngineComponent } from '../../entities/components/sea
 import {
   CMDPalletGenerateResultWidgetEvent,
   CMDPalletSearchEngine,
+  CMDPalletSearchEngineResult,
   CommandPalletSearchEngineOptions
 } from '../../cmd-pallet/CMDPalletSearchEngine';
 import {
@@ -21,6 +22,13 @@ import { styled } from '../../stores/themes/reactor-theme-fragment';
 import { ActionMetaWidget } from '../../actions/ActionMetaWidget';
 import { useMemo } from 'react';
 import { ActionStore } from '../../stores/actions/ActionStore';
+import { SearchEvent } from '@journeyapps-labs/lib-reactor-search';
+
+export const matchesActionCommandPaletteSearch = (action: Action, event: SearchEvent) => {
+  return [action.options.name, ...(action.options.aliases || []), ...(action.options.tags || [])].some((term) =>
+    Boolean(event.matches(term))
+  );
+};
 
 export class ActionSearchEngineComponent extends SimpleEntitySearchEngineComponent<Action> {
   constructor() {
@@ -63,6 +71,30 @@ export class CmdPaletteActionSearchEngine extends CMDPalletEntitySearchEngine<Ac
 
   async handleSelection(entry: CMDPalletEntitySearchEngineEntry<Action>): Promise<any> {
     return super.handleSelection(entry);
+  }
+
+  doSearch(event: SearchEvent): CMDPalletSearchEngineResult<CMDPalletEntitySearchEngineEntry<Action>> {
+    const result = new CMDPalletSearchEngineResult<CMDPalletEntitySearchEngineEntry<Action>>(this);
+    result.setValues(
+      ioc
+        .get(ActionStore)
+        .getActions()
+        .filter((action) => !action.options.hideFromCmdPallet)
+        .filter((action) => action.validate().type !== ActionValidationState.HIDDEN)
+        .filter((action) => matchesActionCommandPaletteSearch(action, event))
+        .map((action) => {
+          const entry: EntitySearchResultEntry<Action> = {
+            entity: action,
+            key: action.id
+          };
+          return {
+            ...entry,
+            engine: this,
+            getWidget: (widgetEvent) => this.getWidget(entry, widgetEvent)
+          } as CMDPalletEntitySearchEngineEntry<Action>;
+        })
+    );
+    return result;
   }
 
   getWidget(entry: EntitySearchResultEntry<Action>, event: CMDPalletGenerateResultWidgetEvent): React.JSX.Element {

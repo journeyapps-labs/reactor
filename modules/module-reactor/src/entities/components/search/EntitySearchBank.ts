@@ -4,6 +4,7 @@ import { ComboBoxDirective } from '../../../stores/combo2/ComboBoxDirective';
 import { MousePosition } from '../../../layers/combo/SmartPositionWidget';
 import { ComposableComboBoxDirective } from '../../../stores/combo2/directives/ComposableComboBoxDirective';
 import { ComboBoxStore2 } from '../../../stores/combo2/ComboBoxStore2';
+import { activateWithValidation } from '../../../hooks/useValidator';
 
 export interface EntitySearchBankOptions {
   label: string;
@@ -31,8 +32,18 @@ export class EntitySearchBank<T = any> extends ComponentBank<EntitySearchEngineC
       });
       const item = res ? engineComponents[0].definition.getAsComboBoxItem(res) : null;
       const transformedItem = item ? options.transformItem?.(res, item) || item : null;
-      if (res && options.filter?.(res) !== false && !transformedItem.disabled) {
-        return res;
+      if (res && transformedItem && options.filter?.(res) !== false && !transformedItem.disabled) {
+        const validation = transformedItem.validator?.();
+        if (!validation) {
+          return res;
+        }
+        let selected = false;
+        await activateWithValidation(validation, () => {
+          selected = true;
+        });
+        if (selected) {
+          return res;
+        }
       }
     }
 

@@ -7,6 +7,8 @@ description: Use Reactor widgets, sizing, surfaces, forms, tooltips, and overlay
 
 Reactor widgets are shared interaction primitives, not just visual components. Buttons understand action validation, tooltips use anchored overlays, cards expose consistent actions and selection, and controls adapt to the current Reactor size.
 
+The foundational interaction contracts have dedicated guides: [Controls](./controls.md), [Forms](./forms.md), and [Themes](./themes.md). This page focuses on composing their rendered widgets into a consistent application interface.
+
 ## Responsive sizing
 
 Wrap a subtree in `ReactorSizeProvider` or pass a `size` prop directly:

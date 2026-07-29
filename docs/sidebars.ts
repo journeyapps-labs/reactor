@@ -28,7 +28,12 @@ const sidebars: SidebarsConfig = {
     'subsystems/modules-and-stores',
     'subsystems/actions-and-validation',
     'subsystems/entity-definitions',
+    'subsystems/search-selection-and-command-palette',
+    'subsystems/controls',
+    'subsystems/forms',
     'subsystems/workspaces-and-panels',
+    'subsystems/settings-and-persistence',
+    'subsystems/themes',
     'subsystems/ui-system',
     'subsystems/logging-and-debugging'
   ],

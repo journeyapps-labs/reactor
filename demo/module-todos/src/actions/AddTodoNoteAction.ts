@@ -14,6 +14,7 @@ export class AddTodoNoteAction extends EntityAction<TodoModel> {
     super({
       id: AddTodoNoteAction.ID,
       name: 'Add note',
+      tags: ['todo', 'note', 'create'],
       icon: 'sticky-note',
       target: TodoEntities.TODO_ITEM,
       category: {

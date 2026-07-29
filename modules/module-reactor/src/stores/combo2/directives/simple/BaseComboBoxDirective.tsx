@@ -6,7 +6,7 @@ import { ComboBoxWidget } from '../../../../layers/combo/ComboBoxWidget';
 import { useForceUpdate } from '../../../../hooks/useForceUpdate';
 import { ControlledSearchWidget } from '../../../../widgets/search/ControlledSearchWidget';
 import * as _ from 'lodash';
-import { createSearchEventMatcherBool } from '@journeyapps-labs/lib-reactor-search';
+import { createSearchEventMatcher, SearchEventMatcher } from '@journeyapps-labs/lib-reactor-search';
 import { styled } from '../../../themes/reactor-theme-fragment';
 import { ioc } from '../../../../inversify.config';
 import { ComboBoxStore2 } from '../../ComboBoxStore2';
@@ -26,7 +26,8 @@ export class BaseComboBoxDirective<
   T extends ComboBoxItem = ComboBoxItem,
   O extends BaseComboBoxDirectiveOptions<T> = BaseComboBoxDirectiveOptions<T>
 > extends ComboBoxDirective<T, O> {
-  private matcher: (c: string) => boolean;
+  private matcher: SearchEventMatcher;
+  private flattenedItems = new Map<string, T>();
 
   constructor(options: O) {
     super(options);
@@ -36,11 +37,11 @@ export class BaseComboBoxDirective<
     if (this.options.hideSearch) {
       return false;
     }
-    return this.getAllItems().length > 5;
+    return this.getFlattenedItems().length > 5;
   }
 
   selectItem(key: string) {
-    const found = this.options.items.find((i) => i.key === key);
+    const found = this.flattenedItems.get(key) || this.options.items.find((i) => i.key === key);
     if (found?.disabled) {
       return;
     }
@@ -72,16 +73,52 @@ export class BaseComboBoxDirective<
     if (!this.matcher) {
       return this.getAllItems();
     }
-    return this.getAllItems().filter((i) => this.matcher(i.title));
+    return this.getFlattenedItems().flatMap((item) => {
+      const titleMatch = this.matcher(item.title);
+      return titleMatch ? [{ ...item, titleMatch }] : [];
+    });
   }
 
   setSearch(search: string) {
     super.setSearch(search);
-    if (this.search === null) {
+    const value = search?.trim();
+    if (!value) {
       this.matcher = null;
     } else {
-      this.matcher = createSearchEventMatcherBool(search);
+      this.matcher = createSearchEventMatcher(value);
     }
+  }
+
+  private getFlattenedItems(): T[] {
+    this.flattenedItems.clear();
+
+    const flatten = (items: ComboBoxItem[], titlePath: string[], keyPath: string[]): T[] => {
+      return items.flatMap((item) => {
+        if (item.validator && isValidationHidden(item.validator())) {
+          return [];
+        }
+
+        const nextTitlePath = [...titlePath, item.title];
+        const nextKeyPath = [...keyPath, item.key];
+        if (item.children?.length) {
+          return flatten(item.children, nextTitlePath, nextKeyPath);
+        }
+
+        const key = `search:${nextKeyPath.join('>')}`;
+        this.flattenedItems.set(key, item as T);
+        return [
+          {
+            ...item,
+            key,
+            title: nextTitlePath.join(' › '),
+            group: undefined,
+            children: undefined
+          } as T
+        ];
+      });
+    };
+
+    return flatten(this.getAllItems(), [], []);
   }
 }
 
@@ -98,6 +135,12 @@ export const SimpleComboBoxDirectiveWidget: React.FC<BaseComboBoxDirectiveWidget
     key: string;
     listener: () => any;
   }>(null);
+
+  const dismissChildDirective = () => {
+    childDirective.current?.listener();
+    childDirective.current?.directive.dismiss();
+    childDirective.current = null;
+  };
 
   useEffect(() => {
     return props.directive.registerListener({
@@ -117,6 +160,7 @@ export const SimpleComboBoxDirectiveWidget: React.FC<BaseComboBoxDirectiveWidget
         <S.Search
           focusOnMount={true}
           searchChanged={(search) => {
+            dismissChildDirective();
             props.directive.setSearch(search);
             forceUpdate();
           }}
@@ -134,9 +178,7 @@ export const SimpleComboBoxDirectiveWidget: React.FC<BaseComboBoxDirectiveWidget
           if (!dimensions || item.key === childDirective.current?.key) {
             return;
           }
-          childDirective.current?.listener();
-          childDirective.current?.directive.dismiss();
-          childDirective.current = null;
+          dismissChildDirective();
           if (item.children?.length > 0) {
             let directive = new SimpleComboBoxDirective({
               items: item.children,
@@ -163,9 +205,7 @@ export const SimpleComboBoxDirectiveWidget: React.FC<BaseComboBoxDirectiveWidget
         }}
         selected={(item, event) => {
           if (viewportMode === ReactorViewportMode.MOBILE && item.children?.length > 0) {
-            childDirective.current?.listener();
-            childDirective.current?.directive.dismiss();
-            childDirective.current = null;
+            dismissChildDirective();
 
             props.directive.dismiss();
             store.show(

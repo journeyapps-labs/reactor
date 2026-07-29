@@ -12,6 +12,7 @@ import * as _ from 'lodash';
 import { Dimensions, useDimensionObserver } from '../../hooks/useDimensionObserver';
 import { REACTOR_MOBILE_MEDIA_QUERY } from '../../hooks/useReactorViewportMode';
 import { useValidator } from '../../hooks/useValidator';
+import { MatchesWidget } from '../../widgets/search/MatchesWidget';
 
 export interface ComboBoxItemWidgetProps {
   item: ComboBoxItem;
@@ -121,7 +122,13 @@ const ItemContent: React.FC<ItemContentProps> = (props) => {
           <S.IconInner icon={props.item.icon} />
         </S.Icon>
       ) : null}
-      <S.Label disabled={props.item.disabled}>{props.item.title}</S.Label>
+      <S.Label disabled={props.item.disabled}>
+        {props.item.titleMatch ? (
+          <MatchesWidget text={props.item.title} locators={props.item.titleMatch.locators} />
+        ) : (
+          props.item.title
+        )}
+      </S.Label>
       {props.item.badge ? (
         <S.Badge
           color={props.item.badge.foreground}

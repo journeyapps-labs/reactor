@@ -53,19 +53,13 @@ const modules = loadModules({
   }
 });
 
-const moduleEnv = modules.reduce(
-  (env, module) => ({ ...env, ...module.getEnvs() }),
-  {}
-);
+const moduleEnv = modules.reduce((env, module) => ({ ...env, ...module.getEnvs() }), {});
 
 serveModules({ app, modules });
 
 const index = await createBaseIndexMiddleware({
   title: 'My Reactor application',
-  indexFile: join(
-    require.resolve('@journeyapps-labs/lib-reactor-server'),
-    '../../media/index.html'
-  ),
+  indexFile: join(require.resolve('@journeyapps-labs/lib-reactor-server'), '../../media/index.html'),
   getEnv: () => moduleEnv,
   domTransform: ($) => createModuleLoaderContentTransformer($, modules),
   templateVars: {
@@ -95,12 +89,12 @@ export const ENV = window.process.env as ExampleEnv;
 
 ## Environment variable reference
 
-| Variable | Used by | Description |
-| --- | --- | --- |
-| `MODULES` | Application server | Comma-separated module directories or package names. Convert it to an array before calling `loadModules`. |
-| `PORT` | Demo server convention | HTTP port. The Reactor server library does not choose a port itself. |
-| `NODE_ENV` | Reactor server | Added automatically to the browser environment by `createBaseIndexMiddleware`. |
-| `REACTOR_LOG_LEVEL` | Reactor core module | Default browser root logger level. Accepts `OFF`, `ERROR`, `WARN`, `INFO`, or `DEBUG`. Supply `INFO` as the server default; invalid values also fall back to `INFO` in the browser. |
+| Variable            | Used by                | Description                                                                                                                                                                         |
+| ------------------- | ---------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `MODULES`           | Application server     | Comma-separated module directories or package names. Convert it to an array before calling `loadModules`.                                                                           |
+| `PORT`              | Demo server convention | HTTP port. The Reactor server library does not choose a port itself.                                                                                                                |
+| `NODE_ENV`          | Reactor server         | Added automatically to the browser environment by `createBaseIndexMiddleware`.                                                                                                      |
+| `REACTOR_LOG_LEVEL` | Reactor core module    | Default browser root logger level. Accepts `OFF`, `ERROR`, `WARN`, `INFO`, or `DEBUG`. Supply `INFO` as the server default; invalid values also fall back to `INFO` in the browser. |
 
 Each application module may declare additional variables in its own `reactor.config.json`.
 

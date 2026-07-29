@@ -9,6 +9,7 @@ export class ChangeEditorThemeAction extends EntityAction<EditorTheme> {
   constructor() {
     super({
       name: ChangeEditorThemeAction.NAME,
+      tags: ['internal', 'editor', 'theme', 'appearance'],
       icon: 'paint-brush',
       id: ChangeEditorThemeAction.ID,
       target: EditorEntities.THEME

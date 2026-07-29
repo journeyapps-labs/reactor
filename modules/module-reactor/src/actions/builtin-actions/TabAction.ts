@@ -18,6 +18,7 @@ export class TabAction extends Action {
     super({
       id: left ? TabAction.NAME_LEFT : TabAction.NAME_RIGHT,
       name: `Tab ${left ? 'left' : 'right'}`,
+      tags: ['internal', 'navigation', 'tabs'],
       icon: {
         chars: left ? 'TL' : 'TR'
       },

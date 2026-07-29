@@ -1,4 +1,4 @@
-import { EntityAction, EntityActionEvent, inject } from '@journeyapps-labs/reactor-mod';
+import { ActionMacroBehavior, EntityAction, EntityActionEvent, inject } from '@journeyapps-labs/reactor-mod';
 import { TodoModel } from '../models/TodoModel';
 import { TodoEntities } from '../TodoEntities';
 import { TodoStore } from '../stores/TodoStore';
@@ -13,6 +13,8 @@ export class DuplicateTodoAction extends EntityAction<TodoModel> {
     super({
       id: DuplicateTodoAction.ID,
       name: 'Duplicate todo',
+      tags: ['todo', 'structure'],
+      behavior: ActionMacroBehavior.COPY,
       icon: 'copy',
       target: TodoEntities.TODO_ITEM,
       category: {

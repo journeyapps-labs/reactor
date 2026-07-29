@@ -12,6 +12,7 @@ export class CreateTodoAction extends Action {
     super({
       id: CreateTodoAction.ID,
       name: 'Create todo item',
+      tags: ['todo', 'create'],
       icon: 'plus'
     });
   }

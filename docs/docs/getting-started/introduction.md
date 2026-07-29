@@ -26,7 +26,7 @@ Reactor is best understood as an application operating system: modules install c
 1. Follow [local development](./local-development.md) and [explore the sandbox](./exploring-the-sandbox.md).
 2. [Build your first module](./first-module.md).
 3. Read the [application model](../subsystems/application-model.md).
-4. Go deeper with the subsystem guides for [modules and stores](../subsystems/modules-and-stores.md), [actions](../subsystems/actions-and-validation.md), [entities](../subsystems/entity-definitions.md), and [workspaces](../subsystems/workspaces-and-panels.md).
+4. Go deeper with the subsystem guides for [modules and stores](../subsystems/modules-and-stores.md), [actions](../subsystems/actions-and-validation.md), [entities](../subsystems/entity-definitions.md), [controls](../subsystems/controls.md), [forms](../subsystems/forms.md), [themes](../subsystems/themes.md), and [workspaces](../subsystems/workspaces-and-panels.md).
 
 ## Reference applications
 
