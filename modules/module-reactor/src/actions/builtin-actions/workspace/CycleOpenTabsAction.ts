@@ -12,6 +12,7 @@ export class CycleOpenTabsAction extends Action {
     super({
       id: `CYCLE_OPEN_TABS_${left ? 'LEFT' : 'RIGHT'}`,
       name: `Cycle ${left ? 'left' : 'right'} through open tabs`,
+      tags: ['internal', 'workspace', 'navigation', 'tabs'],
       icon: left ? 'arrow-left' : 'arrow-right',
       hotkeys: [
         new ShortcutChord([

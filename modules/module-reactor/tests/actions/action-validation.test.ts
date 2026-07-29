@@ -2,11 +2,16 @@ import { describe, expect, it, vi } from 'vitest';
 import {
   Action,
   ActionEvent,
+  ActionMacroBehavior,
   ActionValidator,
   ActionValidationState,
   activateWithValidation,
+  EntityAction,
+  EntityDefinition,
   ValidationResult
 } from '../../src';
+import { createSearchEventMatcher } from '@journeyapps-labs/lib-reactor-search';
+import { matchesActionCommandPaletteSearch } from '../../src/entities-reactor/actions/ActionSearchEngineComponent';
 
 interface TestActionEvent extends ActionEvent {
   targetEntity?: { allowed: boolean };
@@ -14,6 +19,9 @@ interface TestActionEvent extends ActionEvent {
 
 class TargetValidator extends ActionValidator<TestActionEvent> {
   validate(event?: Partial<TestActionEvent>): ValidationResult {
+    if (!event?.targetEntity) {
+      return { type: ActionValidationState.DEFERRED };
+    }
     return event?.targetEntity?.allowed
       ? { type: ActionValidationState.ALLOWED }
       : {
@@ -52,6 +60,47 @@ class TestAction extends Action<{ EVENT: TestActionEvent }> {
   }
 }
 
+class SearchableTestAction extends Action {
+  constructor() {
+    super({
+      id: 'SEARCHABLE_ACTION',
+      name: 'Delete todo item',
+      icon: 'trash',
+      aliases: ['Remove todo item', 'Discard todo item'],
+      tags: ['todo', 'cleanup'],
+      behavior: ActionMacroBehavior.DELETE
+    });
+  }
+
+  protected async fireEvent(): Promise<true> {
+    return true;
+  }
+}
+
+class TestEntityAction extends EntityAction<{ id: string }> {
+  constructor() {
+    super({ id: 'ENTITY_ACTION', name: 'Entity action', icon: 'check', target: 'test-entity' });
+  }
+
+  protected async fireEvent(): Promise<true> {
+    return true;
+  }
+}
+
+class TestEntityDefinition extends EntityDefinition<{ id: string }> {
+  constructor() {
+    super({ type: 'test-entity', label: 'Test entity', category: 'Test', icon: 'cube', iconColor: 'blue' });
+  }
+
+  getEntityUID(entity: { id: string }) {
+    return entity.id;
+  }
+
+  matchEntity(entity: unknown): boolean {
+    return !!entity;
+  }
+}
+
 const event = (allowed: boolean): TestActionEvent => ({
   id: 'TEST_ACTION',
   source: undefined,
@@ -71,6 +120,22 @@ describe('action validation', () => {
     expect(action.validate(event(false))).toEqual({
       type: ActionValidationState.DISABLED,
       message: 'Not permitted'
+    });
+  });
+
+  it('keeps actions with deferred validation available for parameter collection', () => {
+    const action = new TestAction([new TargetValidator()]);
+    const item = action.representAsComboBoxItem();
+
+    expect(action.validate()).toEqual({ type: ActionValidationState.DEFERRED });
+    expect(item.validator()).toEqual({ type: ActionValidationState.DEFERRED });
+  });
+
+  it('threads a contextual entity into entity action validation', () => {
+    const entity = { id: 'entity-1' };
+
+    expect(new TestEntityDefinition().getActionEventDataForEntity(entity, new TestEntityAction())).toEqual({
+      targetEntity: entity
     });
   });
 
@@ -117,6 +182,14 @@ describe('action validation', () => {
     expect(execute).not.toHaveBeenCalled();
   });
 
+  it('allows deferred validation to proceed to parameter collection', async () => {
+    const execute = vi.fn();
+
+    await activateWithValidation({ type: ActionValidationState.DEFERRED }, execute);
+
+    expect(execute).toHaveBeenCalledOnce();
+  });
+
   it('activates remediation when preflight becomes blocked', async () => {
     const onActivate = vi.fn();
     const action = new TestAction([
@@ -142,5 +215,18 @@ describe('action validation', () => {
 
     await expect(action.checkPreflight(event(true))).resolves.toBe(true);
     await expect(action.checkPreflight(event(false))).resolves.toBe(false);
+  });
+
+  it('searches actions by full-name aliases, explicit tags and behavior tags', () => {
+    const action = new SearchableTestAction();
+    const matches = (search: string) =>
+      matchesActionCommandPaletteSearch(action, {
+        search,
+        matches: createSearchEventMatcher(search)
+      });
+
+    expect(action.options.tags).toEqual(['todo', 'cleanup', 'delete', 'remove', 'destroy']);
+    expect(['delete', 'discard', 'cleanup', 'destroy'].map(matches)).toEqual([true, true, true, true]);
+    expect(matches('publish')).toBe(false);
   });
 });

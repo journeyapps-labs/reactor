@@ -47,6 +47,7 @@ export class ExportWorkspacesAction extends Action {
     super({
       id: 'EXPORT_WORKSPACES',
       name: ExportWorkspacesAction.NAME,
+      tags: ['internal', 'workspace', 'export'],
       icon: 'upload'
     });
   }

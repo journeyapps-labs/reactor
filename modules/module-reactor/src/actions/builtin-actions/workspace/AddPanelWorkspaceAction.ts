@@ -18,6 +18,7 @@ export class AddPanelWorkspaceAction extends EntityAction<ReactorPanelFactory> {
     super({
       id: AddPanelWorkspaceAction.ID,
       name: 'Add panel to workspace',
+      tags: ['internal', 'workspace', 'panel'],
       icon: 'plus',
       target: ReactorEntities.PANEL
     });

@@ -11,6 +11,8 @@ import { COMBOBOX_ITEM_H_PADDING } from '../../layout';
 import * as _ from 'lodash';
 import { Dimensions, useDimensionObserver } from '../../hooks/useDimensionObserver';
 import { REACTOR_MOBILE_MEDIA_QUERY } from '../../hooks/useReactorViewportMode';
+import { useValidator } from '../../hooks/useValidator';
+import { MatchesWidget } from '../../widgets/search/MatchesWidget';
 
 export interface ComboBoxItemWidgetProps {
   item: ComboBoxItem;
@@ -120,7 +122,13 @@ const ItemContent: React.FC<ItemContentProps> = (props) => {
           <S.IconInner icon={props.item.icon} />
         </S.Icon>
       ) : null}
-      <S.Label disabled={props.item.disabled}>{props.item.title}</S.Label>
+      <S.Label disabled={props.item.disabled}>
+        {props.item.titleMatch ? (
+          <MatchesWidget text={props.item.title} locators={props.item.titleMatch.locators} />
+        ) : (
+          props.item.title
+        )}
+      </S.Label>
       {props.item.badge ? (
         <S.Badge
           color={props.item.badge.foreground}
@@ -214,6 +222,11 @@ export const ComboBoxItemWidget: React.FC<React.PropsWithChildren<ComboBoxItemWi
   const localRef = React.useRef<HTMLDivElement>(null);
   const scrolledRef = React.useRef(false);
   const rowRef = props.forwardRef || localRef;
+  const { disabled: validationDisabled, hidden } = useValidator({ validator: props.item.validator });
+  const item = {
+    ...props.item,
+    disabled: props.item.disabled || validationDisabled
+  };
 
   useDimensionObserver({
     element: rowRef,
@@ -222,6 +235,10 @@ export const ComboBoxItemWidget: React.FC<React.PropsWithChildren<ComboBoxItemWi
     },
     enabled: !!props.gotDimensions
   });
+
+  if (hidden) {
+    return null;
+  }
 
   return (
     <AttentionWrapperWidget<ButtonComponentSelection>
@@ -240,7 +257,7 @@ export const ComboBoxItemWidget: React.FC<React.PropsWithChildren<ComboBoxItemWi
 
         return (
           <ComboBoxItemRow
-            item={props.item}
+            item={item}
             selected={props.selected}
             attention={!!attention}
             rowRef={rowRef}

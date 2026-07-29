@@ -21,6 +21,7 @@ export class OpenTodoDialogAction extends EntityAction<TodoModel> {
     super({
       id: OpenTodoDialogAction.ID,
       name: 'View item',
+      tags: ['todo', 'details', 'navigation'],
       icon: 'table',
       target: TodoEntities.TODO_ITEM,
       category: {

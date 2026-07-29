@@ -7,9 +7,36 @@ import { ActionEntityHandler } from './ActionEntityHandler';
 import { EntityPanelComponent } from '../../entities/components/ui/EntityPanelComponent';
 import { InlineTreePresenterComponent } from '../../entities/components/presenter/types/tree/InlineTreePresenterComponent';
 import { ActionTreePresenter } from './ActionTreePresenter';
-import { EntityDescriberComponent } from '../../entities/components/meta/EntityDescriberComponent';
+import { EntityDescriberComponent, EntityLabel } from '../../entities/components/meta/EntityDescriberComponent';
 import { ActionSearchEngineComponent } from './ActionSearchEngineComponent';
 import { EntityCardsPresenterComponent } from '../../entities/components/presenter/types/cards/EntityCardsPresenterComponent';
+import { TagDisplayMode } from '../../widgets/tree/TreeEntityDisplayMode';
+
+function getActionMetadata(entity: Action): EntityLabel[] {
+  const metadata: EntityLabel[] = [
+    {
+      label: 'Type',
+      value: entity.getTypeDisplayName(),
+      icon: {
+        name: 'cube',
+        color: 'currentColor'
+      }
+    }
+  ];
+  if (entity.options.exemptFromExclusiveExecutionLock) {
+    metadata.push({
+      label: 'Execution lock',
+      value: 'Exempt'
+    });
+  }
+  if (entity.options.hideFromCmdPallet) {
+    metadata.push({
+      label: 'Command palette',
+      value: 'Hidden'
+    });
+  }
+  return metadata;
+}
 
 export class ActionEntityDefinition extends EntityDefinition<Action> {
   constructor() {
@@ -24,28 +51,11 @@ export class ActionEntityDefinition extends EntityDefinition<Action> {
       new EntityDescriberComponent<Action>({
         label: 'Simple',
         describe: (entity: Action) => {
-          const tags = [entity instanceof ParameterizedAction ? 'parameterized' : 'standard'];
-          if (entity.options.exemptFromExclusiveExecutionLock) {
-            tags.push('exclusive-exempt');
-          }
-          if (entity.options.hideFromCmdPallet) {
-            tags.push('cmd-hidden');
-          }
-
           return {
             icon: entity.options.icon,
             simpleName: entity.options.name,
-            labels: [
-              {
-                label: 'Type',
-                value: entity.getTypeDisplayName(),
-                icon: {
-                  name: 'cube',
-                  color: 'currentColor'
-                }
-              }
-            ],
-            tags
+            labels: getActionMetadata(entity),
+            tags: entity.options.tags
           };
         }
       })
@@ -56,13 +66,6 @@ export class ActionEntityDefinition extends EntityDefinition<Action> {
         describe: (entity: Action) => {
           const behavior = entity.options.behavior || 'none';
           const rollback = entity.options.rollbackMechanic || ActionRollbackMechanic.NONE;
-          const tags = [entity instanceof ParameterizedAction ? 'parameterized' : 'standard'];
-          if (entity.options.exemptFromExclusiveExecutionLock) {
-            tags.push('exclusive-exempt');
-          }
-          if (entity.options.hideFromCmdPallet) {
-            tags.push('cmd-hidden');
-          }
 
           return {
             icon: entity.options.icon,
@@ -70,6 +73,7 @@ export class ActionEntityDefinition extends EntityDefinition<Action> {
             complexName: entity.getTypeDisplayName(),
             iconColor: !(entity instanceof ParameterizedAction) ? 'orange' : 'mediumpurple',
             labels: [
+              ...getActionMetadata(entity),
               {
                 label: 'Hotkeys',
                 value: `${entity.options.hotkeys?.length || 0}`,
@@ -103,7 +107,7 @@ export class ActionEntityDefinition extends EntityDefinition<Action> {
                 }
               }
             ],
-            tags
+            tags: entity.options.tags
           };
         }
       })
@@ -113,8 +117,10 @@ export class ActionEntityDefinition extends EntityDefinition<Action> {
     this.registerComponent(
       new InlineTreePresenterComponent<Action>({
         allowedGroupingSettings: {
-          complexName: true
-        }
+          complexName: true,
+          tags: true
+        },
+        tagDisplayMode: TagDisplayMode.PILL
       })
     );
     this.registerComponent(new EntityCardsPresenterComponent<Action>());

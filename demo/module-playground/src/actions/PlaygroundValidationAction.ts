@@ -54,6 +54,7 @@ export class PlaygroundValidationAction extends Action<{ EVENT: PlaygroundValida
     super({
       id: PlaygroundValidationAction.ID,
       name: 'Run playground action',
+      tags: ['playground', 'demo', 'validation'],
       icon: 'wand-magic-sparkles',
       validators: [new PlaygroundActionValidator()]
     });

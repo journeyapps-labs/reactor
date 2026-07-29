@@ -4,6 +4,9 @@ import { ioc } from '../../../inversify.config';
 import { RenderCalloutFunction } from '../../../stores/combo/ComboBoxDirectives';
 import { ParameterizedActionEvent } from '../ParameterizedAction';
 import { EntityDefinition } from '../../../entities/EntityDefinition';
+import { EntityActionParams } from '../ParameterizedAction';
+import * as React from 'react';
+import { ActionMetaWidget } from '../../ActionMetaWidget';
 
 export interface ProviderActionParameterOptions<T> extends AbstractActionParameterOptions {
   type: string;
@@ -39,14 +42,22 @@ export class ProviderActionParameter<T> extends AbstractActionParameter<Provider
         event: event.position,
         autoSelectedIsolatedEntity: this.options.autoSelectIsolatedItem,
         filter: (entity) => {
-          let definition = ioc.get(System).getDefinitionForEntity(entity);
+          const definition = ioc.get(System).getDefinitionForEntity(entity);
           if (definition && !definition.isActionAllowedForEntity(this.action, entity)) {
             return false;
           }
-          if (this.options.filter) {
-            return this.options.filter(entity);
-          }
-          return true;
+          return this.options.filter?.(entity) ?? true;
+        },
+        transformItem: (entity, item) => {
+          const candidateEvent = this.getCandidateEvent(event, entity);
+          return {
+            ...item,
+            validator: () => this.action.validate(candidateEvent),
+            right: React.createElement(ActionMetaWidget, {
+              action: this.action,
+              eventData: candidateEvent
+            })
+          };
         }
       });
       if (!selectedItem) {
@@ -57,5 +68,23 @@ export class ProviderActionParameter<T> extends AbstractActionParameter<Provider
     }
 
     return false;
+  }
+
+  private getCandidateEvent(event: ParameterizedActionEvent, entity: T): ParameterizedActionEvent {
+    const candidateEvent = {
+      ...event,
+      entities: {
+        ...event.entities,
+        [this.options.name]: entity
+      }
+    } as ParameterizedActionEvent & {
+      targetEntity?: unknown;
+      sourceEntity?: unknown;
+    };
+
+    candidateEvent.targetEntity = candidateEvent.entities[EntityActionParams.TARGET];
+    candidateEvent.sourceEntity = candidateEvent.entities[EntityActionParams.SOURCE];
+
+    return candidateEvent;
   }
 }

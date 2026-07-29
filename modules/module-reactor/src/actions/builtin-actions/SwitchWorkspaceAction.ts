@@ -16,6 +16,7 @@ export class SwitchWorkspaceAction extends EntityAction<IDEWorkspace> {
     super({
       id: SwitchWorkspaceAction.ID,
       name: SwitchWorkspaceAction.NAME,
+      tags: ['internal', 'workspace', 'navigation'],
       icon: 'th-large',
       target: ReactorEntities.WORKSPACE
     });

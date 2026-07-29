@@ -1,10 +1,5 @@
 type ENV = {
-  RELEASE: string;
-  USER_EMAIL: string;
-  USER_ID: string;
-  USER_NAME: string;
-  USER_ORG: string;
-  ADMIN_PORTAL_URL: string;
+  REACTOR_LOG_LEVEL?: string;
 };
 
 export const ENV: ENV = {

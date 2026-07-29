@@ -3,6 +3,7 @@ import { beforeEach, describe, expect, it } from 'vitest';
 import { Action, ActionEvent } from '../../src/actions/Action';
 import { LoggerStore } from '../../src/stores/logging/LoggerStore';
 import { ActionStore } from '../../src/stores/actions/ActionStore';
+import { resolveReactorLogLevel } from '../../src/core/logging';
 
 class TestAction extends Action {
   constructor() {
@@ -25,6 +26,11 @@ describe('LoggerStore', () => {
         removeItem: (key: string) => values.delete(key)
       }
     });
+  });
+
+  it('resolves the environment log level with an info fallback', () => {
+    expect(resolveReactorLogLevel('debug')).toBe(LogLevel.DEBUG);
+    expect(resolveReactorLogLevel('invalid')).toBe(LogLevel.INFO);
   });
 
   it('configures, persists and resets a logger hierarchy', () => {

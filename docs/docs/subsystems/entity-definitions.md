@@ -63,6 +63,21 @@ this.registerComponent(
 
 Descriptions are reused by trees, cards, combo boxes, search results, context menus, and headers.
 
+`tags` should describe the entity in application terms. Use `labels` for structured metadata:
+
+```ts
+describe: (project) => ({
+  simpleName: project.name,
+  tags: project.tags,
+  labels: [
+    { label: 'Organization', value: project.organizationName },
+    { label: 'Status', value: project.status }
+  ]
+});
+```
+
+Tree presenters can render tags as badges or pills, limit the visible tag count, and allow users to group by tags. Metadata has its own display configuration, so implementation details do not need to be disguised as tags.
+
 ### Search
 
 ```ts
@@ -75,6 +90,8 @@ this.registerComponent(
 ```
 
 Search components allow entity pickers and action parameters to resolve objects without knowing how the application stores them.
+
+Search engines are collected in an `EntitySearchBank`. A preferred engine supplies the default experience, while applications can expose several engines for different data sources or scopes. Provider-backed action parameters use the same search infrastructure.
 
 ### Presentation and panels
 

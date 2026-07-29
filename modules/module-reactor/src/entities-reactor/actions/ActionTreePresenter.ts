@@ -5,6 +5,7 @@ import { EntityTreePresenterContext } from '../../entities/components/presenter/
 import { ReactorTreeLeaf } from '../../widgets/core-tree/reactor-tree/ReactorTreeLeaf';
 import { ReactorTreeNode } from '../../widgets/core-tree/reactor-tree/ReactorTreeNode';
 import { ReactorTreeEntity } from '../../widgets/core-tree/reactor-tree/reactor-tree-utils';
+import { TagDisplayMode } from '../../widgets/tree/TreeEntityDisplayMode';
 
 export class ActionTreePresenterContext extends EntityTreePresenterContext<Action> {
   doGenerateTreeNode(entity: Action, options): ReactorTreeEntity {
@@ -51,8 +52,10 @@ export class ActionTreePresenter extends EntityTreePresenterComponent<Action> {
     super({
       label: 'Advanced Tree',
       allowedGroupingSettings: {
-        complexName: true
-      }
+        complexName: true,
+        tags: true
+      },
+      tagDisplayMode: TagDisplayMode.PILL
     });
   }
 

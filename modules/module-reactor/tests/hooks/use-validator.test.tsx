@@ -22,19 +22,19 @@ describe('useValidator', () => {
   });
 
   it('uses the validator result on the first render', async () => {
-    const rendered: ActionValidationState[] = [];
+    const rendered: { type: ActionValidationState; disabled: boolean; hidden: boolean }[] = [];
     const validator: Validator = () => ({ type: ActionValidationState.DISABLED });
 
     const TestWidget = () => {
-      const { validationResult } = useValidator({ validator });
-      rendered.push(validationResult.type);
+      const { validationResult, disabled, hidden } = useValidator({ validator });
+      rendered.push({ type: validationResult.type, disabled, hidden });
       return null;
     };
 
     await act(async () => root.render(<TestWidget />));
 
-    expect(rendered[0]).toBe(ActionValidationState.DISABLED);
-    expect(rendered).not.toContain(ActionValidationState.ALLOWED);
+    expect(rendered[0]).toEqual({ type: ActionValidationState.DISABLED, disabled: true, hidden: false });
+    expect(rendered.map((result) => result.type)).not.toContain(ActionValidationState.ALLOWED);
   });
 
   it('switches validator dependencies without recreating its subscription', async () => {

@@ -6,7 +6,7 @@ import { Log } from '@journeyapps-labs/common-logger';
 
 export interface ReactorModuleOptions {
   directory: string;
-  resolveGlobalEnv: (key: string) => string;
+  resolveGlobalEnv: (key: string) => string | undefined;
 }
 
 export class ReactorModule {
@@ -24,13 +24,21 @@ export class ReactorModule {
     } else {
       throw new Error(`No config file for ${options.directory} at ${this.confFile}`);
     }
+    this.getEnvs();
   }
 
-  getEnvs(): object {
-    return this.config.env.reduce((prev: any, cur) => {
-      prev[cur] = this.options.resolveGlobalEnv(cur);
-      return prev;
-    }, {});
+  getEnvs(): Record<string, string> {
+    return this.config.env.reduce(
+      (env, key) => {
+        const value = this.options.resolveGlobalEnv(key);
+        if (value == null) {
+          throw new Error(`Environment variable '${key}' required by Reactor module '${this.name}' is missing`);
+        }
+        env[key] = value;
+        return env;
+      },
+      {} as Record<string, string>
+    );
   }
 
   get name() {

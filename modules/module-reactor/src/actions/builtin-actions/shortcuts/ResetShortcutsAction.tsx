@@ -15,6 +15,7 @@ export class ResetShortcutsAction extends Action {
     super({
       id: 'RESET_SHORTCUTS',
       name: ResetShortcutsAction.NAME,
+      tags: ['internal', 'shortcuts', 'reset'],
       icon: 'sync-alt'
     });
     setupDeleteConfirmation({

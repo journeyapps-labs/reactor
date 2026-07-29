@@ -20,9 +20,12 @@ let path = require.resolve('@journeyapps-labs/lib-reactor-server');
 const PORT = parseInt(process.env.PORT || '9527');
 const MODULES = loadModules({
   env: {
-    MODULES: process.env.MODULES.split(',')
+    MODULES: process.env.MODULES.split(','),
+    REACTOR_LOG_LEVEL: process.env.REACTOR_LOG_LEVEL || 'INFO'
   }
 });
+
+const MODULE_ENV = MODULES.reduce((env, module) => ({ ...env, ...module.getEnvs() }), {});
 
 app.use(compression());
 
@@ -30,11 +33,7 @@ const serveIndex = () => {
   return createBaseIndexMiddleware({
     title: 'Demo',
     getEnv: () => {
-      return {
-        USER_ID: '1234',
-        USER_NAME: 'Test User',
-        USER_EMAIL: 'test@example.com'
-      };
+      return MODULE_ENV;
     },
     domTransform: ($) => {
       createModuleLoaderContentTransformer($, MODULES);

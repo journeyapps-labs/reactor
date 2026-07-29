@@ -17,6 +17,7 @@ export class ImportShortcutsAction extends Action {
     super({
       id: 'IMPORT_SHORTCUTS',
       name: ImportShortcutsAction.NAME,
+      tags: ['internal', 'shortcuts', 'import'],
       icon: 'download'
     });
   }

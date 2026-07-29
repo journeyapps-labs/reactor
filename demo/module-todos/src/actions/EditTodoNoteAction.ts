@@ -9,6 +9,7 @@ export class EditTodoNoteAction extends EntityAction<TodoNoteModel> {
     super({
       id: EditTodoNoteAction.ID,
       name: 'Edit note',
+      tags: ['todo', 'note', 'edit'],
       icon: 'pencil',
       target: TodoEntities.TODO_NOTE,
       category: {

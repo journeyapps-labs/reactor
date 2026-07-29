@@ -18,6 +18,7 @@ export class CreateWorkspaceAction extends ParameterizedAction<{ EVENT: CreateWo
     super({
       id: 'CREATE_WORKSPACE',
       name: CreateWorkspaceAction.NAME,
+      tags: ['internal', 'workspace', 'create'],
       icon: 'plus',
       validators: [new WorkspaceActionValidator()],
       params: [

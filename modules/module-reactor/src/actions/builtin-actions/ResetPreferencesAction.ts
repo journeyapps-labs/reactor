@@ -15,6 +15,7 @@ export class ResetPreferencesAction extends Action {
     super({
       id: 'RESET_PREFERENCES',
       name: 'Reset preferences',
+      tags: ['internal', 'settings', 'reset'],
       icon: 'sync'
     });
     setupDeleteConfirmation({

@@ -18,6 +18,7 @@ export class ImportWorkspaceAction extends Action {
     super({
       id: 'IMPORT_WORKSPACE',
       name: ImportWorkspaceAction.NAME,
+      tags: ['internal', 'workspace', 'import'],
       icon: 'download',
       validators: [new WorkspaceActionValidator()]
     });

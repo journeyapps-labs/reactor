@@ -13,6 +13,7 @@ export class ChangeThemeAction extends EntityAction<Theme> {
     super({
       id: 'CHANGE_THEME',
       name: ChangeThemeAction.NAME,
+      tags: ['internal', 'theme', 'appearance'],
       icon: 'moon',
       target: 'theme'
     });

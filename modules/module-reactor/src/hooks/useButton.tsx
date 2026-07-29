@@ -20,16 +20,8 @@ export interface UseButtonProps {
 export const useButton = (props: UseButtonProps) => {
   const ref = props.forwardRef || useRef(null);
   let [loading, setLoading] = useState<boolean>(false);
-  const { validationResult } = useValidator({ validator: props.btn.validator });
-
-  let disabled = props.btn.disabled ?? false;
-  if (
-    validationResult.type === ActionValidationState.DISABLED ||
-    validationResult.type === ActionValidationState.PENDING ||
-    validationResult.type === ActionValidationState.HIDDEN
-  ) {
-    disabled = true;
-  }
+  const { validationResult, disabled: validationDisabled } = useValidator({ validator: props.btn.validator });
+  const disabled = (props.btn.disabled ?? false) || validationDisabled;
 
   let action = useCallback(
     async (event: MousePosition) => {

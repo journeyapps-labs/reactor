@@ -1,4 +1,4 @@
-import { EntityAction, EntityActionEvent, inject } from '@journeyapps-labs/reactor-mod';
+import { ActionMacroBehavior, EntityAction, EntityActionEvent, inject } from '@journeyapps-labs/reactor-mod';
 import { TodoEntities } from '../TodoEntities';
 import { TodoNoteModel } from '../models/TodoNoteModel';
 import { TodoStore } from '../stores/TodoStore';
@@ -13,6 +13,8 @@ export class DeleteTodoNoteAction extends EntityAction<TodoNoteModel> {
     super({
       id: DeleteTodoNoteAction.ID,
       name: 'Remove note',
+      tags: ['todo', 'note', 'cleanup'],
+      behavior: ActionMacroBehavior.DELETE,
       icon: 'trash',
       target: TodoEntities.TODO_NOTE,
       category: {

@@ -6,9 +6,11 @@ import * as React from 'react';
 import { SearchEngineFieldWidget } from '../../../search/widgets/SearchEngineFieldWidget';
 import { ComboBoxWidget } from '../../../layers/combo/ComboBoxWidget';
 import { observer } from 'mobx-react';
+import { activateWithValidation } from '../../../hooks/useValidator';
 import styled from '@emotion/styled';
 import { SearchResult, SearchResultEntry } from '@journeyapps-labs/lib-reactor-search';
 import { ReactorViewportMode, useReactorViewportMode } from '../../../hooks/useReactorViewportMode';
+import { isValidationHidden } from '../../../actions/validators/ActionValidator';
 
 export interface SearchEngineComboBoxDirectiveOptions<
   E extends SearchResultEntry,
@@ -65,11 +67,20 @@ export class SearchEngineComboBoxDirective<
         }
         return this.options.filter(r);
       })
-      .map((r) => this.options.transformResult(r));
+      .map((r) => this.options.transformResult(r))
+      .filter((item) => !item.validator || !isValidationHidden(item.validator()));
   }
 
   selectItem(item: T) {
-    this.setSelected([item]);
+    if (item.disabled) {
+      return;
+    }
+    const validation = item.validator?.();
+    if (!validation) {
+      this.setSelected([item]);
+      return;
+    }
+    void activateWithValidation(validation, () => this.setSelected([item]));
   }
 
   setSelected(items: T[]) {

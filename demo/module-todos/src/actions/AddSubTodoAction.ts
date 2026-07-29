@@ -14,6 +14,7 @@ export class AddSubTodoAction extends EntityAction<TodoModel> {
     super({
       id: AddSubTodoAction.ID,
       name: 'Add sub todo',
+      tags: ['todo', 'structure', 'create'],
       icon: 'plus-square',
       target: TodoEntities.TODO_ITEM,
       category: {

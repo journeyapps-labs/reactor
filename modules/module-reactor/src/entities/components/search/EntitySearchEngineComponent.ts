@@ -22,6 +22,7 @@ export interface EntityComboBoxItem<T> extends ComboBoxItem {
 export interface GetComboBoxDirectiveOptions<T> {
   position: MousePosition;
   filter?: (entity: T) => boolean;
+  transformItem?: (entity: T, item: EntityComboBoxItem<T>) => EntityComboBoxItem<T>;
 }
 
 export abstract class EntitySearchEngineComponent<T extends any = any> extends EntityDefinitionComponent {
@@ -64,7 +65,8 @@ export abstract class EntitySearchEngineComponent<T extends any = any> extends E
         return event.filter(r.entity);
       },
       transformResult: (e) => {
-        return this.definition.getAsComboBoxItem(e.entity);
+        const item = this.definition.getAsComboBoxItem(e.entity);
+        return event.transformItem?.(e.entity, item) || item;
       }
     });
   }

@@ -63,12 +63,12 @@ const HelloPanelWidget = observer(() => {
     <CardWidget
       title="Hello Reactor"
       subHeading={`Visits: ${store.visits}`}
-      sections={[{
-        key: 'hello',
-        content: () => (
-          <PanelButtonWidget label="Visit" icon="hand" action={() => store.visit()} />
-        )
-      }]}
+      sections={[
+        {
+          key: 'hello',
+          content: () => <PanelButtonWidget label="Visit" icon="hand" action={() => store.visit()} />
+        }
+      ]}
     />
   );
 });

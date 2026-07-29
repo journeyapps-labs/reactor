@@ -10,6 +10,7 @@ export class ResetWorkspacesAction extends Action {
     super({
       id: 'RESET_WORKSPACE',
       name: ResetWorkspacesAction.NAME,
+      tags: ['internal', 'workspace', 'reset'],
       icon: 'sync'
     });
   }

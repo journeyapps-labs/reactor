@@ -12,7 +12,6 @@ import { ComboBoxItem } from '../stores/combo/ComboBoxDirectives';
 import * as _ from 'lodash';
 import { ActionButtonControl, EventType } from '../controls/ActionButtonControl';
 import { ActionMetaWidget } from './ActionMetaWidget';
-import { activateWithValidation } from '../hooks/useValidator';
 import { BaseObserver } from '@journeyapps-labs/common-utils';
 import { Logger } from '@journeyapps-labs/common-logger';
 import { createLogger, formatLoggerName } from '../core/logging';
@@ -42,6 +41,12 @@ export enum ActionMacroBehavior {
   COPY = 'copy'
 }
 
+const ACTION_BEHAVIOR_TAGS: Record<ActionMacroBehavior, string[]> = {
+  [ActionMacroBehavior.DELETE]: ['delete', 'remove', 'destroy'],
+  [ActionMacroBehavior.DESTRUCTIVE]: ['destructive', 'destroy'],
+  [ActionMacroBehavior.COPY]: ['copy', 'clone', 'duplicate']
+};
+
 export enum ActionRollbackMechanic {
   /**
    * There is no way to rollback
@@ -56,6 +61,10 @@ export enum ActionRollbackMechanic {
 export interface ActionOptions {
   id: string;
   name: string;
+  /** Complete alternative names used to discover this action. */
+  aliases?: string[];
+  /** Searchable terms describing this action. The action behavior is included automatically. */
+  tags?: string[];
   category?: {
     entityType?: string;
     grouping?: string;
@@ -114,7 +123,11 @@ export abstract class Action<
     super();
     this.options = {
       ...options,
-      hotkeys: options.hotkeys || []
+      hotkeys: options.hotkeys || [],
+      aliases: options.aliases || [],
+      tags: Array.from(
+        new Set([...(options.tags || []), ...(options.behavior ? ACTION_BEHAVIOR_TAGS[options.behavior] : [])])
+      )
     };
     this.logger = createLogger(options.name);
   }
@@ -135,6 +148,7 @@ export abstract class Action<
       ActionValidationState.DISABLED,
       ActionValidationState.BLOCKED,
       ActionValidationState.PENDING,
+      ActionValidationState.DEFERRED,
       ActionValidationState.ALLOWED
     ];
 
@@ -194,6 +208,7 @@ export abstract class Action<
   ): ActionComboBoxItem<this> {
     const eventData = options.eventData || {};
     const validation = this.validate(eventData);
+    const validator = () => this.validate(eventData);
     const action = {
       icon: this.options.icon,
       color: 'orange',
@@ -201,7 +216,7 @@ export abstract class Action<
       key: this.options.name,
       actionObject: this,
       group: this.group,
-      disabled: validation.type === ActionValidationState.DISABLED || validation.type === ActionValidationState.PENDING,
+      validator,
       right: <ActionMetaWidget action={this} eventData={eventData} />
     } as ActionComboBoxItem<this>;
     if (validation.type === ActionValidationState.HIDDEN) {
@@ -209,13 +224,11 @@ export abstract class Action<
     }
     if (options.installAction) {
       action.action = (e) => {
-        return activateWithValidation(this.validate(eventData), () => {
-          return this.fireAction({
-            source: ActionSource.RIGHT_CLICK,
-            position: e,
-            ...(options?.eventData || {})
-          } as T['EVENT']);
-        });
+        return this.fireAction({
+          source: ActionSource.RIGHT_CLICK,
+          position: e,
+          ...(options?.eventData || {})
+        } as T['EVENT']);
       };
     }
     return action;

@@ -22,6 +22,7 @@ export class OpenCMDPalletAction extends Action {
       id: `COMMAND_PALLET:${category.name.toUpperCase()}`,
       hotkeys: category.hotkeys,
       name: `CMDPallet:${category.name}`,
+      tags: ['internal', 'command-palette', 'navigation'],
       icon: 'bolt',
       exemptFromExclusiveExecutionLock: true
     });

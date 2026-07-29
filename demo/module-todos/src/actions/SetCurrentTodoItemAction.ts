@@ -9,6 +9,7 @@ export class SetCurrentTodoItemAction extends EntityAction<TodoModel> {
     super({
       id: SetCurrentTodoItemAction.ID,
       name: 'Select item',
+      tags: ['todo', 'selection', 'navigation'],
       icon: 'check-square',
       target: TodoEntities.TODO_ITEM,
       category: {

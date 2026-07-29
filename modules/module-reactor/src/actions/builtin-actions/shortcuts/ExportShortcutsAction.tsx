@@ -16,6 +16,7 @@ export class ExportShortcutsAction extends Action {
     super({
       id: 'EXPORT_SHORTCUTS',
       name: ExportShortcutsAction.NAME,
+      tags: ['internal', 'shortcuts', 'export'],
       icon: 'upload'
     });
   }
