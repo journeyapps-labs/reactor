@@ -1,38 +1,91 @@
 ---
 sidebar_position: 1
-title: Introduction to Reactor
+title: Meet Reactor
+description: Build stateful web applications that behave like serious installed software.
+hide_title: true
 ---
 
-# Reactor
+<div className="capability-hero">
+  <div className="capability-hero__eyebrow">Application framework</div>
+  <h1>Build ambitious software, not a pile of screens.</h1>
+  <p>
+    Reactor gives complex web applications one runtime for commands, data, persistent workspaces, settings, search,
+    responsive interaction, and progress.
+  </p>
+</div>
 
-Reactor is an application framework for ambitious, stateful web software. It provides the shell and shared runtime needed by IDEs, administration systems, data browsers, and other applications that behave more like installed software than a collection of web pages.
+Reactor is for web software that behaves more like an IDE or desktop application than a collection of routed pages. It powers large development and administration systems, but also works well for focused tools such as data browsers.
 
-Instead of assembling routing, commands, panels, persistence, settings, and interaction patterns independently, a Reactor application installs modules into a common runtime.
+Instead of independently assembling routing, commands, panels, persistence, settings, search, keyboard behavior, and mobile adaptations, a Reactor application installs **modules** into a shared runtime.
 
-## What Reactor provides
+:::note Mental model
+Think of Reactor as an application operating system. Modules add features, stores provide state and services, and Reactor supplies the common UI.
+:::
 
-- **Modules** install capabilities into an application during a defined boot lifecycle.
-- **Stores** own observable application state and asynchronous boot work.
-- **Actions** describe user intent once and expose it through buttons, menus, shortcuts, and command palettes.
-- **Workspaces and panels** provide persistent, rearrangeable application layouts.
-- **Entities** connect domain objects to descriptions, actions, panels, search, trees, tables, and cards.
-- **Widgets and themes** provide a consistent, responsive application interface.
-- **Logging and diagnostics** expose the runtime hierarchy without coupling features to a particular application.
+## What you get
 
-Reactor is best understood as an application operating system: modules install capabilities, stores provide services and state, and Reactor supplies the shared interaction and presentation environment.
+<div className="capability-grid">
+  <a className="capability-card" href="../subsystems/actions-and-validation">
+    <strong>One action, many places</strong>
+    <span>Define an action once, then use it in buttons, menus, shortcuts, command palettes, and guides.</span>
+  </a>
+  <a className="capability-card" href="../subsystems/entity-definitions">
+    <strong>UI that understands your data</strong>
+    <span>Teach Reactor how to display, find, open, and save references to your objects.</span>
+  </a>
+  <a className="capability-card" href="../subsystems/workspaces-and-panels">
+    <strong>Application workspaces</strong>
+    <span>Compose tabs, trays, splits, floating windows, groups, and persistent layouts without coupling features to placement.</span>
+  </a>
+  <a className="capability-card" href="../advanced/guided-workflows">
+    <strong>Guided workflows</strong>
+    <span>Coordinate real multi-step work across actions, dialogs, panels, and selected interface elements.</span>
+  </a>
+  <a className="capability-card" href="../runtime/operational-feedback">
+    <strong>Progress and status</strong>
+    <span>Give long-running work, application status, errors, and recovery a consistent place in the interface.</span>
+  </a>
+  <a className="capability-card" href="../runtime/responsive-applications">
+    <strong>Desktop and mobile</strong>
+    <span>Keep dense desktop workflows while Reactor adapts placement and interaction for smaller viewports.</span>
+  </a>
+</div>
 
-## Where to begin
+## The main building blocks
 
-1. Follow [local development](./local-development.md) and [explore the sandbox](./exploring-the-sandbox.md).
-2. [Build your first module](./first-module.md).
-3. Read the [application model](../subsystems/application-model.md).
-4. Go deeper with the subsystem guides for [modules and stores](../subsystems/modules-and-stores.md), [actions](../subsystems/actions-and-validation.md), [entities](../subsystems/entity-definitions.md), [controls](../subsystems/controls.md), [forms](../subsystems/forms.md), [themes](../subsystems/themes.md), and [workspaces](../subsystems/workspaces-and-panels.md).
+Reactor is more than a component catalog. Its main building blocks are:
 
-## Reference applications
+- **Modules** install application behavior during a defined boot lifecycle.
+- **Stores** own observable state, services, asynchronous readiness, and persistence.
+- **Actions** keep an operation, its validation, parameters, and progress together.
+- **Entity definitions** tell Reactor how to display, find, open, and save references to your objects.
+- **Controls and forms** project behavior and values into consistent interactions.
+- **Workspaces and panels** separate a feature's renderable state from application layout policy.
+- **Runtime services** provide dialogs, notifications, shortcuts, guides, media, and responsive behavior.
 
-The repository contains two useful examples:
+These pieces work together. A command can ask an entity definition to find a todo, validate it, open a panel in the current workspace, and show progress in the Visor.
 
-- `demo/module-todos` is a small domain-oriented module with entities, actions, stores, panels, and workspace generation.
-- `demo/module-playground` is a catalog of Reactor widgets and interaction systems.
+:::tip Pro tip
+Put the operation in an action and the display rules in an entity definition. Reactor can then reuse them across the application.
+:::
 
-The generated API reference is useful once you know which subsystem you need, but it is not intended to be the starting point.
+## Choose your path
+
+- **New to the repository?** Follow [Local development](./local-development.md), then [explore the sandbox](./exploring-the-sandbox.md).
+- **Ready to build?** [Build your first module](./first-module.md).
+- **Evaluating the architecture?** Read [How Reactor fits together](./architecture.md).
+- **Looking for a feature?** Use the Manual sidebar or start with [Application model](../subsystems/application-model.md).
+- **Need an exact signature?** Use the generated API reference after reading the relevant manual page.
+
+## Living reference applications
+
+This repository contains two main examples:
+
+- `demo/module-todos` is a small domain module with actions, entity definitions, nested entities, search, panels, workspace groups, persistence, dialogs, and Visor metadata.
+- `demo/module-playground` is an interactive catalog of controls, forms, cards, surfaces, trees, tables, dialogs, overlays, drag-and-drop, and guided workflows.
+
+The manual uses those examples as its source of truth. Product-specific policy belongs in product modules and case studies, not in Reactor's core explanations.
+
+:::warning Scope
+Reactor has many abstractions because it is built for applications with lots of state and connected features. A small routed website may not need it.
+:::

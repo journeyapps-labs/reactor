@@ -1,44 +1,57 @@
 ---
 title: Actions and validation
-description: Model reusable user intent and event-aware action availability.
+description: Define an action once and use it across the application.
 ---
 
 # Actions and validation
 
-Actions describe user intent independently of the widget that activates them. A single action can appear in a panel button, toolbar, combo box, context menu, command palette, or shortcut.
+An action describes something a user can do. The same action can appear in a button, menu, command palette, shortcut, batch operation, or guide.
+
+:::note Mental model
+An action keeps the operation, its validation, and its progress in one place.
+:::
 
 ## Define and register an action
+
+The Todo demo's create action owns its name, discovery tags, icon, dialog, operation, and progress message:
 
 ```ts
 export class CreateTodoAction extends Action {
   static ID = 'CREATE_TODO';
 
+  @inject(TodoStore)
+  accessor todoStore: TodoStore;
+
   constructor() {
     super({
       id: CreateTodoAction.ID,
-      name: 'Create todo',
+      name: 'Create todo item',
+      tags: ['todo', 'create'],
       icon: 'plus'
     });
   }
 
   protected async fireEvent(event: ActionEvent) {
     event.getStatus().pushMessage('Creating a todo');
-    // perform the operation
+    const name = await this.dialogStore.showInputDialog({ title: 'Create todo' });
+    if (!name) return false;
+
+    this.todoStore.addTodo(new TodoModel({ name }));
   }
 }
 ```
 
-Register it during module registration:
+Register actions during module registration:
 
 ```ts
-ioc.get(ActionStore).registerAction(new CreateTodoAction());
+event.ioc.get(ActionStore).registerAction(new CreateTodoAction());
 ```
 
-Registered actions inherit the `ActionStore` logger and receive their own child logger.
+Registration gives the action a child logger and makes it discoverable by Reactor's action surfaces.
 
-## Names, aliases, tags, and behavior
+## Name actions clearly
 
-The action name is the canonical label shown throughout Reactor. `aliases` are complete alternative names used only to discover the action in the command palette. `tags` are shorter semantic terms used by command-palette search and entity presenters.
+The `name` is what users see. Use `aliases` for other phrases they may search for and `tags` for shorter search terms:
 
 ```ts
 super({
@@ -51,47 +64,52 @@ super({
 });
 ```
 
-Macro behavior contributes conventional search tags. For example, `DELETE` adds `delete`, `remove`, and `destroy`; `COPY` adds `copy`, `clone`, and `duplicate`. Applications can add domain tags such as `billing`, `project`, or `internal` without changing the visible action name.
+Macro behavior contributes conventional tags. `DELETE` adds `delete`, `remove`, and `destroy`; `COPY` adds `copy`, `clone`, and `duplicate`.
 
-Aliases are intentionally not rendered as tags. They are alternate full phrases, while tags describe the action and can be displayed or used for grouping in the Actions entity panel.
+:::tip Pro tip
+Name the operation, not the control. Prefer “Create todo” to “Create button clicked.” The action may later run without a button.
+:::
 
-## Represent an action
+## Show an action in the UI
 
-Actions generate descriptors that Reactor widgets consume:
+Actions generate descriptors and controls that standard Reactor widgets understand:
 
 ```tsx
-<PanelButtonWidget {...action.representAsButton({ todo })} />
+<PanelButtonWidget {...action.representAsButton({ targetEntity: todo })} />
 ```
 
-Other representations include `representAsIcon()`, `representAsControl()`, and `representAsComboBoxItem()`. The event data supplied to the representation is also supplied to validation and execution.
+Available representations include:
 
-Representations carry the validator with them. Widgets do not need to duplicate permission checks; they render the action's current validation state and subscribe to subsequent validator updates.
+- `representAsButton()`
+- `representAsIcon()`
+- `representAsControl()`
+- `representAsComboBoxItem()`
+
+The supplied event data is passed to validation and execution. Each representation keeps checking the action's validator, so widgets do not need their own availability rules.
 
 ## Validation states
 
-An `ActionValidator` returns one of these states:
+Validators return one result:
 
-- `ALLOWED` — render and execute normally.
-- `DEFERRED` — validation needs action parameters that have not been resolved yet.
-- `PENDING` — an asynchronous decision has not completed.
-- `DISABLED` — render disabled, optionally with a reason.
-- `BLOCKED` — prevent execution but allow a remediation flow.
-- `HIDDEN` — omit the action from the UI.
+| State | Meaning |
+| --- | --- |
+| `ALLOWED` | Render and execute normally. |
+| `DEFERRED` | More action parameters are required before a decision is possible. |
+| `PENDING` | A live asynchronous decision has not completed. |
+| `DISABLED` | Keep the action visible but unavailable, optionally with a reason. |
+| `BLOCKED` | Prevent execution but allow activation of a remediation flow. |
+| `HIDDEN` | Do not show the action here. |
 
 ```ts
-class SubscriptionValidator extends ActionValidator<MyActionEvent> {
-  validate(event: Partial<MyActionEvent>): ValidationResult {
-    if (!event.featureAvailable) {
+class TodoLockedValidator extends ActionValidator<EntityActionEvent<TodoModel>> {
+  validate(event: Partial<EntityActionEvent<TodoModel>>): ValidationResult {
+    if (!event.targetEntity) {
+      return { type: ActionValidationState.DEFERRED };
+    }
+    if (event.targetEntity.locked) {
       return {
-        type: ActionValidationState.BLOCKED,
-        message: 'Upgrade to use this feature',
-        indicator: {
-          icon: 'dollar-sign',
-          background: '#00945b',
-          foreground: '#fff',
-          tooltip: 'Upgrade required'
-        },
-        onActivate: () => event.openUpgrade?.()
+        type: ActionValidationState.DISABLED,
+        message: 'Unlock the todo before editing it.'
       };
     }
     return { type: ActionValidationState.ALLOWED };
@@ -99,36 +117,88 @@ class SubscriptionValidator extends ActionValidator<MyActionEvent> {
 }
 ```
 
-Reactor understands only generic validation outcomes. Permission systems, subscriptions, and remediation experiences belong to application modules.
+:::warning Common pitfall
+Use `PENDING` only when a validator has started asynchronous work and will notify its listeners when the answer changes. If the missing information is an unresolved action parameter, return `DEFERRED`.
+:::
 
-## Parameterized actions
-
-`ParameterizedAction` resolves required values before execution. `EntityAction` adds a target entity parameter, while `CoupledAction` adds source and target entities.
+`BLOCKED` lets the application offer a way to fix the problem:
 
 ```ts
-export class ArchiveProjectAction extends EntityAction<Project> {
+return {
+  type: ActionValidationState.BLOCKED,
+  message: 'Connect before refreshing.',
+  indicator: { icon: 'plug', tooltip: 'Connection required' },
+  onActivate: () => connectionStore.openConnectionDialog()
+};
+```
+
+Reactor understands the generic outcome; it does not own the application's permission or availability policy.
+
+## Entity and coupled actions
+
+`ParameterizedAction` collects named values before execution. `EntityAction` adds a target entity. `CoupledAction` adds a source and target, which is useful for assignments, moves, links, and drag-and-drop.
+
+```ts
+export class DuplicateTodoAction extends EntityAction<TodoModel> {
   constructor() {
     super({
-      id: 'ARCHIVE_PROJECT',
-      name: 'Archive project',
-      target: 'project',
-      params: [],
-      validators: [new ArchiveProjectValidator()],
-      icon: 'box-archive'
+      id: 'DUPLICATE_TODO',
+      name: 'Duplicate todo',
+      target: TodoEntities.TODO_ITEM,
+      behavior: ActionMacroBehavior.COPY,
+      icon: 'copy'
     });
+  }
+
+  protected async fireEvent(event: EntityActionEvent<TodoModel>) {
+    event.targetEntity.duplicate();
   }
 }
 ```
 
-An action launched from a context menu may already have its target. The same action launched from the command palette can ask the entity definition to resolve a target. Candidate entities are validated with the partially resolved event, so unavailable choices can be disabled or omitted before selection.
+An action opened from an entity menu already has its target. The same action opened from the command palette asks the entity definition to resolve one.
 
-If a validator cannot decide until parameters are available, return `DEFERRED`. Reactor resolves the remaining parameters and runs validation again before `fireEvent()`. Use `PENDING` only when an asynchronous check has started and the validator expects to notify listeners when its answer changes.
+:::note Hidden complexity
+Candidate entities are placed into partial action events and validated before selection. The picker can therefore hide or disable candidates that would make the final action unavailable.
+:::
 
-The execution order is:
+## Execution lifecycle
 
-1. collect or resolve action parameters;
-2. run validation against the resolved event;
-3. activate remediation for `BLOCKED`, or stop for other non-allowed states;
-4. execute `fireEvent()`.
+The order is:
 
-This keeps command palette, entity menus, buttons, and shortcuts consistent even when they begin with different amounts of context.
+1. collect or resolve parameters;
+2. create the complete action event;
+3. run validation;
+4. activate remediation for `BLOCKED`, or stop for another unavailable state;
+5. notify `willFire` listeners;
+6. honor cancellation;
+7. execute `fireEvent()`;
+8. complete or fail the status directive;
+9. notify `didFire` listeners.
+
+Errors are logged, the action status fails, and Reactor presents a standard error dialog before rethrowing.
+
+## Progress indication
+
+`event.getStatus()` shows the action in the Visor. Use it for work that takes long enough to notice; fast actions do not need progress UI.
+
+`getExclusiveExecutionLock()` lets a workflow temporarily cancel other actions while allowing explicit exceptions. The returned cleanup function must always be released.
+
+Actions also support a temporary execution lock. Guided workflows use it to stop unrelated actions while a step is active. Always call the returned cleanup function when the step ends.
+
+See [Progress and status](../runtime/operational-feedback.md) and [Guided workflows](../advanced/guided-workflows.md).
+
+## Destructive and batch behavior
+
+`ActionMacroBehavior` adds common search terms. `ActionRollbackMechanic` says whether destructive work can be recovered through source control. Helpers such as `setupDeleteConfirmation()` add standard confirmation behavior.
+
+Entity actions can opt into batch execution with `batch` and `batch_concurrency`. See [Batch actions](../advanced/batch-actions.md).
+
+## Go deeper
+
+<div className="doc-links">
+  <a href="./search-selection-and-command-palette">Parameter resolution</a>
+  <a href="./entity-definitions">Entity targets and handlers</a>
+  <a href="../runtime/operational-feedback">Status and notifications</a>
+  <a href="../advanced/guided-workflows">Action-driven guides</a>
+</div>

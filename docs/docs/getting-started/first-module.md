@@ -9,6 +9,19 @@ This walkthrough adds a small panel to the demo application. It introduces the f
 
 Create `demo/module-hello` using the package, TypeScript, and `reactor.config.json` files in `demo/module-todos` as a template. Set the config slug to `module-hello`. The demo launcher discovers every `demo/module-*` directory containing a Reactor config.
 
+Copy only the package scaffolding:
+
+- `package.json`
+- `tsconfig.json`
+- `webpack.config.js`
+- `reactor.config.json`
+
+Create a new `src` directory for the files below rather than copying the Todo implementation.
+
+:::note Mental model
+The module installs the feature. The store owns its state. The panel model lets a workspace place it. The workspace gives the panel an initial home.
+:::
+
 ## 1. Create a store
 
 Stores own observable application state and services:
@@ -32,6 +45,10 @@ export class HelloStore extends AbstractStore {
 ```
 
 Constructors establish usable initial state. Override `_init()` only when the store has asynchronous boot work.
+
+:::warning Lifecycle note
+The panel can discover this store during registration. Keep its constructor state safe to read before asynchronous initialization.
+:::
 
 ## 2. Create a panel
 
@@ -151,3 +168,16 @@ You now have the basic Reactor composition:
 - the **workspace generator** gives the panel a home.
 
 The next subsystem guides explain how to replace the inline button callback with an Action and how Entity Definitions let generic Reactor surfaces understand application models.
+
+:::tip Next improvement
+This first panel uses an inline callback to keep the walkthrough focused. Make “Visit” an action when it needs to appear in another place or gain validation, logging, or progress.
+:::
+
+## Go deeper
+
+<div className="doc-links">
+  <a href="../subsystems/modules-and-stores">Module lifecycle</a>
+  <a href="../subsystems/actions-and-validation">Create reusable actions</a>
+  <a href="../subsystems/entity-definitions">Teach Reactor a domain type</a>
+  <a href="../subsystems/workspaces-and-panels">Persist panel state</a>
+</div>

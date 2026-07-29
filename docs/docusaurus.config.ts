@@ -26,15 +26,9 @@ const config: Config = {
       items: [
         {
           type: 'docSidebar',
-          sidebarId: 'gettingStartedSidebar',
+          sidebarId: 'manualSidebar',
           position: 'left',
-          label: 'Getting started'
-        },
-        {
-          type: 'docSidebar',
-          sidebarId: 'subsystemsSidebar',
-          position: 'left',
-          label: 'Subsystems'
+          label: 'Manual'
         },
         {
           type: 'docSidebar',

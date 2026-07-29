@@ -18,18 +18,18 @@ Monaco editor:Monaco
 Modules can use their logger directly:
 
 ```ts
-this.logger.info('Connected to project', project.id);
+this.logger.info('Todo store ready', { count: this.todos.length });
 ```
 
 Stores receive a public `logger` when registered:
 
 ```ts
-this.logger.debug('Refreshing projects', { organizationId });
-this.logger.warn('Project metadata is incomplete', project.id);
-this.logger.error('Failed to refresh projects', error);
+this.logger.debug('Refreshing todos', { currentCount: this.todos.length });
+this.logger.warn('Todo metadata is incomplete', todo.id);
+this.logger.error('Failed to refresh todos', error);
 ```
 
-Choose levels by operational meaning:
+Choose levels by what the message means:
 
 - `DEBUG` for detailed execution and state transitions.
 - `INFO` for meaningful lifecycle or user-visible operations.
@@ -57,3 +57,19 @@ The panel can:
 Configuration is applied immediately and persisted in browser local storage. Resetting preserves the selected global level.
 
 The demo launcher lists Reactor Debug as an optional module and selects it by default.
+
+:::tip Pro tip
+Name loggers after stores, groups of actions, or subsystems rather than component instances. A developer can then isolate a useful part of the application.
+:::
+
+:::warning Common pitfall
+Do not log credentials, tokens, or private entity payloads. Browser logs and persisted diagnostic choices are user-accessible application state.
+:::
+
+## Go deeper
+
+<div className="doc-links">
+  <a href="./modules-and-stores">Store lifecycle</a>
+  <a href="../runtime/operational-feedback">User-facing status</a>
+  <a href="../getting-started/reactor-server">Deployment log levels</a>
+</div>
