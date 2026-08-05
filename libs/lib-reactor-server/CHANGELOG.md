@@ -1,5 +1,13 @@
 # @journeyapps-labs/lib-reactor-server
 
+## 2.1.1
+
+### Patch Changes
+
+- a824777: Update package dependencies, including support for MobX 7.
+- Updated dependencies [a824777]
+  - @journeyapps-labs/lib-reactor-utils@2.0.13
+
 ## 2.1.0
 
 ### Minor Changes

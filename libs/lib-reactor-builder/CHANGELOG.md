@@ -1,5 +1,11 @@
 # @journeyapps-labs/lib-reactor-builder
 
+## 3.1.1
+
+### Patch Changes
+
+- a824777: Update package dependencies, including support for MobX 7.
+
 ## 3.1.0
 
 ### Minor Changes
