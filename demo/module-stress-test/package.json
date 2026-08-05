@@ -15,6 +15,6 @@
   },
   "devDependencies": {
     "@journeyapps-labs/lib-reactor-builder": "workspace:^",
-    "@types/lodash": "^4.17.24"
+    "@types/lodash": "^4.17.25"
   }
 }

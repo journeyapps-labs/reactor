@@ -22,11 +22,11 @@
     "@journeyapps-labs/lib-reactor-search": "workspace:*",
     "@journeyapps-labs/reactor-mod": "workspace:*",
     "@projectstorm/react-workspaces-core": "4.3.2",
-    "mobx-react": "^9.2.2",
+    "mobx-react": "^10.0.0",
     "react": "19.2.8"
   },
   "devDependencies": {
     "@journeyapps-labs/lib-reactor-builder": "workspace:*",
-    "@types/react": "19.2.17"
+    "@types/react": "19.2.18"
   }
 }

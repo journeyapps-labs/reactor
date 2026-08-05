@@ -1,4 +1,4 @@
-import { observable } from 'mobx';
+import { observable, observableShallow } from 'mobx';
 import * as _ from 'lodash';
 import { Action } from '../../actions/Action';
 import { MousePosition } from '../../layers/combo/SmartPositionWidget';
@@ -34,7 +34,7 @@ export interface ComboBoxStoreListener extends AbstractStoreListener {
  * @deprecated
  */
 export class ComboBoxStore extends AbstractStore<ComboBoxStoreListener> {
-  @observable.shallow
+  @observableShallow
   accessor directive: UIDirective;
 
   @observable
