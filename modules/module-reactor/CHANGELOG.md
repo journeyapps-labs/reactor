@@ -1,5 +1,11 @@
 # @journeyapps-labs/reactor-mod
 
+## 8.1.1
+
+### Patch Changes
+
+- d757f3f: Apply updated user-setting defaults before initialization and share default/reset behavior across value-backed settings.
+
 ## 8.1.0
 
 ### Minor Changes
