@@ -1,5 +1,15 @@
 # @journeyapps-labs/reactor-mod-editor
 
+## 2.3.10
+
+### Patch Changes
+
+- a824777: Update package dependencies, including support for MobX 7.
+- Updated dependencies [a824777]
+  - @journeyapps-labs/lib-reactor-search@1.0.14
+  - @journeyapps-labs/lib-reactor-utils@2.0.13
+  - @journeyapps-labs/reactor-mod@8.1.2
+
 ## 2.3.9
 
 ### Patch Changes
