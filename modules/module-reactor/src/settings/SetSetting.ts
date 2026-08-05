@@ -10,8 +10,6 @@ export interface SetSettingOptions extends AbstractInteractiveControlOptions {
 }
 
 export class SetSetting extends AbstractUserSetting<SetControl, SetSettingOptions> {
-  default: string;
-
   constructor(options: SetSettingOptions) {
     super(
       options,
@@ -20,7 +18,6 @@ export class SetSetting extends AbstractUserSetting<SetControl, SetSettingOption
         initialValue: options.value
       })
     );
-    this.default = options.value;
     this.control.registerListener({
       valueChanged: (value) => {
         if (this.initialized) {
@@ -70,9 +67,5 @@ export class SetSetting extends AbstractUserSetting<SetControl, SetSettingOption
     return {
       value: this.control.value
     };
-  }
-
-  reset() {
-    this.control.value = this.default;
   }
 }

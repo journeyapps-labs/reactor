@@ -36,8 +36,8 @@ export class EntitySetting<I> extends AbstractUserSetting<EntityControl<I>, Enti
 
   updateOptions(options: Partial<EntitySettingOptions<I>>) {
     super.updateOptions(options);
-    if (!this.initialized && options.defaultEntity !== undefined) {
-      this.setItem(options.defaultEntity);
+    if (options.defaultEntity !== undefined) {
+      this.setDefault(options.defaultEntity);
     }
   }
 
@@ -54,10 +54,6 @@ export class EntitySetting<I> extends AbstractUserSetting<EntityControl<I>, Enti
     } catch (ex) {
       this.logger.warn('Could not restore entity preference; retaining the default value', this.options.name, ex);
     }
-  }
-
-  reset() {
-    this.control.value = this.options.defaultEntity;
   }
 
   serialize() {

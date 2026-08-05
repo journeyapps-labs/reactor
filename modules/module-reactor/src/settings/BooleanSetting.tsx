@@ -19,8 +19,6 @@ namespace S {
 }
 
 export class BooleanSetting extends AbstractUserSetting<BooleanControl, BooleanControlOptions> {
-  default: boolean;
-
   @observable
   accessor checked: boolean;
 
@@ -35,7 +33,6 @@ export class BooleanSetting extends AbstractUserSetting<BooleanControl, BooleanC
       })
     );
     this.checked = !!options.checked;
-    this.default = !!options.checked;
     this.control.registerListener({
       valueChanged: (value) => {
         this.checked = value;
@@ -47,16 +44,8 @@ export class BooleanSetting extends AbstractUserSetting<BooleanControl, BooleanC
     });
   }
 
-  setDefault(checked: boolean) {
-    this.default = checked;
-  }
-
   setChecked(checked: boolean) {
     this.control.value = checked;
-  }
-
-  reset() {
-    this.control.value = this.default;
   }
 
   serialize() {
